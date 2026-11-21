@@ -51,6 +51,9 @@ class MainActivity : ComponentActivity() {
             var number by remember { mutableStateOf("") }
             var showScanner by remember { mutableStateOf(false) }
             var status by remember { mutableStateOf("Sendungsnummer scannen oder manuell eingeben.") }
+            var showPartnerPicker by remember { mutableStateOf(false) }
+            var showAllApps by remember { mutableStateOf(false) }
+            var installedApps by remember { mutableStateOf<List<PartnerCandidate>>(emptyList()) }
             val context = LocalContext.current
 
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
@@ -101,7 +104,48 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Text("An Partner-App übergeben")
                         }
+                        OutlinedButton(
+                            onClick = {
+                                installedApps = findLaunchableApps(context)
+                                showAllApps = false
+                                showPartnerPicker = true
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) { Text("Betriebssoftware auf diesem Gerät finden") }
+                        Text(
+                            context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
+                                .getString("partner_label", null)?.let { "Ausgewählte Betriebssoftware: $it" }
+                                ?: "Noch keine Betriebssoftware ausgewählt",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Forest
+                        )
                         Text(status, style = MaterialTheme.typography.bodyMedium, color = Forest)
+                        if (showPartnerPicker) {
+                            val candidates = if (showAllApps) installedApps else installedApps.filter { it.looksLikeCarrierApp }
+                            AlertDialog(
+                                onDismissRequest = { showPartnerPicker = false },
+                                title = { Text("Betriebssoftware auswählen") },
+                                text = {
+                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        Text(if (candidates.isEmpty()) "Keine eindeutig erkennbare Paketdienst-App gefunden. Du kannst alle installierten Apps anzeigen." else "Wähle die Paketshop-/Betriebssoftware aus.")
+                                        candidates.take(30).forEach { app ->
+                                            TextButton(onClick = {
+                                                context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).edit()
+                                                    .putString("partner_package", app.packageName)
+                                                    .putString("partner_label", app.label)
+                                                    .apply()
+                                                status = "Betriebssoftware ${app.label} gespeichert. Die Sendungsnummer wird beim nächsten Übergabeversuch mitgegeben."
+                                                showPartnerPicker = false
+                                            }, modifier = Modifier.fillMaxWidth()) {
+                                                Text("${app.label}  ·  ${app.packageName}")
+                                            }
+                                        }
+                                        if (!showAllApps) TextButton(onClick = { showAllApps = true }) { Text("Alle installierten Apps anzeigen") }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showPartnerPicker = false }) { Text("Schließen") } }
+                            )
+                        }
                         Spacer(Modifier.weight(1f))
                         Text(
                             "Die letzte Sendungsnummer bleibt lokal gespeichert.",
@@ -116,6 +160,29 @@ class MainActivity : ComponentActivity() {
 }
 
 data class HandoffResult(val message: String)
+
+private data class PartnerCandidate(
+    val label: String,
+    val packageName: String,
+    val looksLikeCarrierApp: Boolean
+)
+
+private fun findLaunchableApps(context: Context): List<PartnerCandidate> {
+    val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+    return context.packageManager.queryIntentActivities(intent, 0)
+        .mapNotNull { info ->
+            val packageName = info.activityInfo?.packageName ?: return@mapNotNull null
+            if (packageName == context.packageName) return@mapNotNull null
+            val label = info.loadLabel(context.packageManager)?.toString()?.trim().orEmpty()
+            if (label.isBlank()) return@mapNotNull null
+            val searchable = "$label $packageName".lowercase()
+            val keywords = listOf("dhl", "dpd", "gls", "ups", "post", "paket", "parcel", "shipping", "versand", "zebra", "mde", "courier", "express")
+            PartnerCandidate(label, packageName, keywords.any { searchable.contains(it) })
+        }
+        .distinctBy { it.packageName }
+        .sortedWith(compareByDescending<PartnerCandidate> { it.looksLikeCarrierApp }.thenBy { it.label.lowercase() })
+}
+
 
 private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: String?): HandoffResult {
     val number = normalizeTrackingNumber(rawNumber)
@@ -135,7 +202,7 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     clipboard.setPrimaryClip(ClipData.newPlainText("TRAKUNA Sendungsnummer", number))
 
-    val packageName = PartnerAppConfig.packageFor(carrier)
+    val preferences = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)\n    val packageName = PartnerAppConfig.packageFor(carrier) ?: preferences.getString("partner_package", null)
     if (packageName.isNullOrBlank()) {
         return HandoffResult(
             "Nummer $number ist im TRAKUNA-Cache gesichert und kopiert. " +
