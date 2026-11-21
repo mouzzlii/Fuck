@@ -26,8 +26,6 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Android SDK einrichten
-        uses: android-actions/setup-android@v3
 
       - name: APK bauen
         run: gradle assembleDebug
