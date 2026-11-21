@@ -2,6 +2,8 @@ package de.trakuna.app
 
 import android.Manifest
 import android.content.Intent
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -213,8 +215,31 @@ class MainActivity : ComponentActivity() {
 private fun normalizeTrackingNumber(raw: String): String =
     raw.replace(Regex("[\\u0000-\\u001F]"), "").trim().replace(Regex("\\s+"), "")
 
+private fun extractTrackingNumber(raw: String): String? {
+    val cleaned = normalizeTrackingNumber(raw).removePrefix("]C1").removePrefix("]d2")
+    if (cleaned.startsWith("http://", true) || cleaned.startsWith("https://", true)) {
+        val uri = runCatching { Uri.parse(cleaned) }.getOrNull()
+        listOf("trackingNumber", "tracking", "shipment", "shipmentId", "parcel", "id", "piececode", "snr").forEach { key ->
+            uri?.getQueryParameter(key)?.let { value ->
+                normalizeTrackingNumber(value).takeIf { isPlausibleTrackingNumber(it) }?.let { return it }
+            }
+        }
+        uri?.lastPathSegment?.let { segment ->
+            normalizeTrackingNumber(segment).takeIf { isPlausibleTrackingNumber(it) }?.let { return it }
+        }
+        return null
+    }
+    return cleaned.takeIf { isPlausibleTrackingNumber(it) }
+}
+
 private fun isPlausibleTrackingNumber(value: String): Boolean =
     value.length in 6..40 && value.any { it.isDigit() } && value.all { it.isLetterOrDigit() || it == '-' }
+
+private tailrec fun Context.findActivity(): ComponentActivity? = when (this) {
+    is ComponentActivity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
+}
 
 private fun identifyCarrier(raw: String): CarrierMatch {
     val value = normalizeTrackingNumber(raw).uppercase()
@@ -275,7 +300,7 @@ private fun ScannerPanel(onDetected: (String) -> Unit, onClose: () -> Unit) {
 @OptIn(ExperimentalGetImage::class)
 private fun CameraPreview(onDetected: (String) -> Unit) {
     val context = LocalContext.current
-    val activity = context as? ComponentActivity
+    val activity = context.findActivity()
     if (activity == null) {
         Text("Kamera kann in diesem Kontext nicht gestartet werden.")
         return
@@ -330,8 +355,7 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
                                 .addOnSuccessListener(mainExecutor) { barcodes ->
                                     val candidates = barcodes.mapNotNull { barcode ->
                                         val candidate = barcode.rawValue ?: barcode.displayValue
-                                        candidate?.let { normalizeTrackingNumber(it) }
-                                            ?.takeIf { isPlausibleTrackingNumber(it) }
+                                        candidate?.let { extractTrackingNumber(it) }
                                     }.distinct().sortedByDescending { it.length }
                                     val value = candidates.firstOrNull()
                                     if (value != null && delivered.compareAndSet(false, true)) onDetected(value)
