@@ -245,20 +245,45 @@ private fun isPlausibleTrackingNumber(value: String): Boolean =
     value.length in 6..40 && value.any { it.isDigit() } && value.all { it.isLetterOrDigit() || it == '-' }
 
 private fun extractTrackingNumber(raw: String): String? {
-    val cleaned = normalizeTrackingNumber(raw).removePrefix("]C1").removePrefix("]d2")
+    // Some scanners prepend AIM symbology identifiers (for example ]C1 for Code 128).
+    val cleaned = raw.trim()
+        .removePrefix("]C1").removePrefix("]d2").removePrefix("]Q3")
+        .trim()
+
     if (cleaned.startsWith("http://", true) || cleaned.startsWith("https://", true)) {
         val uri = runCatching { Uri.parse(cleaned) }.getOrNull()
-        listOf("trackingNumber", "tracking", "shipment", "shipmentId", "parcel", "id", "piececode", "snr").forEach { key ->
-            uri?.getQueryParameter(key)?.let { value ->
+        val acceptedKeys = setOf(
+            "trackingnumber", "tracking_number", "tracking", "trackid", "shipment",
+            "shipmentid", "shipment_id", "consignment", "consignmentnumber",
+            "parcel", "parcelnumber", "barcode", "piececode", "sendungsnummer", "snr", "id"
+        )
+        // Query parameter names are not consistently cased across carrier QR formats.
+        uri?.queryParameterNames?.firstOrNull { it.lowercase() in acceptedKeys }?.let { key ->
+            uri.getQueryParameter(key)?.let { value ->
                 normalizeTrackingNumber(value).takeIf { isPlausibleTrackingNumber(it) }?.let { return it }
             }
         }
+        // Prefer the final path segment only when it looks like an actual shipment ID.
+        uri?.pathSegments?.asReversed()?.firstOrNull { segment ->
+            normalizeTrackingNumber(segment).let { isPlausibleTrackingNumber(it) && identifyCarrier(it) != null }
+        }?.let { return normalizeTrackingNumber(it) }
         uri?.lastPathSegment?.let { segment ->
             normalizeTrackingNumber(segment).takeIf { isPlausibleTrackingNumber(it) }?.let { return it }
         }
         return null
     }
-    return cleaned.takeIf { isPlausibleTrackingNumber(it) }
+
+    val compact = normalizeTrackingNumber(cleaned)
+    if (isPlausibleTrackingNumber(compact)) return compact
+
+    // Labels sometimes encode a short human-readable prefix/suffix around the barcode.
+    // Extract only well-known, structurally distinctive formats; do not guess arbitrary digits.
+    val candidates = listOf(
+        Regex("(?i)1Z[A-Z0-9]{16}").find(cleaned)?.value,
+        Regex("(?i)[A-Z]{2}[0-9]{9}AT").find(cleaned)?.value,
+        Regex("(?i)(?:JVGL|JJD)[A-Z0-9]{8,26}").find(cleaned)?.value
+    )
+    return candidates.firstOrNull { isPlausibleTrackingNumber(it) }
 }
 
 private fun identifyCarrier(raw: String): String? {
@@ -268,7 +293,11 @@ private fun identifyCarrier(raw: String): String? {
         Regex("^[A-Z]{2}[0-9]{9}AT$").matches(value) -> "Österreichische Post"
         value.startsWith("JVGL") || value.startsWith("JJD") -> "DHL Paket"
         value.startsWith("JD") && value.length in 12..30 -> "DHL Paket"
-        value.startsWith("0034") && value.length >= 12 -> "DPD"
+        // Common national formats. Ambiguous lengths are deliberately left unassigned.
+        value.matches(Regex("^[0-9]{13}$")) -> "Österreichische Post"
+        value.matches(Regex("^[0-9]{14}$")) -> "DPD"
+        value.matches(Regex("^[0-9]{11,12}$")) -> "GLS"
+        value.matches(Regex("^[0-9]{10}$")) || value.matches(Regex("^[0-9]{20}$")) -> "DHL Paket"
         else -> null
     }
 }
@@ -352,8 +381,14 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
                                 .addOnSuccessListener(mainExecutor) { barcodes ->
                                     val values = barcodes.mapNotNull { barcode ->
                                         (barcode.rawValue ?: barcode.displayValue)?.let { extractTrackingNumber(it) }
-                                    }.distinct().sortedByDescending { it.length }
-                                    values.firstOrNull()?.let { value ->
+                                    }.distinct()
+                                    // Prefer a structurally recognized shipment number over unrelated QR/barcode data.
+                                    val selected = values.sortedWith(
+                                        compareByDescending<String> { identifyCarrier(it) != null }
+                                            .thenByDescending { it.length in 10..22 }
+                                            .thenByDescending { it.length }
+                                    ).firstOrNull()
+                                    selected?.let { value ->
                                         if (delivered.compareAndSet(false, true)) onDetected(value)
                                     }
                                 }
