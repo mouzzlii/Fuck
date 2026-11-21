@@ -345,7 +345,7 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
                 provider.unbindAll()
                 provider.bindToLifecycle(activity as LifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
             } catch (_: Exception) {
-                mainExecutor.execute { onDetected("") }
+                // Scanner remains open; manual entry is still available.
             }
         }, mainExecutor)
 
