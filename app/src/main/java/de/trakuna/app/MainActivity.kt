@@ -206,7 +206,7 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
     if (packageName.isNullOrBlank()) {
         return HandoffResult(
             "Nummer $number ist im TRAKUNA-Cache gesichert und kopiert. " +
-                "In PartnerAppConfig.kt nur noch die Paket-ID der Betriebs-App eintragen."
+                "Wähle zuerst die Betriebssoftware über die Schaltfläche oben aus."
         )
     }
 
