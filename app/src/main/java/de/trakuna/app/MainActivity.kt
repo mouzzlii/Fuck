@@ -283,7 +283,7 @@ private fun extractTrackingNumber(raw: String): String? {
         Regex("(?i)[A-Z]{2}[0-9]{9}AT").find(cleaned)?.value,
         Regex("(?i)(?:JVGL|JJD)[A-Z0-9]{8,26}").find(cleaned)?.value
     )
-    return candidates.firstOrNull { isPlausibleTrackingNumber(it) }
+    return candidates.filterNotNull().firstOrNull { isPlausibleTrackingNumber(it) }
 }
 
 private fun identifyCarrier(raw: String): String? {
