@@ -202,7 +202,8 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     clipboard.setPrimaryClip(ClipData.newPlainText("TRAKUNA Sendungsnummer", number))
 
-    val preferences = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)\n    val packageName = PartnerAppConfig.packageFor(carrier) ?: preferences.getString("partner_package", null)
+    val preferences = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
+    val packageName = PartnerAppConfig.packageFor(carrier) ?: preferences.getString("partner_package", null)
     if (packageName.isNullOrBlank()) {
         return HandoffResult(
             "Nummer $number ist im TRAKUNA-Cache gesichert und kopiert. " +
