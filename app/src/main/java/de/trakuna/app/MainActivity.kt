@@ -1,7 +1,11 @@
 package de.trakuna.app
 
 import android.Manifest
+import android.content.Intent
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,6 +46,7 @@ private val carriers = listOf("Österreichische Post", "DHL Paket", "DHL Express
 private val workflows = listOf("Annahme", "Abholung", "Retoure", "Versand")
 
 data class Parcel(val code: String, val carrier: String, val customer: String, val status: String)
+data class CarrierMatch(val carrier: String?, val confidence: String)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +61,8 @@ class MainActivity : ComponentActivity() {
             var carrier by remember { mutableStateOf(carriers.first()) }
             var carrierMenu by remember { mutableStateOf(false) }
             var showScanner by remember { mutableStateOf(false) }
-            var message by remember { mutableStateOf("Lokaler Testbetrieb – Scanner und manuelle Erfassung verfügbar.") }
+            var message by remember { mutableStateOf("Bereit zum Scannen. Nummern werden geprüft, bevor sie zugeordnet werden.") }
+            val context = LocalContext.current
 
             fun saveParcels(updated: List<Parcel>) {
                 parcels = updated
@@ -69,10 +75,7 @@ class MainActivity : ComponentActivity() {
 
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
                 Surface(Modifier.fillMaxSize(), color = Color(0xFFF3F6F3)) {
-                    Column(
-                        Modifier.fillMaxSize().padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
+                    Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text("TRAKUNA", style = MaterialTheme.typography.headlineLarge, color = Forest)
                         Text("ALLE PAKETDIENSTE. EIN SMARTPHONE.", style = MaterialTheme.typography.labelLarge)
                         Text(message, style = MaterialTheme.typography.bodySmall)
@@ -91,28 +94,35 @@ class MainActivity : ComponentActivity() {
                         }
 
                         Button(onClick = { showScanner = !showScanner }, modifier = Modifier.fillMaxWidth()) {
-                            Text(if (showScanner) "Scanner schließen" else "Kamera-Barcode / QR scannen")
+                            Text(if (showScanner) "Scanner schließen" else "Barcode / QR zuverlässig scannen")
                         }
                         if (showScanner) {
                             ScannerPanel(
                                 onDetected = { value ->
                                     code = value
                                     showScanner = false
-                                    message = "Code erkannt: $value"
+                                    val match = identifyCarrier(value)
+                                    if (match.carrier != null) {
+                                        carrier = match.carrier
+                                        message = "${match.carrier} erkannt. Sendungsnummer geprüft: $value. Dienstleister wird geöffnet."
+                                        openCarrierApp(context, match.carrier, value)
+                                    } else {
+                                        message = "Nummer gelesen: $value. Dienstleister nicht sicher erkennbar – bitte oben auswählen und anschließend „Dienstleister öffnen“ tippen."
+                                    }
                                 },
                                 onClose = { showScanner = false }
                             )
                         }
 
                         OutlinedTextField(
-                            value = code, onValueChange = { code = it }, modifier = Modifier.fillMaxWidth(),
+                            value = code, onValueChange = { code = it.trim() }, modifier = Modifier.fillMaxWidth(),
                             label = { Text("Sendungsnummer / Barcode (manuell möglich)") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii), singleLine = true
                         )
                         OutlinedTextField(value = customer, onValueChange = { customer = it }, modifier = Modifier.fillMaxWidth(), label = { Text("Kundenname (optional)") }, singleLine = true)
 
                         Box {
-                            OutlinedButton(onClick = { carrierMenu = true }, modifier = Modifier.fillMaxWidth()) { Text("Paketdienst: $carrier") }
+                            OutlinedButton(onClick = { carrierMenu = true }, modifier = Modifier.fillMaxWidth()) { Text("Zugeordneter Paketdienst: $carrier") }
                             DropdownMenu(expanded = carrierMenu, onDismissRequest = { carrierMenu = false }) {
                                 carriers.forEach { item ->
                                     DropdownMenuItem(text = { Text(item) }, onClick = { carrier = item; carrierMenu = false })
@@ -120,24 +130,35 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
+                        OutlinedButton(
+                            onClick = {
+                                if (code.isBlank()) message = "Zuerst eine Sendungsnummer scannen oder eingeben."
+                                else {
+                                    openCarrierApp(context, carrier, code)
+                                    message = "$carrier wird mit Sendungsnummer geöffnet."
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) { Text("Dienstleister-App / Sendungsverfolgung öffnen") }
+
                         Button(onClick = {
-                            val number = code.trim()
-                            if (number.isBlank()) {
-                                message = "Bitte Sendungsnummer eingeben oder scannen."
+                            val number = normalizeTrackingNumber(code)
+                            if (number.isBlank() || !isPlausibleTrackingNumber(number)) {
+                                message = "Keine plausible Sendungsnummer. Bitte Barcode erneut scannen oder Nummer manuell korrigieren."
                             } else {
-                                val index = parcels.indexOfFirst { it.code == number }
+                                val index = parcels.indexOfFirst { it.code.equals(number, ignoreCase = true) }
                                 when (selectedWorkflow) {
                                     "Annahme" -> {
-                                        if (index >= 0) message = "Diese Sendungsnummer existiert bereits."
+                                        if (index >= 0) message = "Diese Sendungsnummer ist bereits erfasst."
                                         else {
                                             saveParcels(parcels + Parcel(number, carrier, customer.trim(), "Eingelagert"))
-                                            message = "Sendung lokal angenommen."
+                                            message = "Sendung $number wurde $carrier zugeordnet und lokal angenommen."
                                             code = ""; customer = ""
                                         }
                                     }
                                     "Retoure" -> {
                                         saveParcels(parcels + Parcel(number, carrier, customer.trim(), "Retoure erfasst"))
-                                        message = "Retoure lokal erfasst."
+                                        message = "Retoure $number wurde $carrier zugeordnet und lokal erfasst."
                                         code = ""; customer = ""
                                     }
                                     "Abholung" -> {
@@ -191,6 +212,64 @@ class MainActivity : ComponentActivity() {
     } catch (_: Exception) { emptyList() }
 }
 
+private fun normalizeTrackingNumber(raw: String): String =
+    raw.replace(Regex("[\\u0000-\\u001F]"), "").trim().replace(Regex("\\s+"), "")
+
+private fun extractTrackingNumber(raw: String): String? {
+    val cleaned = normalizeTrackingNumber(raw).removePrefix("]C1").removePrefix("]d2")
+    if (cleaned.startsWith("http://", true) || cleaned.startsWith("https://", true)) {
+        val uri = runCatching { Uri.parse(cleaned) }.getOrNull()
+        listOf("trackingNumber", "tracking", "shipment", "shipmentId", "parcel", "id", "piececode", "snr").forEach { key ->
+            uri?.getQueryParameter(key)?.let { value ->
+                normalizeTrackingNumber(value).takeIf { isPlausibleTrackingNumber(it) }?.let { return it }
+            }
+        }
+        uri?.lastPathSegment?.let { segment ->
+            normalizeTrackingNumber(segment).takeIf { isPlausibleTrackingNumber(it) }?.let { return it }
+        }
+        return null
+    }
+    return cleaned.takeIf { isPlausibleTrackingNumber(it) }
+}
+
+private fun isPlausibleTrackingNumber(value: String): Boolean =
+    value.length in 6..40 && value.any { it.isDigit() } && value.all { it.isLetterOrDigit() || it == '-' }
+
+private tailrec fun Context.findActivity(): ComponentActivity? = when (this) {
+    is ComponentActivity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
+}
+
+private fun identifyCarrier(raw: String): CarrierMatch {
+    val value = normalizeTrackingNumber(raw).uppercase()
+    return when {
+        Regex("^1Z[A-Z0-9]{16}$").matches(value) -> CarrierMatch("UPS", "hoch")
+        Regex("^[A-Z]{2}[0-9]{9}AT$").matches(value) -> CarrierMatch("Österreichische Post", "hoch")
+        value.startsWith("JVGL") || value.startsWith("JJD") -> CarrierMatch("DHL Paket", "hoch")
+        value.startsWith("JD") && value.length in 12..30 -> CarrierMatch("DHL Paket", "mittel")
+        value.startsWith("0034") && value.length >= 12 -> CarrierMatch("DPD", "mittel")
+        else -> CarrierMatch(null, "unklar")
+    }
+}
+
+private fun openCarrierApp(context: android.content.Context, carrier: String, rawCode: String) {
+    val code = Uri.encode(normalizeTrackingNumber(rawCode))
+    val url = when (carrier) {
+        "Österreichische Post" -> "https://www.post.at/s/sendungssuche?snr=$code"
+        "DHL Paket", "Deutsche Post" -> "https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html?piececode=$code"
+        "DHL Express" -> "https://mydhl.express.dhl/at/de/tracking.html#/results?id=$code"
+        "DPD" -> "https://tracking.dpd.de/status/de_AT/parcel/$code"
+        "GLS" -> "https://gls-group.com/AT/de/paketverfolgung?match=$code"
+        "UPS" -> "https://www.ups.com/track?tracknum=$code"
+        "Hermes" -> "https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation/?shipmentId=$code"
+        "FedEx" -> "https://www.fedex.com/fedextrack/?trknbr=$code"
+        else -> "https://www.google.com/search?q=Sendungsverfolgung+$code"
+    }
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    try { context.startActivity(intent) } catch (_: Exception) { }
+}
+
 @Composable
 private fun ScannerPanel(onDetected: (String) -> Unit, onClose: () -> Unit) {
     val context = LocalContext.current
@@ -204,9 +283,9 @@ private fun ScannerPanel(onDetected: (String) -> Unit, onClose: () -> Unit) {
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("Barcode- und QR-Scanner", style = MaterialTheme.typography.titleMedium)
-            if (hasPermission) {
-                CameraPreview(onDetected = onDetected)
-            } else {
+            Text("Etikett ruhig und vollständig in die Kamera halten. Die App übernimmt nur lesbare Nummern.", style = MaterialTheme.typography.bodySmall)
+            if (hasPermission) CameraPreview(onDetected = onDetected)
+            else {
                 Text("Für das Scannen wird Kamerazugriff benötigt.")
                 Button(onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) }, modifier = Modifier.fillMaxWidth()) {
                     Text("Kamerazugriff erlauben")
@@ -221,18 +300,37 @@ private fun ScannerPanel(onDetected: (String) -> Unit, onClose: () -> Unit) {
 @OptIn(ExperimentalGetImage::class)
 private fun CameraPreview(onDetected: (String) -> Unit) {
     val context = LocalContext.current
-    val activity = context as? ComponentActivity
+    val activity = context.findActivity()
     if (activity == null) {
         Text("Kamera kann in diesem Kontext nicht gestartet werden.")
         return
     }
-    val previewView = remember { PreviewView(context).apply { scaleType = PreviewView.ScaleType.FILL_CENTER } }
+    val previewView = remember { PreviewView(context).apply {
+        scaleType = PreviewView.ScaleType.FIT_CENTER
+        implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+    } }
 
-    AndroidView(factory = { previewView }, modifier = Modifier.fillMaxWidth().height(260.dp))
+    AndroidView(factory = { previewView }, modifier = Modifier.fillMaxWidth().height(300.dp))
 
     DisposableEffect(previewView) {
         val executor = Executors.newSingleThreadExecutor()
-        val scannerOptions = BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS).build()
+        val mainExecutor = ContextCompat.getMainExecutor(context)
+        val scannerOptions = BarcodeScannerOptions.Builder()
+            .setBarcodeFormats(
+                Barcode.FORMAT_CODE_128,
+                Barcode.FORMAT_CODE_39,
+                Barcode.FORMAT_CODE_93,
+                Barcode.FORMAT_CODABAR,
+                Barcode.FORMAT_EAN_13,
+                Barcode.FORMAT_EAN_8,
+                Barcode.FORMAT_ITF,
+                Barcode.FORMAT_UPC_A,
+                Barcode.FORMAT_UPC_E,
+                Barcode.FORMAT_QR_CODE,
+                Barcode.FORMAT_DATA_MATRIX,
+                Barcode.FORMAT_PDF417,
+                Barcode.FORMAT_AZTEC
+            ).build()
         val barcodeScanner: BarcodeScanner = BarcodeScanning.getClient(scannerOptions)
         val delivered = AtomicBoolean(false)
         var cameraProvider: ProcessCameraProvider? = null
@@ -251,21 +349,29 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
                     if (mediaImage == null || delivered.get()) {
                         imageProxy.close()
                     } else {
-                        val input = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-                        barcodeScanner.process(input)
-                            .addOnSuccessListener { barcodes ->
-                                val value = barcodes.firstNotNullOfOrNull { it.rawValue?.takeIf(String::isNotBlank) }
-                                if (value != null && delivered.compareAndSet(false, true)) onDetected(value)
-                            }
-                            .addOnCompleteListener { imageProxy.close() }
+                        try {
+                            val input = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                            barcodeScanner.process(input)
+                                .addOnSuccessListener(mainExecutor) { barcodes ->
+                                    val candidates = barcodes.mapNotNull { barcode ->
+                                        val candidate = barcode.rawValue ?: barcode.displayValue
+                                        candidate?.let { extractTrackingNumber(it) }
+                                    }.distinct().sortedByDescending { it.length }
+                                    val value = candidates.firstOrNull()
+                                    if (value != null && delivered.compareAndSet(false, true)) onDetected(value)
+                                }
+                                .addOnCompleteListener { imageProxy.close() }
+                        } catch (_: Exception) {
+                            imageProxy.close()
+                        }
                     }
                 }
                 provider.unbindAll()
                 provider.bindToLifecycle(activity as LifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
             } catch (_: Exception) {
-                // Permission/device/camera errors leave manual entry available.
+                // Scanner remains open; manual entry is still available.
             }
-        }, ContextCompat.getMainExecutor(context))
+        }, mainExecutor)
 
         onDispose {
             try { cameraProvider?.unbindAll() } catch (_: Exception) { }
