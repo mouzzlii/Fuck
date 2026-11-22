@@ -78,6 +78,9 @@ class MainActivity : ComponentActivity() {
             var editRecipient by remember { mutableStateOf("") }
             var editNote by remember { mutableStateOf("") }
             val context = LocalContext.current
+            // Keep one store instance for the screen: its synchronization and initialization state
+            // must be shared by every read/write operation in this UI.
+            val shipmentStore = remember(context) { ShipmentStore(context) }
             DisposableEffect(context) {
                 val receiver = object : BroadcastReceiver() {
                     override fun onReceive(context: Context?, intent: Intent?) {
@@ -142,7 +145,7 @@ class MainActivity : ComponentActivity() {
                         status = "Datei konnte nicht gelesen werden: ${loaded.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
                     } else {
                         val json = loaded.getOrThrow()
-                        when (val validation = ShipmentStore(context).validateBackup(json)) {
+                        when (val validation = shipmentStore.validateBackup(json)) {
                             is BackupValidation.Valid -> {
                                 pendingBackupImport = json
                                 pendingBackupCount = validation.recordCount
@@ -170,8 +173,8 @@ class MainActivity : ComponentActivity() {
                     else "CSV-Datei konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
                 }
             }
-            val shipmentRecords = remember(shipmentRevision) { ShipmentStore(context).all() }
-            val shipmentStorageIssue = remember(shipmentRevision) { ShipmentStore(context).storageError() }
+            val shipmentRecords = remember(shipmentRevision) { shipmentStore.all() }
+            val shipmentStorageIssue = remember(shipmentRevision) { shipmentStore.storageError() }
 
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
                 Surface(Modifier.fillMaxSize(), color = Color(0xFFF3F6F3)) {
@@ -259,7 +262,7 @@ class MainActivity : ComponentActivity() {
                                         OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it.take(500) }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
+                                                val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 if (result is ShipmentUpdate.Saved) {
                                                     recipient = ""
@@ -273,7 +276,7 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Paket für Kunden annehmen") }
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
+                                                val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 if (result is ShipmentUpdate.Saved) {
                                                     recipient = ""
@@ -287,7 +290,7 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Sendung vom Kunden annehmen") }
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
+                                                val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 if (result is ShipmentUpdate.Saved) {
                                                     recipient = ""
@@ -372,7 +375,7 @@ class MainActivity : ComponentActivity() {
                                 confirmButton = {
                                     TextButton(onClick = {
                                         confirmCsvExport = false
-                                        val exported = runCatching { ShipmentStore(context).exportCsv() }
+                                        val exported = runCatching { shipmentStore.exportCsv() }
                                         if (exported.isSuccess) {
                                             pendingCsv = exported.getOrThrow()
                                             csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
@@ -396,7 +399,7 @@ class MainActivity : ComponentActivity() {
                                 confirmButton = {
                                     TextButton(onClick = {
                                         confirmBackupExport = false
-                                        val exported = runCatching { ShipmentStore(context).exportBackupJson() }
+                                        val exported = runCatching { shipmentStore.exportBackupJson() }
                                         if (exported.isSuccess) {
                                             pendingBackupJson = exported.getOrThrow()
                                             backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
@@ -419,7 +422,7 @@ class MainActivity : ComponentActivity() {
                                 },
                                 confirmButton = {
                                     TextButton(onClick = {
-                                        val result = ShipmentStore(context).restoreBackup(backupJson)
+                                        val result = shipmentStore.restoreBackup(backupJson)
                                         status = when (result) {
                                             is BackupRestoreResult.Restored -> "${result.recordCount} Vorgänge wurden wiederhergestellt."
                                             is BackupRestoreResult.Rejected -> "Wiederherstellung fehlgeschlagen: ${result.reason}"
@@ -444,7 +447,7 @@ class MainActivity : ComponentActivity() {
                                 },
                                 confirmButton = {
                                     TextButton(onClick = {
-                                        val result = ShipmentStore(context).updateDetails(record.id, editRecipient, editNote)
+                                        val result = shipmentStore.updateDetails(record.id, editRecipient, editNote)
                                         status = shipmentResultText(result)
                                         shipmentRevision++
                                         editingRecord = null
@@ -471,7 +474,7 @@ class MainActivity : ComponentActivity() {
                                 },
                                 confirmButton = {
                                     TextButton(onClick = {
-                                        val result = ShipmentStore(context).advance(record.id)
+                                        val result = shipmentStore.advance(record.id)
                                         status = shipmentResultText(result)
                                         shipmentRevision++
                                         pendingAdvance = null
@@ -488,7 +491,7 @@ class MainActivity : ComponentActivity() {
                                 title = { Text("Vorgang löschen?") },
                                 text = { Text("Soll der Vorgang ${record.trackingNumber} endgültig von diesem Gerät gelöscht werden?") },
                                 confirmButton = { TextButton(onClick = {
-                                    val removed = ShipmentStore(context).remove(record.id)
+                                    val removed = shipmentStore.remove(record.id)
                                     status = if (removed) "Vorgang wurde gelöscht." else "Vorgang konnte nicht gelöscht werden. Datenspeicher prüfen."
                                     shipmentRevision++
                                     pendingDelete = null
