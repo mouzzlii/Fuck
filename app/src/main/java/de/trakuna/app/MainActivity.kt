@@ -66,6 +66,25 @@ class MainActivity : ComponentActivity() {
             var editRecipient by remember { mutableStateOf("") }
             var editNote by remember { mutableStateOf("") }
             val context = LocalContext.current
+            var pendingCsv by remember { mutableStateOf<String?>(null) }
+            val csvDocumentLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.CreateDocument("text/csv")
+            ) { uri ->
+                val csv = pendingCsv
+                pendingCsv = null
+                if (uri == null || csv == null) {
+                    status = "CSV-Export abgebrochen."
+                } else {
+                    val saved = runCatching {
+                        context.contentResolver.openOutputStream(uri)?.bufferedWriter(Charsets.UTF_8)?.use {
+                            it.write("\uFEFF")
+                            it.write(csv)
+                        } ?: error("Datei konnte nicht geöffnet werden.")
+                    }
+                    status = if (saved.isSuccess) "CSV-Datei wurde gespeichert."
+                    else "CSV-Datei konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
+                }
+            }
             val shipmentRecords = remember(shipmentRevision) { ShipmentStore(context).all() }
 
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
@@ -179,10 +198,9 @@ class MainActivity : ComponentActivity() {
                                         Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
                                         OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedButton(onClick = {
-                                            val csv = ShipmentStore(context).exportCsv()
-                                            val share = Intent(Intent.ACTION_SEND).apply { type = "text/csv"; putExtra(Intent.EXTRA_SUBJECT, "TRAKUNA Sendungsexport"); putExtra(Intent.EXTRA_TEXT, csv) }
-                                            context.startActivity(Intent.createChooser(share, "Sendungsexport teilen"))
-                                        }, modifier = Modifier.fillMaxWidth()) { Text("Sendungsliste als CSV teilen") }
+                                            pendingCsv = ShipmentStore(context).exportCsv()
+                                            csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
+                                        }, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
                                         if (shipmentRecords.isEmpty()) {
                                             Text("Noch keine Paketshop-Vorgänge erfasst.")
                                         } else {
