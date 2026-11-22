@@ -67,12 +67,18 @@ class ShipmentStore(context: Context) {
     private fun readRecords(): Result<List<ShipmentRecord>> = runCatching {
         val raw = prefs.getString(KEY_RECORDS, null) ?: return@runCatching emptyList()
         val array = JSONArray(raw)
-        buildList {
+        val records = buildList {
             for (index in 0 until array.length()) {
                 val item = array.optJSONObject(index) ?: error("Datensatz ${index + 1} ist beschädigt.")
-                add(decode(item) ?: error("Datensatz ${index + 1} ist unvollständig."))
+                val record = decode(item) ?: error("Datensatz ${index + 1} ist unvollständig.")
+                require(ShipmentRules.isValidRecord(record)) { "Datensatz ${index + 1} enthält ungültige Daten." }
+                add(record)
             }
-        }.sortedByDescending { it.updatedAt }
+        }
+        require(records.size <= MAX_RECORDS) { "Lokaler Datenspeicher überschreitet das zulässige Limit." }
+        require(records.map { it.id }.distinct().size == records.size) { "Lokaler Datenspeicher enthält doppelte Vorgangs-IDs." }
+        require(ShipmentRules.hasNoDuplicateActiveShipments(records)) { "Lokaler Datenspeicher enthält doppelte aktive Sendungen." }
+        records.sortedByDescending { it.updatedAt }
     }
 
     @Synchronized
@@ -194,6 +200,7 @@ class ShipmentStore(context: Context) {
             val root = JSONObject(raw)
             require(root.optString("format") == BACKUP_FORMAT) { "Datei ist keine TRAKUNA-Sicherung." }
             require(root.optInt("schemaVersion", -1) == BACKUP_SCHEMA_VERSION) { "Sicherungsversion wird nicht unterstützt." }
+            require(root.optLong("exportedAt", -1L) > 0L) { "Sicherungszeitpunkt fehlt oder ist ungültig." }
             val array = root.optJSONArray("records") ?: error("Sicherungsdatei enthält keine Vorgangsliste.")
             require(root.optInt("recordCount", -1) == array.length()) { "Anzahl der Einträge stimmt nicht mit dem Sicherungskopf überein." }
             require(array.length() <= MAX_RECORDS) { "Sicherung enthält mehr als $MAX_RECORDS Vorgänge." }
@@ -201,11 +208,7 @@ class ShipmentStore(context: Context) {
                 for (index in 0 until array.length()) {
                     val item = array.optJSONObject(index) ?: error("Eintrag ${index + 1} ist beschädigt.")
                     val record = decode(item) ?: error("Eintrag ${index + 1} ist unvollständig oder ungültig.")
-                    require(record.id.isNotBlank() && record.id.length <= 80) { "Ungültige Vorgangs-ID in Eintrag ${index + 1}." }
-                    require(ShipmentRules.isValidTrackingNumber(record.trackingNumber)) { "Ungültige Sendungsnummer in Eintrag ${index + 1}." }
-                    require(record.carrier.length <= 80 && record.recipient.length <= 100 && record.note.length <= 500) { "Textfeld zu lang in Eintrag ${index + 1}." }
-                    require(record.createdAt > 0 && record.updatedAt >= record.createdAt) { "Ungültiger Zeitstempel in Eintrag ${index + 1}." }
-                    require(ShipmentRules.isStatusValidForFlow(record.flow, record.status)) { "Status passt nicht zum Vorgang in Eintrag ${index + 1}." }
+                    require(ShipmentRules.isValidRecord(record)) { "Eintrag ${index + 1} enthält ungültige Daten." }
                     add(record)
                 }
             }
@@ -317,6 +320,13 @@ object ShipmentRules {
         val safeValue = if (formulaPrefix) "'$value" else value
         return "\"" + safeValue.replace("\"", "\"\"") + "\""
     }
+
+    fun isValidRecord(record: ShipmentRecord): Boolean =
+        record.id.isNotBlank() && record.id.length <= 80 &&
+            isValidTrackingNumber(record.trackingNumber) &&
+            record.carrier.length <= 80 && record.recipient.length <= 100 && record.note.length <= 500 &&
+            record.createdAt > 0L && record.updatedAt >= record.createdAt &&
+            isStatusValidForFlow(record.flow, record.status)
 
     fun normalizeTrackingNumber(raw: String): String =
         raw.trim().replace(Regex("\\s+"), "")
