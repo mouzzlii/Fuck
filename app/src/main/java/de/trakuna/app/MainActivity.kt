@@ -2,11 +2,14 @@ package de.trakuna.app
 
 import android.Manifest
 import android.content.ClipData
+import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Build
+import android.os.PersistableBundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -500,31 +503,44 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
         return HandoffResult("Bitte eine gültige Sendungsnummer eingeben oder erneut scannen.")
     }
 
-    // TRAKUNA cache: survives the app switch and remains available when the user returns.
-    context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-        .edit()
+    // Persist the handoff before leaving TRAKUNA. Do not report success if Android
+    // cannot confirm that the local cache was written.
+    val preferences = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
+    val cached = preferences.edit()
         .putString(CACHE_KEY, number)
         .putString("carrier", carrier.orEmpty())
         .putLong("saved_at", System.currentTimeMillis())
-        .apply()
+        .commit()
+    if (!cached) {
+        return HandoffResult("Sendungsnummer konnte nicht dauerhaft gespeichert werden. Bitte Gerätespeicher prüfen und erneut versuchen.")
+    }
 
-    // Clipboard is a compatibility fallback for partner apps that do not expose an intent API.
-    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    clipboard.setPrimaryClip(ClipData.newPlainText("TRAKUNA Sendungsnummer", number))
+    // Clipboard is only a fallback. Mark it sensitive on Android 13+ and never let
+    // a clipboard service failure crash the parcel-shop workflow.
+    val copied = runCatching {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+            ?: error("Zwischenablage ist nicht verfügbar.")
+        val clip = ClipData.newPlainText("TRAKUNA Sendungsnummer", number)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            clip.description.extras = PersistableBundle().apply {
+                putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
+            }
+        }
+        clipboard.setPrimaryClip(clip)
+    }.isSuccess
+    val clipboardMessage = if (copied) "Sendungsnummer zusätzlich kopiert." else "Zwischenablage nicht verfügbar; Nummer bleibt im TRAKUNA-Cache."
 
-    val preferences = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
     val packageName = PartnerAppConfig.packageFor(carrier) ?: preferences.getString("partner_package", null)
     if (packageName.isNullOrBlank()) {
         return HandoffResult(
-            "Nummer $number ist im TRAKUNA-Cache gesichert und kopiert. " +
+            "Nummer $number ist im TRAKUNA-Cache gesichert. $clipboardMessage " +
                 "Wähle zuerst die Betriebssoftware über die Schaltfläche oben aus."
         )
     }
 
     val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
         ?: return HandoffResult(
-            "Nummer ist gesichert. Die konfigurierte Partner-App ($packageName) ist nicht installiert " +
-                "oder Android kann sie nicht starten."
+            "Nummer ist im TRAKUNA-Cache gesichert. $clipboardMessage Die konfigurierte Partner-App ($packageName) ist nicht installiert oder Android kann sie nicht starten."
         )
 
     // Contract for an adapted partner app: read EXTRA_TRACKING_NUMBER from the launch intent.
@@ -535,9 +551,9 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
 
     return try {
         context.startActivity(launchIntent)
-        HandoffResult("Sendungsnummer gesichert. Partner-App wird geöffnet. Automatische Übernahme nur bei unterstützten Intent-Extras oder einer passenden Schnittstelle.")
+        HandoffResult("Sendungsnummer ist im TRAKUNA-Cache gesichert. $clipboardMessage Partner-App wird geöffnet. Automatische Übernahme nur bei unterstützten Intent-Extras oder einer passenden Schnittstelle.")
     } catch (_: Exception) {
-        HandoffResult("Nummer ist gesichert und kopiert, aber die Partner-App ließ sich nicht öffnen.")
+        HandoffResult("Nummer ist im TRAKUNA-Cache gesichert. $clipboardMessage Die Partner-App ließ sich nicht öffnen.")
     }
 }
 
