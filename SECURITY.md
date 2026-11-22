@@ -22,7 +22,8 @@
 - Backup-Import ist auf 2 MiB begrenzt und erfordert eine Bestätigung, da der vorhandene lokale Bestand ersetzt wird.
 - Eine Wiederherstellung aus einer gültigen Sicherung ist auch bei beschädigtem lokalem verschlüsseltem Bestand möglich; der Erfolg wird erst nach bestätigtem verschlüsseltem Commit gemeldet.
 - JSON-Backups enthalten Sendungsnummern, Empfänger und Notizen und sind derzeit nicht verschlüsselt; die App weist vor dem Export darauf hin.
-- CSV-Export entschärft Tabellenkalkulations-Formelanfänge.
+- CSV-Export entschärft Tabellenkalkulations-Formelanfänge auch dann, wenn unsichtbare Unicode-Leerzeichen, Zero-Width-Zeichen oder eine BOM vorangestellt sind.
+- Die Partnerübergabe verwendet dieselbe Sendungsnummern-Normalisierung wie das Speichern. Steuerzeichen werden nicht stillschweigend entfernt, sondern durch die Validierung abgelehnt.
 - Partnerübergabe speichert die Sendungsnummer synchron im lokalen Cache, bevor TRAKUNA die andere App startet.
 - Clipboard-Fehler blockieren den lokalen Ablauf nicht; auf Android 13+ wird der Clip als sensibel markiert.
 

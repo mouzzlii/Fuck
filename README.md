@@ -11,6 +11,16 @@ TRAKUNA 1.41 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 ## Neu in Version 1.41
 
+- Die Partnerübergabe verwendet dieselbe Normalisierung wie das Speichern. Eingebettete Steuerzeichen werden nicht mehr stillschweigend entfernt, sondern führen zur Ablehnung.
+- Ein zusätzlicher Unit-Test prüft, dass fehlerhafte Eingaben nicht durch das Entfernen eines eingebetteten Steuerzeichens in eine andere gültige Sendungsnummer umgewandelt werden.
+
+## Neu in Version 1.40
+
+- CSV-Exporte erkennen Formel-Einstiege jetzt auch dann, wenn vor dem Zeichen unsichtbare Unicode-Leerzeichen, Zero-Width-Zeichen oder eine BOM stehen. Solche Zellen werden ebenfalls als Text markiert.
+- Zusätzliche Tests prüfen Tabulator-, BOM- und Zero-Width-Präfixe.
+
+## Neu in Version 1.39
+
 - Die Sendungsnummer wird bei der Übergabe an eine Partner-App mit derselben strengen Regel geprüft wie beim Speichern und Scannen. Unicode-Zeichen, die normalen Buchstaben oder Zahlen nur ähnlich sehen, werden auch bei der Übergabe abgelehnt.
 - Die bisherige doppelte, abweichende Übergabe-Prüfung wurde entfernt.
 

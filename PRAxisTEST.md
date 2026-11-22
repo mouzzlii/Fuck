@@ -38,6 +38,8 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 - Zebra-/DataWedge-Broadcast ohne Sendungsnummern-Extra oder mit einem falsch typisierten Extra prüfen: Der Scan wird ignoriert und TRAKUNA bleibt bedienbar.
 
 - Ungültige oder zu kurze Sendungsnummern dürfen nicht als neuer Vorgang gespeichert werden.
+- Eine manuell eingegebene Sendungsnummer mit eingebetteten Steuerzeichen (z. B. NUL) muss abgelehnt werden; die Zeichen dürfen nicht stillschweigend entfernt und dadurch in eine andere Nummer umgewandelt werden.
+- Sendungsnummern mit Unicode-Zeichen, die normalen Buchstaben oder Zahlen nur ähnlich sehen, müssen auch bei der Partnerübergabe abgelehnt werden.
 - Derselbe offene Vorgang darf nicht versehentlich mehrfach angelegt werden; die App muss klar „bereits vorhanden“ melden und darf nicht „gespeichert“ vortäuschen.
 - Löschvorgänge müssen eine Bestätigung verlangen.
 - Kamera-Ausfall darf die manuelle Eingabe nicht blockieren.
