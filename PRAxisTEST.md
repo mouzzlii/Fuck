@@ -62,3 +62,13 @@ Ein grüner GitHub-Build bestätigt nur, dass Tests und APK-Erstellung im CI-Lau
 - Zentrale Datenhaltung, Benutzerkonten, Rollen und Audit-Protokoll, falls mehrere Geräte oder Mitarbeiter zusammenarbeiten
 - Backup- und Wiederherstellungsverfahren
 - Praxistest und Freigabe durch den Paketshop-Betreiber
+
+
+## Datensicherung und Wiederherstellung
+1. In „Paketshop-Sendungen verwalten“ eine vollständige JSON-Datensicherung erstellen und in einem sicheren Speicherort ablegen.
+2. Prüfen, dass die Datei `TRAKUNA-Sicherung.json` vorhanden und nicht leer ist.
+3. Für eine Wiederherstellung die Sicherungsdatei auswählen. TRAKUNA prüft Format, Version, Einträge und Höchstmenge.
+4. Vor dem Ersetzen des lokalen Bestands erscheint eine Bestätigungsabfrage. Ohne Bestätigung bleiben die aktuellen Daten unverändert.
+5. Nach Wiederherstellung die angezeigte Anzahl mit dem erwarteten Datenbestand vergleichen.
+
+**Wichtig:** Die Sicherungsdatei enthält personenbezogene Daten im Klartext. Nur auf einem geschützten Speicherort ablegen und nicht unverschlüsselt weitergeben.
