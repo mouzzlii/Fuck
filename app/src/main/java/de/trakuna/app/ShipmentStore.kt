@@ -41,6 +41,16 @@ sealed class ShipmentUpdate {
     data class Rejected(val reason: String) : ShipmentUpdate()
 }
 
+sealed class BackupValidation {
+    data class Valid(val recordCount: Int) : BackupValidation()
+    data class Invalid(val reason: String) : BackupValidation()
+}
+
+sealed class BackupRestoreResult {
+    data class Restored(val recordCount: Int) : BackupRestoreResult()
+    data class Rejected(val reason: String) : BackupRestoreResult()
+}
+
 /**
  * Local, bounded store. Updates are serialized through SharedPreferences.apply().
  * A production multi-device parcel-shop deployment will need a secured backend.
@@ -143,6 +153,98 @@ class ShipmentStore(context: Context) {
     }
 
     @Synchronized
+    fun exportBackupJson(): String {
+        val records = all()
+        return JSONObject().apply {
+            put("format", BACKUP_FORMAT)
+            put("schemaVersion", BACKUP_SCHEMA_VERSION)
+            put("exportedAt", System.currentTimeMillis())
+            put("recordCount", records.size)
+            put("records", JSONArray().apply {
+                records.forEach { record ->
+                    put(JSONObject().apply {
+                        put("id", record.id)
+                        put("trackingNumber", record.trackingNumber)
+                        put("carrier", record.carrier)
+                        put("flow", record.flow.name)
+                        put("status", record.status.name)
+                        put("createdAt", record.createdAt)
+                        put("updatedAt", record.updatedAt)
+                        put("recipient", record.recipient)
+                        put("note", record.note)
+                    })
+                }
+            })
+        }.toString(2)
+    }
+
+    @Synchronized
+    fun validateBackup(raw: String): BackupValidation {
+        val parsed = runCatching {
+            val root = JSONObject(raw)
+            require(root.optString("format") == BACKUP_FORMAT) { "Datei ist keine TRAKUNA-Sicherung." }
+            require(root.optInt("schemaVersion", -1) == BACKUP_SCHEMA_VERSION) { "Sicherungsversion wird nicht unterstützt." }
+            val array = root.optJSONArray("records") ?: error("Sicherungsdatei enthält keine Vorgangsliste.")
+            require(array.length() <= MAX_RECORDS) { "Sicherung enthält mehr als $MAX_RECORDS Vorgänge." }
+            val records = buildList {
+                for (index in 0 until array.length()) {
+                    val item = array.optJSONObject(index) ?: error("Eintrag ${index + 1} ist beschädigt.")
+                    val record = decode(item) ?: error("Eintrag ${index + 1} ist unvollständig oder ungültig.")
+                    require(record.id.isNotBlank() && record.id.length <= 80) { "Ungültige Vorgangs-ID in Eintrag ${index + 1}." }
+                    require(ShipmentRules.isValidTrackingNumber(record.trackingNumber)) { "Ungültige Sendungsnummer in Eintrag ${index + 1}." }
+                    require(record.carrier.length <= 80 && record.recipient.length <= 100 && record.note.length <= 500) { "Textfeld zu lang in Eintrag ${index + 1}." }
+                    require(record.createdAt > 0 && record.updatedAt >= record.createdAt) { "Ungültiger Zeitstempel in Eintrag ${index + 1}." }
+                    add(record)
+                }
+            }
+            require(records.map { it.id }.distinct().size == records.size) { "Sicherung enthält doppelte Vorgangs-IDs." }
+            records
+        }
+        return if (parsed.isSuccess) {
+            BackupValidation.Valid(parsed.getOrThrow().size)
+        } else {
+            BackupValidation.Invalid(parsed.exceptionOrNull()?.message ?: "Sicherungsdatei konnte nicht gelesen werden.")
+        }
+    }
+
+    @Synchronized
+    fun restoreBackup(raw: String): BackupRestoreResult {
+        val validation = validateBackup(raw)
+        if (validation !is BackupValidation.Valid) {
+            return BackupRestoreResult.Rejected((validation as BackupValidation.Invalid).reason)
+        }
+        val root = runCatching { JSONObject(raw) }.getOrElse {
+            return BackupRestoreResult.Rejected("Sicherungsdatei konnte nicht gelesen werden.")
+        }
+        val array = root.optJSONArray("records") ?: return BackupRestoreResult.Rejected("Vorgangsliste fehlt.")
+        val records = buildList {
+            for (index in 0 until array.length()) {
+                decode(array.optJSONObject(index) ?: return BackupRestoreResult.Rejected("Eintrag beschädigt."))?.let(::add)
+            }
+        }
+        val encoded = encodeRecords(records)
+        val saved = prefs.edit().putString(KEY_RECORDS, encoded).commit()
+        return if (saved) BackupRestoreResult.Restored(records.size)
+        else BackupRestoreResult.Rejected("Daten konnten nicht dauerhaft gespeichert werden. Vorhandene Daten wurden nicht absichtlich gelöscht.")
+    }
+
+    private fun encodeRecords(records: List<ShipmentRecord>): String = JSONArray().apply {
+        records.sortedByDescending { it.updatedAt }.forEach { record ->
+            put(JSONObject().apply {
+                put("id", record.id)
+                put("trackingNumber", record.trackingNumber)
+                put("carrier", record.carrier)
+                put("flow", record.flow.name)
+                put("status", record.status.name)
+                put("createdAt", record.createdAt)
+                put("updatedAt", record.updatedAt)
+                put("recipient", record.recipient)
+                put("note", record.note)
+            })
+        }
+    }.toString()
+
+    @Synchronized
     fun exportCsv(): String {
         fun cell(value: String): String = "\"" + value.replace("\"", "\"\"") + "\""
         val header = listOf("ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status", "Empfänger", "Notiz", "Erstellt", "Aktualisiert")
@@ -163,21 +265,7 @@ class ShipmentStore(context: Context) {
     }
 
     private fun persist(records: List<ShipmentRecord>) {
-        val array = JSONArray()
-        records.sortedByDescending { it.updatedAt }.forEach { record ->
-            array.put(JSONObject().apply {
-                put("id", record.id)
-                put("trackingNumber", record.trackingNumber)
-                put("carrier", record.carrier)
-                put("flow", record.flow.name)
-                put("status", record.status.name)
-                put("createdAt", record.createdAt)
-                put("updatedAt", record.updatedAt)
-                put("recipient", record.recipient)
-                put("note", record.note)
-            })
-        }
-        prefs.edit().putString(KEY_RECORDS, array.toString()).apply()
+        prefs.edit().putString(KEY_RECORDS, encodeRecords(records)).apply()
     }
 
     private fun decode(item: JSONObject): ShipmentRecord? = runCatching {
@@ -195,6 +283,8 @@ class ShipmentStore(context: Context) {
     }.getOrNull()
 
     companion object {
+        private const val BACKUP_FORMAT = "TRAKUNA_BACKUP"
+        private const val BACKUP_SCHEMA_VERSION = 1
         private const val PREFS = "trakuna_shipments"
         private const val KEY_RECORDS = "records_v1"
         const val MAX_RECORDS = 500
