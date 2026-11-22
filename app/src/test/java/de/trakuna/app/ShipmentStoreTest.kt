@@ -246,4 +246,32 @@ class ShipmentStoreTest {
         assertEquals(null, ShipmentRules.extractTrackingNumber("x".repeat(4097)))
         assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/track?id=%ZZ"))
     }
+
+    @Test
+    fun scanParserContinuesAfterInvalidRecognizedQueryParameter() {
+        assertEquals(
+            "AB123456789AT",
+            ShipmentRules.extractTrackingNumber(
+                "https://example.test/track?tracking=invalid&sendungsnummer=AB123456789AT"
+            )
+        )
+    }
+
+    @Test
+    fun scanParserDecodesPercentEncodedTrackingNumbersAndAIMQrPrefix() {
+        assertEquals(
+            "AB123456789AT",
+            ShipmentRules.extractTrackingNumber("https://example.test/track?tracking=AB123456789%41T")
+        )
+        assertEquals(
+            "AB123456789AT",
+            ShipmentRules.extractTrackingNumber("]Q3AB123456789AT")
+        )
+    }
+
+    @Test
+    fun scanParserDoesNotAcceptUnicodeLookalikesOrNonHttpUrlSchemes() {
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/track?id=ＡＢ123456789AT"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("javascript://example.test/track?id=AB123456789AT"))
+    }
 }
