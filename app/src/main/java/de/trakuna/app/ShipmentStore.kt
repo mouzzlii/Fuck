@@ -308,9 +308,9 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun restoreBackup(raw: String): BackupRestoreResult {
-        initializationError?.let {
-            return BackupRestoreResult.Rejected("Lokaler Speicher ist nicht initialisiert. Vorhandene Daten werden nicht überschrieben.")
-        }
+        // A validated backup is the recovery path when the local encrypted store is damaged.
+        // The user must explicitly confirm replacement in the UI; failed encryption/commit
+        // leaves the restore operation rejected rather than claiming recovery.
         val validation = validateBackup(raw)
         if (validation !is BackupValidation.Valid) {
             return BackupRestoreResult.Rejected((validation as BackupValidation.Invalid).reason)

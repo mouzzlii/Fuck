@@ -309,7 +309,7 @@ class MainActivity : ComponentActivity() {
                                         }
                                         OutlinedButton(onClick = {
                                             restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
-                                        }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
+                                        }, enabled = true, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
                                         if (shipmentStorageIssue != null) {
                                             Text("Die gespeicherten Vorgänge werden nicht als leer angezeigt, weil der Speicher fehlerhaft gelesen wurde.", color = MaterialTheme.colorScheme.error)
                                         } else if (shipmentRecords.isEmpty()) {
