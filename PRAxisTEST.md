@@ -32,7 +32,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 ## 3. Sicherheits- und Fehlerprüfungen
 
 - Ungültige oder zu kurze Sendungsnummern dürfen nicht als neuer Vorgang gespeichert werden.
-- Derselbe offene Vorgang darf nicht versehentlich mehrfach angelegt werden.
+- Derselbe offene Vorgang darf nicht versehentlich mehrfach angelegt werden; die App muss klar „bereits vorhanden“ melden und darf nicht „gespeichert“ vortäuschen.
 - Löschvorgänge müssen eine Bestätigung verlangen.
 - Kamera-Ausfall darf die manuelle Eingabe nicht blockieren.
 - Keine Passwörter, Zugangsdaten oder geheimen API-Schlüssel in Testnotizen eintragen.
