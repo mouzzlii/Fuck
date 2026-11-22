@@ -72,6 +72,6 @@ Für **jeden** Paketdienst und jede Betriebssoftware ist ein eigener Nachweis er
 
 **Status:** NICHT FREIGEGEBEN, solange ein für den konkreten Einsatz erforderlicher Punkt offen ist.
 
-**Begründung des aktuellen Stands:** TRAKUNA 1.41 ist eine lokale Android-Testversion. Sie besitzt keine zentrale Benutzerverwaltung oder Gerätesynchronisierung und keine nachgewiesene Carrier-Buchungsintegration. Reale Zebra-/Etikettentests, unabhängige Sicherheitsprüfung und Produktionssignatur sind nicht belegt.
+**Begründung des aktuellen Stands:** TRAKUNA 1.42 ist eine lokale Android-Testversion. Sie besitzt keine zentrale Benutzerverwaltung oder Gerätesynchronisierung und keine nachgewiesene Carrier-Buchungsintegration. Reale Zebra-/Etikettentests, unabhängige Sicherheitsprüfung und Produktionssignatur sind nicht belegt.
 
 Diese Checkliste kann keine Anbieterfreigabe, rechtliche Prüfung, Hardwareprüfung oder Sicherheitsprüfung ersetzen.
