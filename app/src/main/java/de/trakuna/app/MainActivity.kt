@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
                 Surface(Modifier.fillMaxSize(), color = Color(0xFFF3F6F3)) {
                     Column(
-                        Modifier.fillMaxSize().padding(20.dp),
+                        Modifier.fillMaxSize().padding(20.dp).verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Spacer(Modifier.height(24.dp))
@@ -249,9 +249,9 @@ class MainActivity : ComponentActivity() {
                                 confirmButton = { TextButton(onClick = { showPartnerPicker = false }) { Text("Schließen") } }
                             )
                         }
-                        Spacer(Modifier.weight(1f))
+                        Spacer(Modifier.height(16.dp))
                         Text(
-                            "Die letzte Sendungsnummer bleibt lokal gespeichert.",
+                            "Sendungsnummern werden lokal auf diesem Gerät gespeichert. Eine automatische Übernahme in Partner-Software klappt nur, wenn diese die übergebenen Intent-Extras oder eine passende Schnittstelle unterstützt.",
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.DarkGray
                         )
@@ -356,7 +356,7 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
 
     return try {
         context.startActivity(launchIntent)
-        HandoffResult("Sendungsnummer gesichert. Partner-App wird geöffnet.")
+        HandoffResult("Sendungsnummer gesichert. Partner-App wird geöffnet. Automatische Übernahme nur bei unterstützten Intent-Extras oder einer passenden Schnittstelle.")
     } catch (_: Exception) {
         HandoffResult("Nummer ist gesichert und kopiert, aber die Partner-App ließ sich nicht öffnen.")
     }
