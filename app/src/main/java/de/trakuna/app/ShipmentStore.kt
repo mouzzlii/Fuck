@@ -205,7 +205,7 @@ class ShipmentStore(context: Context) {
 /** Pure parcel workflow rules shared by the Android store and JVM unit tests. */
 object ShipmentRules {
     fun normalizeTrackingNumber(raw: String): String =
-        raw.trim().replace(Regex("\\\\s+"), "")
+        raw.trim().replace(Regex("\\s+"), "")
 
     fun isValidTrackingNumber(value: String): Boolean =
         value.length in 6..40 && value.any(Char::isDigit) &&
