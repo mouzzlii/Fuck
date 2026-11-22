@@ -45,6 +45,18 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun carrierHintsRecognizeKnownFormatsAndLeaveAmbiguousValuesUnknown() {
+        assertEquals("UPS", ShipmentRules.identifyCarrier("1z999aa10123456784"))
+        assertEquals("Österreichische Post", ShipmentRules.identifyCarrier("AB123456789AT"))
+        assertEquals("Österreichische Post", ShipmentRules.identifyCarrier("1234567890123"))
+        assertEquals("DPD", ShipmentRules.identifyCarrier("12345678901234"))
+        assertEquals("GLS", ShipmentRules.identifyCarrier("12345678901"))
+        assertEquals("DHL Paket", ShipmentRules.identifyCarrier("JVGL1234567890"))
+        assertEquals(null, ShipmentRules.identifyCarrier("ABC1234567"))
+        assertEquals(null, ShipmentRules.identifyCarrier("123456789012345"))
+    }
+
+    @Test
     fun incomingShipmentFollowsPickupLifecycle() {
         assertEquals(
             ShipmentStatus.RECEIVED_BY_SHOP,
