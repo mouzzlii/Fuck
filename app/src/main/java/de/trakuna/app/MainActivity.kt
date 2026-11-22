@@ -70,6 +70,8 @@ class MainActivity : ComponentActivity() {
             var carrierOverride by remember { mutableStateOf("") }
             var shipmentNote by remember { mutableStateOf("") }
             var shipmentSearch by remember { mutableStateOf("") }
+            var visibleRecordLimit by remember { mutableStateOf(100) }
+            var pendingAdvance by remember { mutableStateOf<ShipmentRecord?>(null) }
             var pendingDelete by remember { mutableStateOf<ShipmentRecord?>(null) }
             var editingRecord by remember { mutableStateOf<ShipmentRecord?>(null) }
             var editRecipient by remember { mutableStateOf("") }
@@ -298,7 +300,7 @@ class MainActivity : ComponentActivity() {
                                         } else {
                                             Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $shipmentStorageIssue. Es werden keine Änderungen oder Sicherungen vorgenommen. Bitte stelle eine vertrauenswürdige Sicherung wieder her oder wende dich an den Support.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                                         }
-                                        OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                                        OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it; visibleRecordLimit = 100 }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedButton(onClick = {
                                             val exported = runCatching { ShipmentStore(context).exportCsv() }
                                             if (exported.isSuccess) {
@@ -325,7 +327,8 @@ class MainActivity : ComponentActivity() {
                                             if (filteredRecords.isEmpty()) {
                                                 Text("Keine passenden Sendungen gefunden.")
                                             }
-                                            filteredRecords.take(100).forEach { record ->
+                                            val visibleRecords = filteredRecords.take(visibleRecordLimit)
+                                            visibleRecords.forEach { record ->
                                                 Card(Modifier.fillMaxWidth()) {
                                                     Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                                         Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
@@ -336,16 +339,20 @@ class MainActivity : ComponentActivity() {
                                                         val canAdvance = record.status != ShipmentStatus.HANDED_TO_CUSTOMER &&
                                                             record.status != ShipmentStatus.HANDED_TO_CARRIER
                                                         if (canAdvance && shipmentStorageIssue == null) {
-                                                            TextButton(onClick = {
-                                                                val result = ShipmentStore(context).advance(record.id)
-                                                                status = shipmentResultText(result)
-                                                                shipmentRevision++
-                                                            }) { Text(shipmentNextAction(record.flow, record.status)) }
+                                                            TextButton(onClick = { pendingAdvance = record }) {
+                                                                Text(shipmentNextAction(record.flow, record.status))
+                                                            }
                                                         }
                                                         TextButton(enabled = shipmentStorageIssue == null, onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
                                                         TextButton(enabled = shipmentStorageIssue == null, onClick = { pendingDelete = record }) { Text("Vorgang löschen", color = MaterialTheme.colorScheme.error) }
                                                     }
                                                 }
+                                            }
+                                            if (filteredRecords.size > visibleRecords.size) {
+                                                TextButton(
+                                                    onClick = { visibleRecordLimit = (visibleRecordLimit + 100).coerceAtMost(filteredRecords.size) },
+                                                    modifier = Modifier.fillMaxWidth()
+                                                ) { Text("Weitere ${filteredRecords.size - visibleRecords.size} Treffer anzeigen") }
                                             }
                                         }
                                     }
@@ -420,6 +427,35 @@ class MainActivity : ComponentActivity() {
                                     }) { Text("Speichern") }
                                 },
                                 dismissButton = { TextButton(onClick = { editingRecord = null }) { Text("Abbrechen") } }
+                            )
+                        }
+                        pendingAdvance?.let { record ->
+                            val nextStatus = ShipmentRules.nextStatus(record.flow, record.status)
+                            val isPhysicalHandover = nextStatus == ShipmentStatus.HANDED_TO_CUSTOMER ||
+                                nextStatus == ShipmentStatus.HANDED_TO_CARRIER
+                            AlertDialog(
+                                onDismissRequest = { pendingAdvance = null },
+                                title = { Text("Statusänderung bestätigen?") },
+                                text = {
+                                    Text(
+                                        if (isPhysicalHandover) {
+                                            "Soll ${record.trackingNumber} wirklich als ${nextStatus?.let { shipmentStatusLabel(it) }} markiert werden? Bitte erst bestätigen, wenn die Sendung tatsächlich übergeben wurde."
+                                        } else {
+                                            "Soll ${record.trackingNumber} wirklich als ${nextStatus?.let { shipmentStatusLabel(it) }} markiert werden?"
+                                        }
+                                    )
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        val result = ShipmentStore(context).advance(record.id)
+                                        status = shipmentResultText(result)
+                                        shipmentRevision++
+                                        pendingAdvance = null
+                                    }) { Text("Bestätigen") }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = { pendingAdvance = null }) { Text("Abbrechen") }
+                                }
                             )
                         }
                         pendingDelete?.let { record ->
