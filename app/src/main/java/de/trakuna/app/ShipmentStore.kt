@@ -335,6 +335,25 @@ object ShipmentRules {
         value.length in 6..40 && value.any(Char::isDigit) &&
             value.all { it.isLetterOrDigit() || it == '-' }
 
+    /**
+     * Best-effort carrier hint only. These patterns are not authoritative and must
+     * never be used to select a paid shipping product or confirm carrier acceptance.
+     */
+    fun identifyCarrier(raw: String): String? {
+        val value = normalizeTrackingNumber(raw).uppercase()
+        return when {
+            Regex("^1Z[A-Z0-9]{16}$").matches(value) -> "UPS"
+            Regex("^[A-Z]{2}[0-9]{9}AT$").matches(value) -> "Österreichische Post"
+            value.startsWith("JVGL") || value.startsWith("JJD") -> "DHL Paket"
+            value.startsWith("JD") && value.length in 12..30 -> "DHL Paket"
+            value.matches(Regex("^[0-9]{13}$")) -> "Österreichische Post"
+            value.matches(Regex("^[0-9]{14}$")) -> "DPD"
+            value.matches(Regex("^[0-9]{11,12}$")) -> "GLS"
+            value.matches(Regex("^[0-9]{10}$")) || value.matches(Regex("^[0-9]{20}$")) -> "DHL Paket"
+            else -> null
+        }
+    }
+
     fun initialStatus(flow: ShipmentFlow): ShipmentStatus = when (flow) {
         ShipmentFlow.INCOMING_FOR_CUSTOMER -> ShipmentStatus.RECEIVED_BY_SHOP
         ShipmentFlow.OUTGOING_FROM_CUSTOMER -> ShipmentStatus.ACCEPTED_FROM_CUSTOMER
