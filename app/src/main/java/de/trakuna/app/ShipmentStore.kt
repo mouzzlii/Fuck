@@ -113,7 +113,7 @@ class ShipmentStore(context: Context) {
         val record = ShipmentRecord(
             id = UUID.randomUUID().toString(),
             trackingNumber = number,
-            carrier = carrier.orEmpty(),
+            carrier = ShipmentRules.normalizeCarrierLabel(carrier.orEmpty()),
             flow = flow,
             status = initialStatus,
             createdAt = now,
@@ -330,6 +330,8 @@ object ShipmentRules {
 
     fun normalizeTrackingNumber(raw: String): String =
         raw.trim().replace(Regex("\\s+"), "")
+
+    fun normalizeCarrierLabel(raw: String): String = raw.trim().take(80)
 
     fun isValidTrackingNumber(value: String): Boolean =
         value.length in 6..40 && value.any(Char::isDigit) &&
