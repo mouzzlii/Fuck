@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             var pendingCsv by remember { mutableStateOf<String?>(null) }
             var pendingBackupJson by remember { mutableStateOf<String?>(null) }
+            var confirmBackupExport by remember { mutableStateOf(false) }
             var pendingBackupImport by remember { mutableStateOf<String?>(null) }
             var pendingBackupCount by remember { mutableStateOf(0) }
             val backupDocumentLauncher = rememberLauncherForActivityResult(
@@ -258,15 +259,9 @@ class MainActivity : ComponentActivity() {
                                                 status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
                                             }
                                         }, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
-                                        OutlinedButton(onClick = {
-                                            val exported = runCatching { ShipmentStore(context).exportBackupJson() }
-                                            if (exported.isSuccess) {
-                                                pendingBackupJson = exported.getOrThrow()
-                                                backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
-                                            } else {
-                                                status = exported.exceptionOrNull()?.message ?: "Datensicherung fehlgeschlagen."
-                                            }
-                                        }, modifier = Modifier.fillMaxWidth()) { Text("Vollständige Datensicherung erstellen") }
+                                        OutlinedButton(onClick = { confirmBackupExport = true }, modifier = Modifier.fillMaxWidth()) {
+                                            Text("Vollständige Datensicherung erstellen")
+                                        }
                                         OutlinedButton(onClick = {
                                             restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
                                         }, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
@@ -308,6 +303,30 @@ class MainActivity : ComponentActivity() {
                                 },
                                 confirmButton = {
                                     TextButton(onClick = { showShipmentLedger = false }) { Text("Schließen") }
+                                }
+                            )
+                        }
+                        if (confirmBackupExport) {
+                            AlertDialog(
+                                onDismissRequest = { confirmBackupExport = false },
+                                title = { Text("Datensicherung erstellen?") },
+                                text = {
+                                    Text("Die Sicherungsdatei enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird unverschlüsselt gespeichert. Wähle einen vertrauenswürdigen Speicherort und gib die Datei nicht weiter.")
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        confirmBackupExport = false
+                                        val exported = runCatching { ShipmentStore(context).exportBackupJson() }
+                                        if (exported.isSuccess) {
+                                            pendingBackupJson = exported.getOrThrow()
+                                            backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
+                                        } else {
+                                            status = exported.exceptionOrNull()?.message ?: "Datensicherung fehlgeschlagen."
+                                        }
+                                    }) { Text("Sicherung erstellen") }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = { confirmBackupExport = false }) { Text("Abbrechen") }
                                 }
                             )
                         }
