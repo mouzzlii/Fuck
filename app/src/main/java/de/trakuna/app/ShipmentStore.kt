@@ -583,15 +583,47 @@ object ShipmentRules {
             record.history.size <= 100 &&
             record.history.zipWithNext().all { (a, b) -> b.at >= a.at } &&
             record.history.all { it.at in record.createdAt..record.updatedAt } &&
-            record.history.all { event ->
-                when (event.type) {
-                    ShipmentEventType.CREATED -> event.fromStatus == null && event.toStatus != null && isStatusValidForFlow(record.flow, event.toStatus)
-                    ShipmentEventType.STATUS_CHANGED -> event.fromStatus != null && event.toStatus != null &&
-                        isStatusValidForFlow(record.flow, event.fromStatus) && isStatusValidForFlow(record.flow, event.toStatus)
-                    ShipmentEventType.DETAILS_UPDATED -> event.fromStatus == null && event.toStatus == null
-                }
-            } &&
+            isValidHistory(record) &&
             isStatusValidForFlow(record.flow, record.status)
+
+    private fun isValidHistory(record: ShipmentRecord): Boolean {
+        val history = record.history
+        if (history.isEmpty()) return true
+
+        val createdEvents = history.withIndex().filter { it.value.type == ShipmentEventType.CREATED }
+        if (createdEvents.size > 1) return false
+        if (createdEvents.isNotEmpty()) {
+            val created = createdEvents.single()
+            if (created.index != 0 || created.value.at != record.createdAt ||
+                created.value.fromStatus != null ||
+                created.value.toStatus != initialStatus(record.flow)
+            ) return false
+        }
+
+        var knownStatus: ShipmentStatus? = null
+        history.forEachIndexed { index, event ->
+            when (event.type) {
+                ShipmentEventType.CREATED -> {
+                    if (index != 0 || knownStatus != null) return false
+                    knownStatus = event.toStatus
+                }
+                ShipmentEventType.STATUS_CHANGED -> {
+                    val from = event.fromStatus ?: return false
+                    val to = event.toStatus ?: return false
+                    if (!isStatusValidForFlow(record.flow, from) ||
+                        !isStatusValidForFlow(record.flow, to) ||
+                        nextStatus(record.flow, from) != to ||
+                        (knownStatus != null && knownStatus != from)
+                    ) return false
+                    knownStatus = to
+                }
+                ShipmentEventType.DETAILS_UPDATED -> {
+                    if (event.fromStatus != null || event.toStatus != null) return false
+                }
+            }
+        }
+        return knownStatus == null || knownStatus == record.status
+    }
 
     fun normalizeTrackingNumber(raw: String): String =
         raw.trim().replace(Regex("\\s+"), "")

@@ -42,6 +42,23 @@ class ShipmentStoreTest {
         assertFalse(ShipmentRules.isValidRecord(base.copy(history = base.history.reversed())))
         assertFalse(ShipmentRules.isValidRecord(base.copy(history = base.history + ShipmentEvent(301L, ShipmentEventType.DETAILS_UPDATED))))
         assertFalse(ShipmentRules.isValidRecord(base.copy(history = base.history + ShipmentEvent(250L, ShipmentEventType.CREATED, toStatus = ShipmentStatus.READY_FOR_PICKUP))))
+        assertFalse(ShipmentRules.isValidRecord(base.copy(history = base.history + ShipmentEvent(250L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.RECEIVED_BY_SHOP, ShipmentStatus.HANDED_TO_CUSTOMER))))
+        assertFalse(ShipmentRules.isValidRecord(base.copy(status = ShipmentStatus.RECEIVED_BY_SHOP)))
+    }
+
+    @Test
+    fun shipmentHistoryAllowsAValidCappedTimelineWithoutOriginalCreationEvent() {
+        val capped = ShipmentRecord(
+            id = "history-capped", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER, status = ShipmentStatus.HANDED_TO_CUSTOMER,
+            createdAt = 100L, updatedAt = 400L,
+            history = listOf(
+                ShipmentEvent(200L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.RECEIVED_BY_SHOP, ShipmentStatus.READY_FOR_PICKUP),
+                ShipmentEvent(300L, ShipmentEventType.DETAILS_UPDATED),
+                ShipmentEvent(400L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.READY_FOR_PICKUP, ShipmentStatus.HANDED_TO_CUSTOMER)
+            )
+        )
+        assertTrue(ShipmentRules.isValidRecord(capped))
     }
 
     @Test
