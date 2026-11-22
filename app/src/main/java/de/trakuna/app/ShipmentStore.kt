@@ -263,14 +263,12 @@ class ShipmentStore(context: Context) {
         }.toMutableList()
         val index = records.indexOfFirst { it.id == id }
         if (index < 0) return ShipmentUpdate.Rejected("Sendung wurde nicht gefunden.")
+        val changedAt = ShipmentRules.nextUpdateTimestamp(records[index].updatedAt, System.currentTimeMillis())
         val updated = records[index].copy(
             recipient = recipient.trim().take(100),
             note = note.trim().take(500),
-            updatedAt = ShipmentRules.nextUpdateTimestamp(records[index].updatedAt, System.currentTimeMillis()),
-            history = (records[index].history + ShipmentEvent(
-                ShipmentRules.nextUpdateTimestamp(records[index].updatedAt, System.currentTimeMillis()),
-                ShipmentEventType.DETAILS_UPDATED
-            )).takeLast(MAX_HISTORY_EVENTS)
+            updatedAt = changedAt,
+            history = (records[index].history + ShipmentEvent(changedAt, ShipmentEventType.DETAILS_UPDATED)).takeLast(MAX_HISTORY_EVENTS)
         )
         records[index] = updated
         if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte den Vorgang erneut öffnen und prüfen.")
@@ -443,7 +441,7 @@ class ShipmentStore(context: Context) {
                 add(ShipmentEvent(
                     at = item.getLong("at"),
                     type = ShipmentEventType.valueOf(item.getString("type")),
-                    fromStatus = item.optString("fromStatus").takeIf { it.isNotBlank() }?.let(ShipmentStatus::valueOf),
+                    fromStatus = item.optString("fromStatus").takeIf { it.isNotBlank() }?.let { ShipmentStatus.valueOf(it) },
                     toStatus = item.optString("toStatus").takeIf { it.isNotBlank() }?.let(ShipmentStatus::valueOf)
                 ))
             }
@@ -587,7 +585,7 @@ object ShipmentRules {
             record.history.all { it.at in record.createdAt..record.updatedAt } &&
             record.history.all { event ->
                 when (event.type) {
-                    ShipmentEventType.CREATED -> event.fromStatus == null && event.toStatus == record.status
+                    ShipmentEventType.CREATED -> event.fromStatus == null && event.toStatus != null && isStatusValidForFlow(record.flow, event.toStatus)
                     ShipmentEventType.STATUS_CHANGED -> event.fromStatus != null && event.toStatus != null &&
                         isStatusValidForFlow(record.flow, event.fromStatus) && isStatusValidForFlow(record.flow, event.toStatus)
                     ShipmentEventType.DETAILS_UPDATED -> event.fromStatus == null && event.toStatus == null
