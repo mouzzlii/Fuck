@@ -5,6 +5,8 @@ import android.content.ClipData
 import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -50,6 +52,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 private val Forest = Color(0xFF174B3A)
 private const val CACHE_PREFS = "trakuna_handoff"
 private const val CACHE_KEY = "tracking_number"
+private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
+private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +76,32 @@ class MainActivity : ComponentActivity() {
             var editRecipient by remember { mutableStateOf("") }
             var editNote by remember { mutableStateOf("") }
             val context = LocalContext.current
+            DisposableEffect(context) {
+                val receiver = object : BroadcastReceiver() {
+                    override fun onReceive(context: Context?, intent: Intent?) {
+                        if (intent?.action != DATAWEDGE_ACTION) return
+                        val raw = intent.getStringExtra(DATAWEDGE_DATA_EXTRA)
+                            ?: intent.getStringExtra("com.symbol.datawedge.decode_data")
+                                ?.let { bytes -> bytes.toString() }
+                            ?: return
+                        val scanned = normalizeTrackingNumber(raw)
+                        if (scanned.length !in 6..40 || scanned.any { !it.isLetterOrDigit() }) {
+                            status = "Zebra-Scan empfangen, aber das Format ist ungültig. Bitte Sendungsnummer prüfen."
+                            return
+                        }
+                        number = scanned
+                        status = "Zebra-Scan empfangen. Sendungsnummer bitte prüfen und den nächsten Schritt auswählen."
+                    }
+                }
+                val filter = IntentFilter(DATAWEDGE_ACTION)
+                if (Build.VERSION.SDK_INT >= 33) {
+                    context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED)
+                } else {
+                    @Suppress("DEPRECATION")
+                    context.registerReceiver(receiver, filter)
+                }
+                onDispose { runCatching { context.unregisterReceiver(receiver) } }
+            }
             var pendingCsv by remember { mutableStateOf<String?>(null) }
             var pendingBackupJson by remember { mutableStateOf<String?>(null) }
             var confirmBackupExport by remember { mutableStateOf(false) }
