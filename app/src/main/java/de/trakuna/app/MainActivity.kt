@@ -132,6 +132,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
             val shipmentRecords = remember(shipmentRevision) { ShipmentStore(context).all() }
+            val shipmentStorageIssue = remember(shipmentRevision) { ShipmentStore(context).storageError() }
 
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
                 Surface(Modifier.fillMaxSize(), color = Color(0xFFF3F6F3)) {
@@ -242,9 +243,10 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Retoure annehmen") }
                                         HorizontalDivider()
                                         Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
-                                        Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} möglichen Einträgen belegt", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                        ShipmentStore(context).storageError()?.let { storageIssue ->
-                                            Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $storageIssue. Es werden keine Änderungen oder Sicherungen vorgenommen.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                                        if (shipmentStorageIssue == null) {
+                                            Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} möglichen Einträgen belegt", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        } else {
+                                            Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $shipmentStorageIssue. Es werden keine Änderungen oder Sicherungen vorgenommen. Bitte stelle eine vertrauenswürdige Sicherung wieder her oder wende dich an den Support.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                                         }
                                         OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedButton(onClick = {
@@ -268,7 +270,9 @@ class MainActivity : ComponentActivity() {
                                         OutlinedButton(onClick = {
                                             restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
                                         }, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
-                                        if (shipmentRecords.isEmpty()) {
+                                        if (shipmentStorageIssue != null) {
+                                            Text("Die gespeicherten Vorgänge werden nicht als leer angezeigt, weil der Speicher fehlerhaft gelesen wurde.", color = MaterialTheme.colorScheme.error)
+                                        } else if (shipmentRecords.isEmpty()) {
                                             Text("Noch keine Paketshop-Vorgänge erfasst.")
                                         } else {
                                             val filteredRecords = shipmentRecords.filter { record ->
