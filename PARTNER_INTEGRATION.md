@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: App-Version 1.42
+Stand: App-Version 1.43
 
 ## Zweck
 
@@ -90,7 +90,7 @@ Mindestanforderungen:
 - Testzugang und freigegebene Testsendungen.
 - Beschreibung, welche Paketshop-Aktionen die Schnittstelle tatsächlich unterstützt (Annahme, Kundenausgabe, Retoure, Übergabe an Zusteller).
 
-Rein numerische Sendungsnummern werden in TRAKUNA 1.42 nicht anhand ihrer Länge einem Paketdienst zugeordnet; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
+Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.43; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
 
 Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Übergabeversuch mit lokalem Cache und Zwischenablage-Fallback. Es werden keine Carrier-Endpunkte, Paketbuchungen oder Zugangsdaten erfunden.
 
