@@ -1,11 +1,17 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.30 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.31 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Integrations- und Sicherheitsdokumentation
 
 - [Partner-Schnittstelle und Abnahmekriterien](PARTNER_INTEGRATION.md): beschreibt den aktuellen Android-Übergabeversuch, den notwendigen Vertrag mit dem Softwareanbieter und die Tests für eine echte Integration.
 - [Sicherheitsstatus und Produktionsfreigabe](SECURITY.md): dokumentiert umgesetzte Schutzmaßnahmen, bekannte Restrisiken und verbindliche Freigabekriterien.
+
+## Neu in Version 1.31
+
+- Vor dem CSV-Export erscheint jetzt wie bei der JSON-Sicherung eine deutliche Warnung: Die Datei enthält Sendungsnummern, Empfängerdaten und Notizen und ist unverschlüsselt.
+- Die Hauptoberfläche berücksichtigt sichere Display-Ränder und die Bildschirmtastatur, damit Inhalte auf neueren Android-Versionen und kleinen Displays nicht hinter Systemleisten oder Tastatur verschwinden.
+- Die Auswahl installierter Betriebssoftware ist auf kleinen Bildschirmen scrollbar.
 
 ## Neu in Version 1.30
 

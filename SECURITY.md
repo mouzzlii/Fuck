@@ -2,6 +2,8 @@
 
 ## Bereits im Projekt umgesetzt
 
+- Vor dem CSV-Export weist die App ausdrücklich darauf hin, dass die Datei personenbezogene Sendungsdaten und interne Notizen unverschlüsselt enthält.
+
 - Lokale Paketdatensätze werden mit AES-256-GCM verschlüsselt; der AES-Schlüssel wird im Android Keystore gespeichert.
 - Eine Einmalmigration übernimmt den bisherigen Klartextbestand. Der alte Eintrag wird erst nach erfolgreichem Commit des verschlüsselten Ersatzes entfernt.
 - Fehler bei Migration, Entschlüsselung oder Schlüsselzugriff führen zu einem sichtbaren Speicherfehler; die App darf solche Daten nicht als leeren Bestand behandeln.

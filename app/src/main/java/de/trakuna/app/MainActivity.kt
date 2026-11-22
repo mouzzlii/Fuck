@@ -108,6 +108,7 @@ class MainActivity : ComponentActivity() {
             var pendingCsv by remember { mutableStateOf<String?>(null) }
             var pendingBackupJson by remember { mutableStateOf<String?>(null) }
             var confirmBackupExport by remember { mutableStateOf(false) }
+            var confirmCsvExport by remember { mutableStateOf(false) }
             var pendingBackupImport by remember { mutableStateOf<String?>(null) }
             var pendingBackupCount by remember { mutableStateOf(0) }
             val backupDocumentLauncher = rememberLauncherForActivityResult(
@@ -175,7 +176,7 @@ class MainActivity : ComponentActivity() {
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
                 Surface(Modifier.fillMaxSize(), color = Color(0xFFF3F6F3)) {
                     Column(
-                        Modifier.fillMaxSize().padding(20.dp).verticalScroll(rememberScrollState()),
+                        Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing).imePadding().padding(20.dp).verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Spacer(Modifier.height(24.dp))
@@ -306,15 +307,7 @@ class MainActivity : ComponentActivity() {
                                             Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $shipmentStorageIssue. Neue Vorgänge und Exporte sind gesperrt. Du kannst eine vertrauenswürdige Sicherung wiederherstellen oder dich an den Support wenden.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                                         }
                                         OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it.take(120); visibleRecordLimit = 100 }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedButton(onClick = {
-                                            val exported = runCatching { ShipmentStore(context).exportCsv() }
-                                            if (exported.isSuccess) {
-                                                pendingCsv = exported.getOrThrow()
-                                                csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
-                                            } else {
-                                                status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
-                                            }
-                                        }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
+                                        OutlinedButton(onClick = { confirmCsvExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
                                         OutlinedButton(onClick = { confirmBackupExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) {
                                             Text("Vollständige Datensicherung erstellen")
                                         }
@@ -366,6 +359,30 @@ class MainActivity : ComponentActivity() {
                                 },
                                 confirmButton = {
                                     TextButton(onClick = { showShipmentLedger = false }) { Text("Schließen") }
+                                }
+                            )
+                        }
+                        if (confirmCsvExport) {
+                            AlertDialog(
+                                onDismissRequest = { confirmCsvExport = false },
+                                title = { Text("CSV-Datei exportieren?") },
+                                text = {
+                                    Text("Die CSV-Datei enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird unverschlüsselt gespeichert. Wähle einen geschützten Speicherort und gib die Datei nur an berechtigte Personen weiter.")
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        confirmCsvExport = false
+                                        val exported = runCatching { ShipmentStore(context).exportCsv() }
+                                        if (exported.isSuccess) {
+                                            pendingCsv = exported.getOrThrow()
+                                            csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
+                                        } else {
+                                            status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
+                                        }
+                                    }) { Text("CSV erstellen") }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = { confirmCsvExport = false }) { Text("Abbrechen") }
                                 }
                             )
                         }
@@ -485,7 +502,7 @@ class MainActivity : ComponentActivity() {
                                 onDismissRequest = { showPartnerPicker = false },
                                 title = { Text("Betriebssoftware auswählen") },
                                 text = {
-                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Column(modifier = Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                         Text(if (candidates.isEmpty()) "Keine eindeutig erkennbare Paketdienst-App gefunden. Du kannst alle installierten Apps anzeigen." else "Wähle die Paketshop-/Betriebssoftware aus.")
                                         candidates.take(30).forEach { app ->
                                             TextButton(onClick = {
