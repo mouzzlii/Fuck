@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: TRAKUNA 1.20
+Stand: TRAKUNA 1.24
 
 ## Zweck
 
@@ -80,6 +80,6 @@ DataWedge sendet damit Intent-Daten nur an das festgelegte Paket und prüft zus�
 
 ### Verhalten in TRAKUNA
 
-TRAKUNA liest den Scan ein und zeigt ihn zur Prüfung im Sendungsnummernfeld an. Eine Buchung oder Übergabe an eine Partner-App erfolgt nicht automatisch. So wird vermieden, dass ein zufälliger Scan sofort einen betrieblichen Vorgang auslöst.
+TRAKUNA liest den Scan ein und zeigt ihn zur Prüfung im Sendungsnummernfeld an. Auch ein Kamera-Scan löst keine automatische Buchung oder Partnerübergabe aus. Der Bediener muss die Nummer prüfen und die Übergabe bewusst starten. So wird vermieden, dass ein zufälliger Scan sofort einen betrieblichen Vorgang auslöst.
 
 **Sicherheitsgrenze:** Die DataWedge-Allowlist und Signaturprüfung müssen im Zebra-Profil tatsächlich aktiviert sein. TRAKUNA kann nicht erkennen oder erzwingen, ob ein Administrator diese Geräteeinstellung vorgenommen hat. Ohne korrekt eingerichtete Component Information bleibt der dynamische Android-Empfänger grundsätzlich durch andere Apps auf demselben Gerät nachahmbar. Eingehende Werte sind daher weiterhin nicht vertrauenswürdige Eingaben und müssen vor jeder Buchung geprüft werden.

@@ -49,15 +49,8 @@ TRAKUNA 1.24 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Schreibvorgänge melden einen Speicherfehler, statt eine nicht bestätigte Speicherung als erfolgreich darzustellen.
 - Vor dem Export einer unverschlüsselten JSON-Sicherung warnt die App vor den enthaltenen Sendungsnummern, Empfängernamen und internen Notizen.
 - Strikte Statusübergänge je Vorgangsart, damit Retouren und ausgehende Sendungen nicht versehentlich vermischt werden.
-
-## Zebra DataWedge
-
-- Zebra DataWedge: Barcodes können per konfiguriertem Android-Broadcast direkt in das Sendungsnummernfeld übernommen werden. Der Scan löst bewusst keine automatische Buchung aus; der Mitarbeiter prüft die Nummer und startet den nächsten Schritt selbst.
-- Kamera-Scan und manuelle Eingabe bleiben als Alternativen erhalten.
-
-- Paketdienst bei jedem Paketshop-Vorgang manuell eintragen oder die automatische Erkennung überschreiben.
-- Doppelte aktive Vorgänge erhalten eine eigene Rückmeldung; die App meldet nicht länger irreführend eine neue Speicherung.
-- Nach erfolgreicher Erfassung werden Empfänger, manuelle Paketdienst-Auswahl und Notiz geleert, damit keine Angaben versehentlich auf das nächste Paket übertragen werden. Das verhindert, dass eine unsichere Nummern-Heuristik unbemerkt als verbindliche Carrier-Zuordnung behandelt wird.
+- Kamera- und DataWedge-Scans übernehmen die Nummer zunächst nur zur Prüfung; es erfolgt keine automatische Partnerübergabe oder Buchung.
+- Eine gültige Datensicherung kann nach ausdrücklicher Bestätigung auch bei beschädigtem lokalem Speicher wiederhergestellt werden.
 
 ## Praxis-Test
 
