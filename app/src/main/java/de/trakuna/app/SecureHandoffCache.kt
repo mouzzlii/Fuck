@@ -27,6 +27,8 @@ class SecureHandoffCache(context: Context) {
     fun save(trackingNumber: String, carrier: String?): Boolean {
         if (initializationError != null) return false
         val result = runCatching {
+            require(ShipmentRules.isValidTrackingNumber(trackingNumber)) { "Sendungsnummer für die Übergabe ist ungültig." }
+            require(carrier.orEmpty().length <= 80) { "Paketdienstangabe ist zu lang." }
             val payload = JSONObject().apply {
                 put("trackingNumber", trackingNumber)
                 put("carrier", carrier.orEmpty())
@@ -58,7 +60,7 @@ class SecureHandoffCache(context: Context) {
         }
         val encrypted = prefs.getString(KEY_ENCRYPTED, null) ?: return ""
         return try {
-            JSONObject(decrypt(encrypted)).optString("trackingNumber")
+            decodePayload(decrypt(encrypted)).getString("trackingNumber")
         } catch (error: Exception) {
             operationError = error.message ?: "Übergabe-Cache ist beschädigt oder nicht lesbar."
             throw IllegalStateException(operationError, error)
@@ -70,7 +72,7 @@ class SecureHandoffCache(context: Context) {
             val encrypted = prefs.getString(KEY_ENCRYPTED, null)
             val legacy = prefs.getString(KEY_LEGACY_NUMBER, null)
             if (encrypted != null) {
-                decrypt(encrypted)
+                decodePayload(decrypt(encrypted))
                 if (legacy != null && !prefs.edit()
                         .remove(KEY_LEGACY_NUMBER)
                         .remove(KEY_LEGACY_CARRIER)
@@ -83,6 +85,7 @@ class SecureHandoffCache(context: Context) {
                     put("carrier", prefs.getString(KEY_LEGACY_CARRIER, "").orEmpty())
                     put("savedAt", prefs.getLong(KEY_LEGACY_SAVED_AT, 0L))
                 }.toString()
+                decodePayload(payload)
                 if (!prefs.edit().putString(KEY_ENCRYPTED, encrypt(payload))
                         .remove(KEY_LEGACY_NUMBER)
                         .remove(KEY_LEGACY_CARRIER)
@@ -93,6 +96,17 @@ class SecureHandoffCache(context: Context) {
         }.onFailure {
             initializationError = it.message ?: "Übergabedaten konnten nicht sicher initialisiert werden."
         }
+    }
+
+    private fun decodePayload(raw: String): JSONObject {
+        val payload = JSONObject(raw)
+        val number = payload.optString("trackingNumber")
+        val carrier = payload.optString("carrier")
+        val savedAt = payload.optLong("savedAt", -1L)
+        require(ShipmentRules.isValidTrackingNumber(number)) { "Gespeicherte Übergabenummer ist ungültig." }
+        require(carrier.length <= 80) { "Gespeicherte Paketdienstangabe ist ungültig." }
+        require(savedAt >= 0L) { "Zeitpunkt der Übergabe ist ungültig." }
+        return payload
     }
 
     private fun key(): SecretKey {

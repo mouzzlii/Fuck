@@ -2,6 +2,9 @@
 
 ## Bereits im Projekt umgesetzt
 
+- Die Migration verschlüsselter Paketdatensätze entfernt einen alten Klartextbestand erst nach erfolgreicher Entschlüsselung und vollständiger Validierung der Datensatzstruktur.
+- Der Partner-Übergabe-Cache validiert seine entschlüsselten Felder und die Sendungsnummer vor Verwendung und Migration.
+
 - Vor dem CSV-Export weist die App ausdrücklich darauf hin, dass die Datei personenbezogene Sendungsdaten und interne Notizen unverschlüsselt enthält.
 
 - Lokale Paketdatensätze werden mit AES-256-GCM verschlüsselt; der AES-Schlüssel wird im Android Keystore gespeichert.

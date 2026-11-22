@@ -77,7 +77,7 @@ class ShipmentStore(context: Context) {
             val encrypted = prefs.getString(KEY_RECORDS_ENCRYPTED, null)
             val legacy = prefs.getString(KEY_RECORDS, null)
             if (encrypted != null) {
-                decrypt(encrypted) // Verify before removing any old copy.
+                validateStoredPayload(decrypt(encrypted)) // Verify encryption AND record structure before removing any old copy.
                 if (legacy != null && !prefs.edit().remove(KEY_RECORDS).commit()) {
                     error("Alte unverschlüsselte Daten konnten nicht entfernt werden.")
                 }
@@ -95,6 +95,21 @@ class ShipmentStore(context: Context) {
             initializationError = "Geschützte lokale Speicherung konnte nicht initialisiert werden: " +
                 (it.message ?: "unbekannter Fehler")
         }
+    }
+
+    private fun validateStoredPayload(raw: String) {
+        val array = JSONArray(raw)
+        require(array.length() <= MAX_RECORDS) { "Lokaler Datenbestand überschreitet das zulässige Limit." }
+        val records = buildList {
+            for (index in 0 until array.length()) {
+                val item = array.optJSONObject(index) ?: error("Datensatz ${index + 1} ist beschädigt.")
+                val record = decode(item) ?: error("Datensatz ${index + 1} ist unvollständig.")
+                require(ShipmentRules.isValidRecord(record)) { "Datensatz ${index + 1} enthält ungültige Daten." }
+                add(record)
+            }
+        }
+        require(records.map { it.id }.distinct().size == records.size) { "Lokaler Datenbestand enthält doppelte Vorgangs-IDs." }
+        require(ShipmentRules.hasNoDuplicateActiveShipments(records)) { "Lokaler Datenbestand enthält doppelte aktive Sendungen." }
     }
 
     private fun encryptionKey(): SecretKey {

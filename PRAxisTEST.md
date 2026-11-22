@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Version 1.32)
+# TRAKUNA – Praxis-Testplan (Version 1.33)
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -130,6 +130,8 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 45. **Kleine Displays und Tastatur:** App auf einem kleinen Android-Bildschirm mit eingeblendeter Tastatur testen. Eingabefelder und Schaltflächen dürfen nicht dauerhaft hinter Systemleisten oder Tastatur verschwinden.
 46. **App-Symbol:** TRAKUNA muss mit dem neuen Waldgrün-Scan-Symbol im Android-Launcher erscheinen.
 47. **Betriebssoftware-Auswahl scrollen:** Bei vielen installierten Apps muss die Auswahlliste innerhalb des Dialogs scrollbar bleiben.
-48. **Wiederherstellung bei defektem lokalem Speicher:** Auf einem isolierten Testgerät den lokalen Datenspeicher beschädigen, danach eine zuvor erstellte gültige Sicherung auswählen. Die App muss die Wiederherstellung trotz Speicherfehler anbieten, vor dem Ersetzen warnen und danach die gesicherten Einträge wieder anzeigen. Bei fehlgeschlagener Verschlüsselung darf sie keinen Erfolg melden.
-49. **Cache-Lesefehler:** Auf einem isolierten Testgerät den verschlüsselten Cache beschädigen oder den Keystore-Schlüssel entfernen. Ein Lesezugriff muss einen Fehler melden und darf nicht so tun, als wäre lediglich noch keine Sendungsnummer gespeichert.
-50. **Cache-Schreibfehler:** Auf einem isolierten Testgerät einen Speicherausfall simulieren. Die Partner-App darf nicht gestartet werden, wenn das vorherige sichere Speichern nicht bestätigt wurde; die Fehlermeldung muss den Fehler verständlich benennen.
+48. **Migrationsprüfung verschlüsselter Daten:** Beschädigte oder strukturell ungültige verschlüsselte Paketdaten dürfen einen vorhandenen alten Klartextbestand nicht löschen.
+49. **Übergabe-Cache-Feldprüfung:** Ungültige Sendungsnummern, überlange Paketdienstangaben und ungültige Zeitstempel müssen als Cachefehler erkannt werden.
+50. **Wiederherstellung bei defektem lokalem Speicher:** Auf einem isolierten Testgerät den lokalen Datenspeicher beschädigen, danach eine zuvor erstellte gültige Sicherung auswählen. Die App muss die Wiederherstellung trotz Speicherfehler anbieten, vor dem Ersetzen warnen und danach die gesicherten Einträge wieder anzeigen. Bei fehlgeschlagener Verschlüsselung darf sie keinen Erfolg melden.
+51. **Cache-Lesefehler:** Auf einem isolierten Testgerät den verschlüsselten Cache beschädigen oder den Keystore-Schlüssel entfernen. Ein Lesezugriff muss einen Fehler melden und darf nicht so tun, als wäre lediglich noch keine Sendungsnummer gespeichert.
+52. **Cache-Schreibfehler:** Auf einem isolierten Testgerät einen Speicherausfall simulieren. Die Partner-App darf nicht gestartet werden, wenn das vorherige sichere Speichern nicht bestätigt wurde; die Fehlermeldung muss den Fehler verständlich benennen.
