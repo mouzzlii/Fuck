@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: App-Version 1.38
+Stand: App-Version 1.39
 
 ## Zweck
 
