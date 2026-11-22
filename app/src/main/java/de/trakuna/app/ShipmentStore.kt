@@ -313,7 +313,8 @@ object ShipmentRules {
     fun csvSafeCell(value: String): String {
         // Prefix spreadsheet formula starters so untrusted notes/names cannot execute as formulas.
         val candidate = value.trimStart()
-        val safeValue = if (candidate.firstOrNull() in listOf('=', '+', '-', '@', '\t', '\r')) "'$value" else value
+        val formulaPrefix = candidate.firstOrNull()?.let { it == '=' || it == '+' || it == '-' || it == '@' || it == '\t' || it == '\r' } == true
+        val safeValue = if (formulaPrefix) "'$value" else value
         return "\"" + safeValue.replace("\"", "\"\"") + "\""
     }
 
