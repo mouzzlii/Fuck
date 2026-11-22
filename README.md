@@ -1,6 +1,6 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.17 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.18 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Integrations- und Sicherheitsdokumentation
 
@@ -9,6 +9,7 @@ TRAKUNA 1.17 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 ## Funktionen im aktuellen Entwicklungsstand
 
+- Zebra DataWedge-Intent-Eingang für integrierte Zebra-Hardware-Scanner (nach einmaliger Profilkonfiguration; siehe PARTNER_INTEGRATION.md).
 - Kamera-Scan für gängige 1D-Barcodes und QR-/2D-Codes (Google ML Kit).
 - Manuelle Eingabe von Sendungsnummern als Alternative zum Kamerascan.
 - Erkennung einiger verbreiteter Formate für UPS, Österreichische Post, DHL, DPD und GLS. Die Heuristik ist nur ein Hinweis und muss mit echten Labels geprüft werden; beim Erfassen kann der Paketdienst jetzt manuell eingetragen oder korrigiert werden.
@@ -27,7 +28,10 @@ TRAKUNA 1.17 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Vor dem Export einer unverschlüsselten JSON-Sicherung warnt die App vor den enthaltenen Sendungsnummern, Empfängernamen und internen Notizen.
 - Strikte Statusübergänge je Vorgangsart, damit Retouren und ausgehende Sendungen nicht versehentlich vermischt werden.
 
-## Neu in Version 1.17
+## Neu in Version 1.18
+
+- Zebra DataWedge: Barcodes können per konfiguriertem Android-Broadcast direkt in das Sendungsnummernfeld übernommen werden. Der Scan löst bewusst keine automatische Buchung aus; der Mitarbeiter prüft die Nummer und startet den nächsten Schritt selbst.
+- Kamera-Scan und manuelle Eingabe bleiben als Alternativen erhalten.
 
 - Paketdienst bei jedem Paketshop-Vorgang manuell eintragen oder die automatische Erkennung überschreiben.
 - Doppelte aktive Vorgänge erhalten eine eigene Rückmeldung; die App meldet nicht länger irreführend eine neue Speicherung.
