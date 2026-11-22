@@ -699,7 +699,7 @@ fun getCachedTrackingNumber(context: Context): String =
     SecureHandoffCache(context).trackingNumber()
 
 private fun normalizeTrackingNumber(raw: String): String =
-    raw.replace(Regex("[\\u0000-\\u001F]"), "").trim().replace(Regex("\\s+"), "")
+    ShipmentRules.normalizeTrackingNumber(raw)
 
 
 private fun extractTrackingNumber(raw: String): String? =

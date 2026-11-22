@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.40
+Stand: App-Version 1.41
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
 ## 1. Wichtiger Status vor dem ersten Einsatz
 
-TRAKUNA 1.40 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
+TRAKUNA 1.41 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
 
 - Sendungsdaten liegen nur auf diesem Android-Gerät. Es gibt keine zentrale Synchronisierung zwischen mehreren Geräten.
 - Es gibt noch keine Mitarbeiter-Anmeldung, Benutzerrollen oder persönliche Zuordnung von Bearbeitern.

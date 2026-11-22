@@ -74,6 +74,14 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun trackingNumberNormalizationDoesNotSilentlyStripControlCharacters() {
+        val raw = "ABC\\u0000123456"
+        val normalized = ShipmentRules.normalizeTrackingNumber(raw)
+        assertFalse(ShipmentRules.isValidTrackingNumber(normalized))
+        assertEquals("ABC123456", ShipmentRules.normalizeTrackingNumber(" ABC 123456 "))
+    }
+
+    @Test
     fun manualCarrierChoiceOverridesHintAndBlankChoiceUsesHint() {
         assertEquals("DHL", ShipmentRules.resolveCarrierLabel(" DHL ", "12345678901234"))
         assertEquals("DPD", ShipmentRules.resolveCarrierLabel("", "12345678901234"))
