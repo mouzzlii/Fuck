@@ -38,6 +38,8 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import android.net.Uri
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
@@ -93,8 +95,9 @@ class MainActivity : ComponentActivity() {
                     status = "Wiederherstellung abgebrochen."
                 } else {
                     val loaded = runCatching {
-                        context.contentResolver.openInputStream(uri)?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }
-                            ?: error("Datei konnte nicht gelesen werden.")
+                        context.contentResolver.openInputStream(uri)?.use { input ->
+                            readBoundedUtf8(input, ShipmentStore.MAX_BACKUP_BYTES)
+                        } ?: error("Datei konnte nicht gelesen werden.")
                     }
                     if (loaded.isFailure) {
                         status = "Datei konnte nicht gelesen werden: ${loaded.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
@@ -426,6 +429,21 @@ private fun shipmentNextAction(flow: ShipmentFlow, status: ShipmentStatus): Stri
 private fun shipmentResultText(result: ShipmentUpdate): String = when (result) {
     is ShipmentUpdate.Saved -> "Vorgang gespeichert: ${result.record.trackingNumber} · ${shipmentStatusLabel(result.record.status)}"
     is ShipmentUpdate.Rejected -> result.reason
+}
+
+
+private fun readBoundedUtf8(input: InputStream, maxBytes: Int): String {
+    val output = ByteArrayOutputStream()
+    val buffer = ByteArray(8192)
+    var total = 0
+    while (true) {
+        val count = input.read(buffer)
+        if (count < 0) break
+        total += count
+        require(total <= maxBytes) { "Sicherungsdatei ist größer als 2 MiB und wurde nicht geladen." }
+        output.write(buffer, 0, count)
+    }
+    return output.toString(Charsets.UTF_8.name())
 }
 
 data class HandoffResult(val message: String)
