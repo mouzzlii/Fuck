@@ -14,6 +14,8 @@ TRAKUNA ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unt
 - Schutz vor unbemerktem Erreichen der lokalen Speichergrenze: maximal 500 Vorgänge; vor weiteren Einträgen wird ein CSV-Export und Aufräumen verlangt.
 - Anzeige der belegten Speicherkapazität und verständlicher Hinweis bei Suchanfragen ohne Treffer.
 - CSV-Export als echte Datei über den Android-Dateidialog (Speicherort frei wählbar).
+- Vollständige lokale Datensicherung als versioniertes JSON über den Android-Dateidialog.
+- Wiederherstellung mit Format-/Versions-/Datensatzprüfung und ausdrücklicher Bestätigung; der vorhandene lokale Bestand wird beim Wiederherstellen ersetzt.
 
 ## Praxis-Test
 
@@ -32,7 +34,8 @@ APK-Ausgabe: `app/build/outputs/apk/debug/app-debug.apk`.
 ## Wichtige Grenzen – noch kein produktiver Paketdienstbetrieb
 
 - Die Datenspeicherung erfolgt derzeit lokal in Android SharedPreferences (JSON), nicht in einer zentralen Datenbank. Es gibt keine Synchronisierung zwischen Geräten, Benutzerkonten, Rollen oder revisionssichere Audit-Protokolle.
-- Der CSV-Export erstellt eine Datei am vom Nutzer gewählten Speicherort. Eine automatische Datensicherung oder Wiederherstellung ist damit noch nicht eingerichtet.
+- Der CSV-Export erstellt eine Datei am vom Nutzer gewählten Speicherort. Es gibt keine automatische oder verschlüsselte Cloud-Sicherung; die JSON-Datei muss manuell erstellt und sicher aufbewahrt werden.
+- Datensicherungen enthalten Sendungsnummern, Empfängernamen und interne Notizen im Klartext. Die Datei muss wie ein vertrauliches Dokument geschützt und sicher gespeichert werden.
 - Eine Partner-App wird nur geöffnet und mit Intent-Extras gestartet. Eine automatische Übernahme der Sendungsnummer funktioniert nur, wenn die Zielsoftware diese Extras oder eine passende API ausdrücklich unterstützt. TRAKUNA kann die Unterstützung fremder Apps nicht erzwingen.
 - Carrier-Erkennung ist nicht verbindlich; Sendungsnummern müssen vor der Übergabe geprüft werden. Es bestehen keine direkten Tracking- oder Versanddienst-API-Verbindungen.
 - Es fehlen noch Tests mit realen Paketetiketten, echten Betriebssoftware-Versionen, verschiedenen Android-Geräten sowie ein Datenschutz-/Sicherheitsaudit.
