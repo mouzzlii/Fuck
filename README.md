@@ -10,6 +10,9 @@ TRAKUNA 1.33 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 ## Neu in Version 1.33
 
+- Die App nutzt pro Bildschirm-Sitzung eine gemeinsame Instanz des lokalen Datenspeichers, statt sie für einzelne Aktionen neu zu initialisieren.
+- Der Android-Build führt zusätzlich Android-Lint aus, damit typische Manifest-, Ressourcen- und Android-API-Probleme vor der APK-Bereitstellung auffallen.
+
 - Die Migration verschlüsselter Paketdaten prüft jetzt auch JSON-Struktur, Datensatzregeln und Duplikate, bevor ein eventuell vorhandener alter Klartextbestand entfernt wird.
 - Der verschlüsselte Partner-Übergabe-Cache prüft Sendungsnummer, Paketdienstlänge und Zeitstempel sowohl beim Lesen als auch vor der Migration. Fehlerhafte Daten werden nicht stillschweigend als gültige Übergabe übernommen.
 
