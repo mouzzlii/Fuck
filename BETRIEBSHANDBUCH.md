@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.36
+Stand: App-Version 1.37
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
 ## 1. Wichtiger Status vor dem ersten Einsatz
 
-TRAKUNA 1.36 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
+TRAKUNA 1.37 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
 
 - Sendungsdaten liegen nur auf diesem Android-Gerät. Es gibt keine zentrale Synchronisierung zwischen mehreren Geräten.
 - Es gibt noch keine Mitarbeiter-Anmeldung, Benutzerrollen oder persönliche Zuordnung von Bearbeitern.
@@ -57,7 +57,7 @@ Das Zebra-Gerät muss eingerichtet werden. Die genaue Konfiguration steht in `PA
 
 Wichtig: DataWedge muss die Action `de.trakuna.app.DATAWEDGE_SCAN` und das Extra `com.symbol.datawedge.data_string` verwenden. Im Zebra-Profil sollte unter **Intent Output → Component Information** ausschließlich TRAKUNA ausgewählt und die Signaturprüfung aktiviert werden. Diese Geräteeinstellung kann TRAKUNA nicht selbst kontrollieren.
 
-Ein Zebra-Scan füllt nur das Sendungsnummernfeld. Er löst keine automatische Buchung aus.
+Ein Zebra-Scan füllt nur das Sendungsnummernfeld, solange TRAKUNA im Vordergrund aktiv ist. Scans während die App im Hintergrund läuft, werden ignoriert. Ein Scan löst keine automatische Buchung aus.
 
 ## 4. Paketshop-Vorgänge
 

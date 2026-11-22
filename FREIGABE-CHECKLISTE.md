@@ -1,6 +1,6 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.36
+Stand: App-Version 1.37
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
@@ -22,6 +22,7 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Zebra DataWedge-Profil auf jedem Gerät geprüft
 - [ ] DataWedge Component Information auf TRAKUNA begrenzt und Signaturprüfung aktiviert
 - [ ] Scan-Broadcast kann keine automatische Buchung auslösen
+- [ ] Hintergrundverhalten geprüft: Scans werden nur bei aktiver TRAKUNA-App im Vordergrund verarbeitet
 - [ ] Scannerverhalten bei mehreren Barcodes, schlechtem Licht und Verbindungsfehlern geprüft
 
 ## C. Partner- und Carrier-Integration
@@ -71,6 +72,6 @@ Für **jeden** Paketdienst und jede Betriebssoftware ist ein eigener Nachweis er
 
 **Status:** NICHT FREIGEGEBEN, solange ein für den konkreten Einsatz erforderlicher Punkt offen ist.
 
-**Begründung des aktuellen Stands:** TRAKUNA 1.36 ist eine lokale Android-Testversion. Sie besitzt keine zentrale Benutzerverwaltung oder Gerätesynchronisierung und keine nachgewiesene Carrier-Buchungsintegration. Reale Zebra-/Etikettentests, unabhängige Sicherheitsprüfung und Produktionssignatur sind nicht belegt.
+**Begründung des aktuellen Stands:** TRAKUNA 1.37 ist eine lokale Android-Testversion. Sie besitzt keine zentrale Benutzerverwaltung oder Gerätesynchronisierung und keine nachgewiesene Carrier-Buchungsintegration. Reale Zebra-/Etikettentests, unabhängige Sicherheitsprüfung und Produktionssignatur sind nicht belegt.
 
 Diese Checkliste kann keine Anbieterfreigabe, rechtliche Prüfung, Hardwareprüfung oder Sicherheitsprüfung ersetzen.
