@@ -334,6 +334,9 @@ object ShipmentRules {
 
     fun normalizeCarrierLabel(raw: String): String = raw.trim().take(80)
 
+    fun resolveCarrierLabel(manual: String, trackingNumber: String): String =
+        normalizeCarrierLabel(manual).ifBlank { identifyCarrier(trackingNumber).orEmpty() }
+
     fun isValidTrackingNumber(value: String): Boolean =
         value.length in 6..40 && value.any(Char::isDigit) &&
             value.all { it.isLetterOrDigit() || it == '-' }
