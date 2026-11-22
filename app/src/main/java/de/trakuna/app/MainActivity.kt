@@ -183,9 +183,13 @@ class MainActivity : ComponentActivity() {
                         if (showScanner) {
                             ScannerPanel(
                                 onDetected = { scanned ->
-                                    number = scanned
                                     showScanner = false
-                                    status = "Scan erkannt: $scanned. Bitte Sendungsnummer und Paketdienst prüfen. Es wurde noch nichts an eine andere App übergeben."
+                                    if (scanned == null) {
+                                        status = "Mehrere unterschiedliche Codes erkannt. Bitte nur ein Paketlabel gleichzeitig scannen oder die Sendungsnummer manuell eingeben."
+                                    } else {
+                                        number = scanned
+                                        status = "Scan erkannt: $scanned. Bitte Sendungsnummer und Paketdienst prüfen. Es wurde noch nichts an eine andere App übergeben."
+                                    }
                                 },
                                 onClose = { showScanner = false }
                             )
@@ -683,7 +687,7 @@ private fun Context.findActivity(): ComponentActivity? = when (this) {
 }
 
 @Composable
-private fun ScannerPanel(onDetected: (String) -> Unit, onClose: () -> Unit) {
+private fun ScannerPanel(onDetected: (String?) -> Unit, onClose: () -> Unit) {
     val context = LocalContext.current
     var hasPermission by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
@@ -708,7 +712,7 @@ private fun ScannerPanel(onDetected: (String) -> Unit, onClose: () -> Unit) {
 
 @Composable
 @OptIn(ExperimentalGetImage::class)
-private fun CameraPreview(onDetected: (String) -> Unit) {
+private fun CameraPreview(onDetected: (String?) -> Unit) {
     val context = LocalContext.current
     val activity = context.findActivity()
     if (activity == null) {
@@ -761,14 +765,13 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
                                         val values = barcodes.mapNotNull { barcode ->
                                             (barcode.rawValue ?: barcode.displayValue)?.let { extractTrackingNumber(it) }
                                         }.distinct()
-                                        // Prefer a structurally recognized shipment number over unrelated QR/barcode data.
-                                        val selected = values.sortedWith(
-                                            compareByDescending<String> { identifyCarrier(it) != null }
-                                                .thenByDescending { it.length in 10..22 }
-                                                .thenByDescending { it.length }
-                                        ).firstOrNull()
-                                        selected?.let { value ->
-                                            if (!disposed.get() && delivered.compareAndSet(false, true)) onDetected(value)
+                                        // Never guess which parcel is intended when multiple distinct shipment IDs are visible.
+                                        if (values.size > 1) {
+                                            if (!disposed.get() && delivered.compareAndSet(false, true)) onDetected(null)
+                                        } else {
+                                            values.singleOrNull()?.let { value ->
+                                                if (!disposed.get() && delivered.compareAndSet(false, true)) onDetected(value)
+                                            }
                                         }
                                     }
                                 }
