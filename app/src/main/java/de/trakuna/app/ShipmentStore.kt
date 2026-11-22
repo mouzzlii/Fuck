@@ -81,6 +81,11 @@ class ShipmentStore(context: Context) {
                 it.flow == flow && it.status !in TERMINAL_STATUSES
         }
         if (existing != null) return ShipmentUpdate.Saved(existing)
+        if (records.size >= MAX_RECORDS) {
+            return ShipmentUpdate.Rejected(
+                "Speicherlimit von $MAX_RECORDS Vorgängen erreicht. Bitte zuerst eine CSV-Sicherung exportieren und nicht mehr benötigte Einträge löschen."
+            )
+        }
 
         val now = System.currentTimeMillis()
         val initialStatus = ShipmentRules.initialStatus(flow)
@@ -158,9 +163,8 @@ class ShipmentStore(context: Context) {
     }
 
     private fun persist(records: List<ShipmentRecord>) {
-        val bounded = records.sortedByDescending { it.updatedAt }.take(MAX_RECORDS)
         val array = JSONArray()
-        bounded.forEach { record ->
+        records.sortedByDescending { it.updatedAt }.forEach { record ->
             array.put(JSONObject().apply {
                 put("id", record.id)
                 put("trackingNumber", record.trackingNumber)
@@ -193,7 +197,7 @@ class ShipmentStore(context: Context) {
     companion object {
         private const val PREFS = "trakuna_shipments"
         private const val KEY_RECORDS = "records_v1"
-        private const val MAX_RECORDS = 500
+        const val MAX_RECORDS = 500
         private val TERMINAL_STATUSES = setOf(
             ShipmentStatus.HANDED_TO_CUSTOMER,
             ShipmentStatus.HANDED_TO_CARRIER
