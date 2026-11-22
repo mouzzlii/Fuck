@@ -36,6 +36,13 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun carrierLabelsAreTrimmedAndBoundedToStorageLimit() {
+        assertEquals("Österreichische Post", ShipmentRules.normalizeCarrierLabel("  Österreichische Post  "))
+        assertEquals(80, ShipmentRules.normalizeCarrierLabel("X".repeat(120)).length)
+        assertEquals("", ShipmentRules.normalizeCarrierLabel("   "))
+    }
+
+    @Test
     fun normalizesAndValidatesTrackingNumbers() {
         assertEquals("1Z999AA10123456784", ShipmentRules.normalizeTrackingNumber(" 1Z 999AA10123456784 "))
         assertTrue(ShipmentRules.isValidTrackingNumber("1Z999AA10123456784"))
