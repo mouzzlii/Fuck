@@ -240,14 +240,27 @@ class MainActivity : ComponentActivity() {
                                         HorizontalDivider()
                                         Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
                                         Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} möglichen Einträgen belegt", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        ShipmentStore(context).storageError()?.let { storageIssue ->
+                                            Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $storageIssue. Es werden keine Änderungen oder Sicherungen vorgenommen.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                                        }
                                         OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedButton(onClick = {
-                                            pendingCsv = ShipmentStore(context).exportCsv()
-                                            csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
+                                            val exported = runCatching { ShipmentStore(context).exportCsv() }
+                                            if (exported.isSuccess) {
+                                                pendingCsv = exported.getOrThrow()
+                                                csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
+                                            } else {
+                                                status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
+                                            }
                                         }, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
                                         OutlinedButton(onClick = {
-                                            pendingBackupJson = ShipmentStore(context).exportBackupJson()
-                                            backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
+                                            val exported = runCatching { ShipmentStore(context).exportBackupJson() }
+                                            if (exported.isSuccess) {
+                                                pendingBackupJson = exported.getOrThrow()
+                                                backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
+                                            } else {
+                                                status = exported.exceptionOrNull()?.message ?: "Datensicherung fehlgeschlagen."
+                                            }
                                         }, modifier = Modifier.fillMaxWidth()) { Text("Vollständige Datensicherung erstellen") }
                                         OutlinedButton(onClick = {
                                             restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
@@ -339,7 +352,12 @@ class MainActivity : ComponentActivity() {
                                 onDismissRequest = { pendingDelete = null },
                                 title = { Text("Vorgang löschen?") },
                                 text = { Text("Soll der Vorgang ${record.trackingNumber} endgültig von diesem Gerät gelöscht werden?") },
-                                confirmButton = { TextButton(onClick = { ShipmentStore(context).remove(record.id); shipmentRevision++; pendingDelete = null }) { Text("Löschen") } },
+                                confirmButton = { TextButton(onClick = {
+                                    val removed = ShipmentStore(context).remove(record.id)
+                                    status = if (removed) "Vorgang wurde gelöscht." else "Vorgang konnte nicht gelöscht werden. Datenspeicher prüfen."
+                                    shipmentRevision++
+                                    pendingDelete = null
+                                }) { Text("Löschen") } },
                                 dismissButton = { TextButton(onClick = { pendingDelete = null }) { Text("Abbrechen") } }
                             )
                         }
