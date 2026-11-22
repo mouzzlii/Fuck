@@ -15,7 +15,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 |---|---|---|
 | 1 | App starten | TRAKUNA öffnet ohne Absturz. |
 | 2 | Sendungsnummer manuell eingeben | Eingabe bleibt sichtbar und kann übergeben werden. |
-| 3 | Kamera-Scan erlauben und Barcode scannen | Erkannte Nummer wird eingetragen und der Übergabeablauf startet. |
+| 3 | Kamera-Scan erlauben und Barcode scannen | Erkannte Nummer wird nur ins Eingabefeld übernommen. Es erfolgt keine automatische Partner-App-Übergabe oder Buchung. |
 | 4 | Kamerazugriff verweigern | Manuelle Eingabe bleibt verfügbar; Hinweis auf fehlende Kameraberechtigung erscheint. |
 | 5 | Paket für Kunden annehmen | Vorgang erscheint als „Im Shop eingetroffen“. |
 | 6 | Abholbereit markieren | Status wechselt auf „Abholbereit“. |
