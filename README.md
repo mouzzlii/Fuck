@@ -1,6 +1,6 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.19 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.20 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Integrations- und Sicherheitsdokumentation
 
@@ -12,6 +12,7 @@ TRAKUNA 1.19 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Lokale Paketdatensätze werden mit AES-256-GCM verschlüsselt; der Schlüssel wird im Android Keystore verwahrt.
 - Vorhandene unverschlüsselte lokale Datensätze werden beim ersten Start kontrolliert migriert. Die alte Kopie wird erst zusammen mit dem erfolgreich gespeicherten verschlüsselten Bestand entfernt.
 - Bei fehlgeschlagener Migration, beschädigten Chiffretexten oder nicht verfügbarem Schlüssel zeigt die App einen Speicherfehler, statt einen leeren Datenbestand vorzutäuschen.
+- Verschlüsselte Speicherwerte und Klartext vor der Verschlüsselung sind größenbegrenzt, damit beschädigte oder übergroße lokale Einträge nicht unbegrenzt in den Speicher geladen werden.
 - JSON- und CSV-Exporte bleiben bewusst separat: exportierte Dateien sind weiterhin unverschlüsselt und müssen geschützt aufbewahrt werden.
 
 ## Funktionen im aktuellen Entwicklungsstand
@@ -35,7 +36,7 @@ TRAKUNA 1.19 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Vor dem Export einer unverschlüsselten JSON-Sicherung warnt die App vor den enthaltenen Sendungsnummern, Empfängernamen und internen Notizen.
 - Strikte Statusübergänge je Vorgangsart, damit Retouren und ausgehende Sendungen nicht versehentlich vermischt werden.
 
-## Neu in Version 1.19
+## Zebra DataWedge
 
 - Zebra DataWedge: Barcodes können per konfiguriertem Android-Broadcast direkt in das Sendungsnummernfeld übernommen werden. Der Scan löst bewusst keine automatische Buchung aus; der Mitarbeiter prüft die Nummer und startet den nächsten Schritt selbst.
 - Kamera-Scan und manuelle Eingabe bleiben als Alternativen erhalten.
