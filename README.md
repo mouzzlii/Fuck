@@ -6,7 +6,7 @@ TRAKUNA ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unt
 
 - Kamera-Scan für gängige 1D-Barcodes und QR-/2D-Codes (Google ML Kit).
 - Manuelle Eingabe von Sendungsnummern als Alternative zum Kamerascan.
-- Erkennung einiger verbreiteter Formate für UPS, Österreichische Post, DHL, DPD und GLS. Die Erkennung ist eine Heuristik und muss mit echten Labels der jeweiligen Partner geprüft werden.
+- Erkennung einiger verbreiteter Formate für UPS, Österreichische Post, DHL, DPD und GLS. Die Heuristik ist in separat getestete Geschäftslogik ausgelagert und muss mit echten Labels der jeweiligen Partner geprüft werden.
 - Zwischenspeicherung der letzten Sendungsnummer und Kopie in die Zwischenablage.
 - Auswahl einer installierten Betriebssoftware und Übergabeversuch per Android-Intent.
 - Lokale Paketshop-Liste mit Eingang für Kunden, Annahme von Kundensendungen und Retouren.
