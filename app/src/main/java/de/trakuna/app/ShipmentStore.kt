@@ -259,12 +259,6 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun exportCsv(): String {
-        fun cell(value: String): String {
-            // Prefix spreadsheet formula starters so untrusted notes/names cannot execute as formulas.
-            val candidate = value.trimStart()
-            val safeValue = if (candidate.firstOrNull() in listOf('=', '+', '-', '@', '\t', '\r')) "'$value" else value
-            return "\"" + safeValue.replace("\"", "\"\"") + "\""
-        }
         val header = listOf("ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status", "Empfänger", "Notiz", "Erstellt", "Aktualisiert")
         val rows = readRecords().getOrElse { error("Lokaler Datenspeicher ist beschädigt; CSV wurde nicht erstellt.") }.map { record ->
             listOf(
@@ -316,6 +310,13 @@ class ShipmentStore(context: Context) {
 
 /** Pure parcel workflow rules shared by the Android store and JVM unit tests. */
 object ShipmentRules {
+    fun csvSafeCell(value: String): String {
+        // Prefix spreadsheet formula starters so untrusted notes/names cannot execute as formulas.
+        val candidate = value.trimStart()
+        val safeValue = if (candidate.firstOrNull() in listOf('=', '+', '-', '@', '\\t', '\\r')) "'$value" else value
+        return "\\\"" + safeValue.replace("\\\"", "\\\"\\\"") + "\\\""
+    }
+
     fun normalizeTrackingNumber(raw: String): String =
         raw.trim().replace(Regex("\\s+"), "")
 
