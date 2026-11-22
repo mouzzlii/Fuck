@@ -400,17 +400,34 @@ class MainActivity : ComponentActivity() {
                                         Text(if (candidates.isEmpty()) "Keine eindeutig erkennbare Paketdienst-App gefunden. Du kannst alle installierten Apps anzeigen." else "Wähle die Paketshop-/Betriebssoftware aus.")
                                         candidates.take(30).forEach { app ->
                                             TextButton(onClick = {
-                                                context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).edit()
+                                                val saved = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).edit()
                                                     .putString("partner_package", app.packageName)
                                                     .putString("partner_label", app.label)
-                                                    .apply()
-                                                status = "Betriebssoftware ${app.label} gespeichert. Die Sendungsnummer wird beim nächsten Übergabeversuch mitgegeben."
-                                                showPartnerPicker = false
+                                                    .commit()
+                                                if (saved) {
+                                                    status = "Betriebssoftware ${app.label} wurde dauerhaft gespeichert. Die Sendungsnummer wird beim nächsten Übergabeversuch mitgegeben."
+                                                    showPartnerPicker = false
+                                                } else {
+                                                    status = "Auswahl konnte nicht dauerhaft gespeichert werden. Bitte Gerätespeicher prüfen und erneut versuchen."
+                                                }
                                             }, modifier = Modifier.fillMaxWidth()) {
                                                 Text("${app.label}  ·  ${app.packageName}")
                                             }
                                         }
                                         if (!showAllApps) TextButton(onClick = { showAllApps = true }) { Text("Alle installierten Apps anzeigen") }
+                                        if (context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).getString("partner_package", null) != null) {
+                                            TextButton(onClick = {
+                                                val cleared = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).edit()
+                                                    .remove("partner_package")
+                                                    .remove("partner_label")
+                                                    .commit()
+                                                status = if (cleared) "Ausgewählte Betriebssoftware wurde entfernt."
+                                                else "Auswahl konnte nicht entfernt werden. Bitte erneut versuchen."
+                                                if (cleared) showPartnerPicker = false
+                                            }, modifier = Modifier.fillMaxWidth()) {
+                                                Text("Gespeicherte Auswahl entfernen")
+                                            }
+                                        }
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { showPartnerPicker = false }) { Text("Schließen") } }
