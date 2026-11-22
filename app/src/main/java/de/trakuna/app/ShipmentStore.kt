@@ -481,7 +481,12 @@ object ShipmentRules {
         }
 
         val compact = plausible(cleaned)
-        if (compact != null) return compact
+        // Whitespace inside a scan can indicate surrounding label text ("Parcel 123456"),
+        // not a deliberately grouped tracking number. Only compact whitespace-bearing
+        // scans when the resulting value has a known carrier-specific structure.
+        if (compact != null && (!cleaned.any(Char::isWhitespace) || identifyCarrier(compact) != null)) {
+            return compact
+        }
 
         // Extract only structurally distinctive formats from surrounding label text.
         val candidates = listOf(

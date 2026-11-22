@@ -136,17 +136,3 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 50. **Wiederherstellung bei defektem lokalem Speicher:** Auf einem isolierten Testgerät den lokalen Datenspeicher beschädigen, danach eine zuvor erstellte gültige Sicherung auswählen. Die App muss die Wiederherstellung trotz Speicherfehler anbieten, vor dem Ersetzen warnen und danach die gesicherten Einträge wieder anzeigen. Bei fehlgeschlagener Verschlüsselung darf sie keinen Erfolg melden.
 51. **Cache-Lesefehler:** Auf einem isolierten Testgerät den verschlüsselten Cache beschädigen oder den Keystore-Schlüssel entfernen. Ein Lesezugriff muss einen Fehler melden und darf nicht so tun, als wäre lediglich noch keine Sendungsnummer gespeichert.
 52. **Cache-Schreibfehler:** Auf einem isolierten Testgerät einen Speicherausfall simulieren. Die Partner-App darf nicht gestartet werden, wenn das vorherige sichere Speichern nicht bestätigt wurde; die Fehlermeldung muss den Fehler verständlich benennen.
-
-## 8. Zusätzliche Parser- und QR-Code-Prüfungen
-
-Diese Prüfungen ergänzen die Kamera- und DataWedge-Tests. Sie können mit gedruckten Testetiketten oder vorbereiteten QR-Testcodes durchgeführt werden:
-
-53. **AIM-Präfixe:** Code-128-Scan mit `]C1` und QR-Scan mit `]Q3` testen. Das Präfix darf nicht Teil der gespeicherten Sendungsnummer sein.
-54. **QR-Parameter:** QR-Code mit `tracking`, `tracking_number`, `sendungsnummer` oder `id` als Parametername testen. Groß-/Kleinschreibung darf die Erkennung nicht verhindern.
-55. **Mehrere Parameter:** Ein QR-Code enthält zuerst einen ungültigen Tracking-Parameter und danach einen gültigen. TRAKUNA darf nicht am ersten ungültigen Parameter abbrechen.
-56. **Prozentkodierung:** Eine URL mit Prozentkodierung innerhalb der Sendungsnummer testen. Nach dem Dekodieren muss exakt die gültige Nummer erscheinen.
-57. **QR-Pfad:** Eine URL testen, bei der die Sendungsnummer als letztes Pfadsegment enthalten ist. Es darf nur der erkannte Wert übernommen werden.
-58. **Ungültiger Inhalt:** Beliebige URL, ungültige Nummer, Unicode-Zeichen, beschädigte Prozentkodierung und überlange Scan-Inhalte testen. Es darf kein erfundener oder stillschweigend veränderter Wert übernommen werden.
-59. **Keine automatische Aktion:** Nach jeder Erkennung muss die Nummer zunächst sichtbar im Eingabefeld stehen. Ohne bewusste Bedienung darf kein Paketshop-Vorgang angelegt und keine Partner-App geöffnet werden.
-
-Die automatisierten Parser-Tests prüfen die Regeln ohne Kamera-Hardware. Sie ersetzen nicht den Test mit echten Zebra-Geräten, echten Etiketten und der konkret eingesetzten Betriebssoftware.

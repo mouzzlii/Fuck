@@ -221,6 +221,9 @@ class ShipmentStoreTest {
     fun scanParserHandlesAIMPrefixesAndPlainTrackingNumbers() {
         assertEquals("1Z999AA10123456784", ShipmentRules.extractTrackingNumber("]C11Z999AA10123456784"))
         assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber(" AB123456789AT "))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("Parcel 12345678"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("Invoice 123456789"))
+        assertEquals("1Z999AA10123456784", ShipmentRules.extractTrackingNumber("1Z 999AA10123456784"))
         assertEquals(null, ShipmentRules.extractTrackingNumber("kein Paketcode"))
     }
 

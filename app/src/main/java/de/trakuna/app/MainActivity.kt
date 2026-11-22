@@ -42,6 +42,7 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import android.net.Uri
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -699,8 +700,48 @@ private fun normalizeTrackingNumber(raw: String): String =
 private fun isPlausibleTrackingNumber(value: String): Boolean =
     value.length in 6..40 && value.any { it.isDigit() } && value.all { it.isLetterOrDigit() || it == '-' }
 
-private fun extractTrackingNumber(raw: String): String? =
-    ShipmentRules.extractTrackingNumber(raw, MAX_SCAN_INPUT_CHARS)
+private fun extractTrackingNumber(raw: String): String? {
+    if (raw.length > MAX_SCAN_INPUT_CHARS) return null
+    // Some scanners prepend AIM symbology identifiers (for example ]C1 for Code 128).
+    val cleaned = raw.trim()
+        .removePrefix("]C1").removePrefix("]d2").removePrefix("]Q3")
+        .trim()
+
+    if (cleaned.startsWith("http://", true) || cleaned.startsWith("https://", true)) {
+        val uri = runCatching { Uri.parse(cleaned) }.getOrNull()
+        val acceptedKeys = setOf(
+            "trackingnumber", "tracking_number", "tracking", "trackid", "shipment",
+            "shipmentid", "shipment_id", "consignment", "consignmentnumber",
+            "parcel", "parcelnumber", "barcode", "piececode", "sendungsnummer", "snr", "id"
+        )
+        // Query parameter names are not consistently cased across carrier QR formats.
+        uri?.queryParameterNames?.firstOrNull { it.lowercase() in acceptedKeys }?.let { key ->
+            uri.getQueryParameter(key)?.let { value ->
+                normalizeTrackingNumber(value).takeIf { isPlausibleTrackingNumber(it) }?.let { return it }
+            }
+        }
+        // Prefer the final path segment only when it looks like an actual shipment ID.
+        uri?.pathSegments?.asReversed()?.firstOrNull { segment ->
+            normalizeTrackingNumber(segment).let { isPlausibleTrackingNumber(it) && identifyCarrier(it) != null }
+        }?.let { return normalizeTrackingNumber(it) }
+        uri?.lastPathSegment?.let { segment ->
+            normalizeTrackingNumber(segment).takeIf { isPlausibleTrackingNumber(it) }?.let { return it }
+        }
+        return null
+    }
+
+    val compact = normalizeTrackingNumber(cleaned)
+    if (isPlausibleTrackingNumber(compact)) return compact
+
+    // Labels sometimes encode a short human-readable prefix/suffix around the barcode.
+    // Extract only well-known, structurally distinctive formats; do not guess arbitrary digits.
+    val candidates = listOf(
+        Regex("(?i)1Z[A-Z0-9]{16}").find(cleaned)?.value,
+        Regex("(?i)[A-Z]{2}[0-9]{9}AT").find(cleaned)?.value,
+        Regex("(?i)(?:JVGL|JJD)[A-Z0-9]{8,26}").find(cleaned)?.value
+    )
+    return candidates.filterNotNull().firstOrNull { isPlausibleTrackingNumber(it) }
+}
 
 private fun identifyCarrier(raw: String): String? =
     ShipmentRules.identifyCarrier(normalizeTrackingNumber(raw))
