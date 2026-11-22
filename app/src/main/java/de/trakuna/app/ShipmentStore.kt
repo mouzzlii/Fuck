@@ -138,7 +138,9 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun updateDetails(id: String, recipient: String, note: String): ShipmentUpdate {
-        val records = all().toMutableList()
+        val records = readRecords().getOrElse {
+            return ShipmentUpdate.Rejected("Lokaler Datenspeicher kann nicht sicher gelesen werden. Es wurden keine Daten geändert.")
+        }.toMutableList()
         val index = records.indexOfFirst { it.id == id }
         if (index < 0) return ShipmentUpdate.Rejected("Sendung wurde nicht gefunden.")
         val updated = records[index].copy(
