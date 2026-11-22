@@ -117,15 +117,21 @@ class ShipmentStore(context: Context) {
     }
 
     private fun encrypt(plainText: String): String {
+        val plainBytes = plainText.toByteArray(Charsets.UTF_8)
+        require(plainBytes.size <= MAX_BACKUP_BYTES) { "Lokaler Datenbestand überschreitet die sichere Speichergrenze." }
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, encryptionKey())
-        val encrypted = cipher.doFinal(plainText.toByteArray(Charsets.UTF_8))
+        val encrypted = cipher.doFinal(plainBytes)
         return Base64.encodeToString(cipher.iv + encrypted, Base64.NO_WRAP)
     }
 
     private fun decrypt(encoded: String): String {
+        require(encoded.length <= MAX_ENCRYPTED_STORAGE_CHARS) { "Verschlüsselte lokale Daten überschreiten die zulässige Größe." }
         val payload = Base64.decode(encoded, Base64.NO_WRAP)
         require(payload.size > GCM_IV_BYTES) { "Verschlüsselte lokale Daten sind beschädigt." }
+        require(payload.size <= MAX_BACKUP_BYTES + GCM_IV_BYTES + GCM_TAG_BYTES) {
+            "Verschlüsselte lokale Daten überschreiten die zulässige Größe."
+        }
         val iv = payload.copyOfRange(0, GCM_IV_BYTES)
         val encrypted = payload.copyOfRange(GCM_IV_BYTES, payload.size)
         val cipher = Cipher.getInstance(TRANSFORMATION)
@@ -394,6 +400,8 @@ class ShipmentStore(context: Context) {
         private const val KEY_ALIAS = "de.trakuna.app.shipments.aes.v1"
         private const val TRANSFORMATION = "AES/GCM/NoPadding"
         private const val GCM_IV_BYTES = 12
+        private const val GCM_TAG_BYTES = 16
+        private const val MAX_ENCRYPTED_STORAGE_CHARS = 2_800_000
         const val MAX_RECORDS = 500
         const val MAX_BACKUP_BYTES = 2 * 1024 * 1024
         private val TERMINAL_STATUSES = setOf(
