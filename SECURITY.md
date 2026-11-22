@@ -36,7 +36,10 @@ TRAKUNA darf erst als produktionsbereit für einen realen Paketshop bezeichnet w
 
 Bitte keine realen Sendungsnummern, Empfängernamen, Passwörter oder Schlüssel in öffentlichen Issues posten. Sicherheitsprobleme sollten dem Projektverantwortlichen privat und mit möglichst wenigen personenbezogenen Beispieldaten gemeldet werden.
 
-
 ## Zebra DataWedge Broadcast
 
-Der DataWedge-Empfänger ist für die Zusammenarbeit mit Zebra Intent Output dynamisch und exportiert registriert. Android-Broadcasts sind damit nicht kryptografisch an DataWedge gebunden. Eingehende Werte werden als nicht vertrauenswürdige Nutzereingabe behandelt, auf Länge und Zeichen geprüft und niemals automatisch gebucht. Für Hochsicherheitsbetrieb ist eine vom Geräteadministrator kontrollierte App-/Profil-Allowlist bzw. eine zusätzliche vertrauenswürdige Integrationsschicht erforderlich.
+TRAKUNA registriert den DataWedge-Empfänger dynamisch, damit DataWedge Broadcast-Scans zustellen kann. Ohne geräteseitige Einschränkung kann ein anderer Prozess auf demselben Gerät einen gleichartigen Broadcast nachahmen.
+
+**Empfohlene Gerätekonfiguration:** Im DataWedge-Profil unter Intent Output → Component Information ausschließlich das installierte TRAKUNA-Paket `de.trakuna.app` auswählen und die angebotene App-Signaturprüfung aktivieren. Zebra dokumentiert, dass DataWedge dann die Paket-ID und zusätzlich die App-Signatur vor der Zustellung prüft. Die Einstellung muss auf jedem eingesetzten Gerät bzw. verwalteten Profil kontrolliert werden; TRAKUNA kann ihren Aktivierungsstatus nicht auslesen oder garantieren.
+
+Die Allowlist schützt die Zustellung über korrekt konfiguriertes DataWedge. Sie ist kein Ersatz für Eingabevalidierung oder die Prüfung durch den Mitarbeiter. Eingehende Scanwerte bleiben nicht vertrauenswürdige Eingaben, werden validiert und lösen niemals automatisch eine Buchung aus. Für Hochsicherheitsbetrieb sind zusätzlich zentral verwaltete Geräte, kontrollierte App-Installationen und eine vertrauenswürdige Integrationsschicht erforderlich.
