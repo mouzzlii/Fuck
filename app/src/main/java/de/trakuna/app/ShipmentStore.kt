@@ -556,10 +556,6 @@ object ShipmentRules {
             Regex("^[A-Z]{2}[0-9]{9}AT$").matches(value) -> "Österreichische Post"
             value.startsWith("JVGL") || value.startsWith("JJD") -> "DHL Paket"
             value.startsWith("JD") && value.length in 12..30 -> "DHL Paket"
-            value.matches(Regex("^[0-9]{13}$")) -> "Österreichische Post"
-            value.matches(Regex("^[0-9]{14}$")) -> "DPD"
-            value.matches(Regex("^[0-9]{11,12}$")) -> "GLS"
-            value.matches(Regex("^[0-9]{10}$")) || value.matches(Regex("^[0-9]{20}$")) -> "DHL Paket"
             else -> null
         }
     }

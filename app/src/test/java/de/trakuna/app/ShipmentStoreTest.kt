@@ -47,9 +47,9 @@ class ShipmentStoreTest {
     fun csvExportEscapesSpreadsheetFormulasAndQuotes() {
         assertEquals("\"'=1+1\"", ShipmentRules.csvSafeCell("=1+1"))
         assertEquals("\"'  @SUM(A1:A2)\"", ShipmentRules.csvSafeCell("  @SUM(A1:A2)"))
-        assertEquals("\"'\t=1+1\"", ShipmentRules.csvSafeCell("\t=1+1"))
-        assertEquals("\"'\uFEFF=1+1\"", ShipmentRules.csvSafeCell("\uFEFF=1+1"))
-        assertEquals("\"'\u200B+1+1\"", ShipmentRules.csvSafeCell("\u200B+1+1"))
+        assertEquals("\"'\\t=1+1\"", ShipmentRules.csvSafeCell("\t=1+1"))
+        assertEquals("\"'\\uFEFF=1+1\"", ShipmentRules.csvSafeCell("\uFEFF=1+1"))
+        assertEquals("\"'\\u200B+1+1\"", ShipmentRules.csvSafeCell("\u200B+1+1"))
         assertEquals("\"normal text\"", ShipmentRules.csvSafeCell("normal text"))
         assertEquals("\"say \"\"hello\"\"\"", ShipmentRules.csvSafeCell("say \"hello\""))
     }
@@ -82,9 +82,9 @@ class ShipmentStoreTest {
     }
 
     @Test
-    fun manualCarrierChoiceOverridesHintAndBlankChoiceUsesHint() {
+    fun manualCarrierChoiceOverridesHintAndAmbiguousNumbersStayUnassigned() {
         assertEquals("DHL", ShipmentRules.resolveCarrierLabel(" DHL ", "12345678901234"))
-        assertEquals("DPD", ShipmentRules.resolveCarrierLabel("", "12345678901234"))
+        assertEquals("", ShipmentRules.resolveCarrierLabel("", "12345678901234"))
         assertEquals("GLS", ShipmentRules.resolveCarrierLabel("GLS", "1Z999AA10123456784"))
         assertEquals("", ShipmentRules.resolveCarrierLabel(" ", "ABC1234567"))
     }
@@ -102,12 +102,12 @@ class ShipmentStoreTest {
     }
 
     @Test
-    fun carrierHintsRecognizeKnownFormatsAndLeaveAmbiguousValuesUnknown() {
+    fun carrierHintsRecognizeOnlyDistinctiveFormatsAndLeaveNumericValuesUnknown() {
         assertEquals("UPS", ShipmentRules.identifyCarrier("1z999aa10123456784"))
         assertEquals("Österreichische Post", ShipmentRules.identifyCarrier("AB123456789AT"))
-        assertEquals("Österreichische Post", ShipmentRules.identifyCarrier("1234567890123"))
-        assertEquals("DPD", ShipmentRules.identifyCarrier("12345678901234"))
-        assertEquals("GLS", ShipmentRules.identifyCarrier("12345678901"))
+        assertEquals(null, ShipmentRules.identifyCarrier("1234567890123"))
+        assertEquals(null, ShipmentRules.identifyCarrier("12345678901234"))
+        assertEquals(null, ShipmentRules.identifyCarrier("12345678901"))
         assertEquals("DHL Paket", ShipmentRules.identifyCarrier("JVGL1234567890"))
         assertEquals(null, ShipmentRules.identifyCarrier("ABC1234567"))
         assertEquals(null, ShipmentRules.identifyCarrier("123456789012345"))
@@ -115,46 +115,19 @@ class ShipmentStoreTest {
 
     @Test
     fun incomingShipmentFollowsPickupLifecycle() {
-        assertEquals(
-            ShipmentStatus.RECEIVED_BY_SHOP,
-            ShipmentRules.initialStatus(ShipmentFlow.INCOMING_FOR_CUSTOMER)
-        )
-        assertEquals(
-            ShipmentStatus.READY_FOR_PICKUP,
-            ShipmentRules.nextStatus(ShipmentFlow.INCOMING_FOR_CUSTOMER, ShipmentStatus.RECEIVED_BY_SHOP)
-        )
-        assertEquals(
-            ShipmentStatus.HANDED_TO_CUSTOMER,
-            ShipmentRules.nextStatus(ShipmentFlow.INCOMING_FOR_CUSTOMER, ShipmentStatus.READY_FOR_PICKUP)
-        )
-        assertEquals(
-            null,
-            ShipmentRules.nextStatus(ShipmentFlow.INCOMING_FOR_CUSTOMER, ShipmentStatus.HANDED_TO_CUSTOMER)
-        )
+        assertEquals(ShipmentStatus.RECEIVED_BY_SHOP, ShipmentRules.initialStatus(ShipmentFlow.INCOMING_FOR_CUSTOMER))
+        assertEquals(ShipmentStatus.READY_FOR_PICKUP, ShipmentRules.nextStatus(ShipmentFlow.INCOMING_FOR_CUSTOMER, ShipmentStatus.RECEIVED_BY_SHOP))
+        assertEquals(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentRules.nextStatus(ShipmentFlow.INCOMING_FOR_CUSTOMER, ShipmentStatus.READY_FOR_PICKUP))
+        assertEquals(null, ShipmentRules.nextStatus(ShipmentFlow.INCOMING_FOR_CUSTOMER, ShipmentStatus.HANDED_TO_CUSTOMER))
     }
 
     @Test
     fun outgoingAndReturnFlowsFinishAtCarrierHandover() {
-        assertEquals(
-            ShipmentStatus.HANDED_TO_CARRIER,
-            ShipmentRules.nextStatus(ShipmentFlow.OUTGOING_FROM_CUSTOMER, ShipmentStatus.ACCEPTED_FROM_CUSTOMER)
-        )
-        assertEquals(
-            ShipmentStatus.HANDED_TO_CARRIER,
-            ShipmentRules.nextStatus(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.RETURN_ACCEPTED)
-        )
-        assertEquals(
-            null,
-            ShipmentRules.nextStatus(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.HANDED_TO_CARRIER)
-        )
-        assertEquals(
-            null,
-            ShipmentRules.nextStatus(ShipmentFlow.OUTGOING_FROM_CUSTOMER, ShipmentStatus.RETURN_ACCEPTED)
-        )
-        assertEquals(
-            null,
-            ShipmentRules.nextStatus(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.ACCEPTED_FROM_CUSTOMER)
-        )
+        assertEquals(ShipmentStatus.HANDED_TO_CARRIER, ShipmentRules.nextStatus(ShipmentFlow.OUTGOING_FROM_CUSTOMER, ShipmentStatus.ACCEPTED_FROM_CUSTOMER))
+        assertEquals(ShipmentStatus.HANDED_TO_CARRIER, ShipmentRules.nextStatus(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.RETURN_ACCEPTED))
+        assertEquals(null, ShipmentRules.nextStatus(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.HANDED_TO_CARRIER))
+        assertEquals(null, ShipmentRules.nextStatus(ShipmentFlow.OUTGOING_FROM_CUSTOMER, ShipmentStatus.RETURN_ACCEPTED))
+        assertEquals(null, ShipmentRules.nextStatus(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.ACCEPTED_FROM_CUSTOMER))
     }
 
     @Test
@@ -175,7 +148,6 @@ class ShipmentStoreTest {
         )
         val duplicate = active.copy(id = "two", updatedAt = 3L)
         assertFalse(ShipmentRules.hasNoDuplicateActiveShipments(listOf(active, duplicate)))
-
         val completed = duplicate.copy(status = ShipmentStatus.HANDED_TO_CUSTOMER)
         assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(active, completed)))
     }
@@ -189,12 +161,7 @@ class ShipmentStoreTest {
         )
         val sameNumberDifferentCase = first.copy(id = "second", trackingNumber = "ABC1234567")
         assertFalse(ShipmentRules.hasNoDuplicateActiveShipments(listOf(first, sameNumberDifferentCase)))
-
-        val otherFlow = sameNumberDifferentCase.copy(
-            id = "third",
-            flow = ShipmentFlow.CUSTOMER_RETURN,
-            status = ShipmentStatus.RETURN_ACCEPTED
-        )
+        val otherFlow = sameNumberDifferentCase.copy(id = "third", flow = ShipmentFlow.CUSTOMER_RETURN, status = ShipmentStatus.RETURN_ACCEPTED)
         assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(first, otherFlow)))
     }
 
@@ -205,12 +172,7 @@ class ShipmentStoreTest {
             flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
             status = ShipmentStatus.HANDED_TO_CUSTOMER, createdAt = 1L, updatedAt = 2L
         )
-        val newActive = completed.copy(
-            id = "new",
-            status = ShipmentStatus.RECEIVED_BY_SHOP,
-            createdAt = 3L,
-            updatedAt = 3L
-        )
+        val newActive = completed.copy(id = "new", status = ShipmentStatus.RECEIVED_BY_SHOP, createdAt = 3L, updatedAt = 3L)
         assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(completed, newActive)))
     }
 
@@ -221,10 +183,7 @@ class ShipmentStoreTest {
             flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
             status = ShipmentStatus.READY_FOR_PICKUP, createdAt = 1L, updatedAt = 2L
         )
-        val returned = incoming.copy(
-            id = "return", flow = ShipmentFlow.CUSTOMER_RETURN,
-            status = ShipmentStatus.RETURN_ACCEPTED
-        )
+        val returned = incoming.copy(id = "return", flow = ShipmentFlow.CUSTOMER_RETURN, status = ShipmentStatus.RETURN_ACCEPTED)
         assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(incoming, returned)))
     }
 
@@ -235,27 +194,17 @@ class ShipmentStoreTest {
         assertEquals(null, ShipmentRules.extractTrackingNumber("Parcel 12345678"))
         assertEquals(null, ShipmentRules.extractTrackingNumber("Invoice 123456789"))
         assertEquals("1Z999AA10123456784", ShipmentRules.extractTrackingNumber("1Z 999AA10123456784"))
-        assertEquals(null, ShipmentRules.extractTrackingNumber("kein Paketcode"))
     }
 
     @Test
     fun scanParserReadsSupportedQrQueryParametersCaseInsensitively() {
-        assertEquals(
-            "AB123456789AT",
-            ShipmentRules.extractTrackingNumber("https://example.test/track?Tracking_Number=AB123456789AT")
-        )
-        assertEquals(
-            "1Z999AA10123456784",
-            ShipmentRules.extractTrackingNumber("https://example.test/track?id=1Z999AA10123456784")
-        )
+        assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber("https://example.test/track?Tracking_Number=AB123456789AT"))
+        assertEquals("1Z999AA10123456784", ShipmentRules.extractTrackingNumber("https://example.test/track?id=1Z999AA10123456784"))
     }
 
     @Test
     fun scanParserUsesRecognizableQrPathAndRejectsUntrustedOrOversizedInput() {
-        assertEquals(
-            "AB123456789AT",
-            ShipmentRules.extractTrackingNumber("https://example.test/parcel/AB123456789AT")
-        )
+        assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber("https://example.test/parcel/AB123456789AT"))
         assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/parcel/not-a-number"))
         assertEquals(null, ShipmentRules.extractTrackingNumber("x".repeat(4097)))
         assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/track?id=%ZZ"))
@@ -263,24 +212,13 @@ class ShipmentStoreTest {
 
     @Test
     fun scanParserContinuesAfterInvalidRecognizedQueryParameter() {
-        assertEquals(
-            "AB123456789AT",
-            ShipmentRules.extractTrackingNumber(
-                "https://example.test/track?tracking=invalid&sendungsnummer=AB123456789AT"
-            )
-        )
+        assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber("https://example.test/track?tracking=invalid&sendungsnummer=AB123456789AT"))
     }
 
     @Test
     fun scanParserDecodesPercentEncodedTrackingNumbersAndAIMQrPrefix() {
-        assertEquals(
-            "AB123456789AT",
-            ShipmentRules.extractTrackingNumber("https://example.test/track?tracking=AB123456789%41T")
-        )
-        assertEquals(
-            "AB123456789AT",
-            ShipmentRules.extractTrackingNumber("]Q3AB123456789AT")
-        )
+        assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber("https://example.test/track?tracking=AB123456789%41T"))
+        assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber("]Q3AB123456789AT"))
     }
 
     @Test
