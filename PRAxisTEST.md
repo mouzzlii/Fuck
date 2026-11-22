@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Version 1.37)
+# TRAKUNA – Praxis-Testplan (Version 1.38)
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -34,6 +34,8 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 19 | Eine Betriebssoftware ausdrücklich auswählen und danach eine Paketdienst-Standardzuordnung konfigurieren (falls vorhanden) | Die bewusst gespeicherte Auswahl des Mitarbeiters hat Vorrang; eine Standardzuordnung darf sie nicht unbemerkt ersetzen. |
 
 ## 3. Sicherheits- und Fehlerprüfungen
+
+- Zebra-/DataWedge-Broadcast ohne Sendungsnummern-Extra oder mit einem falsch typisierten Extra prüfen: Der Scan wird ignoriert und TRAKUNA bleibt bedienbar.
 
 - Ungültige oder zu kurze Sendungsnummern dürfen nicht als neuer Vorgang gespeichert werden.
 - Derselbe offene Vorgang darf nicht versehentlich mehrfach angelegt werden; die App muss klar „bereits vorhanden“ melden und darf nicht „gespeichert“ vortäuschen.

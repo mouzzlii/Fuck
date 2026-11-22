@@ -87,7 +87,9 @@ class MainActivity : ComponentActivity() {
                         // Ignore broadcasts while TRAKUNA is backgrounded or no longer active.
                         if (!this@MainActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return
                         if (intent?.action != DATAWEDGE_ACTION) return
-                        val raw = intent.getStringExtra(DATAWEDGE_DATA_EXTRA) ?: return
+                        // Broadcasts are externally supplied; ignore a missing or wrongly typed
+                        // extra instead of allowing a malformed parcel to crash the receiver.
+                        val raw = runCatching { intent.getStringExtra(DATAWEDGE_DATA_EXTRA) }.getOrNull() ?: return
                         if (raw.length > MAX_SCAN_INPUT_CHARS) {
                             status = "Scaninhalt ist zu lang und wurde aus Sicherheitsgründen abgelehnt. Bitte Sendungsnummer manuell prüfen."
                             return

@@ -15,6 +15,7 @@
 - Fehler beim Lesen/Entschlüsseln des Übergabe-Caches werden nicht als leerer Cache ausgegeben; der Lesezugriff meldet einen Fehler.
 
 - Zebra-DataWedge-Broadcasts werden nur verarbeitet, solange die TRAKUNA-Aktivität im Vordergrund (`RESUMED`) ist; im Hintergrund eingehende Broadcasts werden ignoriert.
+- Fehlende oder falsch typisierte DataWedge-Extras werden defensiv ignoriert; fehlerhafte externe Broadcast-Nutzdaten sollen den Empfänger nicht zum Absturz bringen.
 - Android-Backup ist deaktiviert (`allowBackup=false`).
 - Unverschlüsselter Netzwerkverkehr ist standardmäßig deaktiviert.
 - Lokale Datensätze werden vor Anzeige und Wiederherstellung auf Struktur, Status, IDs und Duplikate geprüft.
