@@ -224,6 +224,11 @@ class MainActivity : ComponentActivity() {
                                             onClick = {
                                                 val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
+                                                if (result is ShipmentUpdate.Saved) {
+                                                    recipient = ""
+                                                    carrierOverride = ""
+                                                    shipmentNote = ""
+                                                }
                                                 shipmentRevision++
                                             },
                                             enabled = normalizeTrackingNumber(number).isNotBlank(),
@@ -233,6 +238,11 @@ class MainActivity : ComponentActivity() {
                                             onClick = {
                                                 val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
+                                                if (result is ShipmentUpdate.Saved) {
+                                                    recipient = ""
+                                                    carrierOverride = ""
+                                                    shipmentNote = ""
+                                                }
                                                 shipmentRevision++
                                             },
                                             enabled = normalizeTrackingNumber(number).isNotBlank(),
@@ -242,6 +252,11 @@ class MainActivity : ComponentActivity() {
                                             onClick = {
                                                 val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
+                                                if (result is ShipmentUpdate.Saved) {
+                                                    recipient = ""
+                                                    carrierOverride = ""
+                                                    shipmentNote = ""
+                                                }
                                                 shipmentRevision++
                                             },
                                             enabled = normalizeTrackingNumber(number).isNotBlank(),
