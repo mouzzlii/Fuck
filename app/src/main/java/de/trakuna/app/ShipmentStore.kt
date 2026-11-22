@@ -454,7 +454,12 @@ object ShipmentRules {
         fun plausible(value: String?): String? =
             value?.let(::normalizeTrackingNumber)?.takeIf(::isValidTrackingNumber)
 
-        if (cleaned.startsWith("http://", true) || cleaned.startsWith("https://", true)) {
+        val isHttpUrl = cleaned.startsWith("http://", true) || cleaned.startsWith("https://", true)
+        val hasUrlScheme = Regex("^[A-Za-z][A-Za-z0-9+.-]*://").containsMatchIn(cleaned)
+        // Never mine a tracking-number-looking substring from an unsupported URL scheme.
+        if (hasUrlScheme && !isHttpUrl) return null
+
+        if (isHttpUrl) {
             val uri = runCatching { java.net.URI(cleaned) }.getOrNull() ?: return null
             if (uri.scheme?.lowercase() !in setOf("http", "https")) return null
             val acceptedKeys = setOf(
