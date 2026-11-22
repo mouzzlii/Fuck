@@ -11,6 +11,8 @@ TRAKUNA ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unt
 - Auswahl einer installierten Betriebssoftware und Übergabeversuch per Android-Intent.
 - Lokale Paketshop-Liste mit Eingang für Kunden, Annahme von Kundensendungen und Retouren.
 - Statusfortschritt, Empfänger-/Notizfelder (nachträglich bearbeitbar), Suche und Löschen einzelner Vorgänge.
+- Schutz vor unbemerktem Erreichen der lokalen Speichergrenze: maximal 500 Vorgänge; vor weiteren Einträgen wird ein CSV-Export und Aufräumen verlangt.
+- Anzeige der belegten Speicherkapazität und verständlicher Hinweis bei Suchanfragen ohne Treffer.
 - CSV-Export als echte Datei über den Android-Dateidialog (Speicherort frei wählbar).
 
 ## Praxis-Test
