@@ -1,6 +1,6 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.20 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.21 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Integrations- und Sicherheitsdokumentation
 
@@ -13,6 +13,7 @@ TRAKUNA 1.20 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Vorhandene unverschlüsselte lokale Datensätze werden beim ersten Start kontrolliert migriert. Die alte Kopie wird erst zusammen mit dem erfolgreich gespeicherten verschlüsselten Bestand entfernt.
 - Bei fehlgeschlagener Migration, beschädigten Chiffretexten oder nicht verfügbarem Schlüssel zeigt die App einen Speicherfehler, statt einen leeren Datenbestand vorzutäuschen.
 - Verschlüsselte Speicherwerte und Klartext vor der Verschlüsselung sind größenbegrenzt, damit beschädigte oder übergroße lokale Einträge nicht unbegrenzt in den Speicher geladen werden.
+- Auch die zuletzt an die Partner-App übergebene Sendungsnummer und Paketdienstangabe werden separat mit AES-GCM und einem eigenen Android-Keystore-Schlüssel verschlüsselt; vorhandene Klartext-Cachewerte werden einmalig migriert.
 - JSON- und CSV-Exporte bleiben bewusst separat: exportierte Dateien sind weiterhin unverschlüsselt und müssen geschützt aufbewahrt werden.
 
 ## Funktionen im aktuellen Entwicklungsstand
@@ -61,7 +62,7 @@ APK-Ausgabe: `app/build/outputs/apk/debug/app-debug.apk`.
 
 ## Wichtige Grenzen – noch kein produktiver Paketdienstbetrieb
 
-- Die Datenspeicherung erfolgt lokal in Android SharedPreferences; die Paketdatensätze werden mit AES-256-GCM verschlüsselt und der Schlüssel liegt im Android Keystore. Es gibt weiterhin keine zentrale Datenbank. Die Sendungsnummer wird vor der Partnerübergabe synchron in den lokalen Cache geschrieben; bei einem Schreibfehler wird der Übergabeversuch gestoppt. Es gibt keine Synchronisierung zwischen Geräten, Benutzerkonten, Rollen oder revisionssichere Audit-Protokolle.
+- Die Datenspeicherung erfolgt lokal in Android SharedPreferences; die Paketdatensätze werden mit AES-256-GCM verschlüsselt und der Schlüssel liegt im Android Keystore. Es gibt weiterhin keine zentrale Datenbank. Die Sendungsnummer wird vor der Partnerübergabe synchron in einen verschlüsselten lokalen Cache geschrieben; bei einem Schreibfehler wird der Übergabeversuch gestoppt. Es gibt keine Synchronisierung zwischen Geräten, Benutzerkonten, Rollen oder revisionssichere Audit-Protokolle.
 - Der CSV-Export erstellt eine Datei am vom Nutzer gewählten Speicherort. Es gibt keine automatische oder verschlüsselte Cloud-Sicherung; die JSON-Datei muss manuell erstellt und sicher aufbewahrt werden.
 - Datensicherungen enthalten Sendungsnummern, Empfängernamen und interne Notizen im Klartext. Die Datei muss wie ein vertrauliches Dokument geschützt und sicher gespeichert werden.
 - Eine Partner-App wird nur geöffnet und mit Intent-Extras gestartet. Eine automatische Übernahme der Sendungsnummer funktioniert nur, wenn die Zielsoftware diese Extras oder eine passende API ausdrücklich unterstützt. TRAKUNA kann die Unterstützung fremder Apps nicht erzwingen.
