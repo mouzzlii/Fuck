@@ -55,7 +55,7 @@ Für jeden Test notieren:
 
 Ein begleiteter Praxistest ist erst bestanden, wenn alle für den konkreten Shop benötigten Abläufe auf dem tatsächlichen Android-Gerät erfolgreich getestet wurden.
 
-Ein grüner GitHub-Build bestätigt nur, dass Tests und APK-Erstellung im CI-Lauf erfolgreich waren. Er bestätigt nicht die Kompatibilität mit einer fremden Betriebssoftware, die Erkennung aller Paketetiketten oder die Eignung für den produktiven Paketshop-Betrieb.
+Ein grüner GitHub-Build bestätigt nur, dass Tests und APK-Erstellung im CI-Lauf erfolgreich sind. Er bestätigt nicht die Kompatibilität mit einer fremden Betriebssoftware, die Erkennung aller Paketetiketten oder die Eignung für den produktiven Paketshop-Betrieb.
 
 ## 6. Noch offene Voraussetzungen für Produktivbetrieb
 
@@ -66,8 +66,18 @@ Ein grüner GitHub-Build bestätigt nur, dass Tests und APK-Erstellung im CI-Lau
 - Backup- und Wiederherstellungsverfahren
 - Praxistest und Freigabe durch den Paketshop-Betreiber
 
+## 7. Zusätzlicher Zebra DataWedge-Sicherheitstest
+
+1. DataWedge-Profil für TRAKUNA öffnen und unter Intent Output → Component Information das Paket `de.trakuna.app` hinzufügen.
+2. Bei der Abfrage die Signaturprüfung aktivieren und kontrollieren, dass sie in der Component-Liste als aktiv angezeigt wird.
+3. Einen Barcode mit dem Zebra-Auslöser scannen. Der Wert muss in TRAKUNA erscheinen.
+4. TRAKUNA aktualisieren oder neu installieren und prüfen, ob die Signaturprüfung im DataWedge-Profil weiterhin aktiv ist. Bei einem Signaturwechsel die Komponente neu auswählen.
+5. Wenn ein verwalteter Gerätetest möglich ist, einen gleichartigen Broadcast aus einer nicht autorisierten Test-App senden lassen. Er darf nicht als vertrauenswürdiger Scan behandelt werden. Diesen Test nur auf einem Testgerät und mit einer eigens dafür erstellten Test-App durchführen.
+
+Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Signaturprüfung aktiviert ist. Die Konfiguration muss daher vom Geräteadministrator dokumentiert werden.
 
 ## Datensicherung und Wiederherstellung
+
 1. In „Paketshop-Sendungen verwalten“ eine vollständige JSON-Datensicherung erstellen und in einem sicheren Speicherort ablegen.
 2. Prüfen, dass die Datei `TRAKUNA-Sicherung.json` vorhanden und nicht leer ist.
 3. Für eine Wiederherstellung die Sicherungsdatei auswählen. TRAKUNA prüft Format, Version, Einträge und Höchstmenge.
@@ -77,5 +87,4 @@ Ein grüner GitHub-Build bestätigt nur, dass Tests und APK-Erstellung im CI-Lau
 **Wichtig:** Die Sicherungsdatei enthält personenbezogene Daten im Klartext. Nur auf einem geschützten Speicherort ablegen und nicht unverschlüsselt weitergeben.
 
 6. Eine Sicherungsdatei mit verändertem Zähler, doppelter Vorgangs-ID oder doppelter aktiver Sendung testen. TRAKUNA muss sie ablehnen und den bisherigen Bestand unverändert lassen.
-
 7. Beschädigten lokalen Datenspeicher simulieren (nur in einer Testinstallation). TRAKUNA muss einen Warnhinweis anzeigen und Änderungen sowie CSV-/JSON-Exporte blockieren; vorhandene Rohdaten dürfen nicht automatisch überschrieben werden.
