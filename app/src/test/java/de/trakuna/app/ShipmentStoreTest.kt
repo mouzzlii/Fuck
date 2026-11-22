@@ -7,6 +7,27 @@ import org.junit.Test
 
 class ShipmentStoreTest {
     @Test
+    fun recordValidationRejectsInvalidWorkflowAndTimestamps() {
+        val valid = ShipmentRecord(
+            id = "record-1",
+            trackingNumber = "ABC1234567",
+            carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
+            status = ShipmentStatus.RECEIVED_BY_SHOP,
+            createdAt = 100L,
+            updatedAt = 100L,
+            recipient = "Max Mustermann",
+            note = "Paket liegt im Regal"
+        )
+        assertTrue(ShipmentRules.isValidRecord(valid))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(status = ShipmentStatus.RETURN_ACCEPTED)))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(updatedAt = 99L)))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(id = "")))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(trackingNumber = "ABC")))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(note = "x".repeat(501))))
+    }
+
+    @Test
     fun csvExportEscapesSpreadsheetFormulasAndQuotes() {
         assertEquals("\"'=1+1\"", ShipmentRules.csvSafeCell("=1+1"))
         assertEquals("\"'  @SUM(A1:A2)\"", ShipmentRules.csvSafeCell("  @SUM(A1:A2)"))
