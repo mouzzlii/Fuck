@@ -302,6 +302,9 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun restoreBackup(raw: String): BackupRestoreResult {
+        initializationError?.let {
+            return BackupRestoreResult.Rejected("Lokaler Speicher ist nicht initialisiert. Vorhandene Daten werden nicht überschrieben.")
+        }
         val validation = validateBackup(raw)
         if (validation !is BackupValidation.Valid) {
             return BackupRestoreResult.Rejected((validation as BackupValidation.Invalid).reason)
