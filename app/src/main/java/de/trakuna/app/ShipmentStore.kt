@@ -141,6 +141,26 @@ class ShipmentStore(context: Context) {
         return removed
     }
 
+    @Synchronized
+    fun exportCsv(): String {
+        fun cell(value: String): String = "\"" + value.replace("\"", "\"\"") + "\""
+        val header = listOf("ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status", "Empfänger", "Notiz", "Erstellt", "Aktualisiert")
+        val rows = all().map { record ->
+            listOf(
+                record.id,
+                record.trackingNumber,
+                record.carrier,
+                record.flow.name,
+                record.status.name,
+                record.recipient,
+                record.note,
+                record.createdAt.toString(),
+                record.updatedAt.toString()
+            )
+        }
+        return (listOf(header) + rows).joinToString("\\n") { row -> row.joinToString(";") { cell(it) } }
+    }
+
     private fun persist(records: List<ShipmentRecord>) {
         val bounded = records.sortedByDescending { it.updatedAt }.take(MAX_RECORDS)
         val array = JSONArray()
