@@ -158,7 +158,7 @@ class ShipmentStore(context: Context) {
                 record.updatedAt.toString()
             )
         }
-        return (listOf(header) + rows).joinToString("\\n") { row -> row.joinToString(";") { cell(it) } }
+        return (listOf(header) + rows).joinToString("\n") { row -> row.joinToString(";") { cell(it) } }
     }
 
     private fun persist(records: List<ShipmentRecord>) {
