@@ -21,7 +21,9 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 6 | Abholbereit markieren | Status wechselt auf „Abholbereit“. |
 | 7 | An Kunden übergeben | Status wechselt auf „An Kunden übergeben“. |
 | 8 | Sendung vom Kunden annehmen | Vorgang erscheint im passenden Annahme-Status. |
-| 9 | Paketdienst manuell eintragen oder korrigieren | Beim Erfassen wird der manuell eingetragene Paketdienst gespeichert und hat Vorrang vor der automatischen Erkennung. Bei leerem Feld wird nur der bestmögliche Erkennungshinweis verwendet. |\n| 10 | Formular nach erfolgreicher Erfassung | Empfänger, manuelle Paketdienst-Auswahl und Notiz sind nach erfolgreicher Erfassung leer; ein neuer Vorgang übernimmt keine alten Angaben. |\n| 11 | Retoure annehmen und weitergeben | Retoure kann bis zur Übergabe an den Paketdienst fortgeschrieben werden. |
+| 9 | Paketdienst manuell eintragen oder korrigieren | Beim Erfassen wird der manuell eingetragene Paketdienst gespeichert und hat Vorrang vor der automatischen Erkennung. Bei leerem Feld wird nur der bestmögliche Erkennungshinweis verwendet. |
+| 10 | Formular nach erfolgreicher Erfassung | Empfänger, manuelle Paketdienst-Auswahl und Notiz sind nach erfolgreicher Erfassung leer; ein neuer Vorgang übernimmt keine alten Angaben. |
+| 11 | Retoure annehmen und weitergeben | Retoure kann bis zur Übergabe an den Paketdienst fortgeschrieben werden. |
 | 12 | Empfänger und Notiz bearbeiten | Geänderte Angaben bleiben nach erneutem Öffnen erhalten. |
 | 13 | Suche verwenden | Treffer werden anhand Sendungsnummer, Empfänger, Paketdienst oder Status gefiltert. |
 | 14 | CSV-Datei exportieren | Android-Dateidialog erscheint; die gespeicherte Datei enthält die Sendungsliste. |
