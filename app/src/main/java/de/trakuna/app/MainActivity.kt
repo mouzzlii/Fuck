@@ -660,7 +660,7 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
     }.isSuccess
     val clipboardMessage = if (copied) "Sendungsnummer zusätzlich kopiert." else "Zwischenablage nicht verfügbar; Nummer bleibt im TRAKUNA-Cache."
 
-    val packageName = PartnerAppConfig.packageFor(carrier) ?: preferences.getString("partner_package", null)
+    val packageName = PartnerAppConfig.resolvePackage(carrier, preferences.getString("partner_package", null))
     if (packageName.isNullOrBlank()) {
         return HandoffResult(
             "Nummer $number ist im TRAKUNA-Cache gesichert. $clipboardMessage " +

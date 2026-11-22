@@ -24,4 +24,8 @@ object PartnerAppConfig {
 
     fun packageFor(carrier: String?): String? =
         carrier?.let { carrierPackages[it] } ?: defaultPartnerPackage
+
+    /** An explicit operator choice takes precedence over carrier defaults. */
+    fun resolvePackage(carrier: String?, selectedPackage: String?): String? =
+        selectedPackage?.trim()?.takeIf { it.isNotEmpty() } ?: packageFor(carrier)
 }
