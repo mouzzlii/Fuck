@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Version 1.24)
+# TRAKUNA – Praxis-Testplan (Version 1.25)
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -116,6 +116,7 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 31. **Partner-Auswahl:** Wechseln und Entfernen der gespeicherten Partner-App darf den verschlüsselten Sendungsnummern-Cache nicht löschen.
 32. **Kamera-Scan ohne automatische Übergabe:** Ein Barcode wird erkannt und ins Feld übernommen. TRAKUNA darf nicht selbstständig eine Partner-App öffnen oder eine Sendung buchen. Erst nach bewusster Betätigung der Übergabe-Schaltfläche darf die Übergabe starten.
 33. **Zebra-Scan ohne automatische Übergabe:** Einen Barcode über DataWedge senden. Die Nummer muss nur ins Eingabefeld übernommen werden; keine Partner-App darf automatisch starten.
-34. **Wiederherstellung bei defektem lokalem Speicher:** Auf einem isolierten Testgerät den lokalen Datenspeicher beschädigen, danach eine zuvor erstellte gültige Sicherung auswählen. Die App muss die Wiederherstellung trotz Speicherfehler anbieten, vor dem Ersetzen warnen und danach die gesicherten Einträge wieder anzeigen. Bei fehlgeschlagener Verschlüsselung darf sie keinen Erfolg melden.
-35. **Cache-Lesefehler:** Auf einem isolierten Testgerät den verschlüsselten Cache beschädigen oder den Keystore-Schlüssel entfernen. Ein Lesezugriff muss einen Fehler melden und darf nicht so tun, als wäre lediglich noch keine Sendungsnummer gespeichert.
-36. **Cache-Schreibfehler:** Auf einem isolierten Testgerät einen Speicherausfall simulieren. Die Partner-App darf nicht gestartet werden, wenn das vorherige sichere Speichern nicht bestätigt wurde; die Fehlermeldung muss den Fehler verständlich benennen.
+34. **Kamera schließen während Initialisierung:** Scanner öffnen und unmittelbar wieder schließen, während die Kamera noch initialisiert. Die Kamera darf danach nicht im Hintergrund starten und es darf keine Fehlermeldung nach dem Schließen erscheinen.
+35. **Wiederherstellung bei defektem lokalem Speicher:** Auf einem isolierten Testgerät den lokalen Datenspeicher beschädigen, danach eine zuvor erstellte gültige Sicherung auswählen. Die App muss die Wiederherstellung trotz Speicherfehler anbieten, vor dem Ersetzen warnen und danach die gesicherten Einträge wieder anzeigen. Bei fehlgeschlagener Verschlüsselung darf sie keinen Erfolg melden.
+36. **Cache-Lesefehler:** Auf einem isolierten Testgerät den verschlüsselten Cache beschädigen oder den Keystore-Schlüssel entfernen. Ein Lesezugriff muss einen Fehler melden und darf nicht so tun, als wäre lediglich noch keine Sendungsnummer gespeichert.
+37. **Cache-Schreibfehler:** Auf einem isolierten Testgerät einen Speicherausfall simulieren. Die Partner-App darf nicht gestartet werden, wenn das vorherige sichere Speichern nicht bestätigt wurde; die Fehlermeldung muss den Fehler verständlich benennen.

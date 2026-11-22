@@ -737,11 +737,13 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
         ).build()
         val scanner: BarcodeScanner = BarcodeScanning.getClient(options)
         val delivered = AtomicBoolean(false)
+        val disposed = AtomicBoolean(false)
         var provider: ProcessCameraProvider? = null
         val future = ProcessCameraProvider.getInstance(context)
         future.addListener({
-            try {
+            if (!disposed.get()) try {
                 val cameraProvider = future.get()
+                if (disposed.get()) return@addListener
                 provider = cameraProvider
                 val preview = Preview.Builder().build().also { it.surfaceProvider = previewView.surfaceProvider }
                 val analysis = ImageAnalysis.Builder()
@@ -749,7 +751,7 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
                     .build()
                 analysis.setAnalyzer(executor) { proxy ->
                     val mediaImage = proxy.image
-                    if (mediaImage == null || delivered.get()) {
+                    if (mediaImage == null || delivered.get() || disposed.get()) {
                         proxy.close()
                     } else {
                         try {
@@ -774,13 +776,18 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
                         }
                     }
                 }
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(activity as LifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
+                if (!disposed.get()) {
+                    cameraProvider.unbindAll()
+                    cameraProvider.bindToLifecycle(activity as LifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
+                }
             } catch (error: Exception) {
-                cameraError = "Kamera konnte nicht gestartet werden. Bitte Kameraberechtigung prüfen oder Sendungsnummer manuell eingeben."
+                if (!disposed.get()) {
+                    cameraError = "Kamera konnte nicht gestartet werden. Bitte Kameraberechtigung prüfen oder Sendungsnummer manuell eingeben."
+                }
             }
         }, mainExecutor)
         onDispose {
+            disposed.set(true)
             runCatching { provider?.unbindAll() }
             scanner.close()
             executor.shutdown()
