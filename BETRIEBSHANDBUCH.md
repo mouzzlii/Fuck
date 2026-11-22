@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.35
+Stand: App-Version 1.36
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
 ## 1. Wichtiger Status vor dem ersten Einsatz
 
-TRAKUNA 1.35 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
+TRAKUNA 1.36 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
 
 - Sendungsdaten liegen nur auf diesem Android-Gerät. Es gibt keine zentrale Synchronisierung zwischen mehreren Geräten.
 - Es gibt noch keine Mitarbeiter-Anmeldung, Benutzerrollen oder persönliche Zuordnung von Bearbeitern.
@@ -106,7 +106,7 @@ Ein Zebra-Scan füllt nur das Sendungsnummernfeld. Er löst keine automatische B
 
 TRAKUNA speichert die Sendungsnummer vorher verschlüsselt im lokalen Übergabe-Cache und versucht, die ausgewählte App mit definierten Android-Intent-Extras zu öffnen. Zusätzlich kann die Nummer in die Zwischenablage kopiert werden.
 
-**Das Öffnen einer App ist keine bestätigte Buchung.** Nur wenn der Anbieter die TRAKUNA-Extras oder eine dokumentierte Schnittstelle tatsächlich unterstützt, kann eine Übernahme funktionieren. Die konkrete Betriebssoftware muss separat getestet und vom Anbieter freigegeben werden.
+**Das Öffnen einer App ist keine bestätigte Buchung.** Nur wenn der Anbieter die TRAKUNA-Extras oder eine dokumentierte Schnittstelle tatsächlich unterstützt, kann eine Übernahme funktionieren. Die konkrete Betriebssoftware muss separat getestet und vom Anbieter freigegeben werden. Eine bewusst gespeicherte Auswahl bleibt vorrangig; eine spätere Paketdienst-Standardzuordnung darf diese Auswahl nicht überschreiben.
 
 ## 7. Datensicherung und Export
 
