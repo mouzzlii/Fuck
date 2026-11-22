@@ -116,7 +116,7 @@ class ShipmentStore(context: Context) {
             note = note.trim().take(500)
         )
         records.add(record)
-        persist(records)
+        if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte freien Gerätespeicher prüfen und den Vorgang erneut kontrollieren.")
         return ShipmentUpdate.Saved(record)
     }
 
@@ -132,7 +132,7 @@ class ShipmentStore(context: Context) {
             ?: return ShipmentUpdate.Rejected("Dieser Vorgang ist bereits abgeschlossen.")
         val updated = current.copy(status = next, updatedAt = System.currentTimeMillis())
         records[index] = updated
-        persist(records)
+        if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte den Vorgang erneut öffnen und prüfen.")
         return ShipmentUpdate.Saved(updated)
     }
 
@@ -157,8 +157,8 @@ class ShipmentStore(context: Context) {
     fun remove(id: String): Boolean {
         val records = readRecords().getOrElse { return false }.toMutableList()
         val removed = records.removeAll { it.id == id }
-        if (removed) persist(records)
-        return removed
+        if (!removed) return false
+        return persist(records)
     }
 
     @Synchronized
@@ -190,6 +190,7 @@ class ShipmentStore(context: Context) {
     @Synchronized
     fun validateBackup(raw: String): BackupValidation {
         val parsed = runCatching {
+            require(raw.toByteArray(Charsets.UTF_8).size <= MAX_BACKUP_BYTES) { "Sicherungsdatei ist zu groß oder beschädigt." }
             val root = JSONObject(raw)
             require(root.optString("format") == BACKUP_FORMAT) { "Datei ist keine TRAKUNA-Sicherung." }
             require(root.optInt("schemaVersion", -1) == BACKUP_SCHEMA_VERSION) { "Sicherungsversion wird nicht unterstützt." }
@@ -276,9 +277,8 @@ class ShipmentStore(context: Context) {
         return (listOf(header) + rows).joinToString("\n") { row -> row.joinToString(";") { cell(it) } }
     }
 
-    private fun persist(records: List<ShipmentRecord>) {
-        prefs.edit().putString(KEY_RECORDS, encodeRecords(records)).apply()
-    }
+    private fun persist(records: List<ShipmentRecord>): Boolean =
+        runCatching { prefs.edit().putString(KEY_RECORDS, encodeRecords(records)).commit() }.getOrDefault(false)
 
     private fun decode(item: JSONObject): ShipmentRecord? = runCatching {
         ShipmentRecord(
@@ -300,6 +300,7 @@ class ShipmentStore(context: Context) {
         private const val PREFS = "trakuna_shipments"
         private const val KEY_RECORDS = "records_v1"
         const val MAX_RECORDS = 500
+        private const val MAX_BACKUP_BYTES = 2 * 1024 * 1024
         private val TERMINAL_STATUSES = setOf(
             ShipmentStatus.HANDED_TO_CUSTOMER,
             ShipmentStatus.HANDED_TO_CARRIER
