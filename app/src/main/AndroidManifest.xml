@@ -10,6 +10,7 @@
     </queries>
     <application
         android:allowBackup="false"
+        android:usesCleartextTraffic="false"
         android:label="TRAKUNA"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <activity
