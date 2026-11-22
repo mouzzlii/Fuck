@@ -6,6 +6,7 @@
 - Eine Einmalmigration übernimmt den bisherigen Klartextbestand. Der alte Eintrag wird erst nach erfolgreichem Commit des verschlüsselten Ersatzes entfernt.
 - Fehler bei Migration, Entschlüsselung oder Schlüsselzugriff führen zu einem sichtbaren Speicherfehler; die App darf solche Daten nicht als leeren Bestand behandeln.
 - Verschlüsselte Speicherwerte und Klartext vor der Verschlüsselung sind auf maximal 2 MiB Nutzdaten begrenzt; Base64-Eingaben werden vor dem Dekodieren zusätzlich begrenzt.
+- Der zuletzt an eine Partner-App übergebene Sendungsnummern-Cache wird separat mit AES-GCM und einem eigenen Android-Keystore-Schlüssel verschlüsselt. Vorhandene Klartext-Cachewerte werden nach erfolgreichem verschlüsseltem Commit entfernt.
 
 - Android-Backup ist deaktiviert (`allowBackup=false`).
 - Unverschlüsselter Netzwerkverkehr ist standardmäßig deaktiviert.
@@ -18,7 +19,7 @@
 
 ## Bekannte Restrisiken / nicht abgeschlossene Arbeiten
 
-- Exportierte JSON- und CSV-Dateien sind weiterhin unverschlüsselt und müssen wie vertrauliche Unterlagen geschützt werden. Der lokale Übergabe-Cache ist gesondert zu prüfen; die Verschlüsselung des Paketbestands deckt ihn nicht automatisch ab.
+- Exportierte JSON- und CSV-Dateien sind weiterhin unverschlüsselt und müssen wie vertrauliche Unterlagen geschützt werden.
 - Es gibt keine zentrale Anmeldung, Rollen-/Rechteverwaltung oder Gerätesynchronisierung.
 - Es gibt keine verifizierte Carrier-API-Anbindung.
 - Die Partner-App-Übergabe bestätigt nur das Öffnen der Ziel-App, nicht die Übernahme oder Buchung.
