@@ -17,6 +17,7 @@ import javax.crypto.SecretKey
 class SecureHandoffCache(context: Context) {
     private val prefs = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
     @Volatile private var initializationError: String? = null
+    @Volatile private var operationError: String? = null
 
     init {
         migrateLegacyValue()
@@ -25,7 +26,7 @@ class SecureHandoffCache(context: Context) {
     @Synchronized
     fun save(trackingNumber: String, carrier: String?): Boolean {
         if (initializationError != null) return false
-        return runCatching {
+        val result = runCatching {
             val payload = JSONObject().apply {
                 put("trackingNumber", trackingNumber)
                 put("carrier", carrier.orEmpty())
@@ -38,16 +39,30 @@ class SecureHandoffCache(context: Context) {
                 .remove(KEY_LEGACY_CARRIER)
                 .remove(KEY_LEGACY_SAVED_AT)
                 .commit()
-        }.getOrDefault(false)
+        }
+        operationError = when {
+            result.isFailure -> result.exceptionOrNull()?.message ?: "Übergabedaten konnten nicht verschlüsselt werden."
+            result.getOrDefault(false).not() -> "Übergabedaten konnten nicht dauerhaft gespeichert werden."
+            else -> null
+        }
+        return result.getOrDefault(false)
     }
+
+    /** Returns a precise failure instead of disguising damaged cache data as an empty cache. */
+    fun failureReason(): String? = initializationError ?: operationError
 
     @Synchronized
     fun trackingNumber(): String {
-        if (initializationError != null) return ""
-        return runCatching {
-            val encrypted = prefs.getString(KEY_ENCRYPTED, null) ?: return ""
+        check(initializationError == null) {
+            initializationError ?: "Übergabe-Cache konnte nicht initialisiert werden."
+        }
+        val encrypted = prefs.getString(KEY_ENCRYPTED, null) ?: return ""
+        return try {
             JSONObject(decrypt(encrypted)).optString("trackingNumber")
-        }.getOrDefault("")
+        } catch (error: Exception) {
+            operationError = error.message ?: "Übergabe-Cache ist beschädigt oder nicht lesbar."
+            throw IllegalStateException(operationError, error)
+        }
     }
 
     private fun migrateLegacyValue() {
