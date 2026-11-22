@@ -1,6 +1,6 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.14 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Funktionen im aktuellen Entwicklungsstand
 
@@ -8,7 +8,7 @@ TRAKUNA ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unt
 - Manuelle Eingabe von Sendungsnummern als Alternative zum Kamerascan.
 - Erkennung einiger verbreiteter Formate für UPS, Österreichische Post, DHL, DPD und GLS. Die Heuristik ist in separat getestete Geschäftslogik ausgelagert und muss mit echten Labels der jeweiligen Partner geprüft werden.
 - Zwischenspeicherung der letzten Sendungsnummer und Kopie in die Zwischenablage.
-- Auswahl einer installierten Betriebssoftware und Übergabeversuch per Android-Intent.
+- Auswahl einer installierten Betriebssoftware und Übergabeversuch per Android-Intent; die lokale Zwischenspeicherung wird vor dem App-Wechsel bestätigt, ein nicht verfügbarer Clipboard-Dienst blockiert den Ablauf nicht und die Zwischenablage wird auf Android 13+ als sensibel markiert.
 - Lokale Paketshop-Liste mit Eingang für Kunden, Annahme von Kundensendungen und Retouren.
 - Statusfortschritt, Empfänger-/Notizfelder (nachträglich bearbeitbar), Suche und Löschen einzelner Vorgänge.
 - Schutz vor unbemerktem Erreichen der lokalen Speichergrenze: maximal 500 Vorgänge; vor weiteren Einträgen wird ein CSV-Export und Aufräumen verlangt.
@@ -37,7 +37,7 @@ APK-Ausgabe: `app/build/outputs/apk/debug/app-debug.apk`.
 
 ## Wichtige Grenzen – noch kein produktiver Paketdienstbetrieb
 
-- Die Datenspeicherung erfolgt derzeit lokal in Android SharedPreferences (JSON), nicht in einer zentralen Datenbank. Es gibt keine Synchronisierung zwischen Geräten, Benutzerkonten, Rollen oder revisionssichere Audit-Protokolle.
+- Die Datenspeicherung erfolgt derzeit lokal in Android SharedPreferences (JSON), nicht in einer zentralen Datenbank. Die Sendungsnummer wird vor der Partnerübergabe synchron in den lokalen Cache geschrieben; bei einem Schreibfehler wird der Übergabeversuch gestoppt. Es gibt keine Synchronisierung zwischen Geräten, Benutzerkonten, Rollen oder revisionssichere Audit-Protokolle.
 - Der CSV-Export erstellt eine Datei am vom Nutzer gewählten Speicherort. Es gibt keine automatische oder verschlüsselte Cloud-Sicherung; die JSON-Datei muss manuell erstellt und sicher aufbewahrt werden.
 - Datensicherungen enthalten Sendungsnummern, Empfängernamen und interne Notizen im Klartext. Die Datei muss wie ein vertrauliches Dokument geschützt und sicher gespeichert werden.
 - Eine Partner-App wird nur geöffnet und mit Intent-Extras gestartet. Eine automatische Übernahme der Sendungsnummer funktioniert nur, wenn die Zielsoftware diese Extras oder eine passende API ausdrücklich unterstützt. TRAKUNA kann die Unterstützung fremder Apps nicht erzwingen.
