@@ -7,6 +7,14 @@ import org.junit.Test
 
 class ShipmentStoreTest {
     @Test
+    fun csvExportEscapesSpreadsheetFormulasAndQuotes() {
+        assertEquals("\"'=1+1\"", ShipmentRules.csvSafeCell("=1+1"))
+        assertEquals("\"'  @SUM(A1:A2)\"", ShipmentRules.csvSafeCell("  @SUM(A1:A2)"))
+        assertEquals("\"normal text\"", ShipmentRules.csvSafeCell("normal text"))
+        assertEquals("\"say \"\"hello\"\"\"", ShipmentRules.csvSafeCell("say \"hello\""))
+    }
+
+    @Test
     fun normalizesAndValidatesTrackingNumbers() {
         assertEquals("1Z999AA10123456784", ShipmentRules.normalizeTrackingNumber(" 1Z 999AA10123456784 "))
         assertTrue(ShipmentRules.isValidTrackingNumber("1Z999AA10123456784"))
