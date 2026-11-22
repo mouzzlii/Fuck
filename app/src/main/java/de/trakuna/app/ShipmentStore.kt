@@ -185,6 +185,7 @@ class ShipmentStore(context: Context) {
             require(root.optString("format") == BACKUP_FORMAT) { "Datei ist keine TRAKUNA-Sicherung." }
             require(root.optInt("schemaVersion", -1) == BACKUP_SCHEMA_VERSION) { "Sicherungsversion wird nicht unterstützt." }
             val array = root.optJSONArray("records") ?: error("Sicherungsdatei enthält keine Vorgangsliste.")
+            require(root.optInt("recordCount", -1) == array.length()) { "Anzahl der Einträge stimmt nicht mit dem Sicherungskopf überein." }
             require(array.length() <= MAX_RECORDS) { "Sicherung enthält mehr als $MAX_RECORDS Vorgänge." }
             val records = buildList {
                 for (index in 0 until array.length()) {
@@ -199,6 +200,7 @@ class ShipmentStore(context: Context) {
                 }
             }
             require(records.map { it.id }.distinct().size == records.size) { "Sicherung enthält doppelte Vorgangs-IDs." }
+            require(ShipmentRules.hasNoDuplicateActiveShipments(records)) { "Sicherung enthält doppelte aktive Sendungen desselben Vorgangstyps." }
             records
         }
         return if (parsed.isSuccess) {
@@ -328,6 +330,13 @@ object ShipmentRules {
                 else -> null
             }
         }
+
+    fun hasNoDuplicateActiveShipments(records: List<ShipmentRecord>): Boolean {
+        val activeKeys = records
+            .filter { it.status !in setOf(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentStatus.HANDED_TO_CARRIER) }
+            .map { it.trackingNumber.uppercase() to it.flow }
+        return activeKeys.distinct().size == activeKeys.size
+    }
 
     fun isStatusValidForFlow(flow: ShipmentFlow, status: ShipmentStatus): Boolean = when (flow) {
         ShipmentFlow.INCOMING_FOR_CUSTOMER -> status in setOf(
