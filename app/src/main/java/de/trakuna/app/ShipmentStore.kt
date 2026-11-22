@@ -38,6 +38,7 @@ data class ShipmentRecord(
 
 sealed class ShipmentUpdate {
     data class Saved(val record: ShipmentRecord) : ShipmentUpdate()
+    data class AlreadyExists(val record: ShipmentRecord) : ShipmentUpdate()
     data class Rejected(val reason: String) : ShipmentUpdate()
 }
 
@@ -101,7 +102,7 @@ class ShipmentStore(context: Context) {
             it.trackingNumber.equals(number, ignoreCase = true) &&
                 it.flow == flow && it.status !in TERMINAL_STATUSES
         }
-        if (existing != null) return ShipmentUpdate.Saved(existing)
+        if (existing != null) return ShipmentUpdate.AlreadyExists(existing)
         if (records.size >= MAX_RECORDS) {
             return ShipmentUpdate.Rejected(
                 "Speicherlimit von $MAX_RECORDS Vorgängen erreicht. Bitte zuerst eine CSV-Sicherung exportieren und nicht mehr benötigte Einträge löschen."
