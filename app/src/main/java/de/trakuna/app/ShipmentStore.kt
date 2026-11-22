@@ -475,8 +475,8 @@ object ShipmentRules {
         normalizeCarrierLabel(manual).ifBlank { identifyCarrier(trackingNumber).orEmpty() }
 
     fun isValidTrackingNumber(value: String): Boolean =
-        value.length in 6..40 && value.any(Char::isDigit) &&
-            value.all { it.isLetterOrDigit() || it == '-' }
+        value.length in 6..40 && value.any { it in '0'..'9' } &&
+            value.all { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' || it == '-' }
 
     /**
      * Best-effort carrier hint only. These patterns are not authoritative and must

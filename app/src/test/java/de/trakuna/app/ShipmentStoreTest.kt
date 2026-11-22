@@ -64,6 +64,9 @@ class ShipmentStoreTest {
         assertTrue(ShipmentRules.isValidTrackingNumber("1Z999AA10123456784"))
         assertFalse(ShipmentRules.isValidTrackingNumber("ABC"))
         assertFalse(ShipmentRules.isValidTrackingNumber("123456!"))
+        assertFalse(ShipmentRules.isValidTrackingNumber("ÄBC123456"))
+        assertFalse(ShipmentRules.isValidTrackingNumber("ＡBC123456"))
+        assertTrue(ShipmentRules.isValidTrackingNumber("ABC123456"))
         assertFalse(ShipmentRules.isValidTrackingNumber("12345678901234567890123456789012345678901"))
     }
 
