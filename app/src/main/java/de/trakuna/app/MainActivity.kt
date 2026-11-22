@@ -12,6 +12,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -56,6 +58,10 @@ class MainActivity : ComponentActivity() {
             var installedApps by remember { mutableStateOf<List<PartnerCandidate>>(emptyList()) }
             var showShipmentLedger by remember { mutableStateOf(false) }
             var shipmentRevision by remember { mutableStateOf(0) }
+            var recipient by remember { mutableStateOf("") }
+            var shipmentNote by remember { mutableStateOf("") }
+            var shipmentSearch by remember { mutableStateOf("") }
+            var pendingDelete by remember { mutableStateOf<ShipmentRecord?>(null) }
             val context = LocalContext.current
             val shipmentRecords = remember(shipmentRevision) { ShipmentStore(context).all() }
 
@@ -133,13 +139,15 @@ class MainActivity : ComponentActivity() {
                                 title = { Text("Paketshop – Sendungen") },
                                 text = {
                                     Column(
-                                        modifier = Modifier.heightIn(max = 440.dp),
+                                        modifier = Modifier.heightIn(max = 520.dp).verticalScroll(rememberScrollState()),
                                         verticalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
                                         Text("Neuen Vorgang mit der oben eingegebenen Sendungsnummer erfassen:")
+                                        OutlinedTextField(value = recipient, onValueChange = { recipient = it }, label = { Text("Empfänger / Kundenname (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                                        OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.INCOMING_FOR_CUSTOMER)
+                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 shipmentRevision++
                                             },
@@ -148,7 +156,7 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Paket für Kunden annehmen") }
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.OUTGOING_FROM_CUSTOMER)
+                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 shipmentRevision++
                                             },
@@ -157,7 +165,7 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Sendung vom Kunden annehmen") }
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.CUSTOMER_RETURN)
+                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 shipmentRevision++
                                             },
@@ -166,16 +174,25 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Retoure annehmen") }
                                         HorizontalDivider()
                                         Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
+                                        OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                                        OutlinedButton(onClick = {
+                                            val csv = ShipmentStore(context).exportCsv()
+                                            val share = Intent(Intent.ACTION_SEND).apply { type = "text/csv"; putExtra(Intent.EXTRA_SUBJECT, "TRAKUNA Sendungsexport"); putExtra(Intent.EXTRA_TEXT, csv) }
+                                            context.startActivity(Intent.createChooser(share, "Sendungsexport teilen"))
+                                        }, modifier = Modifier.fillMaxWidth()) { Text("Sendungsliste als CSV teilen") }
                                         if (shipmentRecords.isEmpty()) {
                                             Text("Noch keine Paketshop-Vorgänge erfasst.")
                                         } else {
-                                            shipmentRecords.take(30).forEach { record ->
+                                            shipmentRecords.filter { record ->
+                                                shipmentSearch.isBlank() || listOf(record.trackingNumber, record.recipient, record.carrier, shipmentStatusLabel(record.status)).any { it.contains(shipmentSearch, ignoreCase = true) }
+                                            }.take(100).forEach { record ->
                                                 Card(Modifier.fillMaxWidth()) {
                                                     Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                                         Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
                                                         Text("${shipmentFlowLabel(record.flow)} · ${shipmentStatusLabel(record.status)}")
                                                         if (record.carrier.isNotBlank()) Text(record.carrier, style = MaterialTheme.typography.bodySmall)
                                                         if (record.recipient.isNotBlank()) Text("Empfänger: ${record.recipient}", style = MaterialTheme.typography.bodySmall)
+                                                        if (record.note.isNotBlank()) Text("Notiz: ${record.note}", style = MaterialTheme.typography.bodySmall)
                                                         val canAdvance = record.status != ShipmentStatus.HANDED_TO_CUSTOMER &&
                                                             record.status != ShipmentStatus.HANDED_TO_CARRIER
                                                         if (canAdvance) {
@@ -185,6 +202,7 @@ class MainActivity : ComponentActivity() {
                                                                 shipmentRevision++
                                                             }) { Text(shipmentNextAction(record.flow, record.status)) }
                                                         }
+                                                        TextButton(onClick = { pendingDelete = record }) { Text("Vorgang löschen", color = MaterialTheme.colorScheme.error) }
                                                     }
                                                 }
                                             }
@@ -194,6 +212,15 @@ class MainActivity : ComponentActivity() {
                                 confirmButton = {
                                     TextButton(onClick = { showShipmentLedger = false }) { Text("Schließen") }
                                 }
+                            )
+                        }
+                        pendingDelete?.let { record ->
+                            AlertDialog(
+                                onDismissRequest = { pendingDelete = null },
+                                title = { Text("Vorgang löschen?") },
+                                text = { Text("Soll der Vorgang ${record.trackingNumber} endgültig von diesem Gerät gelöscht werden?") },
+                                confirmButton = { TextButton(onClick = { ShipmentStore(context).remove(record.id); shipmentRevision++; pendingDelete = null }) { Text("Löschen") } },
+                                dismissButton = { TextButton(onClick = { pendingDelete = null }) { Text("Abbrechen") } }
                             )
                         }
                         if (showPartnerPicker) {
