@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Version 1.41)
+# TRAKUNA – Praxis-Testplan (Version 1.43)
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -21,7 +21,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 6 | Abholbereit markieren | Status wechselt auf „Abholbereit“. |
 | 7 | An Kunden übergeben | Status wechselt auf „An Kunden übergeben“. |
 | 8 | Sendung vom Kunden annehmen | Vorgang erscheint im passenden Annahme-Status. |
-| 9 | Paketdienst manuell eintragen oder korrigieren | Beim Erfassen wird der manuell eingetragene Paketdienst gespeichert und hat Vorrang vor der automatischen Erkennung. Bei leerem Feld wird nur der bestmögliche Erkennungshinweis verwendet. |
+| 9 | Paketdienst manuell eintragen oder korrigieren | Die Angabe in der Hauptmaske wird bei der lokalen Erfassung und bei der Partnerübergabe verwendet und hat Vorrang vor der automatischen Erkennung. Bei leerem Feld wird nur der bestmögliche Erkennungshinweis verwendet. |
 | 10 | Formular nach erfolgreicher Erfassung | Empfänger, manuelle Paketdienst-Auswahl und Notiz sind nach erfolgreicher Erfassung leer; ein neuer Vorgang übernimmt keine alten Angaben. |
 | 11 | Retoure annehmen und weitergeben | Retoure kann bis zur Übergabe an den Paketdienst fortgeschrieben werden. |
 | 12 | Empfänger und Notiz bearbeiten | Geänderte Angaben bleiben nach erneutem Öffnen erhalten. |

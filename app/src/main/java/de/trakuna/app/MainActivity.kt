@@ -223,9 +223,19 @@ class MainActivity : ComponentActivity() {
                                 imeAction = ImeAction.Done
                             )
                         )
+                        OutlinedTextField(
+                            value = carrierOverride,
+                            onValueChange = { carrierOverride = it.take(80) },
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Paketdienst (optional, manuell)") },
+                            placeholder = { Text("z. B. DHL, DPD, GLS, Österreichische Post, UPS") },
+                            supportingText = { Text("Bei manueller Angabe wird diese für Erfassung und Übergabe verwendet.") },
+                            singleLine = true
+                        )
                         Button(
                             onClick = {
-                                val result = handoffToPartnerApp(context, number, identifyCarrier(number))
+                                val carrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
+                                val result = handoffToPartnerApp(context, number, carrier.ifBlank { null })
                                 status = result.message
                             },
                             enabled = normalizeTrackingNumber(number).isNotBlank(),
@@ -264,7 +274,6 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Text("Neuen Vorgang mit der oben eingegebenen Sendungsnummer erfassen:")
                                         OutlinedTextField(value = recipient, onValueChange = { recipient = it.take(100) }, label = { Text("Empfänger / Kundenname (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedTextField(value = carrierOverride, onValueChange = { carrierOverride = it.take(80) }, label = { Text("Paketdienst (optional, manuell korrigieren)") }, placeholder = { Text("z. B. DHL, DPD, GLS, Post, UPS") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it.take(500) }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
                                         Button(
                                             onClick = {

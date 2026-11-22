@@ -1,6 +1,6 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.41
+Stand: App-Version 1.43
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
@@ -39,7 +39,7 @@ Es gibt drei Eingabewege:
 2. Beim ersten Start den Kamerazugriff erlauben.
 3. Ein Paketlabel möglichst einzeln und gut sichtbar in den Scanbereich halten.
 4. Die erkannte Sendungsnummer erscheint im Eingabefeld.
-5. Nummer und Paketdienst kontrollieren.
+5. Nummer und Paketdienst kontrollieren. Den optionalen Paketdienst kannst du direkt in der Hauptmaske manuell eintragen; diese Angabe wird auch bei der Partnerübergabe verwendet.
 
 Wenn mehrere unterschiedliche Sendungsnummern gleichzeitig erkannt werden, übernimmt TRAKUNA keine davon. Bitte nur ein Label scannen oder manuell eingeben.
 
@@ -47,7 +47,8 @@ Wenn mehrere unterschiedliche Sendungsnummern gleichzeitig erkannt werden, über
 
 1. Sendungsnummer in **Sendungsnummer manuell eingeben** schreiben.
 2. Auf richtige Zeichenfolge achten; Leerzeichen werden bei der Verarbeitung entfernt.
-3. Die manuelle Eingabe bleibt auch ohne Kameraberechtigung verfügbar.
+3. Optional den Paketdienst im Feld **Paketdienst (optional, manuell)** eintragen. Diese Angabe gilt für Erfassung und Partnerübergabe.
+4. Die manuelle Eingabe bleibt auch ohne Kameraberechtigung verfügbar.
 
 ### Zebra DataWedge
 
