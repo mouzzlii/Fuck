@@ -35,3 +35,8 @@ TRAKUNA darf erst als produktionsbereit für einen realen Paketshop bezeichnet w
 ## Sicherheitsmeldungen
 
 Bitte keine realen Sendungsnummern, Empfängernamen, Passwörter oder Schlüssel in öffentlichen Issues posten. Sicherheitsprobleme sollten dem Projektverantwortlichen privat und mit möglichst wenigen personenbezogenen Beispieldaten gemeldet werden.
+
+
+## Zebra DataWedge Broadcast
+
+Der DataWedge-Empfänger ist für die Zusammenarbeit mit Zebra Intent Output dynamisch und exportiert registriert. Android-Broadcasts sind damit nicht kryptografisch an DataWedge gebunden. Eingehende Werte werden als nicht vertrauenswürdige Nutzereingabe behandelt, auf Länge und Zeichen geprüft und niemals automatisch gebucht. Für Hochsicherheitsbetrieb ist eine vom Geräteadministrator kontrollierte App-/Profil-Allowlist bzw. eine zusätzliche vertrauenswürdige Integrationsschicht erforderlich.
