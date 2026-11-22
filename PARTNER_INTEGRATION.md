@@ -1,12 +1,12 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: TRAKUNA 1.35
+Stand: App-Version 1.36
 
 ## Zweck
 
 Dieses Dokument beschreibt die minimale technische Vereinbarung, damit eine Paketshop- oder Carrier-App eine Sendungsnummer aus TRAKUNA übernehmen kann. Es ist **keine Behauptung**, dass eine bestehende Post-, DHL-, DPD-, GLS- oder UPS-App diese Schnittstelle bereits unterstützt.
 
-## Aktueller Übergabeversuch
+## Aktueller Übergabeversuch von TRAKUNA
 
 TRAKUNA versucht, die installierte Ziel-App über deren Android-Launcher-Intent zu öffnen und hängt folgende Extras an:
 
@@ -18,9 +18,47 @@ TRAKUNA versucht, die installierte Ziel-App über deren Android-Launcher-Intent 
 
 Die Übergabe startet die Ziel-App. Android bestätigt damit **nicht**, dass die Ziel-App die Extras gelesen, validiert oder einen Vorgang angelegt hat. TRAKUNA darf deshalb nur „Partner-App geöffnet“ melden, nicht „Sendung im Partnersystem gebucht“.
 
+## Beispiel für einen Partner-App-Empfänger (Kotlin)
+
+Das folgende Beispiel zeigt nur, wie eine Partner-App die Extras aus ihrem eigenen Launcher-Activity-Einstieg lesen kann. Es bucht **keine** Sendung und ersetzt weder die Validierung noch die Bestätigung durch den Paketdienst.
+
+```kotlin
+private fun handleTrakunaHandoff(intent: Intent?) {
+    if (intent == null) return
+
+    val trackingNumber = intent.getStringExtra(
+        "de.trakuna.app.extra.TRACKING_NUMBER"
+    ) ?: intent.getStringExtra(Intent.EXTRA_TEXT)
+
+    val carrier = intent.getStringExtra(
+        "de.trakuna.app.extra.CARRIER"
+    ).orEmpty()
+
+    if (trackingNumber.isNullOrBlank()) return
+
+    // Partner-App: Nummer lokal validieren, dann in der eigenen
+    // Oberfläche zur bewussten Prüfung durch den Mitarbeiter anzeigen.
+    // Erst nach eigener erfolgreicher Buchung darf die Partner-App
+    // einen Vorgang als gebucht kennzeichnen.
+}
+
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    handleTrakunaHandoff(intent)
+}
+
+override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+    handleTrakunaHandoff(intent)
+}
+```
+
+Die Partner-App muss außerdem ihre Activity-Konfiguration und Android-Versionen testen. Sie darf nicht allein aus dem Empfang eines Intents eine erfolgreiche Paketdienst-Buchung ableiten.
+
 ## Empfohlene Integration für Partner
 
-Der Partner sollte einen ausdrücklich dokumentierten, nicht exportierten oder geschützt exportierten Android-Einstiegspunkt bzw. eine authentifizierte API bereitstellen.
+Der Partner sollte einen ausdrücklich dokumentierten, möglichst eng geschützten Android-Einstiegspunkt oder eine authentifizierte API bereitstellen.
 
 Mindestanforderungen:
 1. Eindeutige Paket-ID und unterstützte App-Versionen.
@@ -31,6 +69,7 @@ Mindestanforderungen:
 6. Keine Zugangsdaten oder personenbezogenen Daten in Logs.
 7. Transportverschlüsselung und Authentisierung bei Netzwerk-APIs.
 8. Sandbox/Testkonto und Testetiketten für Abnahme.
+9. Dokumentierte Rückmeldung mit Partner-Vorgangs-ID und eindeutigem Buchungsergebnis.
 
 ## Abnahmetests
 
@@ -40,7 +79,8 @@ Mindestanforderungen:
 - Ziel-App nicht installiert: TRAKUNA zeigt einen klaren Hinweis; lokaler Cache bleibt erhalten.
 - Ziel-App installiert, aber ohne Schnittstelle: TRAKUNA behauptet keine automatische Übernahme.
 - Offline-/Timeout-Fall: kein falscher Erfolgsstatus und keine verlorene lokale Erfassung.
-- Rückmeldung der Partner-App wird auf korrekte Sendungsnummer und Vorgangs-ID geprüft.
+- Rückmeldung der Partner-App wird auf korrekte Sendungsnummer, Partner-Vorgangs-ID und Buchungsergebnis geprüft.
+- App-Neustart und erneute Übergabe werden auf doppelte oder veraltete Intents geprüft.
 
 ## Für die konkrete Anbindung noch erforderlich
 
@@ -54,7 +94,7 @@ Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Ü
 
 ## Zebra DataWedge – Barcode-Eingang
 
-TRAKUNA 1.18 kann Scan-Ergebnisse von Zebra DataWedge über einen Android-Broadcast empfangen.
+TRAKUNA kann Scan-Ergebnisse von Zebra DataWedge über einen Android-Broadcast empfangen.
 
 ### Grundkonfiguration auf dem Zebra-Gerät
 
