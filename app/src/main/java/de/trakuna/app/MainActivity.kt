@@ -757,17 +757,19 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
                         try {
                             scanner.process(InputImage.fromMediaImage(mediaImage, proxy.imageInfo.rotationDegrees))
                                 .addOnSuccessListener(mainExecutor) { barcodes ->
-                                    val values = barcodes.mapNotNull { barcode ->
-                                        (barcode.rawValue ?: barcode.displayValue)?.let { extractTrackingNumber(it) }
-                                    }.distinct()
-                                    // Prefer a structurally recognized shipment number over unrelated QR/barcode data.
-                                    val selected = values.sortedWith(
-                                        compareByDescending<String> { identifyCarrier(it) != null }
-                                            .thenByDescending { it.length in 10..22 }
-                                            .thenByDescending { it.length }
-                                    ).firstOrNull()
-                                    selected?.let { value ->
-                                        if (delivered.compareAndSet(false, true)) onDetected(value)
+                                    if (!disposed.get()) {
+                                        val values = barcodes.mapNotNull { barcode ->
+                                            (barcode.rawValue ?: barcode.displayValue)?.let { extractTrackingNumber(it) }
+                                        }.distinct()
+                                        // Prefer a structurally recognized shipment number over unrelated QR/barcode data.
+                                        val selected = values.sortedWith(
+                                            compareByDescending<String> { identifyCarrier(it) != null }
+                                                .thenByDescending { it.length in 10..22 }
+                                                .thenByDescending { it.length }
+                                        ).firstOrNull()
+                                        selected?.let { value ->
+                                            if (!disposed.get() && delivered.compareAndSet(false, true)) onDetected(value)
+                                        }
                                     }
                                 }
                                 .addOnCompleteListener { proxy.close() }
