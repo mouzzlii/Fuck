@@ -100,12 +100,14 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 val filter = IntentFilter(DATAWEDGE_ACTION)
-                if (Build.VERSION.SDK_INT >= 33) {
-                    context.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED)
-                } else {
-                    @Suppress("DEPRECATION")
-                    context.registerReceiver(receiver, filter)
-                }
+                // DataWedge is a separate Android app, so the receiver must be exported.
+                // ContextCompat supplies the required explicit flag on every supported API level.
+                ContextCompat.registerReceiver(
+                    context,
+                    receiver,
+                    filter,
+                    ContextCompat.RECEIVER_EXPORTED
+                )
                 onDispose { runCatching { context.unregisterReceiver(receiver) } }
             }
             var pendingCsv by remember { mutableStateOf<String?>(null) }

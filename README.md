@@ -1,12 +1,17 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.33 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.34 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Integrations- und Sicherheitsdokumentation
 
 - [Partner-Schnittstelle und Abnahmekriterien](PARTNER_INTEGRATION.md): beschreibt den aktuellen Android-Übergabeversuch, den notwendigen Vertrag mit dem Softwareanbieter und die Tests für eine echte Integration.
 - [Sicherheitsstatus und Produktionsfreigabe](SECURITY.md): dokumentiert umgesetzte Schutzmaßnahmen, bekannte Restrisiken und verbindliche Freigabekriterien.
 - [Betriebshandbuch](BETRIEBSHANDBUCH.md): einfache Schritt-für-Schritt-Anleitung für Paketannahme, Kundenausgabe, Retouren, Zebra DataWedge, Partner-App und Datensicherung.
+
+## Neu in Version 1.34
+
+- Der Zebra-DataWedge-Broadcast wird jetzt auf allen unterstützten Android-Versionen mit einer expliziten Export-Freigabe registriert. Die Android-Lint-Prüfung hat diese notwendige Angabe auf älteren API-Versionen erkannt.
+- Ein redundanter Test-Ausdruck wurde entfernt, damit die Unit-Test-Ausgabe keine vermeidbare Compilerwarnung enthält.
 
 ## Neu in Version 1.33
 

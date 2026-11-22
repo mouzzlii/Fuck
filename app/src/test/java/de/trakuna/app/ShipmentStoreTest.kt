@@ -79,7 +79,6 @@ class ShipmentStoreTest {
         val outcome: ShipmentUpdate = ShipmentUpdate.AlreadyExists(existing)
         assertTrue(outcome is ShipmentUpdate.AlreadyExists)
         assertEquals(existing, (outcome as ShipmentUpdate.AlreadyExists).record)
-        assertFalse(outcome is ShipmentUpdate.Saved)
     }
 
     @Test
