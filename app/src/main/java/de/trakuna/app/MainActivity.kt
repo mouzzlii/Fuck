@@ -51,7 +51,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 private val Forest = Color(0xFF174B3A)
 private const val CACHE_PREFS = "trakuna_handoff"
-private const val CACHE_KEY = "tracking_number"
 private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
 private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
 
@@ -568,9 +567,14 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
     // Persist the handoff before leaving TRAKUNA. Do not report success if Android
     // cannot confirm that the local cache was written.
     val preferences = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-    val cached = SecureHandoffCache(context).save(number, carrier)
+    val handoffCache = SecureHandoffCache(context)
+    val cached = handoffCache.save(number, carrier)
     if (!cached) {
-        return HandoffResult("Sendungsnummer konnte nicht dauerhaft gespeichert werden. Bitte Gerätespeicher prüfen und erneut versuchen.")
+        val detail = handoffCache.failureReason()
+        return HandoffResult(
+            "Sendungsnummer konnte nicht sicher gespeichert werden. " +
+                (detail ?: "Bitte Gerätespeicher prüfen und erneut versuchen.")
+        )
     }
 
     // Clipboard is only a fallback. Mark it sensitive on Android 13+ and never let
