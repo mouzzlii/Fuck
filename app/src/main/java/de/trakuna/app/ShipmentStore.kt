@@ -194,6 +194,7 @@ class ShipmentStore(context: Context) {
                     require(ShipmentRules.isValidTrackingNumber(record.trackingNumber)) { "Ungültige Sendungsnummer in Eintrag ${index + 1}." }
                     require(record.carrier.length <= 80 && record.recipient.length <= 100 && record.note.length <= 500) { "Textfeld zu lang in Eintrag ${index + 1}." }
                     require(record.createdAt > 0 && record.updatedAt >= record.createdAt) { "Ungültiger Zeitstempel in Eintrag ${index + 1}." }
+                    require(ShipmentRules.isStatusValidForFlow(record.flow, record.status)) { "Status passt nicht zum Vorgang in Eintrag ${index + 1}." }
                     add(record)
                 }
             }
@@ -318,11 +319,29 @@ object ShipmentRules {
                 ShipmentStatus.READY_FOR_PICKUP -> ShipmentStatus.HANDED_TO_CUSTOMER
                 else -> null
             }
-            ShipmentFlow.OUTGOING_FROM_CUSTOMER,
+            ShipmentFlow.OUTGOING_FROM_CUSTOMER -> when (status) {
+                ShipmentStatus.ACCEPTED_FROM_CUSTOMER -> ShipmentStatus.HANDED_TO_CARRIER
+                else -> null
+            }
             ShipmentFlow.CUSTOMER_RETURN -> when (status) {
-                ShipmentStatus.ACCEPTED_FROM_CUSTOMER,
                 ShipmentStatus.RETURN_ACCEPTED -> ShipmentStatus.HANDED_TO_CARRIER
                 else -> null
             }
         }
+
+    fun isStatusValidForFlow(flow: ShipmentFlow, status: ShipmentStatus): Boolean = when (flow) {
+        ShipmentFlow.INCOMING_FOR_CUSTOMER -> status in setOf(
+            ShipmentStatus.RECEIVED_BY_SHOP,
+            ShipmentStatus.READY_FOR_PICKUP,
+            ShipmentStatus.HANDED_TO_CUSTOMER
+        )
+        ShipmentFlow.OUTGOING_FROM_CUSTOMER -> status in setOf(
+            ShipmentStatus.ACCEPTED_FROM_CUSTOMER,
+            ShipmentStatus.HANDED_TO_CARRIER
+        )
+        ShipmentFlow.CUSTOMER_RETURN -> status in setOf(
+            ShipmentStatus.RETURN_ACCEPTED,
+            ShipmentStatus.HANDED_TO_CARRIER
+        )
+    }
 }
