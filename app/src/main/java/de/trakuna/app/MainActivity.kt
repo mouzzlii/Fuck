@@ -62,6 +62,9 @@ class MainActivity : ComponentActivity() {
             var shipmentNote by remember { mutableStateOf("") }
             var shipmentSearch by remember { mutableStateOf("") }
             var pendingDelete by remember { mutableStateOf<ShipmentRecord?>(null) }
+            var editingRecord by remember { mutableStateOf<ShipmentRecord?>(null) }
+            var editRecipient by remember { mutableStateOf("") }
+            var editNote by remember { mutableStateOf("") }
             val context = LocalContext.current
             val shipmentRecords = remember(shipmentRevision) { ShipmentStore(context).all() }
 
@@ -202,6 +205,7 @@ class MainActivity : ComponentActivity() {
                                                                 shipmentRevision++
                                                             }) { Text(shipmentNextAction(record.flow, record.status)) }
                                                         }
+                                                        TextButton(onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
                                                         TextButton(onClick = { pendingDelete = record }) { Text("Vorgang löschen", color = MaterialTheme.colorScheme.error) }
                                                     }
                                                 }
@@ -212,6 +216,28 @@ class MainActivity : ComponentActivity() {
                                 confirmButton = {
                                     TextButton(onClick = { showShipmentLedger = false }) { Text("Schließen") }
                                 }
+                            )
+                        }
+                        editingRecord?.let { record ->
+                            AlertDialog(
+                                onDismissRequest = { editingRecord = null },
+                                title = { Text("Sendungsdetails bearbeiten") },
+                                text = {
+                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
+                                        OutlinedTextField(value = editRecipient, onValueChange = { editRecipient = it.take(100) }, label = { Text("Empfänger / Kundenname") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                                        OutlinedTextField(value = editNote, onValueChange = { editNote = it.take(500) }, label = { Text("Interne Notiz") }, minLines = 3, modifier = Modifier.fillMaxWidth())
+                                    }
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        val result = ShipmentStore(context).updateDetails(record.id, editRecipient, editNote)
+                                        status = shipmentResultText(result)
+                                        shipmentRevision++
+                                        editingRecord = null
+                                    }) { Text("Speichern") }
+                                },
+                                dismissButton = { TextButton(onClick = { editingRecord = null }) { Text("Abbrechen") } }
                             )
                         }
                         pendingDelete?.let { record ->
