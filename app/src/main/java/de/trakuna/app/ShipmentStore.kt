@@ -1,6 +1,13 @@
 package de.trakuna.app
 
 import android.content.Context
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
+import android.util.Base64
+import java.security.KeyStore
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID
@@ -58,6 +65,73 @@ sealed class BackupRestoreResult {
  */
 class ShipmentStore(context: Context) {
     private val prefs = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+    @Volatile private var initializationError: String? = null
+
+    init {
+        migrateLegacyPlaintext()
+    }
+
+    /** Migrate legacy plaintext only after the encrypted replacement is committed. */
+    private fun migrateLegacyPlaintext() {
+        runCatching {
+            val encrypted = prefs.getString(KEY_RECORDS_ENCRYPTED, null)
+            val legacy = prefs.getString(KEY_RECORDS, null)
+            if (encrypted != null) {
+                decrypt(encrypted) // Verify before removing any old copy.
+                if (legacy != null && !prefs.edit().remove(KEY_RECORDS).commit()) {
+                    error("Alte unverschlüsselte Daten konnten nicht entfernt werden.")
+                }
+            } else if (legacy != null) {
+                val replacement = encrypt(legacy)
+                if (!prefs.edit()
+                        .putString(KEY_RECORDS_ENCRYPTED, replacement)
+                        .remove(KEY_RECORDS)
+                        .commit()
+                ) {
+                    error("Verschlüsselte Datenmigration konnte nicht dauerhaft gespeichert werden.")
+                }
+            }
+        }.onFailure {
+            initializationError = "Geschützte lokale Speicherung konnte nicht initialisiert werden: " +
+                (it.message ?: "unbekannter Fehler")
+        }
+    }
+
+    private fun encryptionKey(): SecretKey {
+        val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
+        val existing = keyStore.getKey(KEY_ALIAS, null) as? SecretKey
+        if (existing != null) return existing
+
+        return KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE).apply {
+            init(
+                KeyGenParameterSpec.Builder(
+                    KEY_ALIAS,
+                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+                )
+                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                    .setKeySize(256)
+                    .build()
+            )
+        }.generateKey()
+    }
+
+    private fun encrypt(plainText: String): String {
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        cipher.init(Cipher.ENCRYPT_MODE, encryptionKey())
+        val encrypted = cipher.doFinal(plainText.toByteArray(Charsets.UTF_8))
+        return Base64.encodeToString(cipher.iv + encrypted, Base64.NO_WRAP)
+    }
+
+    private fun decrypt(encoded: String): String {
+        val payload = Base64.decode(encoded, Base64.NO_WRAP)
+        require(payload.size > GCM_IV_BYTES) { "Verschlüsselte lokale Daten sind beschädigt." }
+        val iv = payload.copyOfRange(0, GCM_IV_BYTES)
+        val encrypted = payload.copyOfRange(GCM_IV_BYTES, payload.size)
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        cipher.init(Cipher.DECRYPT_MODE, encryptionKey(), javax.crypto.spec.GCMParameterSpec(128, iv))
+        return String(cipher.doFinal(encrypted), Charsets.UTF_8)
+    }
 
     @Synchronized
     fun all(): List<ShipmentRecord> = readRecords().getOrDefault(emptyList())
@@ -66,7 +140,9 @@ class ShipmentStore(context: Context) {
     fun storageError(): String? = readRecords().exceptionOrNull()?.message
 
     private fun readRecords(): Result<List<ShipmentRecord>> = runCatching {
-        val raw = prefs.getString(KEY_RECORDS, null) ?: return@runCatching emptyList()
+        initializationError?.let { error(it) }
+        val stored = prefs.getString(KEY_RECORDS_ENCRYPTED, null) ?: return@runCatching emptyList()
+        val raw = decrypt(stored)
         val array = JSONArray(raw)
         val records = buildList {
             for (index in 0 until array.length()) {
@@ -240,7 +316,10 @@ class ShipmentStore(context: Context) {
             }
         }
         val encoded = encodeRecords(records)
-        val saved = prefs.edit().putString(KEY_RECORDS, encoded).commit()
+        val encrypted = runCatching { encrypt(encoded) }.getOrElse {
+            return BackupRestoreResult.Rejected("Verschlüsselung fehlgeschlagen. Vorhandene Daten wurden nicht geändert.")
+        }
+        val saved = prefs.edit().putString(KEY_RECORDS_ENCRYPTED, encrypted).remove(KEY_RECORDS).commit()
         return if (saved) BackupRestoreResult.Restored(records.size)
         else BackupRestoreResult.Rejected("Daten konnten nicht dauerhaft gespeichert werden. Vorhandene Daten wurden nicht absichtlich gelöscht.")
     }
@@ -281,7 +360,11 @@ class ShipmentStore(context: Context) {
     }
 
     private fun persist(records: List<ShipmentRecord>): Boolean =
-        runCatching { prefs.edit().putString(KEY_RECORDS, encodeRecords(records)).commit() }.getOrDefault(false)
+        runCatching {
+            initializationError?.let { error(it) }
+            val encrypted = encrypt(encodeRecords(records))
+            prefs.edit().putString(KEY_RECORDS_ENCRYPTED, encrypted).remove(KEY_RECORDS).commit()
+        }.getOrDefault(false)
 
     private fun decode(item: JSONObject): ShipmentRecord? = runCatching {
         ShipmentRecord(
@@ -301,7 +384,13 @@ class ShipmentStore(context: Context) {
         private const val BACKUP_FORMAT = "TRAKUNA_BACKUP"
         private const val BACKUP_SCHEMA_VERSION = 1
         private const val PREFS = "trakuna_shipments"
+        // Legacy plaintext key used only for one-time migration.
         private const val KEY_RECORDS = "records_v1"
+        private const val KEY_RECORDS_ENCRYPTED = "records_encrypted_v2"
+        private const val ANDROID_KEYSTORE = "AndroidKeyStore"
+        private const val KEY_ALIAS = "de.trakuna.app.shipments.aes.v1"
+        private const val TRANSFORMATION = "AES/GCM/NoPadding"
+        private const val GCM_IV_BYTES = 12
         const val MAX_RECORDS = 500
         const val MAX_BACKUP_BYTES = 2 * 1024 * 1024
         private val TERMINAL_STATUSES = setOf(
