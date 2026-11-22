@@ -258,7 +258,7 @@ class MainActivity : ComponentActivity() {
                                                 }
                                                 shipmentRevision++
                                             },
-                                            enabled = normalizeTrackingNumber(number).isNotBlank(),
+                                            enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
                                             modifier = Modifier.fillMaxWidth()
                                         ) { Text("Paket für Kunden annehmen") }
                                         Button(
@@ -272,7 +272,7 @@ class MainActivity : ComponentActivity() {
                                                 }
                                                 shipmentRevision++
                                             },
-                                            enabled = normalizeTrackingNumber(number).isNotBlank(),
+                                            enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
                                             modifier = Modifier.fillMaxWidth()
                                         ) { Text("Sendung vom Kunden annehmen") }
                                         Button(
@@ -286,7 +286,7 @@ class MainActivity : ComponentActivity() {
                                                 }
                                                 shipmentRevision++
                                             },
-                                            enabled = normalizeTrackingNumber(number).isNotBlank(),
+                                            enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
                                             modifier = Modifier.fillMaxWidth()
                                         ) { Text("Retoure annehmen") }
                                         HorizontalDivider()
@@ -305,13 +305,13 @@ class MainActivity : ComponentActivity() {
                                             } else {
                                                 status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
                                             }
-                                        }, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
-                                        OutlinedButton(onClick = { confirmBackupExport = true }, modifier = Modifier.fillMaxWidth()) {
+                                        }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
+                                        OutlinedButton(onClick = { confirmBackupExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) {
                                             Text("Vollständige Datensicherung erstellen")
                                         }
                                         OutlinedButton(onClick = {
                                             restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
-                                        }, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
+                                        }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
                                         if (shipmentStorageIssue != null) {
                                             Text("Die gespeicherten Vorgänge werden nicht als leer angezeigt, weil der Speicher fehlerhaft gelesen wurde.", color = MaterialTheme.colorScheme.error)
                                         } else if (shipmentRecords.isEmpty()) {
@@ -333,15 +333,15 @@ class MainActivity : ComponentActivity() {
                                                         if (record.note.isNotBlank()) Text("Notiz: ${record.note}", style = MaterialTheme.typography.bodySmall)
                                                         val canAdvance = record.status != ShipmentStatus.HANDED_TO_CUSTOMER &&
                                                             record.status != ShipmentStatus.HANDED_TO_CARRIER
-                                                        if (canAdvance) {
+                                                        if (canAdvance && shipmentStorageIssue == null) {
                                                             TextButton(onClick = {
                                                                 val result = ShipmentStore(context).advance(record.id)
                                                                 status = shipmentResultText(result)
                                                                 shipmentRevision++
                                                             }) { Text(shipmentNextAction(record.flow, record.status)) }
                                                         }
-                                                        TextButton(onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
-                                                        TextButton(onClick = { pendingDelete = record }) { Text("Vorgang löschen", color = MaterialTheme.colorScheme.error) }
+                                                        TextButton(enabled = shipmentStorageIssue == null, onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
+                                                        TextButton(enabled = shipmentStorageIssue == null, onClick = { pendingDelete = record }) { Text("Vorgang löschen", color = MaterialTheme.colorScheme.error) }
                                                     }
                                                 }
                                             }
