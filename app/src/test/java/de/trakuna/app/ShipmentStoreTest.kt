@@ -67,4 +67,32 @@ class ShipmentStoreTest {
         assertFalse(ShipmentRules.isStatusValidForFlow(ShipmentFlow.OUTGOING_FROM_CUSTOMER, ShipmentStatus.RETURN_ACCEPTED))
         assertFalse(ShipmentRules.isStatusValidForFlow(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.READY_FOR_PICKUP))
     }
+
+    @Test
+    fun duplicateActiveShipmentsAreRejectedButCompletedHistoryIsAllowed() {
+        val active = ShipmentRecord(
+            id = "one", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
+            status = ShipmentStatus.READY_FOR_PICKUP, createdAt = 1L, updatedAt = 2L
+        )
+        val duplicate = active.copy(id = "two", updatedAt = 3L)
+        assertFalse(ShipmentRules.hasNoDuplicateActiveShipments(listOf(active, duplicate)))
+
+        val completed = duplicate.copy(status = ShipmentStatus.HANDED_TO_CUSTOMER)
+        assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(active, completed)))
+    }
+
+    @Test
+    fun sameTrackingNumberCanExistForDifferentWorkflowTypes() {
+        val incoming = ShipmentRecord(
+            id = "in", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
+            status = ShipmentStatus.READY_FOR_PICKUP, createdAt = 1L, updatedAt = 2L
+        )
+        val returned = incoming.copy(
+            id = "return", flow = ShipmentFlow.CUSTOMER_RETURN,
+            status = ShipmentStatus.RETURN_ACCEPTED
+        )
+        assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(incoming, returned)))
+    }
 }
