@@ -10,7 +10,8 @@ TRAKUNA ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unt
 - Zwischenspeicherung der letzten Sendungsnummer und Kopie in die Zwischenablage.
 - Auswahl einer installierten Betriebssoftware und Übergabeversuch per Android-Intent.
 - Lokale Paketshop-Liste mit Eingang für Kunden, Annahme von Kundensendungen und Retouren.
-- Statusfortschritt, Empfänger-/Notizfelder, Suche, Löschen einzelner Vorgänge und CSV-Text-Export.
+- Statusfortschritt, Empfänger-/Notizfelder (nachträglich bearbeitbar), Suche und Löschen einzelner Vorgänge.
+- CSV-Export als echte Datei über den Android-Dateidialog (Speicherort frei wählbar).
 
 ## Bauen
 
@@ -25,7 +26,7 @@ APK-Ausgabe: `app/build/outputs/apk/debug/app-debug.apk`.
 ## Wichtige Grenzen – noch kein produktiver Paketdienstbetrieb
 
 - Die Datenspeicherung erfolgt derzeit lokal in Android SharedPreferences (JSON), nicht in einer zentralen Datenbank. Es gibt keine Synchronisierung zwischen Geräten, Benutzerkonten, Rollen oder revisionssichere Audit-Protokolle.
-- Die CSV-Funktion teilt den Export als Textinhalt über Android Sharesheet. Sie erstellt noch keine verwaltete Dateiablage oder automatische Datensicherung.
+- Der CSV-Export erstellt eine Datei am vom Nutzer gewählten Speicherort. Eine automatische Datensicherung oder Wiederherstellung ist damit noch nicht eingerichtet.
 - Eine Partner-App wird nur geöffnet und mit Intent-Extras gestartet. Eine automatische Übernahme der Sendungsnummer funktioniert nur, wenn die Zielsoftware diese Extras oder eine passende API ausdrücklich unterstützt. TRAKUNA kann die Unterstützung fremder Apps nicht erzwingen.
 - Carrier-Erkennung ist nicht verbindlich; Sendungsnummern müssen vor der Übergabe geprüft werden. Es bestehen keine direkten Tracking- oder Versanddienst-API-Verbindungen.
 - Es fehlen noch Tests mit realen Paketetiketten, echten Betriebssoftware-Versionen, verschiedenen Android-Geräten sowie ein Datenschutz-/Sicherheitsaudit.
