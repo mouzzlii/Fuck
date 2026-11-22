@@ -59,17 +59,20 @@ class ShipmentStore(context: Context) {
     private val prefs = context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     @Synchronized
-    fun all(): List<ShipmentRecord> {
-        val raw = prefs.getString(KEY_RECORDS, null) ?: return emptyList()
-        return runCatching {
-            val array = JSONArray(raw)
-            buildList {
-                for (index in 0 until array.length()) {
-                    val item = array.optJSONObject(index) ?: continue
-                    decode(item)?.let(::add)
-                }
-            }.sortedByDescending { it.updatedAt }
-        }.getOrDefault(emptyList())
+    fun all(): List<ShipmentRecord> = readRecords().getOrDefault(emptyList())
+
+    @Synchronized
+    fun storageError(): String? = readRecords().exceptionOrNull()?.message
+
+    private fun readRecords(): Result<List<ShipmentRecord>> = runCatching {
+        val raw = prefs.getString(KEY_RECORDS, null) ?: return@runCatching emptyList()
+        val array = JSONArray(raw)
+        buildList {
+            for (index in 0 until array.length()) {
+                val item = array.optJSONObject(index) ?: error("Datensatz ${index + 1} ist beschädigt.")
+                add(decode(item) ?: error("Datensatz ${index + 1} ist unvollständig."))
+            }
+        }.sortedByDescending { it.updatedAt }
     }
 
     @Synchronized
@@ -85,7 +88,9 @@ class ShipmentStore(context: Context) {
             return ShipmentUpdate.Rejected("Bitte eine gültige Sendungsnummer mit 6 bis 40 Zeichen eingeben.")
         }
 
-        val records = all().toMutableList()
+        val records = readRecords().getOrElse {
+            return ShipmentUpdate.Rejected("Lokaler Datenspeicher kann nicht sicher gelesen werden. Es wurden keine Daten geändert. Bitte zuerst Support kontaktieren.")
+        }.toMutableList()
         val existing = records.firstOrNull {
             it.trackingNumber.equals(number, ignoreCase = true) &&
                 it.flow == flow && it.status !in TERMINAL_STATUSES
@@ -117,7 +122,9 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun advance(id: String): ShipmentUpdate {
-        val records = all().toMutableList()
+        val records = readRecords().getOrElse {
+            return ShipmentUpdate.Rejected("Lokaler Datenspeicher kann nicht sicher gelesen werden. Es wurden keine Daten geändert.")
+        }.toMutableList()
         val index = records.indexOfFirst { it.id == id }
         if (index < 0) return ShipmentUpdate.Rejected("Sendung wurde nicht gefunden.")
         val current = records[index]
@@ -146,7 +153,7 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun remove(id: String): Boolean {
-        val records = all().toMutableList()
+        val records = readRecords().getOrElse { return false }.toMutableList()
         val removed = records.removeAll { it.id == id }
         if (removed) persist(records)
         return removed
@@ -154,7 +161,7 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun exportBackupJson(): String {
-        val records = all()
+        val records = readRecords().getOrElse { error("Lokaler Datenspeicher ist beschädigt; Sicherung wurde nicht erstellt.") }
         return JSONObject().apply {
             put("format", BACKUP_FORMAT)
             put("schemaVersion", BACKUP_SCHEMA_VERSION)
@@ -251,7 +258,7 @@ class ShipmentStore(context: Context) {
     fun exportCsv(): String {
         fun cell(value: String): String = "\"" + value.replace("\"", "\"\"") + "\""
         val header = listOf("ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status", "Empfänger", "Notiz", "Erstellt", "Aktualisiert")
-        val rows = all().map { record ->
+        val rows = readRecords().getOrElse { error("Lokaler Datenspeicher ist beschädigt; CSV wurde nicht erstellt.") }.map { record ->
             listOf(
                 record.id,
                 record.trackingNumber,
