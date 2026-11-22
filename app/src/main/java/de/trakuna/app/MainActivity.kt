@@ -81,9 +81,9 @@ class MainActivity : ComponentActivity() {
                     override fun onReceive(context: Context?, intent: Intent?) {
                         if (intent?.action != DATAWEDGE_ACTION) return
                         val raw = intent.getStringExtra(DATAWEDGE_DATA_EXTRA) ?: return
-                        val scanned = normalizeTrackingNumber(raw)
-                        if (scanned.length !in 6..40 || scanned.any { !it.isLetterOrDigit() }) {
-                            status = "Zebra-Scan empfangen, aber das Format ist ungültig. Bitte Sendungsnummer prüfen."
+                        val scanned = extractTrackingNumber(raw)
+                        if (scanned.isNullOrBlank()) {
+                            status = "Zebra-Scan empfangen, aber keine unterstützte Sendungsnummer erkannt. Bitte manuell prüfen."
                             return
                         }
                         number = scanned
