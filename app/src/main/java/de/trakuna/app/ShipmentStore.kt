@@ -343,9 +343,20 @@ class ShipmentStore(context: Context) {
         val encrypted = runCatching { encrypt(encoded) }.getOrElse {
             return BackupRestoreResult.Rejected("Verschlüsselung fehlgeschlagen. Vorhandene Daten wurden nicht geändert.")
         }
+        // Verify the encrypted replacement before touching the current store. This also makes
+        // backup restore a real recovery path after init detected a corrupt local payload.
+        val verified = runCatching { validateStoredPayload(decrypt(encrypted)) }
+        if (verified.isFailure) {
+            return BackupRestoreResult.Rejected("Wiederhergestellte Daten konnten vor dem Speichern nicht geprüft werden. Vorhandene Daten wurden nicht geändert.")
+        }
         val saved = prefs.edit().putString(KEY_RECORDS_ENCRYPTED, encrypted).remove(KEY_RECORDS).commit()
-        return if (saved) BackupRestoreResult.Restored(records.size)
-        else BackupRestoreResult.Rejected("Daten konnten nicht dauerhaft gespeichert werden. Vorhandene Daten wurden nicht absichtlich gelöscht.")
+        if (!saved) {
+            return BackupRestoreResult.Rejected("Daten konnten nicht dauerhaft gespeichert werden. Vorhandene Daten wurden nicht absichtlich gelöscht.")
+        }
+        // init may have locked the store because the previous encrypted data was damaged.
+        // Clear that lock only after a verified replacement has been durably committed.
+        initializationError = null
+        return BackupRestoreResult.Restored(records.size)
     }
 
     private fun encodeRecords(records: List<ShipmentRecord>): String = JSONArray().apply {
