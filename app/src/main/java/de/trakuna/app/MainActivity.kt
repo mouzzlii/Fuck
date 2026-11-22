@@ -196,6 +196,7 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Retoure annehmen") }
                                         HorizontalDivider()
                                         Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
+                                        Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} möglichen Einträgen belegt", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedButton(onClick = {
                                             pendingCsv = ShipmentStore(context).exportCsv()
@@ -204,9 +205,13 @@ class MainActivity : ComponentActivity() {
                                         if (shipmentRecords.isEmpty()) {
                                             Text("Noch keine Paketshop-Vorgänge erfasst.")
                                         } else {
-                                            shipmentRecords.filter { record ->
+                                            val filteredRecords = shipmentRecords.filter { record ->
                                                 shipmentSearch.isBlank() || listOf(record.trackingNumber, record.recipient, record.carrier, shipmentStatusLabel(record.status)).any { it.contains(shipmentSearch, ignoreCase = true) }
-                                            }.take(100).forEach { record ->
+                                            }
+                                            if (filteredRecords.isEmpty()) {
+                                                Text("Keine passenden Sendungen gefunden.")
+                                            }
+                                            filteredRecords.take(100).forEach { record ->
                                                 Card(Modifier.fillMaxWidth()) {
                                                     Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                                         Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
