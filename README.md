@@ -1,11 +1,15 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.22 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.23 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Integrations- und Sicherheitsdokumentation
 
 - [Partner-Schnittstelle und Abnahmekriterien](PARTNER_INTEGRATION.md): beschreibt den aktuellen Android-Übergabeversuch, den notwendigen Vertrag mit dem Softwareanbieter und die Tests für eine echte Integration.
 - [Sicherheitsstatus und Produktionsfreigabe](SECURITY.md): dokumentiert umgesetzte Schutzmaßnahmen, bekannte Restrisiken und verbindliche Freigabekriterien.
+
+## Neu in Version 1.23
+
+- Kamera-Scans werden nur noch in das Sendungsnummernfeld übernommen. Eine Partner-App wird nicht mehr automatisch nach einem Scan geöffnet; vor der Übergabe kann der Bediener die Nummer prüfen.
 
 ## Neu in Version 1.22
 

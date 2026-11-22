@@ -185,8 +185,7 @@ class MainActivity : ComponentActivity() {
                                 onDetected = { scanned ->
                                     number = scanned
                                     showScanner = false
-                                    val result = handoffToPartnerApp(context, scanned, identifyCarrier(scanned))
-                                    status = result.message
+                                    status = "Scan erkannt: $scanned. Bitte Sendungsnummer und Paketdienst prüfen. Es wurde noch nichts an eine andere App übergeben."
                                 },
                                 onClose = { showScanner = false }
                             )
