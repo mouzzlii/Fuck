@@ -64,6 +64,7 @@ class MainActivity : ComponentActivity() {
             var showShipmentLedger by remember { mutableStateOf(false) }
             var shipmentRevision by remember { mutableStateOf(0) }
             var recipient by remember { mutableStateOf("") }
+            var carrierOverride by remember { mutableStateOf("") }
             var shipmentNote by remember { mutableStateOf("") }
             var shipmentSearch by remember { mutableStateOf("") }
             var pendingDelete by remember { mutableStateOf<ShipmentRecord?>(null) }
@@ -217,10 +218,11 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Text("Neuen Vorgang mit der oben eingegebenen Sendungsnummer erfassen:")
                                         OutlinedTextField(value = recipient, onValueChange = { recipient = it }, label = { Text("Empfänger / Kundenname (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                                        OutlinedTextField(value = carrierOverride, onValueChange = { carrierOverride = it }, label = { Text("Paketdienst (optional, manuell korrigieren)") }, placeholder = { Text("z. B. DHL, DPD, GLS, Post, UPS") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
+                                                val result = ShipmentStore(context).add(number, carrierOverride.ifBlank { identifyCarrier(number).orEmpty() }, ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 shipmentRevision++
                                             },
@@ -229,7 +231,7 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Paket für Kunden annehmen") }
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
+                                                val result = ShipmentStore(context).add(number, carrierOverride.ifBlank { identifyCarrier(number).orEmpty() }, ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 shipmentRevision++
                                             },
@@ -238,7 +240,7 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Sendung vom Kunden annehmen") }
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
+                                                val result = ShipmentStore(context).add(number, carrierOverride.ifBlank { identifyCarrier(number).orEmpty() }, ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 shipmentRevision++
                                             },
