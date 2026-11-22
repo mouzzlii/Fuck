@@ -52,6 +52,27 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun manualCarrierChoiceOverridesHintAndBlankChoiceUsesHint() {
+        assertEquals("DHL", ShipmentRules.resolveCarrierLabel(" DHL ", "12345678901234"))
+        assertEquals("DPD", ShipmentRules.resolveCarrierLabel("", "12345678901234"))
+        assertEquals("GLS", ShipmentRules.resolveCarrierLabel("GLS", "1Z999AA10123456784"))
+        assertEquals("", ShipmentRules.resolveCarrierLabel(" ", "ABC1234567"))
+    }
+
+    @Test
+    fun duplicateOutcomeRetainsExistingRecordAndIsNotReportedAsNewSave() {
+        val existing = ShipmentRecord(
+            id = "existing", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
+            status = ShipmentStatus.READY_FOR_PICKUP, createdAt = 1L, updatedAt = 2L
+        )
+        val outcome: ShipmentUpdate = ShipmentUpdate.AlreadyExists(existing)
+        assertTrue(outcome is ShipmentUpdate.AlreadyExists)
+        assertEquals(existing, (outcome as ShipmentUpdate.AlreadyExists).record)
+        assertFalse(outcome is ShipmentUpdate.Saved)
+    }
+
+    @Test
     fun carrierHintsRecognizeKnownFormatsAndLeaveAmbiguousValuesUnknown() {
         assertEquals("UPS", ShipmentRules.identifyCarrier("1z999aa10123456784"))
         assertEquals("Österreichische Post", ShipmentRules.identifyCarrier("AB123456789AT"))
