@@ -27,6 +27,9 @@ jobs:
           gradle-version: '8.9'
 
 
+      - name: Unit-Tests ausführen
+        run: gradle testDebugUnitTest
+
       - name: APK bauen
         run: gradle assembleDebug
 
