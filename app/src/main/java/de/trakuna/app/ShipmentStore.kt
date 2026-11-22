@@ -515,8 +515,13 @@ object ShipmentRules {
 
     fun csvSafeCell(value: String): String {
         // Prefix spreadsheet formula starters so untrusted notes/names cannot execute as formulas.
-        val candidate = value.trimStart()
-        val formulaPrefix = candidate.firstOrNull()?.let { it == '=' || it == '+' || it == '-' || it == '@' || it == '\t' || it == '\r' } == true
+        // Spreadsheet programs may ignore leading whitespace or a BOM when deciding
+        // whether a cell starts with a formula. Inspect the first significant character,
+        // but prefix the original cell so the exported value itself remains unchanged.
+        val firstSignificant = value.dropWhile {
+            it.isWhitespace() || it == '\uFEFF' || it == '\u200B'
+        }.firstOrNull()
+        val formulaPrefix = firstSignificant in setOf('=', '+', '-', '@')
         val safeValue = if (formulaPrefix) "'$value" else value
         return "\"" + safeValue.replace("\"", "\"\"") + "\""
     }

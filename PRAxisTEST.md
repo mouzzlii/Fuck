@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Version 1.39)
+# TRAKUNA – Praxis-Testplan (Version 1.40)
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
