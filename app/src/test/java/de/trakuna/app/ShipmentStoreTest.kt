@@ -28,6 +28,34 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun shipmentHistoryMustBeChronologicalAndWithinRecordLifetime() {
+        val base = ShipmentRecord(
+            id = "history-1", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER, status = ShipmentStatus.READY_FOR_PICKUP,
+            createdAt = 100L, updatedAt = 300L,
+            history = listOf(
+                ShipmentEvent(100L, ShipmentEventType.CREATED, toStatus = ShipmentStatus.RECEIVED_BY_SHOP),
+                ShipmentEvent(200L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.RECEIVED_BY_SHOP, ShipmentStatus.READY_FOR_PICKUP)
+            )
+        )
+        assertTrue(ShipmentRules.isValidRecord(base))
+        assertFalse(ShipmentRules.isValidRecord(base.copy(history = base.history.reversed())))
+        assertFalse(ShipmentRules.isValidRecord(base.copy(history = base.history + ShipmentEvent(301L, ShipmentEventType.DETAILS_UPDATED))))
+        assertFalse(ShipmentRules.isValidRecord(base.copy(history = base.history + ShipmentEvent(250L, ShipmentEventType.CREATED, toStatus = ShipmentStatus.READY_FOR_PICKUP))))
+    }
+
+    @Test
+    fun olderRecordsWithoutHistoryRemainValidForBackwardCompatibility() {
+        val legacy = ShipmentRecord(
+            id = "legacy-1", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER, status = ShipmentStatus.RECEIVED_BY_SHOP,
+            createdAt = 100L, updatedAt = 100L
+        )
+        assertTrue(ShipmentRules.isValidRecord(legacy))
+        assertTrue(legacy.history.isEmpty())
+    }
+
+    @Test
     fun updateTimestampNeverMovesBehindPreviousRecordWhenDeviceClockGoesBackwards() {
         assertEquals(2_000L, ShipmentRules.nextUpdateTimestamp(2_000L, 1_000L))
         assertEquals(3_000L, ShipmentRules.nextUpdateTimestamp(2_000L, 3_000L))

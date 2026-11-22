@@ -31,6 +31,15 @@ enum class ShipmentStatus {
     HANDED_TO_CARRIER
 }
 
+enum class ShipmentEventType { CREATED, STATUS_CHANGED, DETAILS_UPDATED }
+
+data class ShipmentEvent(
+    val at: Long,
+    val type: ShipmentEventType,
+    val fromStatus: ShipmentStatus? = null,
+    val toStatus: ShipmentStatus? = null
+)
+
 data class ShipmentRecord(
     val id: String,
     val trackingNumber: String,
@@ -40,7 +49,8 @@ data class ShipmentRecord(
     val createdAt: Long,
     val updatedAt: Long,
     val recipient: String = "",
-    val note: String = ""
+    val note: String = "",
+    val history: List<ShipmentEvent> = emptyList()
 )
 
 sealed class ShipmentUpdate {
@@ -217,7 +227,8 @@ class ShipmentStore(context: Context) {
             createdAt = now,
             updatedAt = now,
             recipient = recipient.trim().take(100),
-            note = note.trim().take(500)
+            note = note.trim().take(500),
+            history = listOf(ShipmentEvent(now, ShipmentEventType.CREATED, toStatus = initialStatus))
         )
         records.add(record)
         if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte freien Gerätespeicher prüfen und den Vorgang erneut kontrollieren.")
@@ -234,7 +245,12 @@ class ShipmentStore(context: Context) {
         val current = records[index]
         val next = ShipmentRules.nextStatus(current.flow, current.status)
             ?: return ShipmentUpdate.Rejected("Dieser Vorgang ist bereits abgeschlossen.")
-        val updated = current.copy(status = next, updatedAt = ShipmentRules.nextUpdateTimestamp(current.updatedAt, System.currentTimeMillis()))
+        val changedAt = ShipmentRules.nextUpdateTimestamp(current.updatedAt, System.currentTimeMillis())
+        val updated = current.copy(
+            status = next,
+            updatedAt = changedAt,
+            history = (current.history + ShipmentEvent(changedAt, ShipmentEventType.STATUS_CHANGED, current.status, next)).takeLast(MAX_HISTORY_EVENTS)
+        )
         records[index] = updated
         if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte den Vorgang erneut öffnen und prüfen.")
         return ShipmentUpdate.Saved(updated)
@@ -250,7 +266,11 @@ class ShipmentStore(context: Context) {
         val updated = records[index].copy(
             recipient = recipient.trim().take(100),
             note = note.trim().take(500),
-            updatedAt = ShipmentRules.nextUpdateTimestamp(records[index].updatedAt, System.currentTimeMillis())
+            updatedAt = ShipmentRules.nextUpdateTimestamp(records[index].updatedAt, System.currentTimeMillis()),
+            history = (records[index].history + ShipmentEvent(
+                ShipmentRules.nextUpdateTimestamp(records[index].updatedAt, System.currentTimeMillis()),
+                ShipmentEventType.DETAILS_UPDATED
+            )).takeLast(MAX_HISTORY_EVENTS)
         )
         records[index] = updated
         if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte den Vorgang erneut öffnen und prüfen.")
@@ -285,6 +305,7 @@ class ShipmentStore(context: Context) {
                         put("updatedAt", record.updatedAt)
                         put("recipient", record.recipient)
                         put("note", record.note)
+                        put("history", encodeHistory(record.history))
                     })
                 }
             })
@@ -371,6 +392,7 @@ class ShipmentStore(context: Context) {
                 put("updatedAt", record.updatedAt)
                 put("recipient", record.recipient)
                 put("note", record.note)
+                put("history", encodeHistory(record.history))
             })
         }
     }.toString()
@@ -401,6 +423,33 @@ class ShipmentStore(context: Context) {
             prefs.edit().putString(KEY_RECORDS_ENCRYPTED, encrypted).remove(KEY_RECORDS).commit()
         }.getOrDefault(false)
 
+    private fun encodeHistory(history: List<ShipmentEvent>): JSONArray = JSONArray().apply {
+        history.forEach { event ->
+            put(JSONObject().apply {
+                put("at", event.at)
+                put("type", event.type.name)
+                event.fromStatus?.let { put("fromStatus", it.name) }
+                event.toStatus?.let { put("toStatus", it.name) }
+            })
+        }
+    }
+
+    private fun decodeHistory(array: JSONArray?): List<ShipmentEvent> {
+        if (array == null) return emptyList()
+        require(array.length() <= MAX_HISTORY_EVENTS) { "Vorgangshistorie enthält zu viele Einträge." }
+        return buildList {
+            for (index in 0 until array.length()) {
+                val item = array.optJSONObject(index) ?: error("Historieneintrag ${index + 1} ist beschädigt.")
+                add(ShipmentEvent(
+                    at = item.getLong("at"),
+                    type = ShipmentEventType.valueOf(item.getString("type")),
+                    fromStatus = item.optString("fromStatus").takeIf { it.isNotBlank() }?.let(ShipmentStatus::valueOf),
+                    toStatus = item.optString("toStatus").takeIf { it.isNotBlank() }?.let(ShipmentStatus::valueOf)
+                ))
+            }
+        }
+    }
+
     private fun decode(item: JSONObject): ShipmentRecord? = runCatching {
         ShipmentRecord(
             id = item.getString("id"),
@@ -411,7 +460,8 @@ class ShipmentStore(context: Context) {
             createdAt = item.getLong("createdAt"),
             updatedAt = item.getLong("updatedAt"),
             recipient = item.optString("recipient"),
-            note = item.optString("note")
+            note = item.optString("note"),
+            history = decodeHistory(item.optJSONArray("history"))
         )
     }.getOrNull()
 
@@ -429,6 +479,7 @@ class ShipmentStore(context: Context) {
         private const val GCM_TAG_BYTES = 16
         private const val MAX_ENCRYPTED_STORAGE_CHARS = 2_800_000
         const val MAX_RECORDS = 500
+        private const val MAX_HISTORY_EVENTS = 100
         const val MAX_BACKUP_BYTES = 2 * 1024 * 1024
         private val TERMINAL_STATUSES = setOf(
             ShipmentStatus.HANDED_TO_CUSTOMER,
@@ -531,6 +582,17 @@ object ShipmentRules {
             isValidTrackingNumber(record.trackingNumber) &&
             record.carrier.length <= 80 && record.recipient.length <= 100 && record.note.length <= 500 &&
             record.createdAt > 0L && record.updatedAt >= record.createdAt &&
+            record.history.size <= 100 &&
+            record.history.zipWithNext().all { (a, b) -> b.at >= a.at } &&
+            record.history.all { it.at in record.createdAt..record.updatedAt } &&
+            record.history.all { event ->
+                when (event.type) {
+                    ShipmentEventType.CREATED -> event.fromStatus == null && event.toStatus == record.status
+                    ShipmentEventType.STATUS_CHANGED -> event.fromStatus != null && event.toStatus != null &&
+                        isStatusValidForFlow(record.flow, event.fromStatus) && isStatusValidForFlow(record.flow, event.toStatus)
+                    ShipmentEventType.DETAILS_UPDATED -> event.fromStatus == null && event.toStatus == null
+                }
+            } &&
             isStatusValidForFlow(record.flow, record.status)
 
     fun normalizeTrackingNumber(raw: String): String =

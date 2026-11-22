@@ -75,6 +75,7 @@ class MainActivity : ComponentActivity() {
             var pendingAdvance by remember { mutableStateOf<ShipmentRecord?>(null) }
             var pendingDelete by remember { mutableStateOf<ShipmentRecord?>(null) }
             var editingRecord by remember { mutableStateOf<ShipmentRecord?>(null) }
+            var historyRecord by remember { mutableStateOf<ShipmentRecord?>(null) }
             var editRecipient by remember { mutableStateOf("") }
             var editNote by remember { mutableStateOf("") }
             val context = LocalContext.current
@@ -361,6 +362,7 @@ class MainActivity : ComponentActivity() {
                                                                 Text(shipmentNextAction(record.flow, record.status))
                                                             }
                                                         }
+                                                        TextButton(onClick = { historyRecord = record }) { Text("Vorgangshistorie anzeigen (${record.history.size})") }
                                                         TextButton(enabled = shipmentStorageIssue == null, onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
                                                         TextButton(enabled = shipmentStorageIssue == null, onClick = { pendingDelete = record }) { Text("Vorgang löschen", color = MaterialTheme.colorScheme.error) }
                                                     }
@@ -447,6 +449,40 @@ class MainActivity : ComponentActivity() {
                                     }) { Text("Ersetzen und wiederherstellen") }
                                 },
                                 dismissButton = { TextButton(onClick = { pendingBackupImport = null }) { Text("Abbrechen") } }
+                            )
+                        }
+                        historyRecord?.let { record ->
+                            AlertDialog(
+                                onDismissRequest = { historyRecord = null },
+                                title = { Text("Vorgangshistorie") },
+                                text = {
+                                    Column(
+                                        modifier = Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()),
+                                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                                    ) {
+                                        Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
+                                        if (record.history.isEmpty()) {
+                                            Text("Für diesen älteren Vorgang liegen noch keine einzelnen Verlaufseinträge vor.")
+                                        } else {
+                                            record.history.asReversed().forEach { event ->
+                                                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                                    Text(
+                                                        when (event.type) {
+                                                            ShipmentEventType.CREATED -> "Vorgang angelegt"
+                                                            ShipmentEventType.STATUS_CHANGED -> "Status geändert: ${event.fromStatus?.let(::shipmentStatusLabel) ?: "unbekannt"} → ${event.toStatus?.let(::shipmentStatusLabel) ?: "unbekannt"}"
+                                                            ShipmentEventType.DETAILS_UPDATED -> "Empfänger oder Notiz bearbeitet"
+                                                        },
+                                                        style = MaterialTheme.typography.bodyMedium
+                                                    )
+                                                    Text(ShipmentRules.formatTimestamp(event.at), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                                }
+                                                HorizontalDivider()
+                                            }
+                                        }
+                                        Text("Die Historie wird lokal auf diesem Gerät gespeichert. Sie ist kein manipulationssicheres, zentrales Prüfprotokoll.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { historyRecord = null }) { Text("Schließen") } }
                             )
                         }
                         editingRecord?.let { record ->
