@@ -521,7 +521,7 @@ object ShipmentRules {
         val firstSignificant = value.dropWhile {
             it.isWhitespace() || it == '\uFEFF' || it == '\u200B'
         }.firstOrNull()
-        val formulaPrefix = firstSignificant in setOf('=', '+', '-', '@')
+        val formulaPrefix = firstSignificant == '=' || firstSignificant == '+' || firstSignificant == '-' || firstSignificant == '@'
         val safeValue = if (formulaPrefix) "'$value" else value
         return "\"" + safeValue.replace("\"", "\"\"") + "\""
     }
