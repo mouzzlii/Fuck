@@ -9,6 +9,8 @@
         </intent>
     </queries>
     <application
+        android:icon="@drawable/ic_trakuna_launcher"
+        android:roundIcon="@drawable/ic_trakuna_launcher"
         android:allowBackup="false"
         android:usesCleartextTraffic="false"
         android:label="TRAKUNA"

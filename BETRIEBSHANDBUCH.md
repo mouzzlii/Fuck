@@ -1,6 +1,6 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.31
+Stand: App-Version 1.32
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
@@ -51,7 +51,9 @@ Wenn mehrere unterschiedliche Sendungsnummern gleichzeitig erkannt werden, über
 
 ### Zebra DataWedge
 
-Das Zebra-Gerät muss einmalig eingerichtet werden. Die genaue Konfiguration steht in `PARTNER_INTEGRATION.md`.
+Das Zebra-Gerät muss eingerichtet werden. Die genaue Konfiguration steht in `PARTNER_INTEGRATION.md`. Die [offizielle Zebra-Dokumentation zu DataWedge Intent Output](https://techdocs.zebra.com/datawedge/latest/guide/output/intent/) erklärt die Component Information und Signaturprüfung.
+
+**Hinweis zu Testpaketen:** Debug-Testpakete aus unterschiedlichen CI-Läufen können unterschiedlich signiert sein. Nach einer Aktualisierung kann es deshalb nötig sein, TRAKUNA in DataWedge unter Component Information erneut auszuwählen und die Signaturprüfung neu zu aktivieren.
 
 Wichtig: DataWedge muss die Action `de.trakuna.app.DATAWEDGE_SCAN` und das Extra `com.symbol.datawedge.data_string` verwenden. Im Zebra-Profil sollte unter **Intent Output → Component Information** ausschließlich TRAKUNA ausgewählt und die Signaturprüfung aktiviert werden. Diese Geräteeinstellung kann TRAKUNA nicht selbst kontrollieren.
 

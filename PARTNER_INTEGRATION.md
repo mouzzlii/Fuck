@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: TRAKUNA 1.31
+Stand: TRAKUNA 1.32
 
 ## Zweck
 
@@ -67,6 +67,8 @@ TRAKUNA 1.18 kann Scan-Ergebnisse von Zebra DataWedge über einen Android-Broadc
 
 ### Empfohlene Empfänger-Allowlist und Signaturprüfung
 
+Siehe auch die [offizielle Zebra-Dokumentation zu Intent Output](https://techdocs.zebra.com/datawedge/latest/guide/output/intent/).
+
 **Diesen Schritt zusätzlich durchführen.** Die Action allein ist kein Zugriffsschutz. DataWedge bietet unter „Component Information“ eine Empfängerbeschränkung an:
 
 1. Im TRAKUNA-Profil den Bereich **Intent Output** öffnen.
@@ -76,7 +78,7 @@ TRAKUNA 1.18 kann Scan-Ergebnisse von Zebra DataWedge über einen Android-Broadc
 5. Prüfen, dass TRAKUNA mit aktivierter Signaturprüfung in der Component-Liste steht.
 6. Profil speichern und einen Testbarcode scannen.
 
-DataWedge sendet damit Intent-Daten nur an das festgelegte Paket und prüft zusätzlich dessen Signatur. Wird später eine App-Version mit einem anderen Signaturschlüssel installiert, muss die Komponentenauswahl in DataWedge erneut geprüft bzw. aktualisiert werden. Die Signatur wird bewusst nicht als fester Text in dieser Anleitung angegeben: DataWedge kann die Signatur der installierten App selbst erfassen; ein statischer Hash wäre ohne Kenntnis des endgültigen Release-Schlüssels nicht verlässlich.
+DataWedge sendet damit Intent-Daten nur an das festgelegte Paket und prüft zusätzlich dessen Signatur. Wird später eine App-Version mit einem anderen Signaturschlüssel installiert, muss die Komponentenauswahl in DataWedge erneut geprüft bzw. aktualisiert werden. Die Signatur wird bewusst nicht als fester Text in dieser Anleitung angegeben: DataWedge kann die Signatur der installierten App selbst erfassen; ein statischer Hash wäre ohne Kenntnis des endgültigen Release-Schlüssels nicht verlässlich. **Debug-Testpakete aus unterschiedlichen CI-Läufen können unterschiedlich signiert sein.** Nach Installation eines neuen Testpakets Component Information erneut öffnen, TRAKUNA neu auswählen und die Signaturprüfung erneut aktivieren. Für den späteren Produktivbetrieb ist ein stabiler, sicher verwahrter Release-Signaturschlüssel erforderlich.
 
 ### Verhalten in TRAKUNA
 
