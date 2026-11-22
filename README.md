@@ -26,7 +26,7 @@ TRAKUNA 1.17 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Vor dem Export einer unverschlüsselten JSON-Sicherung warnt die App vor den enthaltenen Sendungsnummern, Empfängernamen und internen Notizen.
 - Strikte Statusübergänge je Vorgangsart, damit Retouren und ausgehende Sendungen nicht versehentlich vermischt werden.
 
-## Neu in Version 1.17\n\n- Paketdienst bei jedem Paketshop-Vorgang manuell eintragen oder die automatische Erkennung überschreiben.\n- Doppelte aktive Vorgänge erhalten eine eigene Rückmeldung; die App meldet nicht länger irreführend eine neue Speicherung. Das verhindert, dass eine unsichere Nummern-Heuristik unbemerkt als verbindliche Carrier-Zuordnung behandelt wird.\n\n## Praxis-Test
+## Neu in Version 1.17\n\n- Paketdienst bei jedem Paketshop-Vorgang manuell eintragen oder die automatische Erkennung überschreiben.\n- Doppelte aktive Vorgänge erhalten eine eigene Rückmeldung; die App meldet nicht länger irreführend eine neue Speicherung.\n- Nach erfolgreicher Erfassung werden Empfänger, manuelle Paketdienst-Auswahl und Notiz geleert, damit keine Angaben versehentlich auf das nächste Paket übertragen werden. Das verhindert, dass eine unsichere Nummern-Heuristik unbemerkt als verbindliche Carrier-Zuordnung behandelt wird.\n\n## Praxis-Test
 
 Der deutschsprachige [Praxis-Testplan](PRAxisTEST.md) enthält konkrete Prüfschritte für Scan, manuelle Eingabe, Paketshop-Abläufe, Bearbeitung, CSV-Export und Partnerübergabe.
 
