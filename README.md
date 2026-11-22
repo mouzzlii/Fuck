@@ -1,6 +1,6 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.16 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.17 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Integrations- und Sicherheitsdokumentation
 
@@ -11,7 +11,7 @@ TRAKUNA 1.16 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 - Kamera-Scan für gängige 1D-Barcodes und QR-/2D-Codes (Google ML Kit).
 - Manuelle Eingabe von Sendungsnummern als Alternative zum Kamerascan.
-- Erkennung einiger verbreiteter Formate für UPS, Österreichische Post, DHL, DPD und GLS. Die Heuristik ist in separat getestete Geschäftslogik ausgelagert und muss mit echten Labels der jeweiligen Partner geprüft werden.
+- Erkennung einiger verbreiteter Formate für UPS, Österreichische Post, DHL, DPD und GLS. Die Heuristik ist nur ein Hinweis und muss mit echten Labels geprüft werden; beim Erfassen kann der Paketdienst jetzt manuell eingetragen oder korrigiert werden.
 - Zwischenspeicherung der letzten Sendungsnummer und Kopie in die Zwischenablage.
 - Auswahl einer installierten Betriebssoftware (dauerhaft gespeichert, mit Möglichkeit zum Entfernen/Wechseln) und Übergabeversuch per Android-Intent; die lokale Zwischenspeicherung wird vor dem App-Wechsel bestätigt, ein nicht verfügbarer Clipboard-Dienst blockiert den Ablauf nicht und die Zwischenablage wird auf Android 13+ als sensibel markiert.
 - Lokale Paketshop-Liste mit Eingang für Kunden, Annahme von Kundensendungen und Retouren.
@@ -26,7 +26,7 @@ TRAKUNA 1.16 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Vor dem Export einer unverschlüsselten JSON-Sicherung warnt die App vor den enthaltenen Sendungsnummern, Empfängernamen und internen Notizen.
 - Strikte Statusübergänge je Vorgangsart, damit Retouren und ausgehende Sendungen nicht versehentlich vermischt werden.
 
-## Praxis-Test
+## Neu in Version 1.17\n\n- Paketdienst bei jedem Paketshop-Vorgang manuell eintragen oder die automatische Erkennung überschreiben. Das verhindert, dass eine unsichere Nummern-Heuristik unbemerkt als verbindliche Carrier-Zuordnung behandelt wird.\n\n## Praxis-Test
 
 Der deutschsprachige [Praxis-Testplan](PRAxisTEST.md) enthält konkrete Prüfschritte für Scan, manuelle Eingabe, Paketshop-Abläufe, Bearbeitung, CSV-Export und Partnerübergabe.
 
