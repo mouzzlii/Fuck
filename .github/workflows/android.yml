@@ -7,9 +7,14 @@ on:
     branches:
       - main
 
+concurrency:
+  group: trakuna-android-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
 
     steps:
       - name: Repository laden
