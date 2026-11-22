@@ -16,7 +16,7 @@ TRAKUNA 1.17 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Auswahl einer installierten Betriebssoftware (dauerhaft gespeichert, mit Möglichkeit zum Entfernen/Wechseln) und Übergabeversuch per Android-Intent; die lokale Zwischenspeicherung wird vor dem App-Wechsel bestätigt, ein nicht verfügbarer Clipboard-Dienst blockiert den Ablauf nicht und die Zwischenablage wird auf Android 13+ als sensibel markiert.
 - Lokale Paketshop-Liste mit Eingang für Kunden, Annahme von Kundensendungen und Retouren.
 - Statusfortschritt, Empfänger-/Notizfelder (nachträglich bearbeitbar), Suche und Löschen einzelner Vorgänge.
-- Schutz vor unbemerktem Erreichen der lokalen Speichergrenze: maximal 500 Vorgänge; vor weiteren Einträgen wird ein CSV-Export und Aufräumen verlangt.
+- Doppelte aktive Sendungen werden erkannt und ausdrücklich als bereits vorhanden gemeldet, statt fälschlich eine neue Speicherung zu behaupten.\n- Schutz vor unbemerktem Erreichen der lokalen Speichergrenze: maximal 500 Vorgänge; vor weiteren Einträgen wird ein CSV-Export und Aufräumen verlangt.
 - Anzeige der belegten Speicherkapazität und verständlicher Hinweis bei Suchanfragen ohne Treffer.
 - CSV-Export als echte Datei über den Android-Dateidialog (Speicherort frei wählbar); Tabellenkalkulations-Formelanfänge in Nutzereingaben werden beim Export entschärft.
 - Vollständige lokale Datensicherung als versioniertes JSON über den Android-Dateidialog.
@@ -26,7 +26,7 @@ TRAKUNA 1.17 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Vor dem Export einer unverschlüsselten JSON-Sicherung warnt die App vor den enthaltenen Sendungsnummern, Empfängernamen und internen Notizen.
 - Strikte Statusübergänge je Vorgangsart, damit Retouren und ausgehende Sendungen nicht versehentlich vermischt werden.
 
-## Neu in Version 1.17\n\n- Paketdienst bei jedem Paketshop-Vorgang manuell eintragen oder die automatische Erkennung überschreiben. Das verhindert, dass eine unsichere Nummern-Heuristik unbemerkt als verbindliche Carrier-Zuordnung behandelt wird.\n\n## Praxis-Test
+## Neu in Version 1.17\n\n- Paketdienst bei jedem Paketshop-Vorgang manuell eintragen oder die automatische Erkennung überschreiben.\n- Doppelte aktive Vorgänge erhalten eine eigene Rückmeldung; die App meldet nicht länger irreführend eine neue Speicherung. Das verhindert, dass eine unsichere Nummern-Heuristik unbemerkt als verbindliche Carrier-Zuordnung behandelt wird.\n\n## Praxis-Test
 
 Der deutschsprachige [Praxis-Testplan](PRAxisTEST.md) enthält konkrete Prüfschritte für Scan, manuelle Eingabe, Paketshop-Abläufe, Bearbeitung, CSV-Export und Partnerübergabe.
 
