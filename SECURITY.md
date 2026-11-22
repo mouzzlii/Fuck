@@ -2,6 +2,10 @@
 
 ## Bereits im Projekt umgesetzt
 
+- Lokale Paketdatensätze werden mit AES-256-GCM verschlüsselt; der AES-Schlüssel wird im Android Keystore gespeichert.
+- Eine Einmalmigration übernimmt den bisherigen Klartextbestand. Der alte Eintrag wird erst nach erfolgreichem Commit des verschlüsselten Ersatzes entfernt.
+- Fehler bei Migration, Entschlüsselung oder Schlüsselzugriff führen zu einem sichtbaren Speicherfehler; die App darf solche Daten nicht als leeren Bestand behandeln.
+
 - Android-Backup ist deaktiviert (`allowBackup=false`).
 - Unverschlüsselter Netzwerkverkehr ist standardmäßig deaktiviert.
 - Lokale Datensätze werden vor Anzeige und Wiederherstellung auf Struktur, Status, IDs und Duplikate geprüft.
@@ -13,7 +17,7 @@
 
 ## Bekannte Restrisiken / nicht abgeschlossene Arbeiten
 
-- Lokale Paketdaten und der Übergabe-Cache liegen derzeit in Android SharedPreferences und sind nicht anwendungsseitig verschlüsselt.
+- Exportierte JSON- und CSV-Dateien sind weiterhin unverschlüsselt und müssen wie vertrauliche Unterlagen geschützt werden. Der lokale Übergabe-Cache ist gesondert zu prüfen; die Verschlüsselung des Paketbestands deckt ihn nicht automatisch ab.
 - Es gibt keine zentrale Anmeldung, Rollen-/Rechteverwaltung oder Gerätesynchronisierung.
 - Es gibt keine verifizierte Carrier-API-Anbindung.
 - Die Partner-App-Übergabe bestätigt nur das Öffnen der Ziel-App, nicht die Übernahme oder Buchung.
