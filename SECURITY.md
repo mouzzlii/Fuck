@@ -5,6 +5,7 @@
 - Lokale Paketdatensätze werden mit AES-256-GCM verschlüsselt; der AES-Schlüssel wird im Android Keystore gespeichert.
 - Eine Einmalmigration übernimmt den bisherigen Klartextbestand. Der alte Eintrag wird erst nach erfolgreichem Commit des verschlüsselten Ersatzes entfernt.
 - Fehler bei Migration, Entschlüsselung oder Schlüsselzugriff führen zu einem sichtbaren Speicherfehler; die App darf solche Daten nicht als leeren Bestand behandeln.
+- Verschlüsselte Speicherwerte und Klartext vor der Verschlüsselung sind auf maximal 2 MiB Nutzdaten begrenzt; Base64-Eingaben werden vor dem Dekodieren zusätzlich begrenzt.
 
 - Android-Backup ist deaktiviert (`allowBackup=false`).
 - Unverschlüsselter Netzwerkverkehr ist standardmäßig deaktiviert.
