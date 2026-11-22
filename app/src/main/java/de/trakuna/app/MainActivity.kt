@@ -568,11 +568,7 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
     // Persist the handoff before leaving TRAKUNA. Do not report success if Android
     // cannot confirm that the local cache was written.
     val preferences = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-    val cached = preferences.edit()
-        .putString(CACHE_KEY, number)
-        .putString("carrier", carrier.orEmpty())
-        .putLong("saved_at", System.currentTimeMillis())
-        .commit()
+    val cached = SecureHandoffCache(context).save(number, carrier)
     if (!cached) {
         return HandoffResult("Sendungsnummer konnte nicht dauerhaft gespeichert werden. Bitte Gerätespeicher prüfen und erneut versuchen.")
     }
@@ -624,7 +620,7 @@ const val EXTRA_CARRIER = "de.trakuna.app.extra.CARRIER"
 
 /** Public accessor for a future in-process adapter or diagnostics screen. */
 fun getCachedTrackingNumber(context: Context): String =
-    context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).getString(CACHE_KEY, "").orEmpty()
+    SecureHandoffCache(context).trackingNumber()
 
 private fun normalizeTrackingNumber(raw: String): String =
     raw.replace(Regex("[\\u0000-\\u001F]"), "").trim().replace(Regex("\\s+"), "")
