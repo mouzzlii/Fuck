@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: TRAKUNA 1.24
+Stand: TRAKUNA 1.30
 
 ## Zweck
 

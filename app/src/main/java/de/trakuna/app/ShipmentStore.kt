@@ -351,7 +351,7 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun exportCsv(): String {
-        val header = listOf("ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status", "Empfänger", "Notiz", "Erstellt", "Aktualisiert")
+        val header = listOf("ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status", "Empfänger", "Notiz", "Erstellt (UTC)", "Aktualisiert (UTC)")
         val rows = readRecords().getOrElse { error("Lokaler Datenspeicher ist beschädigt; CSV wurde nicht erstellt.") }.map { record ->
             listOf(
                 record.id,
@@ -361,8 +361,8 @@ class ShipmentStore(context: Context) {
                 record.status.name,
                 record.recipient,
                 record.note,
-                record.createdAt.toString(),
-                record.updatedAt.toString()
+                ShipmentRules.formatTimestampForExport(record.createdAt),
+                ShipmentRules.formatTimestampForExport(record.updatedAt)
             )
         }
         return (listOf(header) + rows).joinToString("\n") { row -> row.joinToString(";") { ShipmentRules.csvSafeCell(it) } }
@@ -414,6 +414,14 @@ class ShipmentStore(context: Context) {
 
 /** Pure parcel workflow rules shared by the Android store and JVM unit tests. */
 object ShipmentRules {
+    fun formatTimestamp(timestamp: Long, zoneId: java.time.ZoneId = java.time.ZoneId.systemDefault()): String =
+        java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss", java.util.Locale.GERMANY)
+            .withZone(zoneId)
+            .format(java.time.Instant.ofEpochMilli(timestamp))
+
+    fun formatTimestampForExport(timestamp: Long): String =
+        java.time.Instant.ofEpochMilli(timestamp).toString()
+
     fun csvSafeCell(value: String): String {
         // Prefix spreadsheet formula starters so untrusted notes/names cannot execute as formulas.
         val candidate = value.trimStart()

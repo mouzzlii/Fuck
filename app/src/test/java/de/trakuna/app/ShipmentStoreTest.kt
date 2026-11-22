@@ -28,6 +28,16 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun timestampExportUsesStableUtcIso8601Format() {
+        assertEquals("1970-01-01T00:00:00Z", ShipmentRules.formatTimestampForExport(0L))
+    }
+
+    @Test
+    fun timestampDisplayUsesGermanDateAndTimeOrder() {
+        assertEquals("01.01.1970 00:00:00", ShipmentRules.formatTimestamp(0L, java.time.ZoneOffset.UTC))
+    }
+
+    @Test
     fun csvExportEscapesSpreadsheetFormulasAndQuotes() {
         assertEquals("\"'=1+1\"", ShipmentRules.csvSafeCell("=1+1"))
         assertEquals("\"'  @SUM(A1:A2)\"", ShipmentRules.csvSafeCell("  @SUM(A1:A2)"))

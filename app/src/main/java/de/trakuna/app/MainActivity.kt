@@ -253,9 +253,9 @@ class MainActivity : ComponentActivity() {
                                         verticalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
                                         Text("Neuen Vorgang mit der oben eingegebenen Sendungsnummer erfassen:")
-                                        OutlinedTextField(value = recipient, onValueChange = { recipient = it }, label = { Text("Empfänger / Kundenname (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedTextField(value = carrierOverride, onValueChange = { carrierOverride = it }, label = { Text("Paketdienst (optional, manuell korrigieren)") }, placeholder = { Text("z. B. DHL, DPD, GLS, Post, UPS") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                                        OutlinedTextField(value = recipient, onValueChange = { recipient = it.take(100) }, label = { Text("Empfänger / Kundenname (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                                        OutlinedTextField(value = carrierOverride, onValueChange = { carrierOverride = it.take(80) }, label = { Text("Paketdienst (optional, manuell korrigieren)") }, placeholder = { Text("z. B. DHL, DPD, GLS, Post, UPS") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                                        OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it.take(500) }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
                                         Button(
                                             onClick = {
                                                 val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
@@ -305,7 +305,7 @@ class MainActivity : ComponentActivity() {
                                         } else {
                                             Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $shipmentStorageIssue. Neue Vorgänge und Exporte sind gesperrt. Du kannst eine vertrauenswürdige Sicherung wiederherstellen oder dich an den Support wenden.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                                         }
-                                        OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it; visibleRecordLimit = 100 }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                                        OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it.take(120); visibleRecordLimit = 100 }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedButton(onClick = {
                                             val exported = runCatching { ShipmentStore(context).exportCsv() }
                                             if (exported.isSuccess) {
@@ -338,6 +338,8 @@ class MainActivity : ComponentActivity() {
                                                     Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                                         Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
                                                         Text("${shipmentFlowLabel(record.flow)} · ${shipmentStatusLabel(record.status)}")
+                                                        Text("Erfasst: ${ShipmentRules.formatTimestamp(record.createdAt)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                                        Text("Zuletzt geändert: ${ShipmentRules.formatTimestamp(record.updatedAt)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                         if (record.carrier.isNotBlank()) Text(record.carrier, style = MaterialTheme.typography.bodySmall)
                                                         if (record.recipient.isNotBlank()) Text("Empfänger: ${record.recipient}", style = MaterialTheme.typography.bodySmall)
                                                         if (record.note.isNotBlank()) Text("Notiz: ${record.note}", style = MaterialTheme.typography.bodySmall)
