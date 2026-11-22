@@ -80,10 +80,7 @@ class MainActivity : ComponentActivity() {
                 val receiver = object : BroadcastReceiver() {
                     override fun onReceive(context: Context?, intent: Intent?) {
                         if (intent?.action != DATAWEDGE_ACTION) return
-                        val raw = intent.getStringExtra(DATAWEDGE_DATA_EXTRA)
-                            ?: intent.getStringExtra("com.symbol.datawedge.decode_data")
-                                ?.let { bytes -> bytes.toString() }
-                            ?: return
+                        val raw = intent.getStringExtra(DATAWEDGE_DATA_EXTRA) ?: return
                         val scanned = normalizeTrackingNumber(raw)
                         if (scanned.length !in 6..40 || scanned.any { !it.isLetterOrDigit() }) {
                             status = "Zebra-Scan empfangen, aber das Format ist ungültig. Bitte Sendungsnummer prüfen."
