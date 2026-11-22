@@ -75,7 +75,7 @@ class ShipmentStoreTest {
 
     @Test
     fun trackingNumberNormalizationDoesNotSilentlyStripControlCharacters() {
-        val raw = "ABC\\u0000123456"
+        val raw = "ABC\u0000123456"
         val normalized = ShipmentRules.normalizeTrackingNumber(raw)
         assertFalse(ShipmentRules.isValidTrackingNumber(normalized))
         assertEquals("ABC123456", ShipmentRules.normalizeTrackingNumber(" ABC 123456 "))
