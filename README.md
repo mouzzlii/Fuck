@@ -1,6 +1,6 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.15 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.16 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Integrations- und Sicherheitsdokumentation
 
@@ -13,7 +13,7 @@ TRAKUNA 1.15 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Manuelle Eingabe von Sendungsnummern als Alternative zum Kamerascan.
 - Erkennung einiger verbreiteter Formate für UPS, Österreichische Post, DHL, DPD und GLS. Die Heuristik ist in separat getestete Geschäftslogik ausgelagert und muss mit echten Labels der jeweiligen Partner geprüft werden.
 - Zwischenspeicherung der letzten Sendungsnummer und Kopie in die Zwischenablage.
-- Auswahl einer installierten Betriebssoftware und Übergabeversuch per Android-Intent; die lokale Zwischenspeicherung wird vor dem App-Wechsel bestätigt, ein nicht verfügbarer Clipboard-Dienst blockiert den Ablauf nicht und die Zwischenablage wird auf Android 13+ als sensibel markiert.
+- Auswahl einer installierten Betriebssoftware (dauerhaft gespeichert, mit Möglichkeit zum Entfernen/Wechseln) und Übergabeversuch per Android-Intent; die lokale Zwischenspeicherung wird vor dem App-Wechsel bestätigt, ein nicht verfügbarer Clipboard-Dienst blockiert den Ablauf nicht und die Zwischenablage wird auf Android 13+ als sensibel markiert.
 - Lokale Paketshop-Liste mit Eingang für Kunden, Annahme von Kundensendungen und Retouren.
 - Statusfortschritt, Empfänger-/Notizfelder (nachträglich bearbeitbar), Suche und Löschen einzelner Vorgänge.
 - Schutz vor unbemerktem Erreichen der lokalen Speichergrenze: maximal 500 Vorgänge; vor weiteren Einträgen wird ein CSV-Export und Aufräumen verlangt.
