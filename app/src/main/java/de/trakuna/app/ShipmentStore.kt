@@ -52,7 +52,7 @@ sealed class BackupRestoreResult {
 }
 
 /**
- * Local, bounded store. Updates are serialized through SharedPreferences.apply().
+ * Local, bounded store. Updates are synchronously committed to SharedPreferences.
  * A production multi-device parcel-shop deployment will need a secured backend.
  */
 class ShipmentStore(context: Context) {
@@ -259,7 +259,12 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun exportCsv(): String {
-        fun cell(value: String): String = "\"" + value.replace("\"", "\"\"") + "\""
+        fun cell(value: String): String {
+            // Prefix spreadsheet formula starters so untrusted notes/names cannot execute as formulas.
+            val candidate = value.trimStart()
+            val safeValue = if (candidate.firstOrNull() in listOf('=', '+', '-', '@', '\t', '\r')) "'$value" else value
+            return "\"" + safeValue.replace("\"", "\"\"") + "\""
+        }
         val header = listOf("ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status", "Empfänger", "Notiz", "Erstellt", "Aktualisiert")
         val rows = readRecords().getOrElse { error("Lokaler Datenspeicher ist beschädigt; CSV wurde nicht erstellt.") }.map { record ->
             listOf(
@@ -300,7 +305,7 @@ class ShipmentStore(context: Context) {
         private const val PREFS = "trakuna_shipments"
         private const val KEY_RECORDS = "records_v1"
         const val MAX_RECORDS = 500
-        private const val MAX_BACKUP_BYTES = 2 * 1024 * 1024
+        const val MAX_BACKUP_BYTES = 2 * 1024 * 1024
         private val TERMINAL_STATUSES = setOf(
             ShipmentStatus.HANDED_TO_CUSTOMER,
             ShipmentStatus.HANDED_TO_CARRIER
