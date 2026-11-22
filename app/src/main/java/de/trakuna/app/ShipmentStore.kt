@@ -70,10 +70,10 @@ class ShipmentStore(context: Context) {
         recipient: String = "",
         note: String = ""
     ): ShipmentUpdate {
-        val number = rawTrackingNumber.trim().replace(Regex("\\s+"), "")
-        if (number.length !in 6..40 || number.none(Char::isDigit) ||
-            number.any { !it.isLetterOrDigit() && it != '-' }
-        ) return ShipmentUpdate.Rejected("Bitte eine gültige Sendungsnummer mit 6 bis 40 Zeichen eingeben.")
+        val number = ShipmentRules.normalizeTrackingNumber(rawTrackingNumber)
+        if (!ShipmentRules.isValidTrackingNumber(number)) {
+            return ShipmentUpdate.Rejected("Bitte eine gültige Sendungsnummer mit 6 bis 40 Zeichen eingeben.")
+        }
 
         val records = all().toMutableList()
         val existing = records.firstOrNull {
@@ -83,11 +83,7 @@ class ShipmentStore(context: Context) {
         if (existing != null) return ShipmentUpdate.Saved(existing)
 
         val now = System.currentTimeMillis()
-        val initialStatus = when (flow) {
-            ShipmentFlow.INCOMING_FOR_CUSTOMER -> ShipmentStatus.RECEIVED_BY_SHOP
-            ShipmentFlow.OUTGOING_FROM_CUSTOMER -> ShipmentStatus.ACCEPTED_FROM_CUSTOMER
-            ShipmentFlow.CUSTOMER_RETURN -> ShipmentStatus.RETURN_ACCEPTED
-        }
+        val initialStatus = ShipmentRules.initialStatus(flow)
         val record = ShipmentRecord(
             id = UUID.randomUUID().toString(),
             trackingNumber = number,
@@ -110,7 +106,7 @@ class ShipmentStore(context: Context) {
         val index = records.indexOfFirst { it.id == id }
         if (index < 0) return ShipmentUpdate.Rejected("Sendung wurde nicht gefunden.")
         val current = records[index]
-        val next = nextStatus(current.flow, current.status)
+        val next = ShipmentRules.nextStatus(current.flow, current.status)
             ?: return ShipmentUpdate.Rejected("Dieser Vorgang ist bereits abgeschlossen.")
         val updated = current.copy(status = next, updatedAt = System.currentTimeMillis())
         records[index] = updated
@@ -194,7 +190,34 @@ class ShipmentStore(context: Context) {
         )
     }.getOrNull()
 
-    private fun nextStatus(flow: ShipmentFlow, status: ShipmentStatus): ShipmentStatus? =
+    companion object {
+        private const val PREFS = "trakuna_shipments"
+        private const val KEY_RECORDS = "records_v1"
+        private const val MAX_RECORDS = 500
+        private val TERMINAL_STATUSES = setOf(
+            ShipmentStatus.HANDED_TO_CUSTOMER,
+            ShipmentStatus.HANDED_TO_CARRIER
+        )
+    }
+}
+
+
+/** Pure parcel workflow rules shared by the Android store and JVM unit tests. */
+object ShipmentRules {
+    fun normalizeTrackingNumber(raw: String): String =
+        raw.trim().replace(Regex("\\\\s+"), "")
+
+    fun isValidTrackingNumber(value: String): Boolean =
+        value.length in 6..40 && value.any(Char::isDigit) &&
+            value.all { it.isLetterOrDigit() || it == '-' }
+
+    fun initialStatus(flow: ShipmentFlow): ShipmentStatus = when (flow) {
+        ShipmentFlow.INCOMING_FOR_CUSTOMER -> ShipmentStatus.RECEIVED_BY_SHOP
+        ShipmentFlow.OUTGOING_FROM_CUSTOMER -> ShipmentStatus.ACCEPTED_FROM_CUSTOMER
+        ShipmentFlow.CUSTOMER_RETURN -> ShipmentStatus.RETURN_ACCEPTED
+    }
+
+    fun nextStatus(flow: ShipmentFlow, status: ShipmentStatus): ShipmentStatus? =
         when (flow) {
             ShipmentFlow.INCOMING_FOR_CUSTOMER -> when (status) {
                 ShipmentStatus.RECEIVED_BY_SHOP -> ShipmentStatus.READY_FOR_PICKUP
@@ -208,14 +231,4 @@ class ShipmentStore(context: Context) {
                 else -> null
             }
         }
-
-    companion object {
-        private const val PREFS = "trakuna_shipments"
-        private const val KEY_RECORDS = "records_v1"
-        private const val MAX_RECORDS = 500
-        private val TERMINAL_STATUSES = setOf(
-            ShipmentStatus.HANDED_TO_CUSTOMER,
-            ShipmentStatus.HANDED_TO_CARRIER
-        )
-    }
 }
