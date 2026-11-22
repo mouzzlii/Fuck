@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Version 1.3)
+# TRAKUNA – Praxis-Testplan (Version 1.14)
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -27,7 +27,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 12 | CSV-Datei exportieren | Android-Dateidialog erscheint; die gespeicherte Datei enthält die Sendungsliste. |
 | 13 | Einzelnen Vorgang löschen | Nach Bestätigung wird nur der gewählte Vorgang entfernt. |
 | 14 | App schließen und neu öffnen | Lokal gespeicherte Vorgänge sind weiterhin vorhanden. |
-| 15 | Partner-App auswählen und übergeben | Ziel-App wird geöffnet, sofern sie installiert ist; Nummer bleibt im TRAKUNA-Cache und in der Zwischenablage verfügbar. |
+| 15 | Partner-App auswählen und übergeben | Cache wird vor dem Wechsel dauerhaft gespeichert; Clipboard-Ausfall darf keinen Absturz verursachen, Android 13+ markiert den Clipboard-Inhalt als sensibel; Ziel-App wird nur bei installierter App geöffnet. |
 
 ## 3. Sicherheits- und Fehlerprüfungen
 
