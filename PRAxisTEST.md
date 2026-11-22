@@ -1,0 +1,64 @@
+# TRAKUNA – Praxis-Testplan (Version 1.3)
+
+Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
+
+## 1. Voraussetzungen
+
+- Android-Gerät mit Android 8.0 oder neuer.
+- TRAKUNA-APK aus dem zugehörigen erfolgreichen GitHub-Actions-Lauf.
+- Kameraberechtigung für den Scan-Test.
+- Für die Partnerübergabe eine installierte Betriebssoftware. Eine automatische Übernahme ist nur möglich, wenn die Ziel-App die TRAKUNA-Intent-Extras oder eine dokumentierte API unterstützt.
+
+## 2. Funktionstests
+
+| Nr. | Test | Erwartetes Ergebnis |
+|---|---|---|
+| 1 | App starten | TRAKUNA öffnet ohne Absturz. |
+| 2 | Sendungsnummer manuell eingeben | Eingabe bleibt sichtbar und kann übergeben werden. |
+| 3 | Kamera-Scan erlauben und Barcode scannen | Erkannte Nummer wird eingetragen und der Übergabeablauf startet. |
+| 4 | Kamerazugriff verweigern | Manuelle Eingabe bleibt verfügbar; Hinweis auf fehlende Kameraberechtigung erscheint. |
+| 5 | Paket für Kunden annehmen | Vorgang erscheint als „Im Shop eingetroffen“. |
+| 6 | Abholbereit markieren | Status wechselt auf „Abholbereit“. |
+| 7 | An Kunden übergeben | Status wechselt auf „An Kunden übergeben“. |
+| 8 | Sendung vom Kunden annehmen | Vorgang erscheint im passenden Annahme-Status. |
+| 9 | Retoure annehmen und weitergeben | Retoure kann bis zur Übergabe an den Paketdienst fortgeschrieben werden. |
+| 10 | Empfänger und Notiz bearbeiten | Geänderte Angaben bleiben nach erneutem Öffnen erhalten. |
+| 11 | Suche verwenden | Treffer werden anhand Sendungsnummer, Empfänger, Paketdienst oder Status gefiltert. |
+| 12 | CSV-Datei exportieren | Android-Dateidialog erscheint; die gespeicherte Datei enthält die Sendungsliste. |
+| 13 | Einzelnen Vorgang löschen | Nach Bestätigung wird nur der gewählte Vorgang entfernt. |
+| 14 | App schließen und neu öffnen | Lokal gespeicherte Vorgänge sind weiterhin vorhanden. |
+| 15 | Partner-App auswählen und übergeben | Ziel-App wird geöffnet, sofern sie installiert ist; Nummer bleibt im TRAKUNA-Cache und in der Zwischenablage verfügbar. |
+
+## 3. Sicherheits- und Fehlerprüfungen
+
+- Ungültige oder zu kurze Sendungsnummern dürfen nicht als neuer Vorgang gespeichert werden.
+- Derselbe offene Vorgang darf nicht versehentlich mehrfach angelegt werden.
+- Löschvorgänge müssen eine Bestätigung verlangen.
+- Kamera-Ausfall darf die manuelle Eingabe nicht blockieren.
+- Keine Passwörter, Zugangsdaten oder geheimen API-Schlüssel in Testnotizen eintragen.
+- Exportdateien enthalten möglicherweise personenbezogene Daten. Nur an berechtigte Empfänger weitergeben und nach dem Test sicher verwahren oder löschen.
+
+## 4. Testprotokoll
+
+Für jeden Test notieren:
+
+- Gerät und Android-Version
+- Datum/Uhrzeit
+- Testnummer
+- Ergebnis: Bestanden / Fehlgeschlagen / Nicht testbar
+- Bei Fehlern: genaue Schritte, angezeigte Meldung und optional ein Screenshot ohne unnötige personenbezogene Daten
+
+## 5. Abnahmekriterien
+
+Ein begleiteter Praxistest ist erst bestanden, wenn alle für den konkreten Shop benötigten Abläufe auf dem tatsächlichen Android-Gerät erfolgreich getestet wurden.
+
+Ein grüner GitHub-Build bestätigt nur, dass Tests und APK-Erstellung im CI-Lauf erfolgreich waren. Er bestätigt nicht die Kompatibilität mit einer fremden Betriebssoftware, die Erkennung aller Paketetiketten oder die Eignung für den produktiven Paketshop-Betrieb.
+
+## 6. Noch offene Voraussetzungen für Produktivbetrieb
+
+- Name und dokumentierte Schnittstelle der tatsächlich verwendeten Betriebssoftware
+- Reale Paketlabeltests je eingesetztem Carrier
+- Datenschutz- und Sicherheitsprüfung
+- Zentrale Datenhaltung, Benutzerkonten, Rollen und Audit-Protokoll, falls mehrere Geräte oder Mitarbeiter zusammenarbeiten
+- Backup- und Wiederherstellungsverfahren
+- Praxistest und Freigabe durch den Paketshop-Betreiber
