@@ -234,7 +234,7 @@ class ShipmentStore(context: Context) {
         val current = records[index]
         val next = ShipmentRules.nextStatus(current.flow, current.status)
             ?: return ShipmentUpdate.Rejected("Dieser Vorgang ist bereits abgeschlossen.")
-        val updated = current.copy(status = next, updatedAt = System.currentTimeMillis())
+        val updated = current.copy(status = next, updatedAt = ShipmentRules.nextUpdateTimestamp(current.updatedAt, System.currentTimeMillis()))
         records[index] = updated
         if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte den Vorgang erneut öffnen und prüfen.")
         return ShipmentUpdate.Saved(updated)
@@ -250,7 +250,7 @@ class ShipmentStore(context: Context) {
         val updated = records[index].copy(
             recipient = recipient.trim().take(100),
             note = note.trim().take(500),
-            updatedAt = System.currentTimeMillis()
+            updatedAt = ShipmentRules.nextUpdateTimestamp(records[index].updatedAt, System.currentTimeMillis())
         )
         records[index] = updated
         if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte den Vorgang erneut öffnen und prüfen.")
@@ -447,6 +447,9 @@ object ShipmentRules {
 
     fun formatTimestampForExport(timestamp: Long): String =
         java.time.Instant.ofEpochMilli(timestamp).toString()
+
+    /** Keep record chronology valid even if the device clock is moved backwards. */
+    fun nextUpdateTimestamp(previousUpdatedAt: Long, now: Long): Long = maxOf(previousUpdatedAt, now)
 
     fun csvSafeCell(value: String): String {
         // Prefix spreadsheet formula starters so untrusted notes/names cannot execute as formulas.

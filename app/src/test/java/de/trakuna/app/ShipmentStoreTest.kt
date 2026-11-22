@@ -28,6 +28,12 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun updateTimestampNeverMovesBehindPreviousRecordWhenDeviceClockGoesBackwards() {
+        assertEquals(2_000L, ShipmentRules.nextUpdateTimestamp(2_000L, 1_000L))
+        assertEquals(3_000L, ShipmentRules.nextUpdateTimestamp(2_000L, 3_000L))
+    }
+
+    @Test
     fun timestampExportUsesStableUtcIso8601Format() {
         assertEquals("1970-01-01T00:00:00Z", ShipmentRules.formatTimestampForExport(0L))
     }
