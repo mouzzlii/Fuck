@@ -53,6 +53,7 @@ private val Forest = Color(0xFF174B3A)
 private const val CACHE_PREFS = "trakuna_handoff"
 private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
 private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
+private const val MAX_SCAN_INPUT_CHARS = 4096
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +83,10 @@ class MainActivity : ComponentActivity() {
                     override fun onReceive(context: Context?, intent: Intent?) {
                         if (intent?.action != DATAWEDGE_ACTION) return
                         val raw = intent.getStringExtra(DATAWEDGE_DATA_EXTRA) ?: return
+                        if (raw.length > MAX_SCAN_INPUT_CHARS) {
+                            status = "Scaninhalt ist zu lang und wurde aus Sicherheitsgründen abgelehnt. Bitte Sendungsnummer manuell prüfen."
+                            return
+                        }
                         val scanned = extractTrackingNumber(raw)
                         if (scanned.isNullOrBlank()) {
                             status = "Zebra-Scan empfangen, aber keine unterstützte Sendungsnummer erkannt. Bitte manuell prüfen."
@@ -198,7 +203,7 @@ class MainActivity : ComponentActivity() {
                         }
                         OutlinedTextField(
                             value = number,
-                            onValueChange = { number = it },
+                            onValueChange = { number = it.take(80) },
                             modifier = Modifier.fillMaxWidth(),
                             label = { Text("Sendungsnummer manuell eingeben") },
                             singleLine = true,
@@ -298,7 +303,7 @@ class MainActivity : ComponentActivity() {
                                         if (shipmentStorageIssue == null) {
                                             Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} möglichen Einträgen belegt", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         } else {
-                                            Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $shipmentStorageIssue. Es werden keine Änderungen oder Sicherungen vorgenommen. Bitte stelle eine vertrauenswürdige Sicherung wieder her oder wende dich an den Support.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                                            Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $shipmentStorageIssue. Neue Vorgänge und Exporte sind gesperrt. Du kannst eine vertrauenswürdige Sicherung wiederherstellen oder dich an den Support wenden.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                                         }
                                         OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it; visibleRecordLimit = 100 }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedButton(onClick = {
@@ -672,6 +677,7 @@ private fun isPlausibleTrackingNumber(value: String): Boolean =
     value.length in 6..40 && value.any { it.isDigit() } && value.all { it.isLetterOrDigit() || it == '-' }
 
 private fun extractTrackingNumber(raw: String): String? {
+    if (raw.length > MAX_SCAN_INPUT_CHARS) return null
     // Some scanners prepend AIM symbology identifiers (for example ]C1 for Code 128).
     val cleaned = raw.trim()
         .removePrefix("]C1").removePrefix("]d2").removePrefix("]Q3")

@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Version 1.28)
+# TRAKUNA – Praxis-Testplan (Version 1.29)
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -121,6 +121,8 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 36. **Mehrere Codes gleichzeitig:** Zwei unterschiedliche Sendungsnummern gleichzeitig ins Kamerabild halten. TRAKUNA muss die Auswahl ablehnen und darf keine davon automatisch übernehmen.
 37. **Übergabe-Bestätigung:** Bei einem abholbereiten Paket die Aktion „An Kunden übergeben“ wählen. Vor der Statusänderung muss eine Bestätigung erscheinen; Abbrechen darf den Status nicht ändern. Nach Bestätigung muss der Vorgang abgeschlossen sein.
 38. **Weitere Suchtreffer:** Mehr als 100 Testvorgänge anlegen oder eine Sicherung mit über 100 Einträgen importieren. Die Liste muss über „Weitere Treffer anzeigen“ alle Treffer erreichbar machen; eine Suche muss die Trefferzahl und Anzeige korrekt zurücksetzen.
-39. **Wiederherstellung bei defektem lokalem Speicher:** Auf einem isolierten Testgerät den lokalen Datenspeicher beschädigen, danach eine zuvor erstellte gültige Sicherung auswählen. Die App muss die Wiederherstellung trotz Speicherfehler anbieten, vor dem Ersetzen warnen und danach die gesicherten Einträge wieder anzeigen. Bei fehlgeschlagener Verschlüsselung darf sie keinen Erfolg melden.
-40. **Cache-Lesefehler:** Auf einem isolierten Testgerät den verschlüsselten Cache beschädigen oder den Keystore-Schlüssel entfernen. Ein Lesezugriff muss einen Fehler melden und darf nicht so tun, als wäre lediglich noch keine Sendungsnummer gespeichert.
-41. **Cache-Schreibfehler:** Auf einem isolierten Testgerät einen Speicherausfall simulieren. Die Partner-App darf nicht gestartet werden, wenn das vorherige sichere Speichern nicht bestätigt wurde; die Fehlermeldung muss den Fehler verständlich benennen.
+39. **Überlanger Zebra-Scan:** Einen DataWedge-Testbroadcast mit mehr als 4096 Zeichen senden. TRAKUNA muss ihn mit einer verständlichen Meldung ablehnen und darf keine Sendungsnummer übernehmen.
+40. **Überlange manuelle Eingabe:** Mehr als 80 Zeichen in das Sendungsnummernfeld einfügen. Das Feld darf nicht unbegrenzt anwachsen; die Eingabe muss auf die definierte Länge begrenzt bleiben.
+41. **Wiederherstellung bei defektem lokalem Speicher:** Auf einem isolierten Testgerät den lokalen Datenspeicher beschädigen, danach eine zuvor erstellte gültige Sicherung auswählen. Die App muss die Wiederherstellung trotz Speicherfehler anbieten, vor dem Ersetzen warnen und danach die gesicherten Einträge wieder anzeigen. Bei fehlgeschlagener Verschlüsselung darf sie keinen Erfolg melden.
+42. **Cache-Lesefehler:** Auf einem isolierten Testgerät den verschlüsselten Cache beschädigen oder den Keystore-Schlüssel entfernen. Ein Lesezugriff muss einen Fehler melden und darf nicht so tun, als wäre lediglich noch keine Sendungsnummer gespeichert.
+43. **Cache-Schreibfehler:** Auf einem isolierten Testgerät einen Speicherausfall simulieren. Die Partner-App darf nicht gestartet werden, wenn das vorherige sichere Speichern nicht bestätigt wurde; die Fehlermeldung muss den Fehler verständlich benennen.
