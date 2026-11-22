@@ -632,7 +632,7 @@ private fun findLaunchableApps(context: Context): List<PartnerCandidate> {
 
 private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: String?): HandoffResult {
     val number = normalizeTrackingNumber(rawNumber)
-    if (!isPlausibleTrackingNumber(number)) {
+    if (!ShipmentRules.isValidTrackingNumber(number)) {
         return HandoffResult("Bitte eine gültige Sendungsnummer eingeben oder erneut scannen.")
     }
 
@@ -701,8 +701,6 @@ fun getCachedTrackingNumber(context: Context): String =
 private fun normalizeTrackingNumber(raw: String): String =
     raw.replace(Regex("[\\u0000-\\u001F]"), "").trim().replace(Regex("\\s+"), "")
 
-private fun isPlausibleTrackingNumber(value: String): Boolean =
-    value.length in 6..40 && value.any { it.isDigit() } && value.all { it.isLetterOrDigit() || it == '-' }
 
 private fun extractTrackingNumber(raw: String): String? =
     ShipmentRules.extractTrackingNumber(raw, MAX_SCAN_INPUT_CHARS)
