@@ -67,6 +67,49 @@ class MainActivity : ComponentActivity() {
             var editNote by remember { mutableStateOf("") }
             val context = LocalContext.current
             var pendingCsv by remember { mutableStateOf<String?>(null) }
+            var pendingBackupJson by remember { mutableStateOf<String?>(null) }
+            var pendingBackupImport by remember { mutableStateOf<String?>(null) }
+            var pendingBackupCount by remember { mutableStateOf(0) }
+            val backupDocumentLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.CreateDocument("application/json")
+            ) { uri ->
+                val json = pendingBackupJson
+                pendingBackupJson = null
+                if (uri == null || json == null) {
+                    status = "Datensicherung abgebrochen."
+                } else {
+                    val saved = runCatching {
+                        context.contentResolver.openOutputStream(uri)?.bufferedWriter(Charsets.UTF_8)?.use { it.write(json) }
+                            ?: error("Datei konnte nicht geöffnet werden.")
+                    }
+                    status = if (saved.isSuccess) "TRAKUNA-Datensicherung wurde gespeichert."
+                    else "Datensicherung konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
+                }
+            }
+            val restoreDocumentLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.OpenDocument()
+            ) { uri ->
+                if (uri == null) {
+                    status = "Wiederherstellung abgebrochen."
+                } else {
+                    val loaded = runCatching {
+                        context.contentResolver.openInputStream(uri)?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }
+                            ?: error("Datei konnte nicht gelesen werden.")
+                    }
+                    if (loaded.isFailure) {
+                        status = "Datei konnte nicht gelesen werden: ${loaded.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
+                    } else {
+                        val json = loaded.getOrThrow()
+                        when (val validation = ShipmentStore(context).validateBackup(json)) {
+                            is BackupValidation.Valid -> {
+                                pendingBackupImport = json
+                                pendingBackupCount = validation.recordCount
+                            }
+                            is BackupValidation.Invalid -> status = "Sicherung abgelehnt: ${validation.reason}"
+                        }
+                    }
+                }
+            }
             val csvDocumentLauncher = rememberLauncherForActivityResult(
                 ActivityResultContracts.CreateDocument("text/csv")
             ) { uri ->
@@ -202,6 +245,13 @@ class MainActivity : ComponentActivity() {
                                             pendingCsv = ShipmentStore(context).exportCsv()
                                             csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
                                         }, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
+                                        OutlinedButton(onClick = {
+                                            pendingBackupJson = ShipmentStore(context).exportBackupJson()
+                                            backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
+                                        }, modifier = Modifier.fillMaxWidth()) { Text("Vollständige Datensicherung erstellen") }
+                                        OutlinedButton(onClick = {
+                                            restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
+                                        }, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
                                         if (shipmentRecords.isEmpty()) {
                                             Text("Noch keine Paketshop-Vorgänge erfasst.")
                                         } else {
@@ -239,6 +289,27 @@ class MainActivity : ComponentActivity() {
                                 confirmButton = {
                                     TextButton(onClick = { showShipmentLedger = false }) { Text("Schließen") }
                                 }
+                            )
+                        }
+                        pendingBackupImport?.let { backupJson ->
+                            AlertDialog(
+                                onDismissRequest = { pendingBackupImport = null },
+                                title = { Text("Datensicherung wiederherstellen?") },
+                                text = {
+                                    Text("Die Sicherung enthält $pendingBackupCount Vorgänge. Die aktuell auf diesem Gerät gespeicherten Vorgänge werden vollständig ersetzt. Erstelle bei Bedarf zuerst eine Sicherung des aktuellen Standes.")
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        val result = ShipmentStore(context).restoreBackup(backupJson)
+                                        status = when (result) {
+                                            is BackupRestoreResult.Restored -> "${result.recordCount} Vorgänge wurden wiederhergestellt."
+                                            is BackupRestoreResult.Rejected -> "Wiederherstellung fehlgeschlagen: ${result.reason}"
+                                        }
+                                        shipmentRevision++
+                                        pendingBackupImport = null
+                                    }) { Text("Ersetzen und wiederherstellen") }
+                                },
+                                dismissButton = { TextButton(onClick = { pendingBackupImport = null }) { Text("Abbrechen") } }
                             )
                         }
                         editingRecord?.let { record ->
