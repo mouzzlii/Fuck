@@ -54,7 +54,10 @@ class MainActivity : ComponentActivity() {
             var showPartnerPicker by remember { mutableStateOf(false) }
             var showAllApps by remember { mutableStateOf(false) }
             var installedApps by remember { mutableStateOf<List<PartnerCandidate>>(emptyList()) }
+            var showShipmentLedger by remember { mutableStateOf(false) }
+            var shipmentRevision by remember { mutableStateOf(0) }
             val context = LocalContext.current
+            val shipmentRecords = remember(shipmentRevision) { ShipmentStore(context).all() }
 
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
                 Surface(Modifier.fillMaxSize(), color = Color(0xFFF3F6F3)) {
@@ -105,6 +108,10 @@ class MainActivity : ComponentActivity() {
                             Text("An Partner-App übergeben")
                         }
                         OutlinedButton(
+                            onClick = { showShipmentLedger = true },
+                            modifier = Modifier.fillMaxWidth()
+                        ) { Text("Paketshop-Sendungen verwalten") }
+                        OutlinedButton(
                             onClick = {
                                 installedApps = findLaunchableApps(context)
                                 showAllApps = false
@@ -120,6 +127,75 @@ class MainActivity : ComponentActivity() {
                             color = Forest
                         )
                         Text(status, style = MaterialTheme.typography.bodyMedium, color = Forest)
+                        if (showShipmentLedger) {
+                            AlertDialog(
+                                onDismissRequest = { showShipmentLedger = false },
+                                title = { Text("Paketshop – Sendungen") },
+                                text = {
+                                    Column(
+                                        modifier = Modifier.heightIn(max = 440.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text("Neuen Vorgang mit der oben eingegebenen Sendungsnummer erfassen:")
+                                        Button(
+                                            onClick = {
+                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.INCOMING_FOR_CUSTOMER)
+                                                status = shipmentResultText(result)
+                                                shipmentRevision++
+                                            },
+                                            enabled = normalizeTrackingNumber(number).isNotBlank(),
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) { Text("Paket für Kunden annehmen") }
+                                        Button(
+                                            onClick = {
+                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.OUTGOING_FROM_CUSTOMER)
+                                                status = shipmentResultText(result)
+                                                shipmentRevision++
+                                            },
+                                            enabled = normalizeTrackingNumber(number).isNotBlank(),
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) { Text("Sendung vom Kunden annehmen") }
+                                        Button(
+                                            onClick = {
+                                                val result = ShipmentStore(context).add(number, identifyCarrier(number), ShipmentFlow.CUSTOMER_RETURN)
+                                                status = shipmentResultText(result)
+                                                shipmentRevision++
+                                            },
+                                            enabled = normalizeTrackingNumber(number).isNotBlank(),
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) { Text("Retoure annehmen") }
+                                        HorizontalDivider()
+                                        Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
+                                        if (shipmentRecords.isEmpty()) {
+                                            Text("Noch keine Paketshop-Vorgänge erfasst.")
+                                        } else {
+                                            shipmentRecords.take(30).forEach { record ->
+                                                Card(Modifier.fillMaxWidth()) {
+                                                    Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                        Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
+                                                        Text("${shipmentFlowLabel(record.flow)} · ${shipmentStatusLabel(record.status)}")
+                                                        if (record.carrier.isNotBlank()) Text(record.carrier, style = MaterialTheme.typography.bodySmall)
+                                                        if (record.recipient.isNotBlank()) Text("Empfänger: ${record.recipient}", style = MaterialTheme.typography.bodySmall)
+                                                        val canAdvance = record.status != ShipmentStatus.HANDED_TO_CUSTOMER &&
+                                                            record.status != ShipmentStatus.HANDED_TO_CARRIER
+                                                        if (canAdvance) {
+                                                            TextButton(onClick = {
+                                                                val result = ShipmentStore(context).advance(record.id)
+                                                                status = shipmentResultText(result)
+                                                                shipmentRevision++
+                                                            }) { Text(shipmentNextAction(record.flow, record.status)) }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = { showShipmentLedger = false }) { Text("Schließen") }
+                                }
+                            )
+                        }
                         if (showPartnerPicker) {
                             val candidates = if (showAllApps) installedApps else installedApps.filter { it.looksLikeCarrierApp }
                             AlertDialog(
@@ -157,6 +233,34 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+
+private fun shipmentFlowLabel(flow: ShipmentFlow): String = when (flow) {
+    ShipmentFlow.INCOMING_FOR_CUSTOMER -> "Eingang für Kunden"
+    ShipmentFlow.OUTGOING_FROM_CUSTOMER -> "Annahme vom Kunden"
+    ShipmentFlow.CUSTOMER_RETURN -> "Kundenretoure"
+}
+
+private fun shipmentStatusLabel(status: ShipmentStatus): String = when (status) {
+    ShipmentStatus.RECEIVED_BY_SHOP -> "Im Shop eingetroffen"
+    ShipmentStatus.READY_FOR_PICKUP -> "Abholbereit"
+    ShipmentStatus.HANDED_TO_CUSTOMER -> "An Kunden übergeben"
+    ShipmentStatus.ACCEPTED_FROM_CUSTOMER -> "Vom Kunden angenommen"
+    ShipmentStatus.RETURN_ACCEPTED -> "Retoure angenommen"
+    ShipmentStatus.HANDED_TO_CARRIER -> "An Paketdienst übergeben"
+}
+
+private fun shipmentNextAction(flow: ShipmentFlow, status: ShipmentStatus): String = when {
+    flow == ShipmentFlow.INCOMING_FOR_CUSTOMER && status == ShipmentStatus.RECEIVED_BY_SHOP -> "Als abholbereit markieren"
+    flow == ShipmentFlow.INCOMING_FOR_CUSTOMER -> "An Kunden übergeben"
+    flow == ShipmentFlow.CUSTOMER_RETURN -> "Retoure an Paketdienst übergeben"
+    else -> "An Paketdienst übergeben"
+}
+
+private fun shipmentResultText(result: ShipmentUpdate): String = when (result) {
+    is ShipmentUpdate.Saved -> "Vorgang gespeichert: ${result.record.trackingNumber} · ${shipmentStatusLabel(result.record.status)}"
+    is ShipmentUpdate.Rejected -> result.reason
 }
 
 data class HandoffResult(val message: String)
