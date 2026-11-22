@@ -47,9 +47,9 @@ class ShipmentStoreTest {
     fun csvExportEscapesSpreadsheetFormulasAndQuotes() {
         assertEquals("\"'=1+1\"", ShipmentRules.csvSafeCell("=1+1"))
         assertEquals("\"'  @SUM(A1:A2)\"", ShipmentRules.csvSafeCell("  @SUM(A1:A2)"))
-        assertEquals("\"'\\t=1+1\"", ShipmentRules.csvSafeCell("\t=1+1"))
-        assertEquals("\"'\\uFEFF=1+1\"", ShipmentRules.csvSafeCell("\uFEFF=1+1"))
-        assertEquals("\"'\\u200B+1+1\"", ShipmentRules.csvSafeCell("\u200B+1+1"))
+        assertEquals("\"'\t=1+1\"", ShipmentRules.csvSafeCell("\t=1+1"))
+        assertEquals("\"'\uFEFF=1+1\"", ShipmentRules.csvSafeCell("\uFEFF=1+1"))
+        assertEquals("\"'\u200B+1+1\"", ShipmentRules.csvSafeCell("\u200B+1+1"))
         assertEquals("\"normal text\"", ShipmentRules.csvSafeCell("normal text"))
         assertEquals("\"say \"\"hello\"\"\"", ShipmentRules.csvSafeCell("say \"hello\""))
     }
