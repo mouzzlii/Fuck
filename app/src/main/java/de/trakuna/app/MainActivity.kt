@@ -222,7 +222,7 @@ class MainActivity : ComponentActivity() {
                                         OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, carrierOverride.ifBlank { identifyCarrier(number).orEmpty() }, ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
+                                                val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 shipmentRevision++
                                             },
@@ -231,7 +231,7 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Paket für Kunden annehmen") }
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, carrierOverride.ifBlank { identifyCarrier(number).orEmpty() }, ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
+                                                val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 shipmentRevision++
                                             },
@@ -240,7 +240,7 @@ class MainActivity : ComponentActivity() {
                                         ) { Text("Sendung vom Kunden annehmen") }
                                         Button(
                                             onClick = {
-                                                val result = ShipmentStore(context).add(number, carrierOverride.ifBlank { identifyCarrier(number).orEmpty() }, ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
+                                                val result = ShipmentStore(context).add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
                                                 status = shipmentResultText(result)
                                                 shipmentRevision++
                                             },
