@@ -8,7 +8,7 @@ import org.junit.Test
 class ShipmentStoreTest {
     @Test
     fun normalizesAndValidatesTrackingNumbers() {
-        assertEquals("1Z999AA10123456784", ShipmentRules.normalizeTrackingNumber(" 1Z999AA10123456784 "))
+        assertEquals("1Z999AA10123456784", ShipmentRules.normalizeTrackingNumber(" 1Z 999AA10123456784 "))
         assertTrue(ShipmentRules.isValidTrackingNumber("1Z999AA10123456784"))
         assertFalse(ShipmentRules.isValidTrackingNumber("ABC"))
         assertFalse(ShipmentRules.isValidTrackingNumber("123456!"))
