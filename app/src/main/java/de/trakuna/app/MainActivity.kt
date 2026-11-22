@@ -473,6 +473,7 @@ private fun shipmentNextAction(flow: ShipmentFlow, status: ShipmentStatus): Stri
 
 private fun shipmentResultText(result: ShipmentUpdate): String = when (result) {
     is ShipmentUpdate.Saved -> "Vorgang gespeichert: ${result.record.trackingNumber} · ${shipmentStatusLabel(result.record.status)}"
+    is ShipmentUpdate.AlreadyExists -> "Dieser offene Vorgang ist bereits vorhanden: ${result.record.trackingNumber} · ${shipmentStatusLabel(result.record.status)}"
     is ShipmentUpdate.Rejected -> result.reason
 }
 
