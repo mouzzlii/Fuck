@@ -216,4 +216,34 @@ class ShipmentStoreTest {
         )
         assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(incoming, returned)))
     }
+
+    @Test
+    fun scanParserHandlesAIMPrefixesAndPlainTrackingNumbers() {
+        assertEquals("1Z999AA10123456784", ShipmentRules.extractTrackingNumber("]C11Z999AA10123456784"))
+        assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber(" AB123456789AT "))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("kein Paketcode"))
+    }
+
+    @Test
+    fun scanParserReadsSupportedQrQueryParametersCaseInsensitively() {
+        assertEquals(
+            "AB123456789AT",
+            ShipmentRules.extractTrackingNumber("https://example.test/track?Tracking_Number=AB123456789AT")
+        )
+        assertEquals(
+            "1Z999AA10123456784",
+            ShipmentRules.extractTrackingNumber("https://example.test/track?id=1Z999AA10123456784")
+        )
+    }
+
+    @Test
+    fun scanParserUsesRecognizableQrPathAndRejectsUntrustedOrOversizedInput() {
+        assertEquals(
+            "AB123456789AT",
+            ShipmentRules.extractTrackingNumber("https://example.test/parcel/AB123456789AT")
+        )
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/parcel/not-a-number"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("x".repeat(4097)))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/track?id=%ZZ"))
+    }
 }

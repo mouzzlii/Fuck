@@ -440,6 +440,58 @@ class ShipmentStore(context: Context) {
 
 /** Pure parcel workflow rules shared by the Android store and JVM unit tests. */
 object ShipmentRules {
+    /**
+     * Parse a barcode or supported carrier QR URL without guessing arbitrary digits.
+     * Kept in the pure rules layer so scanner formats can be covered by JVM tests.
+     */
+    fun extractTrackingNumber(raw: String, maxInputChars: Int = 4096): String? {
+        if (raw.length > maxInputChars) return null
+        val cleaned = raw.trim()
+            .removePrefix("]C1").removePrefix("]d2").removePrefix("]Q3")
+            .trim()
+        if (cleaned.isBlank()) return null
+
+        fun plausible(value: String?): String? =
+            value?.let(::normalizeTrackingNumber)?.takeIf(::isValidTrackingNumber)
+
+        if (cleaned.startsWith("http://", true) || cleaned.startsWith("https://", true)) {
+            val uri = runCatching { java.net.URI(cleaned) }.getOrNull() ?: return null
+            if (uri.scheme?.lowercase() !in setOf("http", "https")) return null
+            val acceptedKeys = setOf(
+                "trackingnumber", "tracking_number", "tracking", "trackid", "shipment",
+                "shipmentid", "shipment_id", "consignment", "consignmentnumber",
+                "parcel", "parcelnumber", "barcode", "piececode", "sendungsnummer", "snr", "id"
+            )
+            val query = uri.rawQuery.orEmpty()
+            for (part in query.split("&")) {
+                val key = part.substringBefore("=", "")
+                val value = part.substringAfter("=", "")
+                val decodedKey = runCatching { java.net.URLDecoder.decode(key, "UTF-8") }.getOrNull()
+                if (decodedKey?.lowercase() in acceptedKeys) {
+                    val decodedValue = runCatching { java.net.URLDecoder.decode(value, "UTF-8") }.getOrNull()
+                    plausible(decodedValue)?.let { return it }
+                }
+            }
+            val pathSegments = uri.path.orEmpty().split("/").filter { it.isNotBlank() }
+            pathSegments.asReversed().firstOrNull { segment ->
+                plausible(segment)?.let { isValidTrackingNumber(it) && identifyCarrier(it) != null } == true
+            }?.let { plausible(it)?.let { value -> return value } }
+            pathSegments.lastOrNull()?.let { plausible(it)?.let { value -> return value } }
+            return null
+        }
+
+        val compact = plausible(cleaned)
+        if (compact != null) return compact
+
+        // Extract only structurally distinctive formats from surrounding label text.
+        val candidates = listOf(
+            Regex("(?i)1Z[A-Z0-9]{16}").find(cleaned)?.value,
+            Regex("(?i)[A-Z]{2}[0-9]{9}AT").find(cleaned)?.value,
+            Regex("(?i)(?:JVGL|JJD)[A-Z0-9]{8,26}").find(cleaned)?.value
+        )
+        return candidates.firstNotNullOfOrNull(::plausible)
+    }
+
     fun formatTimestamp(timestamp: Long, zoneId: java.time.ZoneId = java.time.ZoneId.systemDefault()): String =
         java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss", java.util.Locale.GERMANY)
             .withZone(zoneId)
