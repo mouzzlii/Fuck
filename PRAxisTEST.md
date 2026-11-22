@@ -35,6 +35,16 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 
 ## 3. Sicherheits- und Fehlerprüfungen
 
+- Vorgangshistorie nach der Erfassung öffnen: Der Eintrag „Vorgang angelegt“ muss mit dem korrekten Datum und der Uhrzeit erscheinen.
+- Status eines Testvorgangs ändern und Historie erneut öffnen: Der Statuswechsel muss mit altem und neuem Status erscheinen.
+- Empfänger oder Notiz ändern: Ein Eintrag „Empfänger oder Notiz bearbeitet“ muss erscheinen.
+- App schließen und neu öffnen: Die Historie muss weiterhin zum richtigen Vorgang gehören.
+- JSON-Sicherung exportieren und auf einer Testinstallation wiederherstellen: Die vorhandenen Historieneinträge müssen erhalten bleiben.
+- Einen älteren Testdatensatz bzw. eine ältere Sicherung ohne Historienfeld laden: Der Datensatz muss weiterhin lesbar sein und einen Hinweis auf fehlende Historie anzeigen.
+- Einen Vorgang löschen: Die zugehörige lokale Historie darf danach nicht mehr in der App angezeigt werden.
+- Historie darf nicht als manipulationssicheres Mitarbeiter-Audit oder als Carrier-Bestätigung ausgegeben werden.
+
+
 - Zebra-/DataWedge-Broadcast ohne Sendungsnummern-Extra oder mit einem falsch typisierten Extra prüfen: Der Scan wird ignoriert und TRAKUNA bleibt bedienbar.
 
 - Ungültige oder zu kurze Sendungsnummern dürfen nicht als neuer Vorgang gespeichert werden.

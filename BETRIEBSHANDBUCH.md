@@ -98,6 +98,21 @@ Ein Zebra-Scan füllt nur das Sendungsnummernfeld, solange TRAKUNA im Vordergrun
 - **Vorgang löschen** entfernt den ausgewählten Eintrag nach einer zusätzlichen Bestätigung endgültig von diesem Gerät.
 - Doppelte offene Vorgänge desselben Typs werden erkannt und nicht nochmals als neu gespeichert.
 
+### Vorgangshistorie
+
+Auf jeder Sendungskarte kann **Vorgangshistorie anzeigen** geöffnet werden. Dort werden – sofern vorhanden – die lokale Erfassung, Statuswechsel und Änderungen an Empfänger oder Notiz mit Datum und Uhrzeit angezeigt. Neueste Einträge stehen oben.
+
+Die Historie wird zusammen mit dem Vorgang lokal gespeichert und in JSON-Datensicherungen übernommen. Ältere Datensätze ohne Historie bleiben lesbar; bei ihnen erscheint ein entsprechender Hinweis. Pro Vorgang werden höchstens 100 Historieneinträge aufbewahrt.
+
+**Wichtige Grenze:** Die Historie ist nur eine lokale Übersicht. Sie ist kein manipulationssicheres Audit-Protokoll, enthält keine Mitarbeiteridentität und wird beim Löschen des Vorgangs ebenfalls gelöscht. Für einen Mehrmitarbeiter- oder Produktivbetrieb ist später ein geschütztes zentrales Protokoll erforderlich.
+
+
+- Das Suchfeld filtert nach Sendungsnummer, Empfänger, Paketdienst und Status.
+- Bei mehr als 100 Treffern können weitere Treffer in Blöcken eingeblendet werden.
+- **Details bearbeiten** ändert Empfänger und interne Notiz.
+- **Vorgang löschen** entfernt den ausgewählten Eintrag nach einer zusätzlichen Bestätigung endgültig von diesem Gerät.
+- Doppelte offene Vorgänge desselben Typs werden erkannt und nicht nochmals als neu gespeichert.
+
 ## 6. Partner-Betriebssoftware
 
 1. **Betriebssoftware auf diesem Gerät finden** öffnen.
