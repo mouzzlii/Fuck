@@ -516,6 +516,7 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
         Text("Kamera kann hier nicht gestartet werden.")
         return
     }
+    var cameraError by remember { mutableStateOf<String?>(null) }
     val previewView = remember {
         PreviewView(context).apply {
             scaleType = PreviewView.ScaleType.FIT_CENTER
@@ -523,6 +524,7 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
         }
     }
     AndroidView(factory = { previewView }, modifier = Modifier.fillMaxWidth().height(280.dp))
+    cameraError?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
 
     DisposableEffect(previewView) {
         val executor = Executors.newSingleThreadExecutor()
@@ -575,8 +577,8 @@ private fun CameraPreview(onDetected: (String) -> Unit) {
                 }
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(activity as LifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
-            } catch (_: Exception) {
-                // Manual entry remains available if the camera cannot initialize.
+            } catch (error: Exception) {
+                cameraError = "Kamera konnte nicht gestartet werden. Bitte Kameraberechtigung prüfen oder Sendungsnummer manuell eingeben."
             }
         }, mainExecutor)
         onDispose {
