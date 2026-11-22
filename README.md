@@ -16,7 +16,8 @@ TRAKUNA ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unt
 - CSV-Export als echte Datei über den Android-Dateidialog (Speicherort frei wählbar); Tabellenkalkulations-Formelanfänge in Nutzereingaben werden beim Export entschärft.
 - Vollständige lokale Datensicherung als versioniertes JSON über den Android-Dateidialog.
 - Wiederherstellung mit Format-/Versions-/Datensatzprüfung, Prüfung der Vorgangsstatus, Schutz vor doppelten aktiven Vorgängen, Größenlimit für Sicherungsdateien (2 MiB, bereits beim Einlesen begrenzt) und ausdrücklicher Bestätigung; der vorhandene lokale Bestand wird beim Wiederherstellen ersetzt.
-- Schreibvorgänge melden einen Speicherfehler, statt eine nicht bestätigte Speicherung als erfolgreich darzustellen.
+- Schreibvorgänge melden einen Speicherfehler, statt eine nicht bestätigte Speicherung als erfolgreich darzustellen; bei beschädigtem lokalem Speicher wird der Bestand ausdrücklich nicht als leer dargestellt.
+- Vor dem Export einer unverschlüsselten JSON-Sicherung warnt die App vor den enthaltenen Sendungsnummern, Empfängernamen und internen Notizen.
 - Strikte Statusübergänge je Vorgangsart, damit Retouren und ausgehende Sendungen nicht versehentlich vermischt werden.
 
 ## Praxis-Test
