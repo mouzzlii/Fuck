@@ -11,6 +11,10 @@ TRAKUNA 1.38 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 ## Neu in Version 1.38
 
+- Ungültige oder falsch typisierte Zebra-DataWedge-Nutzdaten werden sicher ignoriert, statt den Scan-Empfänger durch eine fehlerhafte Intent-Extra-Angabe abstürzen zu lassen.
+
+## Neu in Version 1.37
+
 - Zebra-DataWedge-Scans werden nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Hintergrund-Broadcasts ändern nicht mehr unbemerkt die Eingabemaske.
 
 ## Neu in Version 1.36
