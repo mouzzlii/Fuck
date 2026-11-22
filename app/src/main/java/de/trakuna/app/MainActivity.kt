@@ -596,21 +596,8 @@ private fun extractTrackingNumber(raw: String): String? {
     return candidates.filterNotNull().firstOrNull { isPlausibleTrackingNumber(it) }
 }
 
-private fun identifyCarrier(raw: String): String? {
-    val value = normalizeTrackingNumber(raw).uppercase()
-    return when {
-        Regex("^1Z[A-Z0-9]{16}$").matches(value) -> "UPS"
-        Regex("^[A-Z]{2}[0-9]{9}AT$").matches(value) -> "Österreichische Post"
-        value.startsWith("JVGL") || value.startsWith("JJD") -> "DHL Paket"
-        value.startsWith("JD") && value.length in 12..30 -> "DHL Paket"
-        // Common national formats. Ambiguous lengths are deliberately left unassigned.
-        value.matches(Regex("^[0-9]{13}$")) -> "Österreichische Post"
-        value.matches(Regex("^[0-9]{14}$")) -> "DPD"
-        value.matches(Regex("^[0-9]{11,12}$")) -> "GLS"
-        value.matches(Regex("^[0-9]{10}$")) || value.matches(Regex("^[0-9]{20}$")) -> "DHL Paket"
-        else -> null
-    }
-}
+private fun identifyCarrier(raw: String): String? =
+    ShipmentRules.identifyCarrier(normalizeTrackingNumber(raw))
 
 private fun Context.findActivity(): ComponentActivity? = when (this) {
     is ComponentActivity -> this
