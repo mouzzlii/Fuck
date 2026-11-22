@@ -122,6 +122,6 @@ DataWedge sendet damit Intent-Daten nur an das festgelegte Paket und prüft zus�
 
 ### Verhalten in TRAKUNA
 
-TRAKUNA liest den Scan ein und zeigt ihn zur Prüfung im Sendungsnummernfeld an. Auch ein Kamera-Scan löst keine automatische Buchung oder Partnerübergabe aus. Der Bediener muss die Nummer prüfen und die Übergabe bewusst starten. So wird vermieden, dass ein zufälliger Scan sofort einen betrieblichen Vorgang auslöst.
+TRAKUNA liest den Scan nur ein, solange die App im Vordergrund aktiv ist, und zeigt ihn zur Prüfung im Sendungsnummernfeld an. Broadcasts während die App im Hintergrund ist, werden ignoriert. Auch ein Kamera-Scan löst keine automatische Buchung oder Partnerübergabe aus. Der Bediener muss die Nummer prüfen und die Übergabe bewusst starten. So wird vermieden, dass ein zufälliger Scan sofort einen betrieblichen Vorgang auslöst.
 
 **Sicherheitsgrenze:** Die DataWedge-Allowlist und Signaturprüfung müssen im Zebra-Profil tatsächlich aktiviert sein. TRAKUNA kann nicht erkennen oder erzwingen, ob ein Administrator diese Geräteeinstellung vorgenommen hat. Ohne korrekt eingerichtete Component Information bleibt der dynamische Android-Empfänger grundsätzlich durch andere Apps auf demselben Gerät nachahmbar. Eingehende Werte sind daher weiterhin nicht vertrauenswürdige Eingaben und müssen vor jeder Buchung geprüft werden.

@@ -150,3 +150,11 @@ Diese Prüfungen ergänzen die Kamera- und DataWedge-Tests. Sie können mit gedr
 59. **Keine automatische Aktion:** Nach jeder Erkennung muss die Nummer zunächst sichtbar im Eingabefeld stehen. Ohne bewusste Bedienung darf kein Paketshop-Vorgang angelegt und keine Partner-App geöffnet werden.
 
 Die automatisierten Parser-Tests prüfen die Regeln ohne Kamera-Hardware. Sie ersetzen nicht den Test mit echten Zebra-Geräten, echten Etiketten und der konkret eingesetzten Betriebssoftware.
+
+
+## 9. Verhalten bei Hintergrundbetrieb
+
+60. TRAKUNA öffnen und im Vordergrund lassen; einen DataWedge-Testbarcode scannen. Die erkannte Nummer muss im Sendungsnummernfeld erscheinen.
+61. TRAKUNA in den Hintergrund wechseln, ohne die App zu beenden; einen weiteren Barcode scannen. Der Hintergrundscan darf die Eingabemaske nicht verändern.
+62. TRAKUNA wieder in den Vordergrund holen und erneut scannen. Der neue Scan muss wieder zur manuellen Prüfung übernommen werden.
+63. TRAKUNA über die Übersicht vollständig schließen und anschließend neu öffnen. Erst nach dem Öffnen darf der nächste Scan wieder verarbeitet werden.

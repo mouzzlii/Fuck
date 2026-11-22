@@ -35,6 +35,7 @@ import androidx.camera.core.Preview
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanner
@@ -83,6 +84,8 @@ class MainActivity : ComponentActivity() {
             DisposableEffect(context) {
                 val receiver = object : BroadcastReceiver() {
                     override fun onReceive(context: Context?, intent: Intent?) {
+                        // Ignore broadcasts while TRAKUNA is backgrounded or no longer active.
+                        if (!this@MainActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return
                         if (intent?.action != DATAWEDGE_ACTION) return
                         val raw = intent.getStringExtra(DATAWEDGE_DATA_EXTRA) ?: return
                         if (raw.length > MAX_SCAN_INPUT_CHARS) {

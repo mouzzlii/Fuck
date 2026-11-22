@@ -14,6 +14,7 @@
 - Der zuletzt an eine Partner-App übergebene Sendungsnummern-Cache wird separat mit AES-GCM und einem eigenen Android-Keystore-Schlüssel verschlüsselt. Vorhandene Klartext-Cachewerte werden nach erfolgreichem verschlüsseltem Commit entfernt.
 - Fehler beim Lesen/Entschlüsseln des Übergabe-Caches werden nicht als leerer Cache ausgegeben; der Lesezugriff meldet einen Fehler.
 
+- Zebra-DataWedge-Broadcasts werden nur verarbeitet, solange die TRAKUNA-Aktivität im Vordergrund (`RESUMED`) ist; im Hintergrund eingehende Broadcasts werden ignoriert.
 - Android-Backup ist deaktiviert (`allowBackup=false`).
 - Unverschlüsselter Netzwerkverkehr ist standardmäßig deaktiviert.
 - Lokale Datensätze werden vor Anzeige und Wiederherstellung auf Struktur, Status, IDs und Duplikate geprüft.
@@ -51,7 +52,7 @@ Bitte keine realen Sendungsnummern, Empfängernamen, Passwörter oder Schlüssel
 
 ## Zebra DataWedge Broadcast
 
-TRAKUNA registriert den DataWedge-Empfänger dynamisch, damit DataWedge Broadcast-Scans zustellen kann. Ohne geräteseitige Einschränkung kann ein anderer Prozess auf demselben Gerät einen gleichartigen Broadcast nachahmen.
+TRAKUNA registriert den DataWedge-Empfänger dynamisch, damit DataWedge Broadcast-Scans zustellen kann. Der Empfänger verarbeitet Scans nur, solange die App im Vordergrund aktiv ist. Das reduziert unbeabsichtigte Hintergrundverarbeitung, authentifiziert aber nicht den Absender: Ohne geräteseitige Einschränkung kann ein anderer Prozess auf demselben Gerät einen gleichartigen Broadcast nachahmen.
 
 **Empfohlene Gerätekonfiguration:** Im DataWedge-Profil unter Intent Output → Component Information ausschließlich das installierte TRAKUNA-Paket `de.trakuna.app` auswählen und die angebotene App-Signaturprüfung aktivieren. Zebra dokumentiert, dass DataWedge dann die Paket-ID und zusätzlich die App-Signatur vor der Zustellung prüft. Die Einstellung muss auf jedem eingesetzten Gerät bzw. verwalteten Profil kontrolliert werden; TRAKUNA kann ihren Aktivierungsstatus nicht auslesen oder garantieren.
 
