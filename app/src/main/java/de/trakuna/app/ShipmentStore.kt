@@ -149,7 +149,7 @@ class ShipmentStore(context: Context) {
             updatedAt = System.currentTimeMillis()
         )
         records[index] = updated
-        persist(records)
+        if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte den Vorgang erneut öffnen und prüfen.")
         return ShipmentUpdate.Saved(updated)
     }
 
