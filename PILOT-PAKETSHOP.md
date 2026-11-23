@@ -13,11 +13,11 @@ Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetr
 
 ## 2. Download des aktuellen Testpakets
 
-- GitHub Actions Build 266 (vorheriger App-Code-Stand; Dokumentationsänderungen danach separat gebaut): https://github.com/mouzzlii/Fuck/actions/runs/45221331671
-- Artefakt: `TRAKUNA-Android`
-- SHA-256: `cc3911e62d4024bb8869559b48ad5c2b3bf35c4e81e65591dc541329ed180ab7`
-- Artefakt erstellt: 23.11.2026
-- Voraussichtlicher Ablauf des Artefakts: 07.12.2026
+- [GitHub Actions CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052)
+- Unit-Tests, Android-Lint und Debug-APK-Erstellung: erfolgreich
+- Artefakt: `TRAKUNA-Android` (Datei `app-debug.apk`)
+- APK-SHA-256: `db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
+- Artefakt erstellt: 23.11.2026, 17:26 UTC; Ablauf: 07.12.2026, 17:26 UTC
 
 Das Artefakt im Actions-Lauf herunterladen und das enthaltene ZIP entpacken. Die Debug-APK kann eine andere Signatur als spätere Builds haben. Vor einem Update bestehende lokale Daten sichern und die App nicht deinstallieren.
 
