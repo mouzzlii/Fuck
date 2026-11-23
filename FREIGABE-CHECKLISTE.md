@@ -13,8 +13,8 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Update von der vorherigen freigegebenen Version getestet
 
-Build 266: https://github.com/mouzzlii/Fuck/actions/runs/45166820754  
-SHA-256: `b2af51c5c910a4378c548071dbae9d80058310fc5821c50f106a2941037d6387`
+CI-Lauf 45227305052: https://github.com/mouzzlii/Fuck/actions/runs/45227305052
+APK-SHA-256: `db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
 
 ## B. Geräte- und Scannerabnahme
 
