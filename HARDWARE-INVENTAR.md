@@ -9,7 +9,8 @@ Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters, Fotos/Ablesungen am Hermes-H
 |---|---|---|---|---|
 | DPD | Zebra TC26 (wahrscheinlich; 4G-Anzeige und Geräteansicht, Typenschild noch zu bestätigen) | Zebra CD420 (Bezeichnung laut Betreiber; Typenschild noch zu prüfen) | Bluetooth zwischen Handgerät und Drucker | V.1.16.11 (genaue Zuordnung innerhalb des DPD-Systems offen) |
 | GLS | Zebra TC26 (wahrscheinlich; 4G-Anzeige und Geräteansicht, Typenschild noch zu bestätigen) | Zebra CD421 (Bezeichnung laut Betreiber; Typenschild noch zu prüfen) | Bluetooth zwischen Handgerät und Drucker | V.7.0.1632 (genaue Zuordnung innerhalb des GLS-Systems offen) |
-| Hermes | Symbol/Zebra MC3090BT, eigenständiges Handterminal | Eigener Hermes-Drucker; Modell noch offen | Eigenständiger Hermes-Geräteablauf; Druckeranschluss noch nicht verifiziert | V.2.1.1.0 (Hermes-Anwendung laut Vor-Ort-Angabe) |
+| Hermes (bisher) | Symbol/Zebra MC3090BT, eigenständiges Handterminal; laut Betreiber zu alt | Eigener Hermes-Drucker; Modell noch offen | Eigenständiger Hermes-Geräteablauf; Druckeranschluss noch nicht verifiziert | V.2.1.1.0 (Hermes-Anwendung laut Vor-Ort-Angabe) |
+| Hermes (Nachfolger) | Neues Gerät vom Betreiber für nächste Woche angekündigt; Hersteller/Modell noch unbekannt | Noch nicht erhoben | Noch nicht erhoben | Hermes-App-/Betriebssystemversion noch nicht erhoben |
 | UPS | Handgerät/Arbeitsplatz noch nicht erhoben | Drucker noch nicht erhoben | Verbindung noch nicht erhoben | Anwendungsversion noch nicht erhoben |
 
 ### Hermes-Handgerät – sichtbare/abgelesene Informationen
@@ -22,9 +23,13 @@ Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters, Fotos/Ablesungen am Hermes-H
 
 Die zusätzlich genannten Versionen V.7.0.1632 (GLS) und V.1.16.11 (DPD) sind noch nicht eindeutig einer konkreten Softwarekomponente zugeordnet. Sie dürfen nicht als Betriebssystemversion oder Drucker-Firmware ausgegeben werden.
 
-### Wichtige Kompatibilitätsgrenze des Hermes-MC3090BT
+### Angekündigter Austausch des Hermes-Handgeräts
 
-Die offizielle Zebra-Kompatibilitätsdokumentation führt den MC3090 unter Windows CE 5.0 bzw. Windows Mobile 6.1. TRAKUNA ist dagegen eine Android-App mit Mindestanforderung Android 8.0 (API 26). **Die aktuelle TRAKUNA-APK kann daher nicht auf dem vorhandenen MC3090BT installiert werden.** Das Hermes-Gerät bleibt für den bestehenden Hermes-Ablauf erhalten; TRAKUNA muss für Hermes auf einem separaten, freigegebenen Android-Gerät laufen oder Hermes muss eine freigegebene moderne Geräte-/Softwarelösung bereitstellen. Ein direkter DataWedge-Scan vom MC3090BT in TRAKUNA ist mit diesem Modell nicht möglich.
+Der Betreiber hat mitgeteilt, dass das bisherige Hermes-Gerät zu alt ist und nächste Woche ein neues Hermes-Gerät bereitgestellt wird. Der genaue Gerätetyp ist noch nicht bekannt. Nach Ankunft sind Typenschild/Modell, Betriebssystem, Hermes-App-Version, Scanner, Drucker und Verbindung zu erfassen. Bis zur Freigabe bleibt der bestehende Hermes-Ablauf unverändert; keine Installation, Kopplung, Profiländerung oder sonstige Umstellung durch TRAKUNA.
+
+### Wichtige Kompatibilitätsgrenze des bisherigen Hermes-MC3090BT
+
+Die offizielle Zebra-Kompatibilitätsdokumentation führt den MC3090 unter Windows CE 5.0 bzw. Windows Mobile 6.1. TRAKUNA ist dagegen eine Android-App mit Mindestanforderung Android 8.0 (API 26). **Die aktuelle TRAKUNA-APK kann daher nicht auf dem vorhandenen MC3090BT installiert werden.** Das bisherige Hermes-Gerät bleibt bis zur regulären Umstellung für den bestehenden Hermes-Ablauf erhalten. Die Kompatibilität des angekündigten Nachfolgers mit TRAKUNA ist noch offen und wird erst nach dessen Ankunft geprüft. Ein direkter DataWedge-Scan vom MC3090BT in TRAKUNA ist mit diesem Modell nicht möglich.
 
 Quelle: [Zebra – Enterprise Browser Gerätekompatibilität (MC3090: Windows CE 5.0 / Windows Mobile 6.1)](https://www.zebra.com/us/en/support-downloads/software/mobile-computer-software/enterprise-browser.html).
 
