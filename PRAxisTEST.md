@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Version 1.53 · versionCode 54)
 
-Aktueller Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der erfolgreiche CI-Lauf 45291370834 auf Commit `cf415c77a4e5ee0c325987e2e0f0bd12b029ea58` bestätigt Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK-Build und Artefakt-Upload. Die Android-Instrumentierungstests wurden in diesem CI-Lauf **nicht ausgeführt**; dafür ist ein echter Emulator-/Gerätelauf erforderlich. [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45290932535). APK-SHA-256: `9c4061b394cad26f7f76456fef738962e02237cffc084cc0b62bdd2ad8c3e6da`.
+Aktueller Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der erfolgreiche CI-Lauf 45291370834 auf Commit `cf415c77a4e5ee0c325987e2e0f0bd12b029ea58` bestätigt Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK-Build und Artefakt-Upload. Die Android-Instrumentierungstests wurden in diesem CI-Lauf **nicht ausgeführt**; dafür ist ein echter Emulator-/Gerätelauf erforderlich. [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45291370834). APK-SHA-256: `9c4061b394cad26f7f76456fef738962e02237cffc084cc0b62bdd2ad8c3e6da`.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -56,7 +56,7 @@ Diesen Ablauf mit einer erfundenen Testnummer durchführen, nicht mit einer echt
 6. Erwartung: TRAKUNA meldet, dass der aktive Vorgang bereits vorhanden ist. Es darf kein zweiter identischer aktiver Vorgang entstehen und es darf keine Erfolgsmeldung für eine neue Speicherung erscheinen.
 7. Das Sendungsnummernfeld leeren.
 8. Erwartung: Die drei Erfassungs-Schaltflächen sind deaktiviert und direkt im Dialog erscheint der Hinweis, zuerst eine Sendungsnummer einzugeben.
-9. Den Testvorgang nach Abschluss des Tests wieder löschen.
+9. Den Testvorgang abschließen, archivieren und erst danach im Archiv endgültig löschen.
 
 **Fehlerprotokoll:** Wenn nach Schritt 3 nichts sichtbar passiert, notieren, ob der Dialog offen bleibt, ob eine Meldung direkt im Dialog erscheint und ob der Vorgang nach erneutem Öffnen der Liste vorhanden ist. Keine zweite Buchung durch wiederholtes Tippen erzwingen, bevor der Bestand geprüft wurde.
 
@@ -96,7 +96,7 @@ Die Carrier-Schnellauswahl und die getrennten App-Zuordnungen in Version 1.49 si
 - App schließen und neu öffnen: Die Historie muss weiterhin zum richtigen Vorgang gehören.
 - JSON-Sicherung exportieren und auf einer Testinstallation wiederherstellen: Die vorhandenen Historieneinträge müssen erhalten bleiben.
 - Einen älteren Testdatensatz bzw. eine ältere Sicherung ohne Historienfeld laden: Der Datensatz muss weiterhin lesbar sein und einen Hinweis auf fehlende Historie anzeigen.
-- Einen Vorgang löschen: Die zugehörige lokale Historie darf danach nicht mehr in der App angezeigt werden.
+- Einen archivierten Vorgang endgültig löschen: Die zugehörige lokale Historie darf danach nicht mehr in der App angezeigt werden; ein offener Vorgang muss gegen endgültiges Löschen geschützt bleiben.
 - Historie darf nicht als manipulationssicheres Mitarbeiter-Audit oder als Carrier-Bestätigung ausgegeben werden.
 
 
