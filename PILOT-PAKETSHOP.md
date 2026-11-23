@@ -37,7 +37,11 @@ Version 1.50 (versionCode 51) ergänzt Archivierung abgeschlossener Vorgänge, W
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
-Das Artefakt im Actions-Lauf 45265965503 herunterladen und das enthaltene ZIP entpacken. Die Debug-APK kann eine andere Signatur als spätere Builds haben. Vor einem Update bestehende lokale Daten sichern und die App nicht deinstallieren.
+Das Artefakt im Actions-Lauf 45273220299 herunterladen und das enthaltene ZIP entpacken. Die Debug-APK kann eine andere Signatur als spätere Builds haben. Vor einem Update bestehende lokale Daten sichern und die App nicht deinstallieren.
+
+### Neue Gerätefunktion in Version 1.50
+
+Abgeschlossene Vorgänge können archiviert und wiederhergestellt werden. Offene Sendungen können nicht archiviert werden. Endgültiges Löschen ist nur in der Archivansicht möglich. Der Archivstatus bleibt in JSON-Backups (Schema 2) und im CSV-Export erhalten; ältere Schema-1-Sicherungen bleiben lesbar. Archivierte Vorgänge zählen weiterhin zum lokalen Limit von 500 Datensätzen.
 
 ### Neue Gerätefunktion in Version 1.49
 
@@ -69,8 +73,6 @@ Die Partner-App-Übergabe ist derzeit ein Android-Intent-Versuch. Das Öffnen ei
 - Abgeschlossene Vorgänge können archiviert und wiederhergestellt werden. Offene Sendungen bleiben aktiv; endgültiges Löschen ist nur aus dem Archiv möglich.
 - Archivierte Vorgänge bleiben im lokalen 500er-Limit enthalten. JSON-Backup-Schema 2 speichert den Archivstatus; ältere Schema-1-Sicherungen bleiben lesbar.
 - Der CSV-Export enthält einen zusätzlichen Archivierungszeitpunkt.
-- Abgeschlossene Vorgänge können lokal archiviert und wiederhergestellt werden; aktive Vorgänge können nicht archiviert werden. Archivierte Vorgänge bleiben Teil der Datensicherung und belegen weiterhin einen Platz des 500er-Limits.
-- Das JSON-Backup-Schema 2 enthält den Archivstatus; Schema-1-Sicherungen ohne Archivfeld bleiben lesbar.
 - JSON-Backup und CSV-Export enthalten vertrauliche Daten im Klartext. Sie müssen geschützt gespeichert und übertragen werden.
 - Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge. Diese können als lokale Arbeitsdokumentation dienen, sind aber kein manipulationssicherer oder zentral bestätigter Nachweis.
 - Es gibt keine zentrale Synchronisierung, keine Mitarbeiterkonten und keine rollenbasierte Zugriffskontrolle.
