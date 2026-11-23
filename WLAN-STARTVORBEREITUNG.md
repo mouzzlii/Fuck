@@ -44,7 +44,7 @@ Die DataWedge-Konfiguration muss auf jedem Zebra-Gerät separat vorgenommen werd
 
 ## 3. Netzwerkanforderungen
 
-Für den derzeitigen lokalen TRAKUNA-Funktionsumfang ist kein direkter WLAN-Zugriff auf die GLS-, DPD- oder Hermes-Geräte erforderlich. Die aktuelle Android-Manifestdatei fordert keine `INTERNET`-Berechtigung an; TRAKUNA verwendet daher derzeit keine Netzwerkverbindung und synchronisiert keine Daten über WLAN oder 4G. WLAN ist für den lokalen Scannerbetrieb nicht erforderlich. Es wird auch kein Netzwerk-Port an den Paketshop-Routern geöffnet.
+Für den derzeitigen lokalen TRAKUNA-Funktionsumfang ist kein direkter WLAN-Zugriff auf die GLS-, DPD- oder Hermes-Geräte erforderlich. Die aktuelle Android-Manifestdatei fordert `ACCESS_NETWORK_STATE`, aber keine `INTERNET`-Berechtigung an. Version 1.49 kann deshalb den WLAN-Transport des **aktuellen Geräts** anzeigen, aber keine Netzwerkdienste aufrufen, keine anderen Geräte suchen und keine Daten über WLAN oder 4G synchronisieren. WLAN ist für den lokalen Scannerbetrieb nicht erforderlich. Es wird auch kein Netzwerk-Port an den Paketshop-Routern geöffnet.
 
 Erst wenn eine freigegebene Online-Funktion oder zentrale Synchronisierung entwickelt wird, sind vorab festzulegen:
 - ein vom Betreiber freigegebener HTTPS-Dienst,
@@ -58,7 +58,7 @@ Keine Portweiterleitung ins Internet und kein ungeschützter lokaler Webserver a
 
 ## 4. Android-Kompatibilität und lokale Netzwerke
 
-Der aktuelle App-Build zielt auf Android API 35. Die App enthält derzeit keinen lokalen Netzwerk-Server und keine automatische Suche nach anderen Geräten. Deshalb wird für den jetzigen Start keine zusätzliche lokale Netzwerkberechtigung angefordert.
+Der aktuelle App-Build zielt auf Android API 35. Die App enthält derzeit keinen lokalen Netzwerk-Server und keine automatische Suche nach anderen Geräten. Die WLAN-Anzeige prüft nur den aktiven Netzwerktransport des aktuellen Geräts. Deshalb wird derzeit keine Berechtigung für lokalen Netzwerkzugriff angefordert.
 
 Bei späterer Anhebung des Target SDK auf API 37 oder höher muss die Android-17-Regelung für lokalen Netzwerkzugriff berücksichtigt werden. Android sieht dafür die Laufzeitberechtigung `ACCESS_LOCAL_NETWORK` oder – für die gezielte Auswahl einzelner Dienste – den systemvermittelten NSD-Service-Picker vor. Das wird erst implementiert, wenn ein konkreter Netzwerkdienst feststeht.
 
@@ -95,7 +95,7 @@ Es werden keine WLAN-Passwörter, Carrier-Passwörter, privaten Schlüssel oder 
 
 ## 7. Ehrlicher Status
 
-**Vorbereitet:** Android-App, lokale Erfassung, Kamera-/manuelle Eingabe, DataWedge-Empfangscode, Hardwareinventar, DataWedge-Konfigurationsanleitung und dieser Startplan. Die aktuelle App läuft lokal; WLAN schaltet keine noch nicht vorhandene Cloud-Synchronisierung frei.
+**Vorbereitet:** Android-App, lokale Erfassung, Kamera-/manuelle Eingabe, DataWedge-Empfangscode, WLAN-Statusanzeige des aktuellen Geräts, Hardwareinventar, DataWedge-Konfigurationsanleitung und dieser Startplan. Die aktuelle App läuft lokal; WLAN schaltet keine noch nicht vorhandene Cloud-Synchronisierung frei. Die Anzeige bestätigt weder, dass alle vier Handgeräte im selben WLAN sind, noch dass sie untereinander erreichbar sind.
 
 **Noch nicht vor Ort verifiziert:** WLAN-Zugang, DataWedge-Profil, echter TC26-Scan, Hermes-Anbindung, zentrale Synchronisierung und produktive Freigabe.
 
