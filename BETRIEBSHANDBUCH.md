@@ -1,23 +1,23 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45290932535 (Debug-Testpaket)
+Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45291370834 (Debug-Testpaket)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45290932535 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45290932535).
+1. Den [erfolgreichen Android-Build 45291370834 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45291370834).
 2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
-5. TRAKUNA starten und zuerst mit erfundenen Testdaten prüfen.
+6. TRAKUNA starten und zuerst mit erfundenen Testdaten prüfen.
 
 **Prüfsummen des bereitgestellten Testpakets**
 
-- APK-SHA-256: `c6d787d3cea6a5e0359bab8cc2f1a9b6759429cbea42dc1e2baf79b916e94965`
-- ZIP-SHA-256: `9bfd1ce4fe02c947abfcba6df8836844a2d810b5ac5c3aeba0e51ece808179cb`
-- Erstellt: 23.11.2026, 23:43 UTC
-- Artefakt verfügbar bis: 07.12.2026, 23:43 UTC
+- APK-SHA-256: `9c4061b394cad26f7f76456fef738962e02237cffc084cc0b62bdd2ad8c3e6da`
+- ZIP-SHA-256: `82b94fe97c53c19bcbc7f65e2a9d4eeb68f2801a775347efc4c036b29ec96ece`
+- Erstellt: 23.11.2026, 23:46 UTC
+- Artefakt verfügbar bis: 07.12.2026, 23:46 UTC
 
 Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstestfälle wurden im aktuellen CI-Lauf nur kompiliert, nicht auf einem Emulator oder echten Gerät ausgeführt. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
 
