@@ -1,4 +1,6 @@
-# TRAKUNA – Praxis-Testplan (Version 1.44)
+# TRAKUNA – Praxis-Testplan (Version 1.44 · CI-Build 266)
+
+Aktuelles Testpaket: [GitHub Actions Build 266](https://github.com/mouzzlii/Fuck/actions/runs/45166820754). Unit-Tests und Android-Lint waren für diesen Build erfolgreich. SHA-256: `b2af51c5c910a4378c548071dbae9d80058310fc5821c50f106a2941037d6387`. Das Artefakt ist ein Debug-Testpaket, kein Produktionsrelease.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
