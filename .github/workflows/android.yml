@@ -48,6 +48,25 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      - name: Sicherheitsgrenzen des Android-Manifests prüfen
+        shell: bash
+        run: |
+          manifest="app/src/main/AndroidManifest.xml"
+          test -f "$manifest"
+          if grep -Eq 'android\\.permission\\.INTERNET' "$manifest"; then
+            echo "FEHLER: Netzwerkberechtigung ist ohne freigegebene Backend-Architektur nicht erlaubt."
+            exit 1
+          fi
+          grep -Eq 'android:allowBackup="false"' "$manifest" || {
+            echo "FEHLER: Android-Backup muss bis zur geprüften Backup-Strategie deaktiviert bleiben."
+            exit 1
+          }
+          grep -Eq 'android:usesCleartextTraffic="false"' "$manifest" || {
+            echo "FEHLER: Unverschlüsselter Netzwerkverkehr muss deaktiviert bleiben."
+            exit 1
+          }
+          echo "OK: Keine INTERNET-Berechtigung, Android-Backup deaktiviert, Klartextverkehr deaktiviert."
+
       - name: Unit-Tests ausführen
         run: gradle --no-daemon testDebugUnitTest
 
