@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.44 (versionCode 45) · CI-Lauf 45227305052
+Stand: App-Version 1.45 (versionCode 46) · CI-Lauf 45227305052
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
 ## 1. Wichtiger Status vor dem ersten Einsatz
 
-TRAKUNA 1.44 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
+TRAKUNA 1.45 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
 
 - Sendungsdaten liegen nur auf diesem Android-Gerät. Es gibt keine zentrale Synchronisierung zwischen mehreren Geräten.
 - Es gibt noch keine Mitarbeiter-Anmeldung, Benutzerrollen oder persönliche Zuordnung von Bearbeitern.
@@ -20,7 +20,7 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 
 ## 2. Aktuelles Testpaket herunterladen
 
-1. Diesen [erfolgreichen CI-Lauf öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45227305052).
+1. Den [Android-Build-Workflow öffnen](https://github.com/mouzzlii/Fuck/actions/workflows/android.yml) und den erfolgreichen Lauf für Version 1.45 auswählen. Der frühere Lauf 45227305052 enthält noch Version 1.44 ohne Carrier-Schnellauswahl.
 2. Im Build den Bereich **Artifacts** öffnen.
 3. Das Paket **TRAKUNA-Android** herunterladen.
 4. Das ZIP auf dem Android-Gerät entpacken.
