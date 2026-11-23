@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · Zielversion 1.51 (versionCode 52) · letzter erfolgreicher CI-Stand 1.50
+Stand: 24. November 2026 · Testversion 1.51 (versionCode 52) · CI-Lauf 45281621801 erfolgreich (Debug-Testpaket)
 
 ## 1. Zweck und Freigabestatus
 
@@ -18,28 +18,28 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
-Version 1.50 wurde erfolgreich durch CI gebaut; Version 1.51 mit zusätzlichem Schutz vor dem Löschen inkonsistenter Archivdatensätze benötigt noch einen eigenen erfolgreichen CI-Lauf. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.51 wurde erfolgreich durch CI gebaut. Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.50 (versionCode 51) ergänzt Archivierung abgeschlossener Vorgänge, Wiederherstellung, Backup-Schema 2 und Archivzeitpunkt im CSV-Export. Version 1.51 (versionCode 52) ergänzt die Prüfung der Datensatzgültigkeit vor endgültigem Löschen; Build ausstehend. [CI-Lauf 45273220299 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45273220299).
+Version 1.51 (versionCode 52) enthält Archivierung/Wiederherstellung, Backup-Schema 2, Archivzeitpunkt im CSV-Export und den zusätzlichen Löschschutz für ungültige Archivdatensätze. [Erfolgreichen CI-Lauf 45281621801 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45281621801).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`
-- ZIP-SHA-256: `a4d75dee23c876d26aa9fbeb696d5a6dd8c9c4c0c9aad2032dbd195dc9f4fe0f`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 21:49 UTC; Ablauf 07.12.2026, 21:49 UTC
+- APK-SHA-256: `e47b845dcd5a8dcc57760d61bd7ab3fa73064c0a19dce4c6eb7bfa7b10b2012e`
+- ZIP-SHA-256: `9ff08004e9bef4665c2399c64f79aab17b7c6b52182490a489278d15ea7823d4`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 22:40 UTC; Ablauf 07.12.2026, 22:40 UTC
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45273220299)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45281621801)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
 Das Artefakt im Actions-Lauf 45273220299 herunterladen und das enthaltene ZIP entpacken. Die Debug-APK kann eine andere Signatur als spätere Builds haben. Vor einem Update bestehende lokale Daten sichern und die App nicht deinstallieren.
 
-### Neue Gerätefunktion in Version 1.50
+### Gerätefunktionen in Version 1.51
 
 Abgeschlossene Vorgänge können archiviert und wiederhergestellt werden. Offene Sendungen können nicht archiviert werden. Endgültiges Löschen ist nur in der Archivansicht möglich. Der Archivstatus bleibt in JSON-Backups (Schema 2) und im CSV-Export erhalten; ältere Schema-1-Sicherungen bleiben lesbar. Archivierte Vorgänge zählen weiterhin zum lokalen Limit von 500 Datensätzen.
 
