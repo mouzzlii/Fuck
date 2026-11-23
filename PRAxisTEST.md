@@ -65,7 +65,11 @@ Jeder Paketdienst wird getrennt mit freigegebenen Testetiketten bzw. fiktiven Te
 | DPD | DPD im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische DPD-Erkennung voraussetzen | Bestehendes DPD-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
 | GLS | GLS im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische GLS-Erkennung voraussetzen | Bestehendes GLS-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
 | Hermes | Hermes im Schnellauswahlmenü | MC3090BT-Barcode und manuelle Nummer mit freigegebenen Testdaten prüfen | Bestehenden Hermes-Ablauf und Drucker nicht verändern; offizielle Schnittstelle und Betreiberfreigabe sind Pflicht | Offen – Pilotblocker |
-| UPS | UPS im Schnellauswahlmenü | Bekannte 1Z-Format-Erkennung nur als Hinweis prüfen; zusätzlich manuelle Nummern testen | Hardware, Shopsoftware, Drucker und offizieller Integrationsweg erst erheben | Offen |
+| UPS | UPS im Schnellauswahlmenü | Bekannte 1Z-Format-Erkennung nur als Hinweis prüfen; zusätzlich manuelle Nummern testen | Prüfen, ob die offizielle App `UPS Access Point` (`com.ups.accesspoint`) installiert und vom Standort freigegeben ist; Version und Android-Gerät erfassen. Nicht eigenmächtig installieren oder konfigurieren. | Offen |
+
+
+
+**Geräteabgleich DPD/GLS:** GLS Österreich beschreibt für neue Partner ein Smartphone, einen Bluetooth-Drucker und eine eigene GLS-App. Der gemeldete TC26-/Zebra-Drucker-Bestand muss mit GLS abgeglichen werden; vorhandene Hardware bis zur ausdrücklichen Freigabe nicht verändern.
 
 Für **jeden** der vier Paketdienste müssen mindestens diese Fälle protokolliert werden:
 
