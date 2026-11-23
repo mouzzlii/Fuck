@@ -3,6 +3,8 @@
 Stand: App-Version 1.45 (versionCode 46)
 
 ## Zweck
+Dieses Dokument beschreibt die technische Vereinbarung für eine autorisierte Übergabe zwischen TRAKUNA und der jeweiligen Paketshop-Betriebssoftware.
+
 ## Verbindliche Startpriorität der Paketdienste
 
 Für den ersten Start sind **DPD, GLS, Hermes und UPS** die vier priorisierten Paketdienste. Die Reihenfolge in der TRAKUNA-Auswahl ist DPD, GLS, Hermes, UPS. Alle vier müssen im Pilotablauf separat geprüft werden; eine manuelle Carrier-Auswahl ist zunächst nur eine Kennzeichnung des lokalen Vorgangs und keine Buchung im Partnersystem.
@@ -100,7 +102,7 @@ Mindestanforderungen:
 - Testzugang und freigegebene Testsendungen.
 - Beschreibung, welche Paketshop-Aktionen die Schnittstelle tatsächlich unterstützt (Annahme, Kundenausgabe, Retoure, Übergabe an Zusteller).
 
-Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.44; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
+Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.45; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
 
 Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Übergabeversuch mit lokalem Cache und Zwischenablage-Fallback. Es werden keine Carrier-Endpunkte, Paketbuchungen oder Zugangsdaten erfunden.
 
