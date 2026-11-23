@@ -237,3 +237,11 @@ Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/202
 - [ ] DPD Österreich bestätigt schriftlich, welche dieser Schritte am konkreten österreichischen Standort gelten.
 
 **Abnahmekriterium:** TRAKUNA darf den lokalen Status nicht als Carrier-bestätigt darstellen, wenn nur ein eigener Scan oder das Öffnen der Partner-App erfolgt ist.
+
+
+## Zusätzliche GLS-Abnahmepunkte (Österreich)
+
+- [ ] GLS bestätigt die für den Standort geltenden Annahme-, Abhol- und Retourenabläufe.
+- [ ] Offizielle GLS-Quittung/Übergabebeleg für Kundenabgabe und Fahrerabholung wird im bestehenden GLS-System erzeugt und geprüft.
+- [ ] TRAKUNA-eigene lokale Scans oder Quittungen werden nicht als GLS-Beleg oder GLS-Haftungsbestätigung bezeichnet.
+- [ ] GLS bestätigt schriftlich, ob eine zusätzliche App-/Scannerintegration zulässig und technisch unterstützt ist.

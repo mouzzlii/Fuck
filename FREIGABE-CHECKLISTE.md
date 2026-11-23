@@ -98,3 +98,10 @@ Keine Passwörter, API-Schlüssel oder Kundendaten in GitHub-Issues oder Chat-Na
 - [ ] Haftungsübergang und Beleg-/Unterschriftsnachweise sind pro Vorgang geklärt.
 - [ ] Rückführung nicht abgeholter Sendungen und Lagerfristablauf sind geklärt.
 - [ ] TRAKUNA zeigt keine Carrier-Bestätigung ohne bestätigtes DPD-Ereignis.
+
+
+### GLS Österreich – Beleg- und Schnittstellenabnahme
+
+- [ ] Vorgesehene GLS-Quittungen und Übergabebelege sind für den Standort dokumentiert.
+- [ ] TRAKUNA unterscheidet strikt zwischen lokalem Scan und offizieller GLS-Quittung/Bestätigung.
+- [ ] GLS hat die parallele App-/Scannerintegration schriftlich freigegeben.

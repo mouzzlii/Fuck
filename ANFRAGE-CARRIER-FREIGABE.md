@@ -140,3 +140,11 @@ DPD Deutschland stellt ein Pickup-Partnerhandbuch mit Abläufen für Kundenabgab
 - Gibt es für den österreichischen Pickup-Shop eine offiziell freigegebene API, Intent-Schnittstelle oder Geräteintegration?
 
 Referenz (Deutschland, nicht ungeprüft auf Österreich übertragbar): [DPD Pickup Partnerhandbuch 01/2026](https://www.dpd.com/wp-content/uploads/sites/227/2026/01/Pickup-Partner-Handbuch.pdf).
+
+
+## Zusätzliche GLS-Fragen
+
+- Welche offiziellen GLS-Quittungen und Übergabebelege müssen bei Annahme und Abholung im österreichischen PaketShop erzeugt werden?
+- Welche Daten bzw. Status dürfen wir in TRAKUNA ergänzend lokal dokumentieren, ohne eine GLS-Quittung oder GLS-Bestätigung zu ersetzen?
+- Gibt es eine freigegebene Schnittstelle für das bestehende GLS-PaketShop-Programm bzw. den Zebra-Handheld?
+- Ist eine parallele Nutzung von TRAKUNA zulässig, und welche technischen Anforderungen gelten für Smartphone, Bluetooth-Drucker und Scanner?

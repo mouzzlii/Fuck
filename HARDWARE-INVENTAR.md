@@ -110,3 +110,8 @@ Keine Kundennamen, Adressen, echten Sendungsnummern, Zugangsdaten, Passwörter, 
 **Produktive Integration: nicht freigegeben.**
 
 Dieses Inventar dokumentiert ausschließlich die bislang vor Ort genannten und abgelesenen Informationen. Unbekannte technische Eigenschaften bleiben ausdrücklich offen.
+
+
+### GLS – offizielle Partnerausstattung als Vergleich
+
+GLS Österreich beschreibt für neue PaketShop-Partner eine technische Ausstattung aus Smartphone und Bluetooth-Drucker. Das ist ein allgemeiner Partnerhinweis, keine Bestätigung der konkreten Geräte am vorhandenen Standort. Die gemeldeten Zebra-Handhelds und Zebra-Drucker müssen weiterhin anhand Typenschild, Modell und installierter Software vor Ort bestätigt werden.

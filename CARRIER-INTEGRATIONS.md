@@ -136,3 +136,18 @@ Hermes Österreich beschreibt PaketShop-Aufgaben öffentlich als Annahme private
 - [Hermes Österreich – Partnerübersicht und Ausstattung](https://www.myhermes.at/paketshop-partner/uebersicht/)
 
 Für den Pilot ist Hermes deshalb weiterhin ein Pflicht-Blocker: bestehendes Gerät und Programm nicht verändern; Hermes muss die tatsächlich vorgesehene Hardware, den App-/Softwarezugang, die Freigabe für eine zusätzliche Lösung und eine mögliche Schnittstelle schriftlich bestätigen.
+
+
+## GLS Österreich – Partnerabläufe und Quittierung
+
+GLS Österreich beschreibt für seine PaketShops die Annahme von Paketen, die Ausgabe an Empfänger gegen Ausweis sowie die Annahme von Retouren zur Abholung durch Fahrer. GLS gibt an, neuen PaketShop-Partnern technische Ausstattung aus Smartphone und Bluetooth-Drucker bereitzustellen. Die konkrete vorhandene Hardware des Nutzers bleibt davon getrennt zu verifizieren.
+
+Besonders wichtig sind die österreichischen GLS-Bedingungen: Die Annahme und Abholung im PaketShop werden mit den von GLS vorgesehenen Quittungen bzw. Übergabebelegen dokumentiert. Laut BGB binden darüber hinausgehende Quittierungen von Paketnummern, Gewichten, Adressaten, Inhalt oder Wert GLS nicht. TRAKUNA darf daher eine eigene lokale Scan-/Quittungsnotiz nicht als GLS-Bestätigung oder haftungsbegründenden GLS-Beleg ausgeben.
+
+Offizielle Referenzen:
+- [GLS Österreich – PaketShop-Partner und Ausstattung](https://gls-group.com/AT/de/uber-us/unsere-partner/unsere-paketshop-partner/)
+- [GLS Österreich – FAQ für PaketShop-Partner](https://gls-group.com/AT/de/faq/paketshop-partner/)
+- [GLS Österreich – Besondere Geschäftsbedingungen](https://gls-group.com/AT/de/bgb/)
+- [GLS Österreich – Versand-/Software-Schnittstellen](https://gls-group.com/AT/de/pakete-versenden/versendinfos/versandsysteme-anbindungen/)
+
+Die auf der GLS-Webseite genannten Versand-APIs/Plugins betreffen Versandlösungen und belegen keine Berechtigung zur Anbindung des bestehenden PaketShop-Scannerprogramms. Dafür ist eine gesonderte Freigabe von GLS erforderlich.
