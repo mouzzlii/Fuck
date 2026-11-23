@@ -14,8 +14,8 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 
 **Prüfsummen des bereitgestellten Testpakets**
 
-- APK-SHA-256: `d7ad261d2f29860a8e7d3e07c7365bad4c23118cc0064dc43c4ec17d8c6a71cc`
-- ZIP-SHA-256: `9497543cfcbb5efaa80c156a800e49fe2098c67293f370db91a7d2193ab403c6`
+- APK-SHA-256: `7bb30957a7bd288c6e9a2748b773d76b46d3229425c0725f738572685e0fd8d3`
+- ZIP-SHA-256: `e009c61993301453c8ee12617f7ac7859fb30ea05205ab7e31baf23291f2ea3a`
 - Erstellt: 23.11.2026, 19:37 UTC
 - Artefakt verfügbar bis: 07.12.2026, 19:37 UTC
 
