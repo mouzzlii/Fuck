@@ -8,12 +8,13 @@ TRAKUNA 1.51 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- 44 Unit-Tests im Testbestand. Version 1.51 enthält einen zusätzlichen Löschschutz für inkonsistente Archivdatensätze. Der Build für versionCode 52 muss noch erfolgreich durch CI bestätigt werden; der vorherige CI-Lauf 45273220299 prüfte Version 1.50.
-- Debug-APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`.
-- ZIP-Artefakt-SHA-256: `a4d75dee23c876d26aa9fbeb696d5a6dd8c9c4c0c9aad2032dbd195dc9f4fe0f`.
-- Das ZIP-Artefakt wurde am 23.11.2026, 21:49 UTC erstellt und läuft am 07.12.2026, 21:49 UTC ab.
+- 44 Unit-Tests im Testbestand. Version 1.51 enthält einen zusätzlichen Löschschutz für inkonsistente Archivdatensätze. CI-Lauf 45281621801 für versionCode 52 war erfolgreich: Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
+- Debug-APK-SHA-256: `e47b845dcd5a8dcc57760d61bd7ab3fa73064c0a19dce4c6eb7bfa7b10b2012e`.
+- ZIP-Artefakt-SHA-256: `9ff08004e9bef4665c2399c64f79aab17b7c6b52182490a489278d15ea7823d4`.
+- Das ZIP-Artefakt wurde am 23.11.2026, 22:40 UTC erstellt und läuft am 07.12.2026, 22:40 UTC ab.
+- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45281621801
 
-**Wichtig:** Version 1.50 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.51 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
