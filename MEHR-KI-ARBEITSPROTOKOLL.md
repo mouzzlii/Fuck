@@ -41,6 +41,8 @@ Eine Person oder ein Modell darf mehrere Rollen übernehmen, aber Implementierun
 
 ## Aufgabenpaket – Vorlage
 
+Für neue Aufträge gibt es zusätzlich die GitHub-Vorlage [KI-/Entwicklungsauftrag](.github/ISSUE_TEMPLATE/ki-arbeitsauftrag.yml). Sie erzwingt Basis-Commit, Ziel, Nicht-Ziele, Akzeptanzkriterien, Tests und Sicherheitsgrenzen.
+
 Jede an ein externes KI- oder Entwicklerwerkzeug übergebene Aufgabe muss mindestens enthalten:
 
 - **Aufgabe:** ein klarer, einzelner Arbeitsauftrag
