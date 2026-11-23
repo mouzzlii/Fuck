@@ -28,7 +28,11 @@ Die zusätzlich genannte Version V.7.0.1632 wurde GLS zugeordnet; V.1.16.11 wurd
 - Wegen der sichtbaren 4G-Mobilfunkanzeige wird als wahrscheinlichstes Modell **Zebra TC26** dokumentiert. Zebra unterscheidet offiziell: TC21 mit WLAN, TC26 mit WLAN und Mobilfunk. Die Modellzuordnung ist plausibel, aber vor endgültiger Hardwarefreigabe am Typenschild bzw. in „Über das Gerät“ zu bestätigen.
 - Die genaue TC26-Teilenummer, Android-Version, Zebra-MX-/DataWedge-Version und Scanner-Engine sind noch unbekannt.
 
-## 2. Bestätigte Betriebsweise
+## 2. Bestätigte Betriebsweise## 1a. UPS – noch offene Bestandsaufnahme
+
+UPS gehört neben DPD, GLS und Hermes zu den vier Start-Prioritäten. Für UPS liegen derzeit noch keine verifizierten Angaben zu Handgerät, Shopsoftware, Drucker, Verbindung, Version oder autorisiertem Integrationsweg vor. Bis zur Bestandsaufnahme darf TRAKUNA nur lokale Testvorgänge kennzeichnen; es darf keine UPS-Buchung oder Etikettenerstellung behaupten.
+
+
 
 - GLS und DPD haben jeweils ein eigenes Handgerät mit eigenem Programm.
 - Die Paketbearbeitung für GLS und DPD erfolgt direkt am jeweiligen Handgerät, nicht an einem separaten Paketshop-Computer.
