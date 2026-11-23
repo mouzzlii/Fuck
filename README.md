@@ -18,7 +18,7 @@ TRAKUNA 1.45 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung.
 - DataWedge-Empfangscode ist vorhanden; das Profil muss auf dem jeweiligen Zebra-Gerät eingerichtet und vor Ort getestet werden.
 - DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.45 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung; offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. Hermes bleibt ein Pflicht-Blocker für den vorgesehenen Pilot.
-- Die vorhandenen GLS-/DPD-/Hermes-Systeme und Druckerkopplungen dürfen nicht verändert werden.
+- Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
 ## Release-Build
 
