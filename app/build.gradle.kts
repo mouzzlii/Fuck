@@ -18,8 +18,9 @@ android {
         applicationId = "de.trakuna.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 53
-        versionName = "1.52"
+        versionCode = 54
+        versionName = "1.53"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -52,6 +53,19 @@ android {
     buildFeatures {
         compose = true
     }
+
+    testOptions {
+        animationsDisabled = true
+        managedDevices {
+            devices {
+                create<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2Api35") {
+                    device = "Pixel 2"
+                    apiLevel = 35
+                    systemImageSource = "aosp"
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -70,4 +84,7 @@ dependencies {
     implementation("com.google.mlkit:barcode-scanning:17.3.0")
 
     testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test:core:1.6.1")
 }
