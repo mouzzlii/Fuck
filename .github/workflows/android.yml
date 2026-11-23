@@ -150,7 +150,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: APK-Prüfsumme erstellen
-        run: sha256sum app/build/outputs/apk/debug/app-debug.apk > app/build/outputs/apk/debug/SHA256SUMS.txt
+        run: (cd app/build/outputs/apk/debug && sha256sum app-debug.apk > SHA256SUMS.txt)
 
       - name: APK und Prüfsumme bereitstellen
         uses: actions/upload-artifact@v7
