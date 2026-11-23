@@ -75,6 +75,9 @@ jobs:
       - name: Unit-Tests ausführen
         run: gradle --no-daemon testDebugUnitTest
 
+      - name: Android-Instrumentierungstests kompilieren (ohne nicht verfügbaren CI-Emulator)
+        run: gradle --no-daemon compileDebugAndroidTest
+
       - name: Android-Lint ausführen
         run: gradle --no-daemon lintDebug
 
