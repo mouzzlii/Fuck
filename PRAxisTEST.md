@@ -44,8 +44,8 @@ Diesen Ablauf mit einer erfundenen Testnummer durchführen, nicht mit einer echt
 4. Erwartung: Der Dialog schließt sich nach erfolgreicher Speicherung. Der neue Vorgang erscheint in der Liste mit dem Status **Im Shop eingetroffen**.
 5. Den Dialog erneut öffnen und dieselbe Nummer im selben Vorgangstyp nochmals erfassen.
 6. Erwartung: TRAKUNA meldet, dass der aktive Vorgang bereits vorhanden ist. Es darf kein zweiter identischer aktiver Vorgang entstehen und es darf keine Erfolgsmeldung für eine neue Speicherung erscheinen.
-7. Das Sendungsnummernfeld leeren und eine Erfassungsaktion wählen.
-8. Erwartung: Der Dialog bleibt offen und zeigt direkt darin einen verständlichen Hinweis zur fehlenden bzw. ungültigen Sendungsnummer.
+7. Das Sendungsnummernfeld leeren.
+8. Erwartung: Die drei Erfassungs-Schaltflächen sind deaktiviert und direkt im Dialog erscheint der Hinweis, zuerst eine Sendungsnummer einzugeben.
 9. Den Testvorgang nach Abschluss des Tests wieder löschen.
 
 **Fehlerprotokoll:** Wenn nach Schritt 3 nichts sichtbar passiert, notieren, ob der Dialog offen bleibt, ob eine Meldung direkt im Dialog erscheint und ob der Vorgang nach erneutem Öffnen der Liste vorhanden ist. Keine zweite Buchung durch wiederholtes Tippen erzwingen, bevor der Bestand geprüft wurde.
