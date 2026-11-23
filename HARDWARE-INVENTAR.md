@@ -22,6 +22,12 @@ Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters und Fotos/Ablesungen am Herme
 
 Die zusätzlich genannten Versionen V.7.0.1632 (GLS) und V.1.16.11 (DPD) sind noch nicht eindeutig einer konkreten Softwarekomponente zugeordnet. Sie dürfen nicht als Betriebssystemversion oder Drucker-Firmware ausgegeben werden.
 
+### Wichtige Kompatibilitätsgrenze des Hermes-MC3090BT
+
+Die offizielle Zebra-Kompatibilitätsdokumentation führt den MC3090 unter Windows CE 5.0 bzw. Windows Mobile 6.1. TRAKUNA ist dagegen eine Android-App mit Mindestanforderung Android 8.0 (API 26). **Die aktuelle TRAKUNA-APK kann daher nicht auf dem vorhandenen MC3090BT installiert werden.** Das Hermes-Gerät bleibt für den bestehenden Hermes-Ablauf erhalten; TRAKUNA muss für Hermes auf einem separaten, freigegebenen Android-Gerät laufen oder Hermes muss eine freigegebene moderne Geräte-/Softwarelösung bereitstellen. Ein direkter DataWedge-Scan vom MC3090BT in TRAKUNA ist mit diesem Modell nicht möglich.
+
+Quelle: [Zebra – Enterprise Browser Gerätekompatibilität (MC3090: Windows CE 5.0 / Windows Mobile 6.1)](https://www.zebra.com/us/en/support-downloads/software/mobile-computer-software/enterprise-browser.html).
+
 ### GLS-/DPD-Handgeräte – Identifikationsstand
 
 - Beide Handgeräte werden anhand der übermittelten Gerätebeschreibungen der Zebra-TC21/TC26-Baureihe zugeordnet.
