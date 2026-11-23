@@ -459,9 +459,7 @@ class MainActivity : ComponentActivity() {
                                                         if (record.carrier.isNotBlank()) Text(record.carrier, style = MaterialTheme.typography.bodySmall)
                                                         if (record.recipient.isNotBlank()) Text("Empfänger: ${record.recipient}", style = MaterialTheme.typography.bodySmall)
                                                         if (record.note.isNotBlank()) Text("Notiz: ${record.note}", style = MaterialTheme.typography.bodySmall)
-                                                        val canAdvance = record.archivedAt == null &&
-                                                            record.status != ShipmentStatus.HANDED_TO_CUSTOMER &&
-                                                            record.status != ShipmentStatus.HANDED_TO_CARRIER
+                                                        val canAdvance = record.archivedAt == null && !ShipmentRules.isTerminalStatus(record.status)
                                                         if (canAdvance) {
                                                             TextButton(onClick = { pendingAdvance = record }) {
                                                                 Text(shipmentNextAction(record.flow, record.status))
@@ -469,11 +467,13 @@ class MainActivity : ComponentActivity() {
                                                         }
                                                         TextButton(onClick = { historyRecord = record }) { Text("Vorgangshistorie anzeigen (${record.history.size})") }
                                                         if (record.archivedAt == null) {
-                                                            TextButton(onClick = {
-                                                                val archived = shipmentStore.archive(record.id)
-                                                                status = if (archived) "Vorgang archiviert. Die Sendungsdaten und Historie bleiben erhalten." else "Vorgang konnte nicht archiviert werden."
-                                                                shipmentRevision++
-                                                            }) { Text("Vorgang archivieren") }
+                                                            if (ShipmentRules.isTerminalStatus(record.status)) {
+                                                                TextButton(onClick = {
+                                                                    val archived = shipmentStore.archive(record.id)
+                                                                    status = if (archived) "Vorgang archiviert. Die Sendungsdaten und Historie bleiben erhalten." else "Nur abgeschlossene Vorgänge können archiviert werden."
+                                                                    shipmentRevision++
+                                                                }) { Text("Vorgang archivieren") }
+                                                            }
                                                             TextButton(onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
                                                         } else {
                                                             TextButton(onClick = {
