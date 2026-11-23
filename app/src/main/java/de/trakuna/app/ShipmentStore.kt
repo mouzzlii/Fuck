@@ -308,8 +308,11 @@ class ShipmentStore(context: Context) {
     @Synchronized
     fun remove(id: String): Boolean {
         val records = readRecords().getOrElse { return false }.toMutableList()
-        val removed = records.removeAll { it.id == id }
-        if (!removed) return false
+        val index = records.indexOfFirst { it.id == id }
+        // Enforce archive-only deletion in the storage layer as well as in the UI.
+        // This protects active parcel records if a future screen or caller invokes remove().
+        if (index < 0 || records[index].archivedAt == null) return false
+        records.removeAt(index)
         return persist(records)
     }
 
