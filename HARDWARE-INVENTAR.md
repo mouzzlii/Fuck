@@ -51,7 +51,7 @@ UPS gehört neben DPD, GLS und Hermes zu den vier Start-Prioritäten. Für UPS l
 - Die Paketbearbeitung für DPD und GLS erfolgt direkt am jeweiligen Handgerät, nicht an einem separaten Paketshop-Computer.
 - Beide Handgeräte sind jeweils per Bluetooth mit ihrem eigenen Etikettendrucker verbunden.
 - Der Etikettendruck bei DPD und GLS erfolgt laut Vor-Ort-Angabe automatisch.
-- Hermes verwendet ein eigenständiges MC3090BT-Handgerät mit eigenem Hermes-Menü und eigenem Drucker.
+- Hermes verwendet bislang ein eigenständiges MC3090BT-Handgerät mit eigenem Hermes-Menü und eigenem Drucker. Laut Betreiber wird dieses Gerät nächste Woche ersetzt; die Nachfolgeausstattung ist noch nicht bekannt.
 - Für UPS ist die Betriebsweise noch nicht erhoben.
 
 ### Bereits vorhandener technischer Ansatz in TRAKUNA
@@ -72,7 +72,7 @@ TRAKUNA darf die bestehenden DPD-, GLS- und Hermes-Systeme zunächst nicht erset
 
 1. TRAKUNA erfasst lokale Testvorgänge unabhängig von den Carrier-Geräten.
 2. Vorhandene DPD-/GLS-Handgeräte und Bluetooth-Druckverbindungen bleiben unverändert.
-3. Der bestehende Hermes-Ablauf auf dem MC3090BT bleibt unverändert.
+3. Der bisherige Hermes-Ablauf bleibt bis zur freigegebenen Umstellung unverändert; das MC3090BT ist das Altgerät und wird nächste Woche ersetzt.
 4. Ein Scan in TRAKUNA gilt nicht als Carrier-Buchung.
 5. Ein Etikettendruck in der vorhandenen Carrier-App gilt nicht automatisch als in TRAKUNA bestätigter Druck.
 6. Erst eine offiziell freigegebene API, ein SDK, eine dokumentierte Geräteintegration oder ein vereinbarter Datenaustausch kann eine echte Integration begründen.
@@ -100,7 +100,8 @@ Nur mit Zustimmung des Betreibers und ausschließlich mit freigegebenen Testetik
 - [ ] Typenschilder aller Handgeräte und Drucker fotografieren; Seriennummern nicht öffentlich teilen.
 - [ ] GLS-Handgerät: Modell, Betriebssystem-/App-Version und Scan-Ausgabe erfassen.
 - [ ] DPD-Handgerät: Modell, Betriebssystem-/App-Version und Scan-Ausgabe erfassen.
-- [ ] Hermes MC3090BT: genaue System-/Anwendungsversion nur ablesen, keine Einstellungen verändern.
+- [ ] Bisheriges Hermes-MC3090BT: nur bei Bedarf dokumentieren, keine Einstellungen verändern.
+- [ ] Neues Hermes-Nachfolgegerät nach Ankunft: Modell, Betriebssystem, App-Version, Scanner, Drucker und Verbindung erfassen; keine Konfiguration ohne Betreiber-/Carrier-Freigabe.
 - [ ] Bluetooth-Kopplung und automatischen Druck bei GLS/DPD nur beobachten, nicht neu koppeln oder zurücksetzen.
 - [ ] Feststellen, ob die Geräte einen freigegebenen Export, eine dokumentierte Schnittstelle oder einen Hersteller-Supportweg besitzen.
 - [ ] TRAKUNA parallel mit fiktiven Daten testen; niemals eine echte Carrier-Buchung durch bloßes Scannen behaupten.
