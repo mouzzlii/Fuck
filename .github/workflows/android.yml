@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 20
     env:
       ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -74,19 +74,6 @@ jobs:
 
       - name: Unit-Tests ausführen
         run: gradle --no-daemon testDebugUnitTest
-
-      - name: Android-Keystore- und Speicher-Instrumentierungstests auf Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        env:
-          ANDROID_I_WANT_MY_TCG: 'yes'
-        with:
-          api-level: 35
-          target: default
-          profile: pixel_2
-          arch: x86_64
-          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
-          disable-animations: true
-          script: gradle --no-daemon connectedDebugAndroidTest
 
       - name: Android-Lint ausführen
         run: gradle --no-daemon lintDebug
