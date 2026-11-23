@@ -1,7 +1,7 @@
 # TRAKUNA – Hardwareinventar des ersten Paketshops
 
 Stand: 23. November 2026  
-Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters und Fotos/Ablesungen am Hermes-Handgerät.
+Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters, Fotos/Ablesungen am Hermes-Handgerät und spätere Bestätigung, dass alle vier Zebra-Handhelds mit WLAN verbunden sind.
 
 ## 1. Erfasster Bestand
 
@@ -39,6 +39,8 @@ Quelle: [Zebra – Enterprise Browser Gerätekompatibilität (MC3090: Windows CE
 UPS gehört neben DPD, GLS und Hermes zu den vier Start-Prioritäten. Für UPS liegen für diesen konkreten Standort noch keine verifizierten Angaben zu Handgerät, tatsächlich installierter UPS-Scanning-App, Drucker, Verbindung oder App-Version vor. Die offizielle App „UPS Access Point“ ist unter dem Android-Paketnamen `com.ups.accesspoint` gelistet und verlangt Android 9.0 oder höher; ob sie auf dem Standortgerät installiert und freigegeben ist, ist offen. UPS Österreich beschreibt öffentlich eine bereitgestellte Scanning-App für PC, Android oder Apple-Geräte sowie Scans bei Paketannahme und Fahrerübergabe. Ob und wie diese App am Standort eingesetzt wird, muss vor Ort erhoben werden. Bis dahin darf TRAKUNA nur lokale Testvorgänge kennzeichnen; es darf keine UPS-Buchung oder Etikettenerstellung behaupten.
 
 ## 2. Bestätigte Betriebsweise
+
+- Der Betreiber hat bestätigt, dass **alle vier Zebra-Handhelds mit WLAN verbunden sind**. Noch nicht festgestellt ist, ob alle vier dieselbe SSID bzw. dasselbe lokale Subnetz verwenden oder ob Client-Isolation/Gastnetzregeln die Gerätekommunikation verhindern. TRAKUNA 1.49 zeigt bislang nur den WLAN-Status des jeweils laufenden Geräts; eine gegenseitige Erkennung oder Datenübertragung ist noch nicht implementiert.
 
 - DPD und GLS haben jeweils ein eigenes Handgerät mit eigenem Programm.
 - Die Paketbearbeitung für DPD und GLS erfolgt direkt am jeweiligen Handgerät, nicht an einem separaten Paketshop-Computer.
