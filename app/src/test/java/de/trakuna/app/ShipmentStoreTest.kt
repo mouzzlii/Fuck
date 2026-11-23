@@ -220,6 +220,19 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun allFourPriorityCarriersCanBeSelectedManuallyAndOverrideFormatHints() {
+        val upsLikeNumber = "1Z999AA10123456784"
+        assertEquals("DPD", ShipmentRules.resolveCarrierLabel("DPD", upsLikeNumber))
+        assertEquals("GLS", ShipmentRules.resolveCarrierLabel("GLS", upsLikeNumber))
+        assertEquals("Hermes", ShipmentRules.resolveCarrierLabel("Hermes", upsLikeNumber))
+        assertEquals("UPS", ShipmentRules.resolveCarrierLabel("UPS", "12345678901234"))
+        assertEquals("DPD", ShipmentRules.normalizeCarrierLabel(" dpd "))
+        assertEquals("GLS", ShipmentRules.normalizeCarrierLabel(" gls "))
+        assertEquals("Hermes", ShipmentRules.normalizeCarrierLabel(" HERMES "))
+        assertEquals("UPS", ShipmentRules.normalizeCarrierLabel(" ups "))
+    }
+
+    @Test
     fun manualHermesSelectionIsPreservedWithoutInventingAutomaticRecognition() {
         assertEquals("Hermes", ShipmentRules.resolveCarrierLabel(" Hermes ", "12345678901234"))
         assertEquals("Hermes", ShipmentRules.resolveCarrierLabel("Hermes", "ABC1234567"))
