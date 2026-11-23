@@ -11,7 +11,7 @@
 - Entschlüsselte Bytes sowohl des lokalen Sendungsbestands als auch des separaten Partner-Übergabe-Caches werden strikt als UTF-8 dekodiert. Fehlerhafte oder nicht abbildbare Bytefolgen werden als Speicherfehler behandelt und nicht stillschweigend durch Ersatzzeichen verändert.
 - Eine Einmalmigration übernimmt den bisherigen Klartextbestand. Der alte Eintrag wird erst nach erfolgreichem Commit des verschlüsselten Ersatzes entfernt.
 - Fehler bei Migration, Entschlüsselung oder Schlüsselzugriff führen zu einem sichtbaren Speicherfehler; die App darf solche Daten nicht als leeren Bestand behandeln.
-- Verschlüsselte Speicherwerte und Klartext vor der Verschlüsselung sind auf maximal 2 MiB Nutzdaten begrenzt; Base64-Eingaben werden vor dem Dekodieren zusätzlich begrenzt.
+- Der verschlüsselte lokale Sendungsbestand ist auf maximal 2 MiB Nutzdaten begrenzt; Base64-Eingaben werden vor dem Dekodieren zusätzlich begrenzt. JSON-Sicherungen werden kompakt exportiert und dürfen beim Import bis zu 4 MiB groß sein, damit der Sicherungskopf und die Exportstruktur nicht dazu führen, dass ein gültiger lokaler Bestand seine eigene Sicherung nicht wiederherstellen kann.
 - Der zuletzt an eine Partner-App übergebene Sendungsnummern-Cache wird separat mit AES-GCM und einem eigenen Android-Keystore-Schlüssel verschlüsselt. Vorhandene Klartext-Cachewerte werden nach erfolgreichem verschlüsseltem Commit entfernt.
 - Fehler beim Lesen/Entschlüsseln des Übergabe-Caches werden nicht als leerer Cache ausgegeben; der Lesezugriff meldet einen Fehler.
 
@@ -25,7 +25,7 @@
 - Archivierte Datensätze bleiben im 500-Einträge-Limit. Endgültiges Löschen ist in der Oberfläche nur aus dem Archiv möglich; zusätzlich verweigert auch die Speicherschicht das Löschen nicht archivierter Vorgänge. Das endgültige Löschen eines archivierten Datensatzes entfernt Datensatz und lokale Historie dauerhaft.
 - JSON-Backup-Schema 2 speichert den Archivzeitpunkt; Schema-1-Backups ohne Archivfeld bleiben für die Wiederherstellung lesbar. CSV enthält den Archivzeitpunkt zusätzlich zur lokalen Historie.
 - Archivierung und lokale Historie sind keine manipulationssicheren oder zentralen Audit-Nachweise.
-- Backup-Import ist auf 2 MiB begrenzt und erfordert eine Bestätigung, da der vorhandene lokale Bestand ersetzt wird.
+- Backup-Import ist auf 4 MiB begrenzt und erfordert eine Bestätigung, da der vorhandene lokale Bestand ersetzt wird.
 - Eine Wiederherstellung aus einer gültigen Sicherung ist auch bei beschädigtem lokalem verschlüsseltem Bestand möglich; der Erfolg wird erst nach bestätigtem verschlüsseltem Commit gemeldet.
 - JSON-Backups enthalten Sendungsnummern, Empfänger und Notizen und sind derzeit nicht verschlüsselt; die App weist vor dem Export darauf hin.
 - CSV-Export entschärft Tabellenkalkulations-Formelanfänge auch dann, wenn unsichtbare Unicode-Leerzeichen, Zero-Width-Zeichen oder eine BOM vorangestellt sind.
