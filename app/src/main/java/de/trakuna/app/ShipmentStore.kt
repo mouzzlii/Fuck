@@ -31,7 +31,7 @@ enum class ShipmentStatus {
     HANDED_TO_CARRIER
 }
 
-enum class ShipmentEventType { CREATED, STATUS_CHANGED, DETAILS_UPDATED }
+enum class ShipmentEventType { CREATED, STATUS_CHANGED, DETAILS_UPDATED, ARCHIVED, RESTORED }
 
 data class ShipmentEvent(
     val at: Long,
@@ -50,7 +50,8 @@ data class ShipmentRecord(
     val updatedAt: Long,
     val recipient: String = "",
     val note: String = "",
-    val history: List<ShipmentEvent> = emptyList()
+    val history: List<ShipmentEvent> = emptyList(),
+    val archivedAt: Long? = null
 )
 
 sealed class ShipmentUpdate {
@@ -242,6 +243,7 @@ class ShipmentStore(context: Context) {
         val index = records.indexOfFirst { it.id == id }
         if (index < 0) return ShipmentUpdate.Rejected("Sendung wurde nicht gefunden.")
         val current = records[index]
+        if (current.archivedAt != null) return ShipmentUpdate.Rejected("Archivierte Vorgänge können nicht fortgeschrieben werden. Bitte zuerst wiederherstellen.")
         val next = ShipmentRules.nextStatus(current.flow, current.status)
             ?: return ShipmentUpdate.Rejected("Dieser Vorgang ist bereits abgeschlossen.")
         val changedAt = ShipmentRules.nextUpdateTimestamp(current.updatedAt, System.currentTimeMillis())
@@ -262,6 +264,7 @@ class ShipmentStore(context: Context) {
         }.toMutableList()
         val index = records.indexOfFirst { it.id == id }
         if (index < 0) return ShipmentUpdate.Rejected("Sendung wurde nicht gefunden.")
+        if (records[index].archivedAt != null) return ShipmentUpdate.Rejected("Archivierte Vorgänge können nicht bearbeitet werden. Bitte zuerst wiederherstellen.")
         val changedAt = ShipmentRules.nextUpdateTimestamp(records[index].updatedAt, System.currentTimeMillis())
         val updated = records[index].copy(
             recipient = recipient.trim().take(100),
@@ -272,6 +275,32 @@ class ShipmentStore(context: Context) {
         records[index] = updated
         if (!persist(records)) return ShipmentUpdate.Rejected("Speichern fehlgeschlagen. Bitte den Vorgang erneut öffnen und prüfen.")
         return ShipmentUpdate.Saved(updated)
+    }
+
+    @Synchronized
+    fun archive(id: String): Boolean = changeArchiveState(id, archive = true)
+
+    @Synchronized
+    fun restoreArchived(id: String): Boolean = changeArchiveState(id, archive = false)
+
+    private fun changeArchiveState(id: String, archive: Boolean): Boolean {
+        val records = readRecords().getOrElse { return false }.toMutableList()
+        val index = records.indexOfFirst { it.id == id }
+        if (index < 0) return false
+        val current = records[index]
+        if ((current.archivedAt != null) == archive) return false
+        val changedAt = ShipmentRules.nextUpdateTimestamp(current.updatedAt, System.currentTimeMillis())
+        val updated = current.copy(
+            updatedAt = changedAt,
+            archivedAt = if (archive) changedAt else null,
+            history = (current.history + ShipmentEvent(
+                changedAt,
+                if (archive) ShipmentEventType.ARCHIVED else ShipmentEventType.RESTORED
+            )).takeLast(MAX_HISTORY_EVENTS)
+        )
+        if (!ShipmentRules.isValidRecord(updated)) return false
+        records[index] = updated
+        return persist(records)
     }
 
     @Synchronized
@@ -302,6 +331,7 @@ class ShipmentStore(context: Context) {
                         put("updatedAt", record.updatedAt)
                         put("recipient", record.recipient)
                         put("note", record.note)
+                        record.archivedAt?.let { put("archivedAt", it) }
                         put("history", encodeHistory(record.history))
                     })
                 }
@@ -389,6 +419,7 @@ class ShipmentStore(context: Context) {
                 put("updatedAt", record.updatedAt)
                 put("recipient", record.recipient)
                 put("note", record.note)
+                record.archivedAt?.let { put("archivedAt", it) }
                 put("history", encodeHistory(record.history))
             })
         }
@@ -402,7 +433,7 @@ class ShipmentStore(context: Context) {
         val header = listOf(
             "ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status",
             "Empfänger", "Notiz", "Erstellt (UTC)", "Aktualisiert (UTC)",
-            "Vorgangshistorie (lokal)"
+            "Archiviert (UTC)", "Vorgangshistorie (lokal)"
         )
         val rows = readRecords().getOrElse { error("Lokaler Datenspeicher ist beschädigt; CSV wurde nicht erstellt.") }.map { record ->
             val history = ShipmentRules.formatHistoryForExport(record.history)
@@ -416,6 +447,7 @@ class ShipmentStore(context: Context) {
                 record.note,
                 ShipmentRules.formatTimestampForExport(record.createdAt),
                 ShipmentRules.formatTimestampForExport(record.updatedAt),
+                record.archivedAt?.let(ShipmentRules::formatTimestampForExport).orEmpty(),
                 history
             )
         }
@@ -471,7 +503,8 @@ class ShipmentStore(context: Context) {
             updatedAt = item.getLong("updatedAt"),
             recipient = item.optString("recipient"),
             note = item.optString("note"),
-            history = decodeHistory(item)
+            history = decodeHistory(item),
+            archivedAt = if (item.has("archivedAt")) item.getLong("archivedAt") else null
         )
     }.getOrNull()
 
@@ -627,6 +660,7 @@ object ShipmentRules {
             record.carrier.length <= 80 && record.recipient.length <= 100 && record.note.length <= 500 &&
             record.createdAt > 0L && record.updatedAt >= record.createdAt &&
             record.history.size <= 100 &&
+            (record.archivedAt == null || record.archivedAt == record.updatedAt) &&
             record.history.zipWithNext().all { (a, b) -> b.at >= a.at } &&
             record.history.all { it.at in record.createdAt..record.updatedAt } &&
             isValidHistory(record) &&
@@ -663,7 +697,9 @@ object ShipmentRules {
                     ) return false
                     knownStatus = to
                 }
-                ShipmentEventType.DETAILS_UPDATED -> {
+                ShipmentEventType.DETAILS_UPDATED,
+                ShipmentEventType.ARCHIVED,
+                ShipmentEventType.RESTORED -> {
                     if (event.fromStatus != null || event.toStatus != null) return false
                 }
             }
@@ -734,7 +770,8 @@ object ShipmentRules {
     /** Find an already active parcel regardless of workflow, preventing a second live record. */
     fun findActiveDuplicate(records: List<ShipmentRecord>, trackingNumber: String): ShipmentRecord? =
         records.firstOrNull {
-            it.trackingNumber.equals(trackingNumber, ignoreCase = true) &&
+            it.archivedAt == null &&
+                it.trackingNumber.equals(trackingNumber, ignoreCase = true) &&
                 it.status !in setOf(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentStatus.HANDED_TO_CARRIER)
         }
 
@@ -745,7 +782,7 @@ object ShipmentRules {
      */
     fun hasNoDuplicateActiveShipments(records: List<ShipmentRecord>): Boolean {
         val activeKeys = records
-            .filter { it.status !in setOf(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentStatus.HANDED_TO_CARRIER) }
+            .filter { it.archivedAt == null && it.status !in setOf(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentStatus.HANDED_TO_CARRIER) }
             .map { it.trackingNumber.uppercase() to it.flow }
         return activeKeys.distinct().size == activeKeys.size
     }
