@@ -1,6 +1,6 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.45 (versionCode 46) · CI erfolgreich: Lauf 45229834365
+Stand: App-Version 1.45 (versionCode 46) · CI erfolgreich: Lauf 45231195765
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
@@ -28,7 +28,7 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 6. Android kann eine einmalige Freigabe für die Installation aus dieser Datei-App verlangen. Nur für die vertrauenswürdige Datei-App freigeben und die Freigabe danach wieder deaktivieren.
 7. Die App starten und zunächst die Tests aus `PRAxisTEST.md` durchführen.
 
-**Aktuelles Artefakt Version 1.45:** APK-SHA-256: `06e847103a51cbf7ba04e6ab6383e200ba856dedc37cefeaf2dba0b220509441`. Das ZIP-Artefakt ist bis 07.12.2026, 17:39 UTC verfügbar. Es handelt sich um ein Debug-Testpaket, nicht um ein signiertes Produktionsrelease.
+**Aktuelles Artefakt Version 1.45:** APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`. Das ZIP-Artefakt ist bis 07.12.2026, 17:48 UTC verfügbar. Es handelt sich um ein Debug-Testpaket, nicht um ein signiertes Produktionsrelease.
 
 ## 3. Sicher aktualisieren – vorhandene Daten schützen
 
