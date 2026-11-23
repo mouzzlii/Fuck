@@ -7,10 +7,10 @@ Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters und Fotos/Ablesungen am Herme
 
 | Paketdienst | Handgerät | Etikettendrucker | Verbindung | Angegebene Version |
 |---|---|---|---|---|
-| GLS | Zebra TC26 (aus Geräteansicht/Gehäusemerkmalen und 4G-Anzeige abgeleitet; Typenschild/Modellnummer noch nicht gegengeprüft) | Zebra CD421 (Bezeichnung vom Etikettendrucker laut Betreiber) | Bluetooth zwischen Handgerät und Drucker | V.7.0.1632 (genaue Zuordnung innerhalb des GLS-Systems noch offen) |
-| DPD | Zebra TC26 (aus Geräteansicht/Gehäusemerkmalen und 4G-Anzeige abgeleitet; Typenschild/Modellnummer noch nicht gegengeprüft) | Zebra CD420 (Bezeichnung vom Etikettendrucker laut Betreiber) | Bluetooth zwischen Handgerät und Drucker | V.1.16.11 (genaue Zuordnung innerhalb des DPD-Systems noch offen) |
-| Hermes | Symbol/Zebra MC3090BT| UPS | Handgerät/Arbeitsplatz noch nicht erhoben | Drucker noch nicht erhoben | Verbindung noch nicht erhoben | Anwendungsversion noch nicht erhoben |
-, eigenständiges Handterminal | Eigener Hermes-Drucker; Modell noch offen | Eigenständiger Hermes-Geräteablauf; Druckeranschluss noch nicht verifiziert | V.2.1.1.0 (Hermes-Anwendung laut Vor-Ort-Angabe) |
+| DPD | Zebra TC26 (wahrscheinlich; 4G-Anzeige und Geräteansicht, Typenschild noch zu bestätigen) | Zebra CD420 (Bezeichnung laut Betreiber; Typenschild noch zu prüfen) | Bluetooth zwischen Handgerät und Drucker | V.1.16.11 (genaue Zuordnung innerhalb des DPD-Systems offen) |
+| GLS | Zebra TC26 (wahrscheinlich; 4G-Anzeige und Geräteansicht, Typenschild noch zu bestätigen) | Zebra CD421 (Bezeichnung laut Betreiber; Typenschild noch zu prüfen) | Bluetooth zwischen Handgerät und Drucker | V.7.0.1632 (genaue Zuordnung innerhalb des GLS-Systems offen) |
+| Hermes | Symbol/Zebra MC3090BT, eigenständiges Handterminal | Eigener Hermes-Drucker; Modell noch offen | Eigenständiger Hermes-Geräteablauf; Druckeranschluss noch nicht verifiziert | V.2.1.1.0 (Hermes-Anwendung laut Vor-Ort-Angabe) |
+| UPS | Handgerät/Arbeitsplatz noch nicht erhoben | Drucker noch nicht erhoben | Verbindung noch nicht erhoben | Anwendungsversion noch nicht erhoben |
 
 ### Hermes-Handgerät – sichtbare/abgelesene Informationen
 
@@ -20,29 +20,30 @@ Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters und Fotos/Ablesungen am Herme
 - Sichtbares Hermes-Menü: „P020 Kunde“
 - Sichtbare Menüpunkte: Retoure, PrivatPaketService, Zustellung, Rücklauf, Hermes Karte
 
-Die zusätzlich genannte Version V.7.0.1632 wurde GLS zugeordnet; V.1.16.11 wurde DPD zugeordnet. Es ist noch nicht geklärt, ob diese Nummern die Handgeräte-Anwendung, ein Gerätemodul oder eine andere Systemkomponente bezeichnen. Sie dürfen deshalb nicht als Betriebssystemversion oder Drucker-Firmware ausgegeben werden.
+Die zusätzlich genannten Versionen V.7.0.1632 (GLS) und V.1.16.11 (DPD) sind noch nicht eindeutig einer konkreten Softwarekomponente zugeordnet. Sie dürfen nicht als Betriebssystemversion oder Drucker-Firmware ausgegeben werden.
 
-### GLS-/DPD-Handgeräte – neue Identifikationsangabe
+### GLS-/DPD-Handgeräte – Identifikationsstand
 
-- Die zuletzt übermittelten Gerätebeschreibungen ordnen beide Handgeräte der Zebra-TC21/TC26-Baureihe zu.
-- Wegen der sichtbaren 4G-Mobilfunkanzeige wird als wahrscheinlichstes Modell **Zebra TC26** dokumentiert. Zebra unterscheidet offiziell: TC21 mit WLAN, TC26 mit WLAN und Mobilfunk. Die Modellzuordnung ist plausibel, aber vor endgültiger Hardwarefreigabe am Typenschild bzw. in „Über das Gerät“ zu bestätigen.
-- Die genaue TC26-Teilenummer, Android-Version, Zebra-MX-/DataWedge-Version und Scanner-Engine sind noch unbekannt.
+- Beide Handgeräte werden anhand der übermittelten Gerätebeschreibungen der Zebra-TC21/TC26-Baureihe zugeordnet.
+- Wegen der sichtbaren 4G-Mobilfunkanzeige ist Zebra TC26 das wahrscheinlichste Modell. Die endgültige Bestätigung über Typenschild bzw. „Über das Gerät“ steht aus.
+- Teilenummer, Android-Version, Zebra-MX-/DataWedge-Version und Scanner-Engine sind noch unbekannt.
 
-## 2. Bestätigte Betriebsweise## 1a. UPS – noch offene Bestandsaufnahme
+## 1a. UPS – noch offene Bestandsaufnahme
 
 UPS gehört neben DPD, GLS und Hermes zu den vier Start-Prioritäten. Für UPS liegen derzeit noch keine verifizierten Angaben zu Handgerät, Shopsoftware, Drucker, Verbindung, Version oder autorisiertem Integrationsweg vor. Bis zur Bestandsaufnahme darf TRAKUNA nur lokale Testvorgänge kennzeichnen; es darf keine UPS-Buchung oder Etikettenerstellung behaupten.
 
+## 2. Bestätigte Betriebsweise
 
-
-- GLS und DPD haben jeweils ein eigenes Handgerät mit eigenem Programm.
-- Die Paketbearbeitung für GLS und DPD erfolgt direkt am jeweiligen Handgerät, nicht an einem separaten Paketshop-Computer.
-- GLS- und DPD-Handgeräte sind jeweils per Bluetooth mit ihrem Etikettendrucker verbunden.
-- Der Etikettendruck bei GLS und DPD erfolgt laut Vor-Ort-Angabe automatisch.
+- DPD und GLS haben jeweils ein eigenes Handgerät mit eigenem Programm.
+- Die Paketbearbeitung für DPD und GLS erfolgt direkt am jeweiligen Handgerät, nicht an einem separaten Paketshop-Computer.
+- Beide Handgeräte sind jeweils per Bluetooth mit ihrem eigenen Etikettendrucker verbunden.
+- Der Etikettendruck bei DPD und GLS erfolgt laut Vor-Ort-Angabe automatisch.
 - Hermes verwendet ein eigenständiges MC3090BT-Handgerät mit eigenem Hermes-Menü und eigenem Drucker.
+- Für UPS ist die Betriebsweise noch nicht erhoben.
 
 ### Bereits vorhandener technischer Ansatz in TRAKUNA
 
-Der aktuelle Android-Code enthält bereits einen DataWedge-Broadcast-Empfänger für den Scan-Intent:
+Der aktuelle Android-Code enthält einen DataWedge-Broadcast-Empfänger:
 
 - Intent action: `de.trakuna.app.DATAWEDGE_SCAN`
 - Daten-Extra: `com.symbol.datawedge.data_string`
@@ -50,14 +51,14 @@ Der aktuelle Android-Code enthält bereits einen DataWedge-Broadcast-Empfänger 
 - Überlange oder nicht eindeutig interpretierbare Inhalte werden abgelehnt bzw. zur manuellen Prüfung gemeldet.
 - Der empfangene Code wird in das Sendungsnummernfeld übernommen; es wird dadurch keine Carrier-Buchung ausgelöst.
 
-Für einen TC26-Praxistest muss auf dem Gerät ein eigenes DataWedge-Profil für TRAKUNA eingerichtet werden: Barcode Input aktivieren, Intent Output aktivieren, als Action exakt `de.trakuna.app.DATAWEDGE_SCAN` setzen und als Delivery „Broadcast Intent“ wählen. Das Extra muss den DataWedge-Standard `com.symbol.datawedge.data_string` liefern. Profilkonfiguration und tatsächliche Scan-Zustellung sind auf den Shopgeräten noch nicht getestet. Zebra beschreibt DataWedge-Profile und Intent-Ausgabe in seiner offiziellen Dokumentation.
+Für einen TC26-Praxistest muss auf jedem Gerät ein eigenes DataWedge-Profil für TRAKUNA eingerichtet werden: Barcode Input aktivieren, Intent Output aktivieren, Action exakt `de.trakuna.app.DATAWEDGE_SCAN` setzen und als Delivery „Broadcast Intent“ wählen. Das Extra muss `com.symbol.datawedge.data_string` liefern. Profilkonfiguration und tatsächliche Scan-Zustellung sind auf den Shopgeräten noch nicht getestet.
 
-## 3. Was daraus für TRAKUNA folgt
+## 3. Konsequenzen für TRAKUNA
 
-TRAKUNA darf die drei bestehenden Carrier-Systeme zunächst nicht ersetzen oder verändern. Die erste Integrationsstufe ist eine **begleitende Scan- und Vorgangszentrale** mit folgenden Grenzen:
+TRAKUNA darf die bestehenden DPD-, GLS- und Hermes-Systeme zunächst nicht ersetzen oder verändern. Die erste Integrationsstufe ist eine begleitende Scan- und Vorgangszentrale:
 
-1. TRAKUNA erfasst und verwaltet lokale Testvorgänge unabhängig von den Carrier-Geräten.
-2. Die vorhandenen GLS-/DPD-Handgeräte und deren Bluetooth-Druckverbindungen bleiben unverändert.
+1. TRAKUNA erfasst lokale Testvorgänge unabhängig von den Carrier-Geräten.
+2. Vorhandene DPD-/GLS-Handgeräte und Bluetooth-Druckverbindungen bleiben unverändert.
 3. Der bestehende Hermes-Ablauf auf dem MC3090BT bleibt unverändert.
 4. Ein Scan in TRAKUNA gilt nicht als Carrier-Buchung.
 5. Ein Etikettendruck in der vorhandenen Carrier-App gilt nicht automatisch als in TRAKUNA bestätigter Druck.
@@ -67,16 +68,17 @@ TRAKUNA darf die drei bestehenden Carrier-Systeme zunächst nicht ersetzen oder 
 
 | Offener Punkt | Warum benötigt |
 |---|---|
-| Hersteller und Modell des GLS-Handgeräts | Geräte-/Scanner-Kompatibilität |
-| Hersteller und Modell des DPD-Handgeräts | Geräte-/Scanner-Kompatibilität |
+| Typenschild und Teilenummer der DPD-/GLS-Handgeräte | Geräte-/Scanner-Kompatibilität |
+| Exakte Modellbezeichnung der Drucker CD420/CD421 | Richtige Druckersprache/Treiber |
 | Modell und Anschluss des Hermes-Druckers | Druck- und Schnittstellenprüfung |
-| Drucker-Modellbezeichnung CD421/CD420 am Typenschild verifizieren | Richtige Treiber-/Druckersprache ermitteln |
 | Genaue Zuordnung der GLS-Version V.7.0.1632 | Keine falsche OS-/Firmware-Annahme |
 | Genaue Zuordnung der DPD-Version V.1.16.11 | Keine falsche OS-/Firmware-Annahme |
-| Internetverbindung der Handgeräte (WLAN/SIM/andere) | Offline-/Netzwerkarchitektur |
-| Paketdienst-/Paketshop-Anbieter und Produktname | Offizielle Schnittstellen und Freigabe |
-| Offizielle API-/SDK-/Intent-Dokumentation und Testzugang | Sichere, echte Buchungsintegration |
-| Schriftliche Zustimmung des Betreibers und Carrier-Freigabe | Zulässigkeit der Integration |
+| Android-, MX- und DataWedge-Version der TC26-Geräte | Scanner-/Intent-Kompatibilität |
+| UPS-Handgerät, Arbeitsplatz, Drucker und Software | UPS-Integrationsplanung |
+| Netzwerkverbindung der jeweiligen Geräte | Offline-/Netzwerkarchitektur |
+| Paketshop-/Versandsoftware und Hersteller | Offizielle Schnittstellen und Freigabe |
+| API-/SDK-/Intent-Dokumentation und Testzugang | Sichere echte Buchungsintegration |
+| Betreiberzustimmung und Carrier-Freigabe | Zulässigkeit der Integration |
 
 ## 5. Verbindlicher Vor-Ort-Testplan
 
