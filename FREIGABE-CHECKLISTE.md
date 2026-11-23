@@ -13,7 +13,7 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Update von der vorherigen freigegebenen Version getestet
 
-Aktueller Build 1.47: https://github.com/mouzzlii/Fuck/actions/runs/45250580288
+Aktueller Build 1.48: https://github.com/mouzzlii/Fuck/actions/runs/45250580288
 APK-SHA-256: `d7ad261d2f29860a8e7d3e07c7365bad4c23118cc0064dc43c4ec17d8c6a71cc`
 
 ZIP-Artefakt erstellt am 23.11.2026, 19:37 UTC; Ablauf am 07.12.2026, 19:37 UTC. Produktionssignierung ist weiterhin offen.
