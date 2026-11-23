@@ -46,6 +46,8 @@ import com.google.mlkit.vision.common.InputImage
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.ConcurrentHashMap
 
 private val Forest = Color(0xFF174B3A)
 private const val CACHE_PREFS = "trakuna_handoff"
@@ -823,6 +825,11 @@ private fun CameraPreview(onDetected: (String?) -> Unit) {
         val scanner: BarcodeScanner = BarcodeScanning.getClient(options)
         val delivered = AtomicBoolean(false)
         val disposed = AtomicBoolean(false)
+        // Camera frames can reveal different barcodes on the same label at slightly
+        // different times. Collect candidates across several frames before choosing.
+        val observedTrackingNumbers = ConcurrentHashMap.newKeySet<String>()
+        val framesAfterFirstCandidate = AtomicInteger(0)
+        val requiredConfirmationFrames = 12
         var provider: ProcessCameraProvider? = null
         val future = ProcessCameraProvider.getInstance(context)
         future.addListener({
@@ -846,13 +853,14 @@ private fun CameraPreview(onDetected: (String?) -> Unit) {
                                         val values = barcodes.mapNotNull { barcode ->
                                             (barcode.rawValue ?: barcode.displayValue)?.let { extractTrackingNumber(it) }
                                         }.distinct()
-                                        // Never guess which parcel is intended when multiple distinct shipment IDs are visible.
-                                        if (values.size > 1) {
-                                            if (!disposed.get() && delivered.compareAndSet(false, true)) onDetected(null)
-                                        } else {
-                                            values.singleOrNull()?.let { value ->
-                                                if (!disposed.get() && delivered.compareAndSet(false, true)) onDetected(value)
-                                            }
+                                        observedTrackingNumbers.addAll(values)
+                                        if (observedTrackingNumbers.isNotEmpty() &&
+                                            framesAfterFirstCandidate.incrementAndGet() >= requiredConfirmationFrames &&
+                                            !disposed.get() && delivered.compareAndSet(false, true)
+                                        ) {
+                                            // Never guess when more than one distinct tracking ID
+                                            // appeared during the confirmation window.
+                                            onDetected(observedTrackingNumbers.singleOrNull())
                                         }
                                     }
                                 }
