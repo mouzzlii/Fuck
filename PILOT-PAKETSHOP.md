@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version 1.45 (versionCode 46) · CI erfolgreich: Lauf 45231195765
+Stand: 23. November 2026 · App-Version 1.47 (versionCode 48) · CI erfolgreich: Lauf 45248166890
 
 ## 1. Zweck und Freigabestatus
 
@@ -18,25 +18,29 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben.
 
 
-Version 1.45 wurde erfolgreich durch CI gebaut. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.47 wurde erfolgreich durch CI gebaut. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.45 (versionCode 46) mit der direkten Carrier-Schnellauswahl wurde erfolgreich gebaut. [CI-Lauf 45231195765 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45231195765).
+Version 1.47 (versionCode 48) mit getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45248166890 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45248166890).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 17:48 UTC; Ablauf 07.12.2026, 17:48 UTC
+- APK-SHA-256: `6ac5eedac4bc130da3cb001f8bf3388b29dc2319fa39581b5031db5fbf968463`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 19:23 UTC; Ablauf 07.12.2026, 19:23 UTC
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45231195765)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45248166890)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
 Das Artefakt im Actions-Lauf herunterladen und das enthaltene ZIP entpacken. Die Debug-APK kann eine andere Signatur als spätere Builds haben. Vor einem Update bestehende lokale Daten sichern und die App nicht deinstallieren.
+
+### Neue Gerätefunktion in Version 1.47
+
+Für jeden der vier Start-Paketdienste kann auf dem Android-Gerät eine eigene installierte Betriebssoftware ausgewählt werden. Die Zuordnung wird lokal gespeichert. Sobald mindestens eine Einzelzuordnung eingerichtet ist, wird für einen anderen Paketdienst ohne eigene Zuordnung keine fremde Partner-App geöffnet. Das verhindert eine versehentliche Übergabe an das falsche Carrier-System. Die Zuordnung und das Öffnen einer App bestätigen weiterhin keine Datenübernahme oder Buchung.
 
 ## 3. Unterstützte lokale Abläufe
 

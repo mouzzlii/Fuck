@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: App-Version 1.45 (versionCode 46)
+Stand: App-Version 1.47 (versionCode 48)
 
 ## Zweck
 Dieses Dokument beschreibt die technische Vereinbarung für eine autorisierte Übergabe zwischen TRAKUNA und der jeweiligen Paketshop-Betriebssoftware.
@@ -17,6 +17,10 @@ Für den ersten Start sind **DPD, GLS, Hermes und UPS** die vier priorisierten P
 Die öffentlich dokumentierten Integrationswege für DPD, GLS, Hermes und UPS sind in [CARRIER-INTEGRATIONS.md](CARRIER-INTEGRATIONS.md) zusammengefasst. Diese Versand-APIs sind nicht automatisch Paketshop-Schnittstellen.
 
 Dieses Dokument beschreibt die minimale technische Vereinbarung, damit eine Paketshop- oder Carrier-App eine Sendungsnummer aus TRAKUNA übernehmen kann. Es ist **keine Behauptung**, dass eine bestehende Post-, DHL-, DPD-, GLS- oder UPS-App diese Schnittstelle bereits unterstützt.
+
+## Carrier-spezifische App-Zuordnung ab Version 1.47
+
+DPD, GLS, Hermes und UPS können getrennt jeweils einer auf dem Android-Gerät installierten App zugeordnet werden. Paketnamen werden nicht fest codiert, da sie je nach Land und Betreiber variieren können. Sobald eine Einzelzuordnung existiert, wird für einen anderen Carrier ohne eigene Zuordnung kein gemeinsamer oder fremder App-Eintrag als Fallback verwendet. Eine Zuordnung ist nur ein lokaler Startparameter; sie ist kein Nachweis einer unterstützten Intent-Schnittstelle oder einer Buchung.
 
 ## Aktueller Übergabeversuch von TRAKUNA
 
@@ -102,7 +106,7 @@ Mindestanforderungen:
 - Testzugang und freigegebene Testsendungen.
 - Beschreibung, welche Paketshop-Aktionen die Schnittstelle tatsächlich unterstützt (Annahme, Kundenausgabe, Retoure, Übergabe an Zusteller).
 
-Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.45; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
+Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.47; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
 
 Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Übergabeversuch mit lokalem Cache und Zwischenablage-Fallback. Es werden keine Carrier-Endpunkte, Paketbuchungen oder Zugangsdaten erfunden.
 

@@ -1,6 +1,6 @@
-# TRAKUNA – Praxis-Testplan (Version 1.45 · versionCode 46)
+# TRAKUNA – Praxis-Testplan (Version 1.47 · versionCode 48)
 
-Version 1.45 enthält die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS. CI-Lauf 45231195765 ist erfolgreich (Unit-Tests, Android-Lint, Debug-APK). [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45231195765). APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`. Das Artefakt läuft am 07.12.2026, 17:48 UTC ab.
+Version 1.47 enthält die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS. CI-Lauf 45248166890 ist erfolgreich (Unit-Tests, Android-Lint, Debug-APK). [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45248166890). APK-SHA-256: `6ac5eedac4bc130da3cb001f8bf3388b29dc2319fa39581b5031db5fbf968463`. Das Artefakt läuft am 07.12.2026, 19:23 UTC ab.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -80,7 +80,7 @@ Für **jeden** der vier Paketdienste müssen mindestens diese Fälle protokollie
 5. Partner-App nicht installiert bzw. nicht integrationsfähig: TRAKUNA muss ehrlich melden, dass keine Buchung bestätigt wurde.
 6. Annahme, Kundenausgabe, Retoure und Übergabe an den Zusteller nur dann als abgeschlossen markieren, wenn der lokale Testablauf dies ausdrücklich vorsieht bzw. das autorisierte Partnersystem die Aktion bestätigt.
 
-Die Carrier-Schnellauswahl in Version 1.45 ist **keine** offizielle Integration. Ein grüner CI-Build ersetzt keinen dieser Gerätetests und keine schriftliche Freigabe.
+Die Carrier-Schnellauswahl und die getrennten App-Zuordnungen in Version 1.47 sind **keine** offizielle Integration. Ein grüner CI-Build ersetzt keinen dieser Gerätetests und keine schriftliche Freigabe.
 
 ## 3. Sicherheits- und Fehlerprüfungen
 

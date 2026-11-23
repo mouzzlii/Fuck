@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.45 (versionCode 46) · CI erfolgreich: Lauf 45231195765
+Stand: App-Version 1.47 (versionCode 48) · CI erfolgreich: Lauf 45248166890
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
 ## 1. Wichtiger Status vor dem ersten Einsatz
 
-TRAKUNA 1.45 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
+TRAKUNA 1.47 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine freigegebene Produktivsoftware.
 
 - Sendungsdaten liegen nur auf diesem Android-Gerät. Es gibt keine zentrale Synchronisierung zwischen mehreren Geräten.
 - Es gibt noch keine Mitarbeiter-Anmeldung, Benutzerrollen oder persönliche Zuordnung von Bearbeitern.
@@ -21,7 +21,7 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 
 ## 2. Aktuelles Testpaket herunterladen
 
-1. Den [erfolgreichen Android-Build 45231195765 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45231195765).
+1. Den [erfolgreichen Android-Build 45248166890 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45248166890).
 2. Im Build den Bereich **Artifacts** öffnen.
 3. Das Paket **TRAKUNA-Android** herunterladen.
 4. Das ZIP auf dem Android-Gerät entpacken.
@@ -29,7 +29,7 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 6. Android kann eine einmalige Freigabe für die Installation aus dieser Datei-App verlangen. Nur für die vertrauenswürdige Datei-App freigeben und die Freigabe danach wieder deaktivieren.
 7. Die App starten und zunächst die Tests aus `PRAxisTEST.md` durchführen.
 
-**Aktuelles Artefakt Version 1.45:** APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`. Das ZIP-Artefakt ist bis 07.12.2026, 17:48 UTC verfügbar. Es handelt sich um ein Debug-Testpaket, nicht um ein signiertes Produktionsrelease.
+**Aktuelles Artefakt Version 1.47:** APK-SHA-256: `6ac5eedac4bc130da3cb001f8bf3388b29dc2319fa39581b5031db5fbf968463`. Das ZIP-Artefakt ist bis 07.12.2026, 19:23 UTC verfügbar. Es handelt sich um ein Debug-Testpaket, nicht um ein signiertes Produktionsrelease.
 
 ## 3. Sicher aktualisieren – vorhandene Daten schützen
 

@@ -1,22 +1,22 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.45 (versionCode 46) · erfolgreicher CI-Lauf 45231195765
+Stand: App-Version 1.47 (versionCode 48) · erfolgreicher CI-Lauf 45248166890
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45231195765 für Version 1.45 (versionCode 46) erfolgreich – Carrier-Auswahl für DPD/GLS/Hermes/UPS
-- [x] Unit-Tests und Android-Lint für Version 1.45 erfolgreich
-- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.45 als Artefakt bereitgestellt
+- [x] CI-Lauf 45248166890 für Version 1.47 (versionCode 48) erfolgreich – Carrier-Auswahl für DPD/GLS/Hermes/UPS
+- [x] Unit-Tests und Android-Lint für Version 1.47 erfolgreich
+- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.47 als Artefakt bereitgestellt
 - [ ] Release-Version und Versionsnummer fachlich geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Update von der vorherigen freigegebenen Version getestet
 
-Aktueller Build 1.45: https://github.com/mouzzlii/Fuck/actions/runs/45231195765
-APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`
+Aktueller Build 1.45: https://github.com/mouzzlii/Fuck/actions/runs/45248166890
+APK-SHA-256: `6ac5eedac4bc130da3cb001f8bf3388b29dc2319fa39581b5031db5fbf968463`
 
-ZIP-Artefakt erstellt am 23.11.2026, 17:48 UTC; Ablauf am 07.12.2026, 17:48 UTC. Produktionssignierung ist weiterhin offen.
+ZIP-Artefakt erstellt am 23.11.2026, 19:23 UTC; Ablauf am 07.12.2026, 19:23 UTC. Produktionssignierung ist weiterhin offen.
 
 ## B. Geräte- und Scannerabnahme
 
