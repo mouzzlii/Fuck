@@ -205,9 +205,11 @@ class ShipmentStore(context: Context) {
         val records = readRecords().getOrElse {
             return ShipmentUpdate.Rejected("Lokaler Datenspeicher kann nicht sicher gelesen werden. Es wurden keine Daten geändert. Bitte zuerst Support kontaktieren.")
         }.toMutableList()
+        // A tracking number represents one physical parcel. Do not allow the same
+        // active parcel to be registered in a second workflow by mistake.
         val existing = records.firstOrNull {
             it.trackingNumber.equals(number, ignoreCase = true) &&
-                it.flow == flow && it.status !in TERMINAL_STATUSES
+                it.status !in TERMINAL_STATUSES
         }
         if (existing != null) return ShipmentUpdate.AlreadyExists(existing)
         if (records.size >= MAX_RECORDS) {
@@ -714,7 +716,7 @@ object ShipmentRules {
     fun hasNoDuplicateActiveShipments(records: List<ShipmentRecord>): Boolean {
         val activeKeys = records
             .filter { it.status !in setOf(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentStatus.HANDED_TO_CARRIER) }
-            .map { it.trackingNumber.uppercase() to it.flow }
+            .map { it.trackingNumber.uppercase() }
         return activeKeys.distinct().size == activeKeys.size
     }
 
