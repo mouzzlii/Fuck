@@ -1,6 +1,6 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.44 · Praxistest-Build 266
+Stand: App-Version 1.44 (versionCode 45) · CI-Lauf 45227305052
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
@@ -20,7 +20,7 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 
 ## 2. Aktuelles Testpaket herunterladen
 
-1. Diesen [Build 266 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45166820754).
+1. Diesen [erfolgreichen CI-Lauf öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45227305052).
 2. Im Build den Bereich **Artifacts** öffnen.
 3. Das Paket **TRAKUNA-Android** herunterladen.
 4. Das ZIP auf dem Android-Gerät entpacken.
