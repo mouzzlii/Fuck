@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version 1.45 (versionCode 46) · CI erfolgreich: Lauf 45229834365
+Stand: 23. November 2026 · App-Version 1.45 (versionCode 46) · CI erfolgreich: Lauf 45231195765
 
 ## 1. Zweck und Freigabestatus
 
@@ -24,13 +24,13 @@ Version 1.45 wurde erfolgreich durch CI gebaut. Das ist kein Nachweis für einen
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.45 (versionCode 46) mit der direkten Carrier-Schnellauswahl wurde erfolgreich gebaut. [CI-Lauf 45229834365 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45229834365).
+Version 1.45 (versionCode 46) mit der direkten Carrier-Schnellauswahl wurde erfolgreich gebaut. [CI-Lauf 45231195765 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45231195765).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `06e847103a51cbf7ba04e6ab6383e200ba856dedc37cefeaf2dba0b220509441`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 17:39 UTC; Ablauf 07.12.2026, 17:39 UTC
+- APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 17:48 UTC; Ablauf 07.12.2026, 17:48 UTC
 
 [Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45229834365)
 
