@@ -20,7 +20,7 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 Aktueller Build 1.50: https://github.com/mouzzlii/Fuck/actions/runs/45273220299
 APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`
 
-ZIP-Artefakt erstellt am 23.11.2026, 21:06 UTC; Ablauf am 07.12.2026, 21:06 UTC. Produktionssignierung ist weiterhin offen.
+ZIP-Artefakt erstellt am 23.11.2026, 21:49 UTC; Ablauf am 07.12.2026, 21:49 UTC. Produktionssignierung ist weiterhin offen.
 
 ## B. Geräte- und Scannerabnahme
 
