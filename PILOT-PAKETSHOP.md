@@ -66,6 +66,7 @@ Die Partner-App-Übergabe ist derzeit ein Android-Intent-Versuch. Das Öffnen ei
 - Für TC26 ist ein dediziertes DataWedge-Profil für TRAKUNA vorgesehen: Barcode Input + Intent Output, Action `de.trakuna.app.DATAWEDGE_SCAN`, Extra `com.symbol.datawedge.data_string`, Delivery `Broadcast Intent`. Das muss auf jedem Handgerät mit Betreiberfreigabe eingerichtet und praktisch getestet werden; eine erfolgreiche Übertragung ist bislang nicht nachgewiesen.
 - Sendungsstatus und begrenzte Ereignishistorie werden lokal gespeichert.
 - JSON-Backup und CSV-Export enthalten vertrauliche Daten im Klartext. Sie müssen geschützt gespeichert und übertragen werden.
+- Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge. Diese können als lokale Arbeitsdokumentation dienen, sind aber kein manipulationssicherer oder zentral bestätigter Nachweis.
 - Es gibt keine zentrale Synchronisierung, keine Mitarbeiterkonten und keine rollenbasierte Zugriffskontrolle.
 - Ein Geräteverlust kann ohne vorhandene, geprüfte Sicherung zum Datenverlust führen.
 - Die Carrier-Erkennung ist eine Hilfestellung; Nummer und Paketdienst sind durch Mitarbeiter zu kontrollieren.
