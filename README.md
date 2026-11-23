@@ -1,23 +1,23 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.48 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.49 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.48 (versionCode 49)
+## Aktueller Entwicklungsstand – Version 1.49 (versionCode 50)
 
 - Neue direkte Carrier-Auswahl für die vier Start-Prioritäten: **DPD, GLS, Hermes und UPS**.
 - Der Auswahlknopf kennzeichnet den lokalen Vorgang; er führt keine externe Buchung aus.
-- CI-Lauf 45250580288: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45250580288). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
-- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `d7ad261d2f29860a8e7d3e07c7365bad4c23118cc0064dc43c4ec17d8c6a71cc`. ZIP-Artefakt-SHA-256: `9497543cfcbb5efaa80c156a800e49fe2098c67293f370db91a7d2193ab403c6`. Das ZIP-Artefakt wurde am 23.11.2026, 19:37 UTC erstellt und läuft am 07.12.2026, 19:37 UTC ab.
+- CI-Lauf 45257771904: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45257771904). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
+- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `38716f1d1d6b4e31e5e4f63f534eeb626b3540ee9837a086a8371ad8a064cd0f`. ZIP-Artefakt-SHA-256: `3a6413497fd600ab045a96d5afe715243891586084a8086b3593a6cde4f29879`. Das ZIP-Artefakt wurde am 23.11.2026, 20:19 UTC erstellt und läuft am 07.12.2026, 20:19 UTC ab.
 
-**Wichtig:** Version 1.48 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.49 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
 - Die Daten werden lokal auf diesem Gerät gespeichert und verschlüsselt.
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
-- WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung.
+- WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden noch nicht gesucht.
 - DataWedge-Empfangscode ist vorhanden; das Profil muss auf dem jeweiligen Zebra-Gerät eingerichtet und vor Ort getestet werden.
-- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.48 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das vorhandene Hermes-Handgerät MC3090BT läuft laut Zebra-Dokumentation mit Windows CE 5.0 bzw. Windows Mobile 6.1 und kann die Android-App (Mindestversion Android 8/API 26) nicht ausführen.** Für TRAKUNA-Hermes-Tests wird deshalb ein separates, vom Betreiber/Carrier freigegebenes Android-Gerät benötigt; das bestehende Hermes-System bleibt unangetastet.
+- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.49 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das vorhandene Hermes-Handgerät MC3090BT läuft laut Zebra-Dokumentation mit Windows CE 5.0 bzw. Windows Mobile 6.1 und kann die Android-App (Mindestversion Android 8/API 26) nicht ausführen.** Für TRAKUNA-Hermes-Tests wird deshalb ein separates, vom Betreiber/Carrier freigegebenes Android-Gerät benötigt; das bestehende Hermes-System bleibt unangetastet.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
 ## Release-Build
@@ -36,6 +36,11 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 - [Betriebshandbuch](BETRIEBSHANDBUCH.md): einfache Schritt-für-Schritt-Anleitung für Paketannahme, Kundenausgabe, Retouren, Zebra DataWedge, Partner-App und Datensicherung.
 - [Freigabe-Checkliste](FREIGABE-CHECKLISTE.md): verbindliche Nachweise und externe Voraussetzungen vor einem echten Paketshop-Einsatz.
 - [Praxis-Testplan](PRAxisTEST.md): Testfälle für den kontrollierten Gerätetest.
+
+## Neu in Version 1.49
+
+- Die App zeigt an, ob das aktuelle Android-Gerät mit einem WLAN verbunden ist. Der Status wird beim Zurückkehren in die App aktualisiert.
+- Dafür wird ausschließlich `ACCESS_NETWORK_STATE` verwendet. Es gibt weiterhin keine `INTERNET`-Berechtigung, keinen Netzwerkzugriff, keine lokale Gerätesuche und keine Synchronisierung.
 
 ## Neu in Version 1.48
 
