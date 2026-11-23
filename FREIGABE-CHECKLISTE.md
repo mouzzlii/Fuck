@@ -1,6 +1,6 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.45 (versionCode 46) · letzter CI-Nachweis: Lauf 45227305052
+Stand: App-Version 1.45 (versionCode 46) · letzter nachweislich erfolgreicher APK-Build: Version 1.44 (CI-Lauf 45227305052)
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
@@ -13,8 +13,8 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Update von der vorherigen freigegebenen Version getestet
 
-CI-Lauf 45227305052: https://github.com/mouzzlii/Fuck/actions/runs/45227305052
-APK-SHA-256: `db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
+Historischer Build 1.44 (ohne neue Carrier-Schnellauswahl): https://github.com/mouzzlii/Fuck/actions/runs/45227305052
+Historische APK-SHA-256: `db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
 
 ## B. Geräte- und Scannerabnahme
 
@@ -43,6 +43,15 @@ Für **jeden** Paketdienst und jede Betriebssoftware ist ein eigener Nachweis er
 - [ ] Hermes-Integration vom Anbieter freigegeben und mit Testsendungen abgenommen
 
 **Wichtig:** Die aktuelle TRAKUNA-Übergabe öffnet eine ausgewählte Android-App und übergibt standardisierte Extras. Sie bestätigt keine Buchung. Solange der Anbieter die Schnittstelle nicht implementiert und abnimmt, bleibt dieser Teil eine manuelle Unterstützung.
+
+### Carrier-spezifische Pflichtfreigaben
+
+- [ ] **DPD:** TC26/DataWedge-Test, autorisierte Shop-Schnittstelle und alle vier Shopabläufe bestätigt
+- [ ] **GLS:** TC26/DataWedge-Test, autorisierte Shop-Schnittstelle und alle vier Shopabläufe bestätigt
+- [ ] **Hermes:** MC3090BT-Ablauf, autorisierte Schnittstelle und alle vier Shopabläufe bestätigt
+- [ ] **UPS:** Hardware/Shopsoftware erhoben, Access-Point-Partnerfreigabe und alle vier Shopabläufe bestätigt
+
+Siehe [Carrier-Integrationsrecherche](CARRIER-INTEGRATIONS.md) und [Praxis-Testplan](PRAxisTEST.md).
 
 ## D. Betrieb, Benutzer und Daten
 
