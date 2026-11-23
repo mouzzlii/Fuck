@@ -432,8 +432,12 @@ class ShipmentStore(context: Context) {
         }
     }
 
-    private fun decodeHistory(array: JSONArray?): List<ShipmentEvent> {
-        if (array == null) return emptyList()
+    private fun decodeHistory(record: JSONObject): List<ShipmentEvent> {
+        // Only a missing field is a legacy backup without history. A present but
+        // wrongly typed/null field is corruption and must not silently erase history.
+        if (!record.has("history")) return emptyList()
+        val array = record.optJSONArray("history")
+            ?: error("Vorgangshistorie ist beschädigt oder hat ein ungültiges Format.")
         require(array.length() <= MAX_HISTORY_EVENTS) { "Vorgangshistorie enthält zu viele Einträge." }
         return buildList {
             for (index in 0 until array.length()) {
@@ -459,7 +463,7 @@ class ShipmentStore(context: Context) {
             updatedAt = item.getLong("updatedAt"),
             recipient = item.optString("recipient"),
             note = item.optString("note"),
-            history = decodeHistory(item.optJSONArray("history"))
+            history = decodeHistory(item)
         )
     }.getOrNull()
 
