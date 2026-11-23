@@ -1,14 +1,14 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.50 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.51 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.50 (versionCode 51)
+## Aktueller Entwicklungsstand – Version 1.51 (versionCode 52)
 
 - Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- 44 Unit-Tests im Testbestand; CI-Lauf 45273220299: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45273220299). Unit-Tests, Android-Lint, Manifest-Sicherheitsprüfungen und Debug-APK-Erstellung erfolgreich.
+- 44 Unit-Tests im Testbestand. Version 1.51 enthält einen zusätzlichen Löschschutz für inkonsistente Archivdatensätze. Der Build für versionCode 52 muss noch erfolgreich durch CI bestätigt werden; der vorherige CI-Lauf 45273220299 prüfte Version 1.50.
 - Debug-APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`.
 - ZIP-Artefakt-SHA-256: `a4d75dee23c876d26aa9fbeb696d5a6dd8c9c4c0c9aad2032dbd195dc9f4fe0f`.
 - Das ZIP-Artefakt wurde am 23.11.2026, 21:49 UTC erstellt und läuft am 07.12.2026, 21:49 UTC ab.
@@ -47,7 +47,7 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 
 Der Android-Workflow startet nur bei App-/Build-Änderungen und prüft vor dem Build, dass die aktuelle Offline-Version keine INTERNET-Berechtigung anfordert, Android-Backups deaktiviert und Klartextverkehr deaktiviert bleibt. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden.
 
-## Neu in Version 1.50
+## Neu in Version 1.51
 
 - Abgeschlossene Vorgänge können archiviert und später wiederhergestellt werden; offene Vorgänge bleiben in der aktiven Liste.
 - Endgültiges Löschen ist nur noch aus der Archivansicht möglich.
