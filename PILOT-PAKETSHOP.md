@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version 1.49 (versionCode 50) · CI erfolgreich: Lauf 45265965503
+Stand: 23. November 2026 · App-Version 1.50 (versionCode 51) · CI erfolgreich: Lauf 45273220299
 
 ## 1. Zweck und Freigabestatus
 
@@ -18,21 +18,22 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
-Version 1.49 wurde erfolgreich durch CI gebaut. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.50 wurde erfolgreich durch CI gebaut. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.49 (versionCode 50) mit WLAN-Statusanzeige und getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45265965503 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45265965503).
+Version 1.50 (versionCode 51) ergänzt Archivierung abgeschlossener Vorgänge, Wiederherstellung, Backup-Schema 2 und Archivzeitpunkt im CSV-Export. [CI-Lauf 45273220299 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45273220299).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `2608aaa39ac9d8e1e38cecadc219e75f733bd868c36064fa6fd43cb7a94bbc54`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 21:06 UTC; Ablauf 07.12.2026, 21:06 UTC
+- APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`
+- ZIP-SHA-256: `a4d75dee23c876d26aa9fbeb696d5a6dd8c9c4c0c9aad2032dbd195dc9f4fe0f`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 21:49 UTC; Ablauf 07.12.2026, 21:49 UTC
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45265965503)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45273220299)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
@@ -65,6 +66,9 @@ Die Partner-App-Übergabe ist derzeit ein Android-Intent-Versuch. Das Öffnen ei
 - Zebra DataWedge ist als Broadcast-Eingangsweg vorbereitet. Die GLS- und DPD-Handgeräte werden nach den vorliegenden Gerätehinweisen als Zebra TC26 eingestuft (4G-Anzeige; endgültige Bestätigung über Typenschild/Teilenummer steht aus).
 - Für TC26 ist ein dediziertes DataWedge-Profil für TRAKUNA vorgesehen: Barcode Input + Intent Output, Action `de.trakuna.app.DATAWEDGE_SCAN`, Extra `com.symbol.datawedge.data_string`, Delivery `Broadcast Intent`. Das muss auf jedem Handgerät mit Betreiberfreigabe eingerichtet und praktisch getestet werden; eine erfolgreiche Übertragung ist bislang nicht nachgewiesen.
 - Sendungsstatus und begrenzte Ereignishistorie werden lokal gespeichert.
+- Abgeschlossene Vorgänge können archiviert und wiederhergestellt werden. Offene Sendungen bleiben aktiv; endgültiges Löschen ist nur aus dem Archiv möglich.
+- Archivierte Vorgänge bleiben im lokalen 500er-Limit enthalten. JSON-Backup-Schema 2 speichert den Archivstatus; ältere Schema-1-Sicherungen bleiben lesbar.
+- Der CSV-Export enthält einen zusätzlichen Archivierungszeitpunkt.
 - Abgeschlossene Vorgänge können lokal archiviert und wiederhergestellt werden; aktive Vorgänge können nicht archiviert werden. Archivierte Vorgänge bleiben Teil der Datensicherung und belegen weiterhin einen Platz des 500er-Limits.
 - Das JSON-Backup-Schema 2 enthält den Archivstatus; Schema-1-Sicherungen ohne Archivfeld bleiben lesbar.
 - JSON-Backup und CSV-Export enthalten vertrauliche Daten im Klartext. Sie müssen geschützt gespeichert und übertragen werden.
