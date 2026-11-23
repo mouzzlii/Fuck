@@ -1,15 +1,15 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.51 (versionCode 52) · CI-Build ausstehend; Version 1.50 war der letzte erfolgreich gebaute Stand
+Stand: App-Version 1.51 (versionCode 52) · CI-Build 45281621801 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45273220299 für Version 1.50 (versionCode 51) erfolgreich – Archivierung abgeschlossener Vorgänge, Wiederherstellung, Backup-Schema 2
-- [ ] Version 1.51 (versionCode 52) mit zusätzlicher Validierung vor endgültigem Löschen erfolgreich bauen und testen
-- [x] Unit-Tests und Android-Lint für Version 1.50 erfolgreich
-- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.50 als Artefakt bereitgestellt
+- [x] CI-Lauf 45281621801 für Version 1.51 (versionCode 52) erfolgreich – Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
+- [x] Zusätzlicher Löschschutz für inkonsistente Archivdatensätze durch Unit-Tests abgedeckt
+- [x] Unit-Tests und Android-Lint für Version 1.51 erfolgreich
+- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.51 als Artefakt bereitgestellt
 - [x] Archivierungsregeln, Archivstatus-Validierung und Historienereignisse durch Unit-Tests abgedeckt
 - [ ] Archivieren/Wiederherstellen und Backup-Restore auf einem echten Android-Gerät praktisch geprüft
 - [ ] Release-Version und Versionsnummer fachlich geprüft
@@ -18,10 +18,12 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
 
-Letzter erfolgreicher Build 1.50: https://github.com/mouzzlii/Fuck/actions/runs/45273220299. Build 1.51 ist ausstehend.
-APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`
+Letzter erfolgreicher Build 1.51: https://github.com/mouzzlii/Fuck/actions/runs/45281621801 (Commit `33845c9f42bab6fe574c851dda5928c916e98b84`). Alle CI-Schritte einschließlich Tests, Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
 
-ZIP-Artefakt erstellt am 23.11.2026, 21:49 UTC; Ablauf am 07.12.2026, 21:49 UTC. Produktionssignierung ist weiterhin offen.
+APK-SHA-256: `e47b845dcd5a8dcc57760d61bd7ab3fa73064c0a19dce4c6eb7bfa7b10b2012e`
+ZIP-Artefakt-SHA-256: `9ff08004e9bef4665c2399c64f79aab17b7c6b52182490a489278d15ea7823d4`
+
+ZIP-Artefakt erstellt am 23.11.2026, 22:40 UTC; Ablauf am 07.12.2026, 22:40 UTC. Produktionssignierung ist weiterhin offen.
 
 ## B. Geräte- und Scannerabnahme
 
