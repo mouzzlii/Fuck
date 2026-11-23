@@ -91,11 +91,11 @@ Für jeden Carrier wird dieselbe Adapter-Grenze vorgesehen, aber die technischen
 
 ## 7. Aktueller Status
 
-| Carrier | Öffentlich dokumentierte Technik | Für den konkreten Paketshop bestätigt? | Blocker |
+| Carrier | Öffentlich dokumentierte Technik in Österreich | Für den konkreten Paketshop bestätigt? | Blocker |
 |---|---|---|---|
-| DPD | Webservices, SOAP-API, Entwicklerportal/Sandbox | Nein | PaketShop-Freigabe und Geräteschnittstelle |
-| GLS | YourGLS, ShipIT REST/SOAP, Versand-Plugins | Nein | PaketShop-Freigabe und Geräte-/Vorgangsschnittstelle |
-| Hermes | HSI REST-API für Geschäftskunden; Vollintegration | Nein | HSI-Relevanz für österreichischen Hermes-Paketshop und MC3090BT klären |
-| UPS | UPS APIs, OAuth, CIE/Sandbox; Access Point Partnerprogramm | Nein | Partnerkonto, autorisierte Shopsoftware und Access-Point-Schnittstelle |
+| DPD | DPD Österreich beschreibt PaketShop-Technik, Einrichtung und individuelles Training; allgemeine DPD-Webservices/SOAP-API sind separat dokumentiert | Nein | Bestehende TC26-App, erlaubter Datenaustausch und PaketShop-Freigabe durch DPD Österreich |
+| GLS | GLS Österreich beschreibt YourGLS/ShipIT und Versand-Anbindungen | Nein | Bestehende TC26-App, PaketShop-Freigabe und Geräte-/Vorgangsschnittstelle |
+| Hermes | Hermes Österreich beschreibt Annahme privater Pakete, Retouren und Kundenausgabe; deutsche HSI-REST-API ist ein separater Geschäftskunden-Versandweg | Nein | MC3090BT-Support, österreichische Shopsoftware und freigegebene Schnittstelle |
+| UPS | UPS Österreich beschreibt eine bereitgestellte Scanning-App für PC/Android/Apple sowie Annahme und Fahrerscans; allgemeine UPS APIs nutzen OAuth/CIE | Nein | Vorhandene App und Hardware am Standort erheben; autorisierte Übergabe/API klären |
 
 **Freigaberegel:** Kein Carrier wird als integriert oder produktionsbereit markiert, bevor die konkrete Schnittstelle für diesen Standort schriftlich freigegeben, technisch implementiert und mit echten autorisierten Testfällen erfolgreich abgenommen wurde.
