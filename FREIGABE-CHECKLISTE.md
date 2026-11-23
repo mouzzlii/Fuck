@@ -26,6 +26,7 @@ ZIP-Artefakt erstellt am 23.11.2026, 19:23 UTC; Ablauf am 07.12.2026, 19:23 UTC.
 - [ ] Manuelle Eingabe einschließlich fehlerhafter/ungewöhnlicher Nummern geprüft
 - [ ] Zebra DataWedge-Profil auf jedem Gerät geprüft
 - [ ] DataWedge Component Information auf TRAKUNA begrenzt und Signaturprüfung aktiviert
+- [ ] Getrennte Betriebssoftware-Zuordnung für DPD, GLS, Hermes und UPS geprüft; keine falsche Carrier-App wird als Fallback geöffnet
 - [ ] Scan-Broadcast kann keine automatische Buchung auslösen
 - [ ] Hintergrundverhalten geprüft: Scans werden nur bei aktiver TRAKUNA-App im Vordergrund verarbeitet
 - [ ] Scannerverhalten bei mehreren Barcodes, schlechtem Licht und Verbindungsfehlern geprüft
@@ -50,8 +51,8 @@ Für **jeden** Paketdienst und jede Betriebssoftware ist ein eigener Nachweis er
 
 - [ ] **DPD:** TC26/DataWedge-Test, autorisierte Shop-Schnittstelle und alle vier Shopabläufe bestätigt
 - [ ] **GLS:** TC26/DataWedge-Test, autorisierte Shop-Schnittstelle und alle vier Shopabläufe bestätigt
-- [ ] **Hermes:** MC3090BT-Ablauf, autorisierte Schnittstelle und alle vier Shopabläufe bestätigt
-- [ ] **UPS:** Hardware/Shopsoftware erhoben, Access-Point-Partnerfreigabe und alle vier Shopabläufe bestätigt
+- [ ] **Hermes:** separates, freigegebenes Android-Gerät für TRAKUNA; bestehendes MC3090BT bleibt unangetastet; autorisierte Schnittstelle und alle vier Shopabläufe bestätigt
+- [ ] **UPS:** Hardware/Shopsoftware erhoben, offizielle App `com.ups.accesspoint`/Android-9+-Anforderung geprüft, Access-Point-Partnerfreigabe und alle vier Shopabläufe bestätigt
 
 Siehe [Carrier-Integrationsrecherche](CARRIER-INTEGRATIONS.md) und [Praxis-Testplan](PRAxisTEST.md).
 

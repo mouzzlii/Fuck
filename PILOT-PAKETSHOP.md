@@ -15,7 +15,7 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 
 - DPD/GLS: TC26-/DataWedge-Scan und bestehende Bluetooth-Druckabläufe getrennt und ohne Eingriff in die Carrier-Systeme testen.
 - Hermes: MC3090BT-Ablauf erhalten; das Gerät ist laut Zebra-Dokumentation ein Windows-CE-/Windows-Mobile-Gerät und nicht mit der Android-App kompatibel. Für TRAKUNA ist ein separates, freigegebenes Android-Gerät erforderlich. Offizielle Hermes-Anbindung vor Produktivpilot klären.
-- UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben.
+- UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
 Version 1.47 wurde erfolgreich durch CI gebaut. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.

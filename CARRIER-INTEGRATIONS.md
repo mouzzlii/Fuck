@@ -66,7 +66,6 @@ Offizielle Einstiege:
 - [UPS Access Point – offizielle Android-App im Google Play Store](https://play.google.com/store/apps/details?id=com.ups.accesspoint&hl=de_AT)
 - [UPS Developer Portal – Start](https://developer.ups.com/get-started?loc=de_AT)
 - [UPS API-Katalog](https://developer.ups.com/catalog?loc=de_AT)
-- [UPS Access Point – offizielle Google-Play-Auflistung (Paketname und Android-Mindestversion)](https://play.google.com/store/apps/details?id=com.ups.accesspoint&hl=de_AT)
 
 **Was noch nicht belegt ist:** Welche UPS-Scanning-App, welches Gerät und welche Version der konkrete Standort verwendet; ob eine Partner-API oder ein freigegebener Datenaustausch für die bestehende App zur Verfügung steht. Das Developer-Portal betrifft allgemeine UPS APIs und ersetzt nicht die Access-Point-App oder eine Partnerfreigabe.
 
