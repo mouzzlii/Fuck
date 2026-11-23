@@ -92,6 +92,48 @@ class EncryptedStorageInstrumentedTest {
         assertEquals("TEST123456", SecureHandoffCache(context).trackingNumber())
     }
 
+    @Test
+    fun damagedPartnerHandoffCacheFailsClosedInsteadOfReturningAnEmptyNumber() {
+        val cache = SecureHandoffCache(context)
+        assertTrue(cache.save("TEST123456", "Hermes"))
+
+        context.getSharedPreferences("trakuna_handoff", Context.MODE_PRIVATE)
+            .edit()
+            .putString("tracking_number_encrypted_v1", "%%%")
+            .commit()
+
+        val reopened = SecureHandoffCache(context)
+        assertNotNull(reopened.failureReason())
+        val read = runCatching { reopened.trackingNumber() }
+        assertTrue("Beschädigter Übergabe-Cache darf nicht als leerer Wert gelten.", read.isFailure)
+    }
+
+    @Test
+    fun validBackupCanRecoverDamagedEncryptedShipmentStorage() {
+        val original = ShipmentStore(context)
+        val saved = original.add(
+            rawTrackingNumber = "TEST123456",
+            carrier = "DPD",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
+            recipient = "Test Empfaenger",
+            note = "Wiederherstellungstest"
+        )
+        assertTrue(saved is ShipmentUpdate.Saved)
+        val backup = original.exportBackupJson()
+
+        context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE)
+            .edit()
+            .putString("records_encrypted_v2", "%%%")
+            .commit()
+
+        val damaged = ShipmentStore(context)
+        assertNotNull(damaged.storageError())
+        val restored = damaged.restoreBackup(backup)
+        assertEquals(BackupRestoreResult.Restored(1), restored)
+        assertEquals(listOf((saved as ShipmentUpdate.Saved).record), damaged.all())
+        assertEquals(null, damaged.storageError())
+    }
+
     private fun clearStorePreferences() {
         context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE).edit().clear().commit()
         context.getSharedPreferences("trakuna_handoff", Context.MODE_PRIVATE).edit().clear().commit()
