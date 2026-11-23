@@ -9,12 +9,16 @@ Dieses Dokument trennt öffentlich dokumentierte Versand-APIs von der tatsächli
 
 **Öffentlich dokumentiert:** DPD beschreibt Webservices für die Integration in eigene Versandlösungen. Genannt werden unter anderem Paketscheindruck, Paketverfolgung und Pickup-Paketshop-Finder. DPD verweist auf ein Entwicklerportal mit Dokumentationen und Testumgebung/Sandbox. Die DPD-Webservice-FAQ beschreibt eine SOAP-basierte Webservice-API; weitere Formate und Integrationswege werden im Entwicklerbereich behandelt.
 
-Offizielle Einstiege:
-- [DPD IT-Anbindung und Schnittstellen](https://www.dpd.com/de/de/support/it-anbindung-und-dpd-schnittstellen/)
+Österreichischer Paketshop-Einstieg:
+- [DPD Österreich – Pickup Paketshop werden](https://www.dpd.com/at/de/pickup-paketshops/paketshop-werden/): DPD beschreibt eine schnelle Einrichtung, stellt Technik und Werbematerial bereit und bietet individuelles Training. Das spricht dafür, die konkrete Integration über den österreichischen Partnerkontakt zu klären, statt eine deutsche Versand-API als Shop-Schnittstelle anzunehmen.
+- [DPD Österreich – Kontakt und Paketshop-Partnerformular](https://www.dpd.com/at/de/support/kontakt/)
+
+Allgemeine technische Versand-API-Einstiege (nicht als österreichische Paketshop-Freigabe zu verstehen):
+- [DPD IT-Anbindung und Schnittstellen (Deutschland)](https://www.dpd.com/de/de/support/it-anbindung-und-dpd-schnittstellen/)
 - [DPD Entwicklerportal](https://esolutions.dpd.com/entwickler/dpdwebservices/dokumentationen.aspx)
 - [DPD Developer Integration](https://www.dpd.com/de/de/entwickler-integration-in-ihre-versandloesung/)
 
-**Was noch nicht belegt ist:** Ob diese Geschäftskunden-Versandservices für den konkreten österreichischen Pickup-Paketshop, dessen bestehendes TC26-Handgerät und die dortigen Vorgänge freigegeben sind. Die API-Dokumentation darf nicht als Erlaubnis verstanden werden, das vorhandene DPD-Programm zu ersetzen.
+**Was noch nicht belegt ist:** Ob die deutschen Geschäftskunden-Versandservices für den konkreten österreichischen Pickup-Paketshop, dessen bestehendes TC26-Handgerät und die dortigen Vorgänge freigegeben sind. DPD Österreich beschreibt die Bereitstellung eigener PaketShop-Technik und individuelles Training; die genaue bestehende Software- und Integrationsschnittstelle muss der Standortbetreuer bestätigen. Die API-Dokumentation darf nicht als Erlaubnis verstanden werden, das vorhandene DPD-Programm zu ersetzen.
 
 **Nächster technischer Schritt:** Vom DPD-Ansprechpartner bzw. Softwareanbieter die für diesen Standort zugelassene Schnittstelle, App-/Geräteintegration, Testzugang, Testsendungen und Rückmeldungen für Annahme, Ausgabe, Retoure und Fahrerübergabe anfordern. Bestehendes DPD-Handgerät und Bluetooth-Drucker unverändert lassen.
 
@@ -34,12 +38,16 @@ Offizielle Einstiege:
 
 **Öffentlich dokumentiert:** Hermes Geschäftskunden beschreibt das Hermes Shipping Interface (HSI) als REST-API mit Authentifizierung und sicherer Datenübertragung. Genannt werden Versandlabel, Retouren, Abholung und Sendungsinformationen. Hermes nennt außerdem eine Offline-Vollintegration für sehr hohe Volumina. Die alte ProPS-SOAP-API wurde laut Hermes durch HSI ersetzt.
 
-Offizielle Einstiege:
-- [Hermes IT-Anbindungen](https://www.myhermes.de/geschaeftskunden/produkte-und-services/it-anbindungen/)
+Österreichischer Paketshop-Einstieg:
+- [Hermes Österreich – PaketShop-Partner](https://www.hermesworld.com/de/ueber-uns/hermes-gruppe/hermes-logistik-at/paketshop-partner/): beschreibt für österreichische PaketShops Annahme privater Pakete, Retourenannahme und Ausgabe von Paketen. Kontakt: Hermes Logistik GmbH, Wien, +43 (0)50 4376 37.
+- [Hermes Österreich – PaketShops und Partner](https://www.hermesworld.com/at/unsere-dienstleistungen/distribution/paketversand/paketshops/)
+
+Zusätzlicher technischer Gesprächseinstieg für Geschäftskunden-Versand (nicht als Freigabe für das österreichische MC3090BT-PaketShop-System zu verstehen):
+- [Hermes IT-Anbindungen (Deutschland)](https://www.myhermes.de/geschaeftskunden/produkte-und-services/it-anbindungen/)
 - [Hermes FAQ zur Umstellung auf HSI](https://www.myhermes.de/geschaeftskunden/faq-umstellung-hsi/)
 - [Hermes Partnersysteme](https://www.myhermes.de/geschaeftskunden/produkte-und-services/partnersysteme/)
 
-**Wichtige Einschränkung:** Die öffentlich beschriebenen HSI-Angebote sind Geschäftskunden-/Versandintegrationen. Es ist nicht nachgewiesen, dass HSI die Funktionen des österreichischen Hermes-Paketshops oder das vorhandene MC3090BT-Handgerät abdeckt. HSI ist daher ein möglicher technischer Gesprächseinstieg, aber noch keine bestätigte Lösung für den Standort.
+**Wichtige Einschränkung:** Die österreichische Hermes-Seite beschreibt die PaketShop-Abläufe, aber keine öffentlich dokumentierte Entwickler-API für das vorhandene MC3090BT-Handgerät. Die deutsche HSI-Dokumentation betrifft Geschäftskunden-/Versandintegrationen und ist keine bestätigte Lösung für den österreichischen PaketShop.
 
 **Nächster technischer Schritt:** Hermes-Paketshop-Support bzw. zuständigen Vertragspartner gezielt nach einer freigegebenen Schnittstelle für das vorhandene MC3090BT-System und die konkrete Hermes-Paketshop-Software fragen. Dabei ausdrücklich nach Paketannahme, Kundenausgabe, Retourenannahme, Rücklauf/Fahrerübergabe, Quittung und Drucker fragen. Bestehenden Hermes-Ablauf nicht verändern.
 
