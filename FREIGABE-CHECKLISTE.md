@@ -1,17 +1,17 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.53 (versionCode 54) · CI-Build 45290269045 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
+Stand: App-Version 1.53 (versionCode 54) · CI-Build 45290932535 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45290269045 für Version 1.53 erfolgreich – Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
+- [x] CI-Lauf 45290932535 für Version 1.53 erfolgreich – Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
 - [x] Vorhandene Unit-Tests erfolgreich
 - [x] Android-Lint erfolgreich
 - [x] Zusammengeführtes Manifest ohne INTERNET-Berechtigung, aktiviertes Android-Backup oder Klartextverkehr geprüft
 - [x] Debug-APK und SHA-256-Prüfsumme für Version 1.53 als Artefakt bereitgestellt
-- [x] Android-Instrumentierungstestfälle für Keystore-Verschlüsselung, Speicher-Wiederöffnung und Fail-closed bei beschädigten Daten hinzugefügt
+- [x] Android-Instrumentierungstestfälle für Keystore-Verschlüsselung, Speicher-Wiederöffnung und Fail-closed bei beschädigten Daten hinzugefügt und erfolgreich kompiliert
 - [ ] Android-Instrumentierungstestfälle auf Emulator oder echtem Android-Gerät tatsächlich ausgeführt
 - [ ] Archivieren/Wiederherstellen und Backup-Restore auf einem echten Android-Gerät praktisch geprüft
 - [ ] Release-Version und Versionsnummer fachlich geprüft
@@ -21,12 +21,12 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
 
-Letzter erfolgreicher Build 1.53: https://github.com/mouzzlii/Fuck/actions/runs/45290269045 (Commit `9678ff54c49d3c97a9f8b180b8df9f46b753e370`). Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build, Prüfsumme und Artefakt-Upload waren erfolgreich. Der Emulator-Schritt wurde aus dem blockierenden Standard-CI entfernt, weil der GitHub-Linux-Runner keinen zuverlässigen Emulatorstart ermöglichte. Die Instrumentierungstestfälle sind im Repository vorhanden, wurden aber in diesem Lauf **nicht** ausgeführt. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
+Letzter erfolgreicher Build 1.53: https://github.com/mouzzlii/Fuck/actions/runs/45290932535 (Commit `401a349d4dde2d98f14e23a5e1e8a28b6efef464`). Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build, Prüfsumme und Artefakt-Upload waren erfolgreich. Der Emulator-Schritt wurde aus dem blockierenden Standard-CI entfernt, weil der GitHub-Linux-Runner keinen zuverlässigen Emulatorstart ermöglichte. Die Instrumentierungstestfälle sind im Repository vorhanden und wurden erfolgreich kompiliert, aber in diesem Lauf **nicht auf einem Emulator oder Gerät ausgeführt**. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
 
-APK-SHA-256: `16b69023df943ab0c7a350eee4f2baef298019929bbe87fbeb9d9fc91cfddc69`
-ZIP-Artefakt-SHA-256: `7553840bb5f337d7d537604ae947cf72a8c0420f934a16097e68cf95bc83f9e4`
+APK-SHA-256: `c6d787d3cea6a5e0359bab8cc2f1a9b6759429cbea42dc1e2baf79b916e94965`
+ZIP-Artefakt-SHA-256: `9bfd1ce4fe02c947abfcba6df8836844a2d810b5ac5c3aeba0e51ece808179cb`
 
-ZIP-Artefakt erstellt am 23.11.2026, 23:38 UTC; Ablauf am 07.12.2026, 23:38 UTC. Produktionssignierung und Emulator-Instrumentierungstest bleiben offen.
+ZIP-Artefakt erstellt am 23.11.2026, 23:43 UTC; Ablauf am 07.12.2026, 23:43 UTC. Produktionssignierung und Emulator-Instrumentierungstest bleiben offen.
 
 ## B. Geräte- und Scannerabnahme
 
