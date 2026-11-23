@@ -8,7 +8,7 @@ TRAKUNA 1.52 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- 45 Unit-Tests im Testbestand. Version 1.52 ergänzt strikte UTF-8-Dekodierung auch für entschlüsselte lokale Speicherdaten. CI-Lauf 45285731190 für versionCode 53 war erfolgreich: Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
+- 58 Unit-Tests im Testbestand. Version 1.52 ergänzt strikte UTF-8-Dekodierung auch für entschlüsselte lokale Speicherdaten. CI-Lauf 45285731190 für versionCode 53 war erfolgreich: Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
 - Debug-APK-SHA-256: `9e721394925265c1a9316089afefa04233aeb58b9461c8f8314b74c7f8a5eae7`.
 - ZIP-Artefakt-SHA-256: `e496571dc273fa43f7b2d077d143eb47da8f20f7691e726db095e27c54891587`.
 - Das ZIP-Artefakt wurde am 23.11.2026, 23:07 UTC erstellt und läuft am 07.12.2026, 23:07 UTC ab.
