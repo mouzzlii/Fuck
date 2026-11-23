@@ -56,17 +56,6 @@ android {
 
     testOptions {
         animationsDisabled = true
-        managedDevices {
-            devices {
-                create<com.android.build.api.dsl.ManagedVirtualDevice>("pixel2Api35") {
-                    device = "Pixel 2"
-                    apiLevel = 35
-                    systemImageSource = "aosp"
-                    // CI runners must not create/load emulator snapshots; use software rendering.
-                    emulatorArgs.addAll(listOf("-no-snapshot", "-no-window", "-no-audio", "-gpu", "swiftshader_indirect"))
-                }
-            }
-        }
     }
 }
 
