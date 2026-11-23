@@ -3,11 +3,11 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · Softwarestand: 1.44 · letzter erfolgreicher CI-Lauf: 45221331671
+Stand: 23. November 2026 · App-Version: 1.44 (versionCode 45) · CI-Lauf: 45227305052
 
 ## 1. Zweck und Freigabestatus
 
-Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetrieb. Build 266 ist ein erfolgreich gebautes **Debug-Testpaket**. Unit-Tests und Android-Lint sind erfolgreich. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetrieb. App-Version 1.44 (versionCode 45) ist als **Debug-Testpaket** erfolgreich gebaut. Unit-Tests und Android-Lint sind erfolgreich. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
