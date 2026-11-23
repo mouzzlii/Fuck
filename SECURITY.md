@@ -17,7 +17,7 @@
 - Zebra-DataWedge-Broadcasts werden nur verarbeitet, solange die TRAKUNA-Aktivität im Vordergrund (`RESUMED`) ist; im Hintergrund eingehende Broadcasts werden ignoriert.
 - Fehlende oder falsch typisierte DataWedge-Extras werden defensiv ignoriert; fehlerhafte externe Broadcast-Nutzdaten sollen den Empfänger nicht zum Absturz bringen.
 - Android-Backup ist deaktiviert (`allowBackup=false`).
-- Das aktuelle Manifest fordert keine `INTERNET`-Berechtigung an; die App baut daher derzeit keine Netzwerkverbindung auf. WLAN/4G aktiviert keine Cloud-Synchronisierung. Es gibt keine automatische Übertragung an einen Server.
+- TRAKUNA fordert im final zusammengeführten App-Manifest keine `INTERNET`-Berechtigung an. Die Barcode-Abhängigkeiten bringen eine Google-Transport-Komponente mit, deren Manifest diese Berechtigung anfordert; TRAKUNA entfernt sie ausdrücklich per Manifest-Merger-Regel (`tools:node="remove"`). Die CI kontrolliert sowohl diese Quellregel als auch das tatsächlich paketierte Manifest. WLAN/4G aktiviert keine Cloud-Synchronisierung. Es gibt keine automatische Übertragung an einen Server.
 - Unverschlüsselter Netzwerkverkehr ist standardmäßig deaktiviert.
 - Lokale Datensätze werden vor Anzeige und Wiederherstellung auf Struktur, Status, IDs und Duplikate geprüft.
 - Backup-Import ist auf 2 MiB begrenzt und erfordert eine Bestätigung, da der vorhandene lokale Bestand ersetzt wird.
