@@ -43,8 +43,6 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
@@ -636,19 +634,7 @@ private fun shipmentResultText(result: ShipmentUpdate): String = when (result) {
 }
 
 
-private fun readBoundedUtf8(input: InputStream, maxBytes: Int): String {
-    val output = ByteArrayOutputStream()
-    val buffer = ByteArray(8192)
-    var total = 0
-    while (true) {
-        val count = input.read(buffer)
-        if (count < 0) break
-        total += count
-        require(total <= maxBytes) { "Sicherungsdatei ist größer als 2 MiB und wurde nicht geladen." }
-        output.write(buffer, 0, count)
-    }
-    return output.toString(Charsets.UTF_8.name())
-}
+
 
 data class HandoffResult(val message: String)
 

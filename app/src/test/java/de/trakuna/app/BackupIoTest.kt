@@ -1,0 +1,54 @@
+package de.trakuna.app
+
+import java.io.ByteArrayInputStream
+import java.io.InputStream
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
+import org.junit.Test
+
+class BackupIoTest {
+    @Test
+    fun readsUtf8WithinLimit() {
+        val value = "TRAKUNA-Sicherung – Österreich"
+        assertEquals(value, readBoundedUtf8(ByteArrayInputStream(value.toByteArray(Charsets.UTF_8)), 128))
+    }
+
+    @Test
+    fun rejectsInputLargerThanLimit() {
+        val input = ByteArrayInputStream("12345".toByteArray(Charsets.UTF_8))
+        assertThrows(IllegalArgumentException::class.java) { readBoundedUtf8(input, 4) }
+    }
+
+    @Test
+    fun rejectsMalformedUtf8InsteadOfSilentlyReplacingBytes() {
+        val malformed = byteArrayOf(0x7B, 0x22, 0xFF.toByte(), 0x22, 0x7D)
+        assertThrows(java.nio.charset.CharacterCodingException::class.java) {
+            readBoundedUtf8(ByteArrayInputStream(malformed), 32)
+        }
+    }
+
+    @Test
+    fun handlesStreamsThatTemporarilyReturnZeroBytes() {
+        val bytes = "Backup".toByteArray(Charsets.UTF_8)
+        val input = object : InputStream() {
+            private val delegate = ByteArrayInputStream(bytes)
+            private var returnZero = true
+            override fun read(): Int = delegate.read()
+            override fun read(buffer: ByteArray, offset: Int, length: Int): Int {
+                if (returnZero) {
+                    returnZero = false
+                    return 0
+                }
+                return delegate.read(buffer, offset, length)
+            }
+        }
+        assertEquals("Backup", readBoundedUtf8(input, 16))
+    }
+
+    @Test
+    fun rejectsNegativeLimit() {
+        assertThrows(IllegalArgumentException::class.java) {
+            readBoundedUtf8(ByteArrayInputStream(byteArrayOf()), -1)
+        }
+    }
+}

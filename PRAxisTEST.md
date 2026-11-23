@@ -95,7 +95,7 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 
 1. In „Paketshop-Sendungen verwalten“ eine vollständige JSON-Datensicherung erstellen und in einem sicheren Speicherort ablegen.
 2. Prüfen, dass die Datei `TRAKUNA-Sicherung.json` vorhanden und nicht leer ist.
-3. Für eine Wiederherstellung die Sicherungsdatei auswählen. TRAKUNA prüft Format, Version, Einträge und Höchstmenge.
+3. Für eine Wiederherstellung die Sicherungsdatei auswählen. TRAKUNA liest höchstens 2 MiB ein und prüft UTF-8-Kodierung, Format, Version, Einträge und Höchstmenge. Beschädigte Textkodierung wird abgelehnt.
 4. Vor dem Ersetzen des lokalen Bestands erscheint eine Bestätigungsabfrage. Ohne Bestätigung bleiben die aktuellen Daten unverändert.
 5. Nach Wiederherstellung die angezeigte Anzahl mit dem erwarteten Datenbestand vergleichen.
 
