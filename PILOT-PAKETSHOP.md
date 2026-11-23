@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version: 1.45 (versionCode 46) · CI-Lauf: 45227305052
+Stand: 23. November 2026 · App-Version: 1.45 (versionCode 46) · CI-Prüfung: ausstehend
 
 ## 1. Zweck und Freigabestatus
 ## Start-Priorität der Paketdienste
@@ -15,7 +15,7 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben.
 
 
-Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetrieb. App-Version 1.45 (versionCode 46) ist als **Debug-Testpaket** erfolgreich gebaut. Unit-Tests und Android-Lint sind erfolgreich. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetrieb. Version 1.45 (versionCode 46) enthält die neue Carrier-Schnellauswahl; der zugehörige Build muss noch erfolgreich durch CI laufen. Der letzte nachweislich erfolgreiche Build ist Version 1.44. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
@@ -27,11 +27,12 @@ Der bisherige Download-Link und die Prüfsumme beziehen sich auf Version 1.44 un
 
 
 
-- [GitHub Actions CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052)
-- Unit-Tests, Android-Lint und Debug-APK-Erstellung: erfolgreich
-- Artefakt: `TRAKUNA-Android` (Datei `app-debug.apk`)
-- APK-SHA-256: `db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
+**Historischer Download für Version 1.44 (ohne Carrier-Schnellauswahl):** [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052)
+- Unit-Tests, Android-Lint und Debug-APK-Erstellung für Version 1.44: erfolgreich
+- Historische APK-SHA-256: `db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
 - Artefakt erstellt: 23.11.2026, 17:26 UTC; Ablauf: 07.12.2026, 17:26 UTC
+
+**Version 1.45 erst herunterladen, wenn der [Android-Workflow](https://github.com/mouzzlii/Fuck/actions/workflows/android.yml) für den aktuellen Commit erfolgreich abgeschlossen ist.**
 
 Das Artefakt im Actions-Lauf herunterladen und das enthaltene ZIP entpacken. Die Debug-APK kann eine andere Signatur als spätere Builds haben. Vor einem Update bestehende lokale Daten sichern und die App nicht deinstallieren.
 
