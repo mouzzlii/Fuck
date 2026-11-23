@@ -654,7 +654,18 @@ object ShipmentRules {
     fun normalizeTrackingNumber(raw: String): String =
         raw.trim().replace(Regex("\\s+"), "")
 
-    fun normalizeCarrierLabel(raw: String): String = raw.trim().take(80)
+    fun normalizeCarrierLabel(raw: String): String {
+        val trimmed = raw.trim().take(80)
+        return when (trimmed.lowercase(java.util.Locale.ROOT).replace(Regex("\\s+"), " ")) {
+            "hermes" -> "Hermes"
+            "dpd" -> "DPD"
+            "gls" -> "GLS"
+            "dhl", "dhl paket" -> "DHL Paket"
+            "ups" -> "UPS"
+            "österreichische post", "österreichische post ag", "austrian post", "post at" -> "Österreichische Post"
+            else -> trimmed
+        }
+    }
 
     fun resolveCarrierLabel(manual: String, trackingNumber: String): String =
         normalizeCarrierLabel(manual).ifBlank { identifyCarrier(trackingNumber).orEmpty() }
@@ -672,8 +683,7 @@ object ShipmentRules {
         return when {
             Regex("^1Z[A-Z0-9]{16}$").matches(value) -> "UPS"
             Regex("^[A-Z]{2}[0-9]{9}AT$").matches(value) -> "Österreichische Post"
-            value.startsWith("JVGL") || value.startsWith("JJD") -> "DHL Paket"
-            value.startsWith("JD") && value.length in 12..30 -> "DHL Paket"
+            Regex("^(?:JVGL|JJD)[A-Z0-9]{8,26}$").matches(value) -> "DHL Paket"
             else -> null
         }
     }
