@@ -583,10 +583,13 @@ class MainActivity : ComponentActivity() {
                                 title = { Text("Statusänderung bestätigen?") },
                                 text = {
                                     Text(
-                                        if (isPhysicalHandover) {
-                                            "Soll ${record.trackingNumber} wirklich als ${nextStatus?.let { shipmentStatusLabel(it) }} markiert werden? Bitte erst bestätigen, wenn die Sendung tatsächlich übergeben wurde."
-                                        } else {
-                                            "Soll ${record.trackingNumber} wirklich als ${nextStatus?.let { shipmentStatusLabel(it) }} markiert werden?"
+                                        when {
+                                            nextStatus == ShipmentStatus.HANDED_TO_CARRIER ->
+                                                "Soll ${record.trackingNumber} lokal als an den Paketdienst übergeben dokumentiert werden? Wichtig: TRAKUNA erhält dabei keine Bestätigung von DPD, GLS, Hermes oder UPS. Erst markieren, wenn die Übergabe im offiziellen Carrier-System abgeschlossen und dort quittiert wurde."
+                                            nextStatus == ShipmentStatus.HANDED_TO_CUSTOMER ->
+                                                "Soll ${record.trackingNumber} wirklich als ${nextStatus.let { shipmentStatusLabel(it) }} markiert werden? Bitte erst bestätigen, wenn die Sendung tatsächlich an den Kunden bzw. Bevollmächtigten ausgehändigt wurde."
+                                            else ->
+                                                "Soll ${record.trackingNumber} wirklich als ${nextStatus?.let { shipmentStatusLabel(it) }} markiert werden?"
                                         }
                                     )
                                 },
@@ -720,14 +723,14 @@ private fun shipmentStatusLabel(status: ShipmentStatus): String = when (status) 
     ShipmentStatus.HANDED_TO_CUSTOMER -> "An Kunden übergeben"
     ShipmentStatus.ACCEPTED_FROM_CUSTOMER -> "Vom Kunden angenommen"
     ShipmentStatus.RETURN_ACCEPTED -> "Retoure angenommen"
-    ShipmentStatus.HANDED_TO_CARRIER -> "An Paketdienst übergeben"
+    ShipmentStatus.HANDED_TO_CARRIER -> "Lokal als an Paketdienst übergeben dokumentiert"
 }
 
 private fun shipmentNextAction(flow: ShipmentFlow, status: ShipmentStatus): String = when {
     flow == ShipmentFlow.INCOMING_FOR_CUSTOMER && status == ShipmentStatus.RECEIVED_BY_SHOP -> "Als abholbereit markieren"
     flow == ShipmentFlow.INCOMING_FOR_CUSTOMER -> "An Kunden übergeben"
-    flow == ShipmentFlow.CUSTOMER_RETURN -> "Retoure an Paketdienst übergeben"
-    else -> "An Paketdienst übergeben"
+    flow == ShipmentFlow.CUSTOMER_RETURN -> "Retoure – Übergabe lokal dokumentieren"
+    else -> "Übergabe an Paketdienst lokal dokumentieren"
 }
 
 private fun shipmentResultText(result: ShipmentUpdate): String = when (result) {
