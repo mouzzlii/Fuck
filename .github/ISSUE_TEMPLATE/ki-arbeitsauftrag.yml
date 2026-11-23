@@ -1,0 +1,81 @@
+name: KI-/Entwicklungsauftrag
+description: Abgegrenzte, überprüfbare Aufgabe für ein externes KI- oder Entwicklerwerkzeug
+title: "[KI-Auftrag]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keine Passwörter, API-Schlüssel, privaten Schlüssel, echten Sendungsnummern oder Empfängerdaten eintragen.
+        Externe Werkzeuge gelten erst nach einem nachvollziehbaren Test als verbunden. Siehe MEHR-KI-ARBEITSPROTOKOLL.md.
+  - type: input
+    id: base_commit
+    attributes:
+      label: Basis-Commit (vollständiger SHA)
+      description: Der exakte Quellstand, auf dem gearbeitet werden soll.
+      placeholder: "40-stelliger Git-SHA"
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Ziel und gewünschtes Verhalten
+      description: Was soll nach der Änderung messbar funktionieren?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Betroffene Bereiche und Nicht-Ziele
+      description: Was darf geändert werden und was muss unverändert bleiben?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Akzeptanzkriterien
+      description: Liste konkreter, überprüfbarer Bedingungen.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Testplan
+      description: Automatisierte Tests und gegebenenfalls einfache manuelle Prüfschritte.
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Sicherheits- und Betriebsgrenzen
+      description: Daten, Geräte, Carrier-Apps, Berechtigungen oder Abläufe, die nicht verändert werden dürfen.
+      value: |
+        - Keine echten Kunden-/Sendungsdaten verwenden.
+        - Keine Carrier-Buchungen oder Bestätigungen vortäuschen.
+        - Keine vorhandenen Paketshop-Geräte oder Carrier-Apps ohne ausdrückliche Freigabe verändern.
+        - Keine Kosten, Provider-Schlüssel oder Deployments ohne ausdrückliche Freigabe.
+    validations:
+      required: true
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Werkzeug
+      options:
+        - ChatGPT
+        - Gemini
+        - Grok
+        - Bolt
+        - Menschliche Entwicklung
+        - Sonstiges
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Ergebnis / Review (nach Abschluss ausfüllen)
+      description: Branch oder PR, geänderte Dateien, CI-Link, Testergebnisse, offene Risiken und tatsächlicher Werkzeugstatus.
+    validations:
+      required: false
