@@ -1,6 +1,6 @@
 # TRAKUNA – WLAN- und Startvorbereitung für den ersten Paketshop
 
-Stand: 23. November 2026
+Stand: 24. November 2026
 
 ## Ziel
 
