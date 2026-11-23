@@ -76,7 +76,7 @@ jobs:
         run: gradle --no-daemon testDebugUnitTest
 
       - name: Android-Keystore- und Speicher-Instrumentierungstests auf Emulator
-        run: gradle --no-daemon pixel2Api35DebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
+        run: gradle --no-daemon pixel2Api35DebugAndroidTest
 
       - name: Android-Lint ausführen
         run: gradle --no-daemon lintDebug
