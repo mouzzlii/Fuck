@@ -6,7 +6,7 @@ Stand: 23. November 2026
 
 Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: Gerät mit dem freigegebenen Shop-WLAN verbinden, TRAKUNA starten und einen kontrollierten Funktionstest durchführen.
 
-**Wichtig:** WLAN allein stellt noch keine Verbindung zu GLS, DPD oder Hermes her. Eine solche Carrier-Integration benötigt eine offiziell freigegebene Schnittstelle und Zugangsdaten/Testzugänge des jeweiligen Anbieters. Bestehende Carrier-Programme und Druckerkopplungen bleiben unverändert.
+**Wichtig:** WLAN allein stellt noch keine Verbindung zu DPD, GLS, Hermes oder UPS her. Eine solche Carrier-Integration benötigt eine offiziell freigegebene Schnittstelle und Zugangsdaten/Testzugänge des jeweiligen Anbieters. Bestehende Carrier-Programme und Druckerkopplungen bleiben unverändert.
 
 ## 1. Welche Verbindung wofür benötigt wird
 
@@ -17,6 +17,7 @@ Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: G
 | GLS-Handgerät ↔ GLS-Drucker | Bestehender GLS-Etikettendruck | Laut Betreiber Bluetooth; nicht verändern |
 | DPD-Handgerät ↔ DPD-Drucker | Bestehender DPD-Etikettendruck | Laut Betreiber Bluetooth; nicht verändern |
 | Hermes MC3090BT ↔ Hermes-Drucker/System | Bestehender Hermes-Ablauf | Eigenständiger Altgeräteablauf; nicht verändern |
+| UPS-Gerät/Arbeitsplatz ↔ UPS-System/Drucker | UPS-Paketshop-Ablauf | Hardware und Verbindung noch nicht erhoben; vor Ort aufnehmen, nichts verändern |
 | TRAKUNA ↔ andere TRAKUNA-Geräte | Gemeinsame Daten/Synchronisierung | Noch nicht implementiert; lokale Datenspeicherung ist derzeit nicht automatisch zwischen Geräten synchronisiert |
 
 ## 2. Vorbereitete Startreihenfolge vor Ort
