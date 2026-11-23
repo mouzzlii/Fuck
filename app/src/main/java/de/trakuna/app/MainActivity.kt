@@ -9,6 +9,8 @@ import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Build
 import android.os.PersistableBundle
@@ -37,6 +39,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
@@ -82,6 +85,16 @@ class MainActivity : ComponentActivity() {
             var editRecipient by remember { mutableStateOf("") }
             var editNote by remember { mutableStateOf("") }
             val context = LocalContext.current
+            var wifiConnected by remember { mutableStateOf(isWifiConnected(context)) }
+            DisposableEffect(context) {
+                val observer = LifecycleEventObserver { _, event ->
+                    if (event == Lifecycle.Event.ON_RESUME) {
+                        wifiConnected = isWifiConnected(context)
+                    }
+                }
+                this@MainActivity.lifecycle.addObserver(observer)
+                onDispose { this@MainActivity.lifecycle.removeObserver(observer) }
+            }
             // Keep one store instance for the screen: its synchronization and initialization state
             // must be shared by every read/write operation in this UI.
             val shipmentStore = remember(context) { ShipmentStore(context) }
@@ -195,6 +208,22 @@ class MainActivity : ComponentActivity() {
                         Spacer(Modifier.height(24.dp))
                         Text("TRAKUNA", style = MaterialTheme.typography.headlineLarge, color = Forest)
                         Text("SCAN-ZENTRALE", style = MaterialTheme.typography.labelLarge)
+                        Card(Modifier.fillMaxWidth()) {
+                            Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(
+                                    if (wifiConnected) "WLAN verbunden" else "Kein WLAN verbunden",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = if (wifiConnected) Forest else MaterialTheme.colorScheme.error
+                                )
+                                Text(
+                                    if (wifiConnected)
+                                        "Dieses TRAKUNA-Gerät ist mit einem WLAN verbunden. Ob die anderen Handgeräte im selben Netzwerk erreichbar sind, ist damit noch nicht geprüft."
+                                    else
+                                        "Dieses Gerät ist derzeit nicht mit einem WLAN verbunden. Der lokale Scanbetrieb funktioniert weiterhin.",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
                         Button(
                             onClick = { showScanner = !showScanner },
                             modifier = Modifier.fillMaxWidth().height(58.dp)
@@ -845,6 +874,14 @@ const val EXTRA_CARRIER = "de.trakuna.app.extra.CARRIER"
 /** Public accessor for a future in-process adapter or diagnostics screen. */
 fun getCachedTrackingNumber(context: Context): String =
     SecureHandoffCache(context).trackingNumber()
+
+private fun isWifiConnected(context: Context): Boolean {
+    val connectivity = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+        ?: return false
+    val network = connectivity.activeNetwork ?: return false
+    val capabilities = connectivity.getNetworkCapabilities(network) ?: return false
+    return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+}
 
 private fun normalizeTrackingNumber(raw: String): String =
     ShipmentRules.normalizeTrackingNumber(raw)
