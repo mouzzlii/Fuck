@@ -74,7 +74,7 @@ Wichtig:
 - Eine Sendung als abholbereit markieren und lokal an den Kunden übergeben.
 - Eine Kundenabgabe bzw. Retoure erfassen und den lokalen Ablauf bis zur Übergabe an den Paketdienst fortschreiben.
 
-Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.51 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
+Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.53 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
 
 ## 6. Zebra TC26 und DataWedge (DPD/GLS)
 
