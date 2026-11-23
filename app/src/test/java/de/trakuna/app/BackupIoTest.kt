@@ -62,6 +62,14 @@ class BackupIoTest {
     }
 
     @Test
+    fun strictUtf8DecoderRejectsMalformedAndUnmappableByteSequences() {
+        assertEquals("TRAKUNA – Österreich", decodeStrictUtf8("TRAKUNA – Österreich".toByteArray(Charsets.UTF_8)))
+        assertThrows(java.nio.charset.CharacterCodingException::class.java) {
+            decodeStrictUtf8(byteArrayOf(0xC3.toByte(), 0x28))
+        }
+    }
+
+    @Test
     fun rejectsNegativeLimit() {
         assertThrows(IllegalArgumentException::class.java) {
             readBoundedUtf8(ByteArrayInputStream(byteArrayOf()), -1)
