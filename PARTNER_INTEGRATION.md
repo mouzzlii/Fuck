@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: App-Version 1.43
+Stand: App-Version 1.44
 
 ## Zweck
 
@@ -90,9 +90,19 @@ Mindestanforderungen:
 - Testzugang und freigegebene Testsendungen.
 - Beschreibung, welche Paketshop-Aktionen die Schnittstelle tatsächlich unterstützt (Annahme, Kundenausgabe, Retoure, Übergabe an Zusteller).
 
-Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.43; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
+Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.44; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
 
 Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Übergabeversuch mit lokalem Cache und Zwischenablage-Fallback. Es werden keine Carrier-Endpunkte, Paketbuchungen oder Zugangsdaten erfunden.
+
+## Sendungsnummern-Erkennung – Sicherheitsverhalten ab Version 1.44
+
+- Eine manuelle Sendungsnummer wird als vollständiger kompakter Wert akzeptiert, wenn sie die allgemeinen Eingaberegeln erfüllt. Das allein bestätigt weder Paketdienst noch Existenz der Sendung.
+- Aus freiem Etikettentext werden nur die derzeit ausdrücklich hinterlegten, strukturell eindeutigen Muster extrahiert. Mehrere unterschiedliche Treffer führen zur Ablehnung statt zur willkürlichen Auswahl.
+- Bei QR-Links werden ausdrücklich benannte Sendungsnummern-Felder ausgewertet. Allgemeine numerische IDs und beliebige URL-Pfadsegmente gelten nicht als ausreichender Nachweis.
+- Die Kamera sammelt erkannte Nummern über mehrere Bilder. Tauchen im Bestätigungsfenster mehrere unterschiedliche Nummern auf, fordert TRAKUNA einen erneuten bzw. manuellen Scan.
+- Automatische Paketdienst-Hinweise bleiben begrenzt auf UPS, Österreichische Post und bestimmte DHL-Muster. DPD, GLS und Hermes müssen bis zur Prüfung freigegebener Originaletiketten manuell ausgewählt werden.
+
+**Wichtig:** Diese Schutzregeln verringern Fehlzuordnungen, ersetzen aber keine Prüfung mit echten, vom Paketshop freigegebenen Testetiketten. Eine automatisch extrahierte Nummer ist keine offizielle Sendungs- oder Buchungsbestätigung.
 
 ## Zebra DataWedge – Barcode-Eingang
 
