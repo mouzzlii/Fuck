@@ -8,11 +8,11 @@ TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- Version 1.53 ergänzt Android-Instrumentierungstests für Keystore-Verschlüsselung, Wiederöffnung des lokalen Speichers und Fail-closed-Verhalten bei beschädigten Daten. CI-Lauf 45290932535 für versionCode 54 war erfolgreich: Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. **Die Emulator-Instrumentierungstests wurden in diesem CI-Lauf nicht ausgeführt**; sie bleiben bis zu einem geeigneten Emulator-/Gerätelauf offen. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
-- Debug-APK-SHA-256: `c6d787d3cea6a5e0359bab8cc2f1a9b6759429cbea42dc1e2baf79b916e94965`.
-- ZIP-Artefakt-SHA-256: `9bfd1ce4fe02c947abfcba6df8836844a2d810b5ac5c3aeba0e51ece808179cb`.
-- Das ZIP-Artefakt wurde am 23.11.2026, 23:43 UTC erstellt und läuft am 07.12.2026, 23:43 UTC ab.
-- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45290932535
+- Version 1.53 ergänzt Android-Instrumentierungstests für Keystore-Verschlüsselung, Wiederöffnung des lokalen Speichers und Fail-closed-Verhalten bei beschädigten Daten. CI-Lauf 45291370834 für versionCode 54 war erfolgreich: Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. **Die Emulator-Instrumentierungstests wurden in diesem CI-Lauf nicht ausgeführt**; sie bleiben bis zu einem geeigneten Emulator-/Gerätelauf offen. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
+- Debug-APK-SHA-256: `9c4061b394cad26f7f76456fef738962e02237cffc084cc0b62bdd2ad8c3e6da`.
+- ZIP-Artefakt-SHA-256: `82b94fe97c53c19bcbc7f65e2a9d4eeb68f2801a775347efc4c036b29ec96ece`.
+- Das ZIP-Artefakt wurde am 23.11.2026, 23:46 UTC erstellt und läuft am 07.12.2026, 23:46 UTC ab.
+- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45291370834
 
 **Wichtig:** Version 1.53 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
