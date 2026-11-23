@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.48 (versionCode 49) · CI erfolgreich: Lauf 45250580288
+Stand: App-Version 1.49 (versionCode 50) · CI erfolgreich: Lauf 45265965503
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45250580288 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45250580288).
+1. Den [erfolgreichen Android-Build 45265965503 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45265965503).
 2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
@@ -14,10 +14,10 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 
 **Prüfsummen des bereitgestellten Testpakets**
 
-- APK-SHA-256: `7bb30957a7bd288c6e9a2748b773d76b46d3229425c0725f738572685e0fd8d3`
-- ZIP-SHA-256: `e009c61993301453c8ee12617f7ac7859fb30ea05205ab7e31baf23291f2ea3a`
-- Erstellt: 23.11.2026, 19:37 UTC
-- Artefakt verfügbar bis: 07.12.2026, 19:37 UTC
+- APK-SHA-256: `2608aaa39ac9d8e1e38cecadc219e75f733bd868c36064fa6fd43cb7a94bbc54`
+- ZIP-SHA-256: `92fe7d6602252f099e87d01a1c030abda0132d25bdab2c00fd1bbffcad33a153`
+- Erstellt: 23.11.2026, 21:06 UTC
+- Artefakt verfügbar bis: 07.12.2026, 21:06 UTC
 
 Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease.
 
@@ -35,7 +35,7 @@ Wenn Android eine abweichende Signatur meldet, Installation abbrechen. Die beste
 
 ## 3. DPD, GLS, Hermes und UPS getrennt zuordnen
 
-In Version 1.48 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
+In Version 1.49 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
 
 1. TRAKUNA öffnen.
 2. **Betriebssoftware pro Paketdienst zuordnen** antippen.
@@ -73,7 +73,7 @@ Wichtig:
 - Eine Sendung als abholbereit markieren und lokal an den Kunden übergeben.
 - Eine Kundenabgabe bzw. Retoure erfassen und den lokalen Ablauf bis zur Übergabe an den Paketdienst fortschreiben.
 
-Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.48 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
+Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.49 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
 
 ## 6. Zebra TC26 und DataWedge (DPD/GLS)
 
@@ -83,11 +83,13 @@ Für einen TRAKUNA-Scan auf einem Android-Zebra-Gerät ist ein eigenes DataWedge
 
 Ein Scan wird nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Die DataWedge-Konfiguration und der echte Scan-Empfang sind auf den Shopgeräten noch nicht vor Ort abgenommen.
 
-## 7. Hermes – vorhandenes MC3090BT unverändert lassen
+## 7. Hermes – neues Handgerät angekündigt
 
-Das gemeldete Hermes-Handgerät ist ein Zebra/Symbol MC3090BT. Zebra führt diese Baureihe mit Windows CE 5.0 bzw. Windows Mobile 6.1; sie kann die Android-App TRAKUNA nicht ausführen. Das MC3090BT und der vorhandene Hermes-Drucker bleiben für den bisherigen Hermes-Ablauf unangetastet.
+Das bisherige Hermes-Handgerät MC3090BT ist laut Betreiber zu alt und wird nächste Woche durch ein neues Gerät ersetzt. Das alte Gerät bleibt bis zur regulären Umstellung ausschließlich für den bestehenden Hermes-Ablauf vorgesehen; TRAKUNA verändert daran nichts.
 
-Für einen TRAKUNA-Hermes-Test ist ein separates, vom Betreiber und Hermes freigegebenes Android-Gerät erforderlich. Bis eine offizielle Schnittstelle bestätigt ist, kann die Sendungsnummer dort nur manuell als lokaler Testvorgang erfasst werden.
+**Nach Ankunft des neuen Geräts** werden zuerst Hersteller, exaktes Modell, Betriebssystem-/Android-Version, Hermes-App-Version, Scannerart, Druckermodell und Verbindung dokumentiert. Danach prüfen wir ausschließlich mit Betreiberzustimmung, ob ein freigegebener Scan- oder Datenaustauschweg existiert. Eine Android-Installation, DataWedge-Konfiguration oder Änderung der Hermes-App erfolgt nicht ohne ausdrückliche Freigabe.
+
+Bis dahin bleibt Hermes in TRAKUNA nur manuell auswählbar und lokal dokumentierbar. Eine offizielle Hermes-Schnittstelle oder Buchungsbestätigung ist weiterhin nicht vorhanden.
 
 ## 8. UPS – App-Anforderung beachten
 
