@@ -274,6 +274,19 @@ class MainActivity : ComponentActivity() {
                                         Text("Neuen Vorgang mit der oben eingegebenen Sendungsnummer erfassen:")
                                         OutlinedTextField(value = recipient, onValueChange = { recipient = it.take(100) }, label = { Text("Empfänger / Kundenname (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it.take(500) }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
+                                        if (shipmentStorageIssue != null) {
+                                            Text(
+                                                "Erfassung derzeit gesperrt: $shipmentStorageIssue",
+                                                color = MaterialTheme.colorScheme.error,
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        } else if (normalizeTrackingNumber(number).isBlank()) {
+                                            Text(
+                                                "Bitte zuerst oben eine Sendungsnummer eingeben. Danach wird die passende Erfassungs-Schaltfläche aktiv.",
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        }
                                         Button(
                                             onClick = {
                                                 val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
@@ -282,6 +295,7 @@ class MainActivity : ComponentActivity() {
                                                     recipient = ""
                                                     carrierOverride = ""
                                                     shipmentNote = ""
+                                                    showShipmentLedger = false
                                                 }
                                                 shipmentRevision++
                                             },
@@ -296,6 +310,7 @@ class MainActivity : ComponentActivity() {
                                                     recipient = ""
                                                     carrierOverride = ""
                                                     shipmentNote = ""
+                                                    showShipmentLedger = false
                                                 }
                                                 shipmentRevision++
                                             },
@@ -310,12 +325,18 @@ class MainActivity : ComponentActivity() {
                                                     recipient = ""
                                                     carrierOverride = ""
                                                     shipmentNote = ""
+                                                    showShipmentLedger = false
                                                 }
                                                 shipmentRevision++
                                             },
                                             enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
                                             modifier = Modifier.fillMaxWidth()
                                         ) { Text("Retoure annehmen") }
+                                        Text(
+                                            status,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
                                         HorizontalDivider()
                                         Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
                                         if (shipmentStorageIssue == null) {
