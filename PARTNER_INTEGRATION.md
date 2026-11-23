@@ -3,6 +3,14 @@
 Stand: App-Version 1.44
 
 ## Zweck
+## Verbindliche Startpriorität der Paketdienste
+
+Für den ersten Start sind **DPD, GLS, Hermes und UPS** die vier priorisierten Paketdienste. Die Reihenfolge in der TRAKUNA-Auswahl ist DPD, GLS, Hermes, UPS. Alle vier müssen im Pilotablauf separat geprüft werden; eine manuelle Carrier-Auswahl ist zunächst nur eine Kennzeichnung des lokalen Vorgangs und keine Buchung im Partnersystem.
+
+- **DPD und GLS:** vorhandene separate Zebra-Handgeräte und Bluetooth-Drucker bleiben unangetastet. DataWedge-Scan auf den TC26-Geräten muss vor Ort getestet werden.
+- **Hermes:** bestehendes MC3090BT-System bleibt unangetastet. Offizielle Hermes-Schnittstelle/Freigabe ist ein Pflicht-Blocker.
+- **UPS:** Sendungsnummern im bekannten `1Z`-Format können als Format-Hinweis erkannt werden. Das bestätigt weder Gültigkeit noch UPS-Paketshop-Berechtigung. Hardware, Shopsoftware und offizieller Integrationsweg sind noch zu ermitteln.
+
 
 Dieses Dokument beschreibt die minimale technische Vereinbarung, damit eine Paketshop- oder Carrier-App eine Sendungsnummer aus TRAKUNA übernehmen kann. Es ist **keine Behauptung**, dass eine bestehende Post-, DHL-, DPD-, GLS- oder UPS-App diese Schnittstelle bereits unterstützt.
 
