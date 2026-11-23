@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity() {
             var shipmentRevision by remember { mutableStateOf(0) }
             var recipient by remember { mutableStateOf("") }
             var carrierOverride by remember { mutableStateOf("") }
+            var showCarrierMenu by remember { mutableStateOf(false) }
             var shipmentNote by remember { mutableStateOf("") }
             var shipmentSearch by remember { mutableStateOf("") }
             var visibleRecordLimit by remember { mutableStateOf(100) }
@@ -224,13 +225,39 @@ class MainActivity : ComponentActivity() {
                                 imeAction = ImeAction.Done
                             )
                         )
+                        Text("Start-Paketdienste", style = MaterialTheme.typography.titleSmall, color = Forest)
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            OutlinedButton(
+                                onClick = { showCarrierMenu = true },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    if (carrierOverride.isBlank()) "Paketdienst auswählen (DPD, GLS, Hermes, UPS)"
+                                    else "Ausgewählt: ${carrierOverride}"
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = showCarrierMenu,
+                                onDismissRequest = { showCarrierMenu = false }
+                            ) {
+                                listOf("DPD", "GLS", "Hermes", "UPS", "Ohne Auswahl").forEach { option ->
+                                    DropdownMenuItem(
+                                        text = { Text(option) },
+                                        onClick = {
+                                            carrierOverride = if (option == "Ohne Auswahl") "" else option
+                                            showCarrierMenu = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
                         OutlinedTextField(
                             value = carrierOverride,
                             onValueChange = { carrierOverride = it.take(80) },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("Paketdienst (optional, manuell)") },
-                            placeholder = { Text("z. B. Hermes, DHL, DPD, GLS, Österreichische Post, UPS") },
-                            supportingText = { Text("Hermes derzeit manuell eintragen; automatische Erkennung und offizielle Hermes-Anbindung sind noch nicht verfügbar.") },
+                            label = { Text("Paketdienst (manuell änderbar)") },
+                            placeholder = { Text("DPD, GLS, Hermes oder UPS") },
+                            supportingText = { Text("Die Auswahl kennzeichnet nur den Vorgang. Eine offizielle Carrier-Buchung oder Schnittstelle ist damit nicht verbunden.") },
                             singleLine = true
                         )
                         Button(
