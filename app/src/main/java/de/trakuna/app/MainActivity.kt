@@ -792,6 +792,7 @@ private fun ScannerPanel(onDetected: (String?) -> Unit, onClose: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalGetImage::class)
 @Composable
 private fun CameraPreview(onDetected: (String?) -> Unit) {
     val context = LocalContext.current
