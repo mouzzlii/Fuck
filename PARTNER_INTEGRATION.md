@@ -139,6 +139,16 @@ TRAKUNA liest den Scan nur ein, solange die App im Vordergrund aktiv ist, und ze
 **Sicherheitsgrenze:** Die DataWedge-Allowlist und Signaturprüfung müssen im Zebra-Profil tatsächlich aktiviert sein. TRAKUNA kann nicht erkennen oder erzwingen, ob ein Administrator diese Geräteeinstellung vorgenommen hat. Ohne korrekt eingerichtete Component Information bleibt der dynamische Android-Empfänger grundsätzlich durch andere Apps auf demselben Gerät nachahmbar. Eingehende Werte sind daher weiterhin nicht vertrauenswürdige Eingaben und müssen vor jeder Buchung geprüft werden.
 
 
+## GLS-/DPD-Handgeräte – Zebra TC26
+
+Nach den neuesten Vor-Ort-Angaben sind die beiden GLS-/DPD-Handgeräte sehr wahrscheinlich Zebra TC26. Ausschlaggebend ist die beschriebene TC21/TC26-Gehäuseform in Verbindung mit der sichtbaren 4G-Mobilfunkanzeige. Zebra dokumentiert den Unterschied ausdrücklich: TC21 bietet WLAN, TC26 WLAN und Mobilfunk. Die genaue TC26-Teilenummer ist vor Ort noch am Typenschild zu bestätigen.
+
+Zebra DataWedge ist der passende technische Scan-Eingang, sofern auf den konkreten TC26-Geräten vorhanden und freigegeben. TRAKUNA besitzt bereits einen dynamischen Broadcast-Empfänger für `de.trakuna.app.DATAWEDGE_SCAN` und liest `com.symbol.datawedge.data_string`. Die DataWedge-Konfiguration muss auf beiden Geräten einzeln mit dem dedizierten TRAKUNA-Profil und der unter „Zebra DataWedge – Barcode-Eingang“ beschriebenen Component-Allowlist/Signaturprüfung eingerichtet werden. Es wurde noch kein Testscan auf den GLS-/DPD-Shopgeräten ausgeführt.
+
+Offizielle Quellen:
+- Zebra TC21/TC26 Datenblatt: https://www.zebra.com/de/de/products/spec-sheets/mobile-computers/handheld/tc21-tc26.html
+- Zebra DataWedge Dokumentation: https://techdocs.zebra.com/datawedge/
+
 ## Hermes – Voraussetzungen für die konkrete Paketshop-Integration
 
 Hermes ist für den vorgesehenen Pilot-Paketshop eine Pflichtanforderung. In der aktuellen App kann Hermes als Paketdienst manuell eingetragen werden; eine automatische Hermes-Format-Erkennung, Hermes-Buchung oder direkte Hermes-Schnittstelle ist **noch nicht umgesetzt**.
