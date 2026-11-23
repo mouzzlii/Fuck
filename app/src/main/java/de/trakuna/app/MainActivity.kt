@@ -453,14 +453,14 @@ class MainActivity : ComponentActivity() {
                                                         if (record.note.isNotBlank()) Text("Notiz: ${record.note}", style = MaterialTheme.typography.bodySmall)
                                                         val canAdvance = record.status != ShipmentStatus.HANDED_TO_CUSTOMER &&
                                                             record.status != ShipmentStatus.HANDED_TO_CARRIER
-                                                        if (canAdvance && shipmentStorageIssue == null) {
+                                                        if (canAdvance) {
                                                             TextButton(onClick = { pendingAdvance = record }) {
                                                                 Text(shipmentNextAction(record.flow, record.status))
                                                             }
                                                         }
                                                         TextButton(onClick = { historyRecord = record }) { Text("Vorgangshistorie anzeigen (${record.history.size})") }
-                                                        TextButton(enabled = shipmentStorageIssue == null, onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
-                                                        TextButton(enabled = shipmentStorageIssue == null, onClick = { pendingDelete = record }) { Text("Vorgang löschen", color = MaterialTheme.colorScheme.error) }
+                                                        TextButton(onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
+                                                        TextButton(onClick = { pendingDelete = record }) { Text("Vorgang löschen", color = MaterialTheme.colorScheme.error) }
                                                     }
                                                 }
                                             }
