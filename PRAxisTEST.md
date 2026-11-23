@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Version 1.45 · versionCode 46)
 
-Version 1.45 enthält die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS. Das neue Testpaket darf erst nach erfolgreichem CI-Lauf verteilt werden: [Android-Workflow](https://github.com/mouzzlii/Fuck/actions/workflows/android.yml). Version 1.44 / CI-Lauf 45227305052 ist ein älteres Debug-Testpaket ohne diese Änderung.
+Version 1.45 enthält die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS. CI-Lauf 45229834365 ist erfolgreich (Unit-Tests, Android-Lint, Debug-APK). [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45229834365). APK-SHA-256: `06e847103a51cbf7ba04e6ab6383e200ba856dedc37cefeaf2dba0b220509441`. Das Artefakt läuft am 07.12.2026, 17:39 UTC ab.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
