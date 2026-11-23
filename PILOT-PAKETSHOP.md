@@ -1,5 +1,4 @@
 # TRAKUNA – Pilotpaket für den ersten Paketshop
-#
 
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
