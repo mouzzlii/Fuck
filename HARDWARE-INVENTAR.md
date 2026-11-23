@@ -30,7 +30,7 @@ Die zusätzlich genannten Versionen V.7.0.1632 (GLS) und V.1.16.11 (DPD) sind no
 
 ## 1a. UPS – noch offene Bestandsaufnahme
 
-UPS gehört neben DPD, GLS und Hermes zu den vier Start-Prioritäten. Für UPS liegen derzeit noch keine verifizierten Angaben zu Handgerät, Shopsoftware, Drucker, Verbindung, Version oder autorisiertem Integrationsweg vor. Bis zur Bestandsaufnahme darf TRAKUNA nur lokale Testvorgänge kennzeichnen; es darf keine UPS-Buchung oder Etikettenerstellung behaupten.
+UPS gehört neben DPD, GLS und Hermes zu den vier Start-Prioritäten. Für UPS liegen für diesen konkreten Standort noch keine verifizierten Angaben zu Handgerät, tatsächlich installierter UPS-Scanning-App, Drucker, Verbindung oder App-Version vor. UPS Österreich beschreibt öffentlich eine bereitgestellte Scanning-App für PC, Android oder Apple-Geräte sowie Scans bei Paketannahme und Fahrerübergabe. Ob und wie diese App am Standort eingesetzt wird, muss vor Ort erhoben werden. Bis dahin darf TRAKUNA nur lokale Testvorgänge kennzeichnen; es darf keine UPS-Buchung oder Etikettenerstellung behaupten.
 
 ## 2. Bestätigte Betriebsweise
 
