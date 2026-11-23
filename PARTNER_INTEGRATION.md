@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: App-Version 1.44
+Stand: App-Version 1.45 (versionCode 46)
 
 ## Zweck
 ## Verbindliche Startpriorität der Paketdienste
