@@ -1,12 +1,12 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.44 · letzter CI-Nachweis: Build 266
+Stand: App-Version 1.44 (versionCode 45) · letzter CI-Nachweis: Lauf 45227305052
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] GitHub-Actions-Build 266 für Commit `d3c1765909e2d618620dc85f582f67b770158eae` erfolgreich
+- [x] GitHub-Actions-Lauf 45227305052 für Commit `e5d59c7ffa40268f7f922297089965f8550eadaa` erfolgreich
 - [x] Unit-Tests und Android-Lint erfolgreich
 - [x] Debug-APK und SHA-256-Prüfsumme als Artefakt `TRAKUNA-Android` bereitgestellt
 - [ ] Release-Version und Versionsnummer fachlich geprüft
