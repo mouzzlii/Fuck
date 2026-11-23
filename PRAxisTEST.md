@@ -33,6 +33,24 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 18 | Partner-App auswählen und übergeben | Cache wird vor dem Wechsel dauerhaft gespeichert; Clipboard-Ausfall darf keinen Absturz verursachen, Android 13+ markiert den Clipboard-Inhalt als sensibel; Ziel-App wird nur bei installierter App geöffnet. |
 | 19 | Eine Betriebssoftware ausdrücklich auswählen und danach eine Paketdienst-Standardzuordnung konfigurieren (falls vorhanden) | Die bewusst gespeicherte Auswahl des Mitarbeiters hat Vorrang; eine Standardzuordnung darf sie nicht unbemerkt ersetzen. |
 
+
+### 2a. Zusätzlicher Erfassungstest nach der Rückmeldung „Speichern reagiert nicht“
+
+Diesen Ablauf mit einer erfundenen Testnummer durchführen, nicht mit einer echten Kundensendung:
+
+1. **Paketshop-Sendungen verwalten** öffnen.
+2. Eine gültige Testnummer mit mindestens 6 Zeichen eingeben, zum Beispiel `TRAKUNA123456789`.
+3. **Paket für Kunden annehmen** wählen.
+4. Erwartung: Der Dialog schließt sich nach erfolgreicher Speicherung. Der neue Vorgang erscheint in der Liste mit dem Status **Im Shop eingetroffen**.
+5. Den Dialog erneut öffnen und dieselbe Nummer im selben Vorgangstyp nochmals erfassen.
+6. Erwartung: TRAKUNA meldet, dass der aktive Vorgang bereits vorhanden ist. Es darf kein zweiter identischer aktiver Vorgang entstehen und es darf keine Erfolgsmeldung für eine neue Speicherung erscheinen.
+7. Das Sendungsnummernfeld leeren und eine Erfassungsaktion wählen.
+8. Erwartung: Der Dialog bleibt offen und zeigt direkt darin einen verständlichen Hinweis zur fehlenden bzw. ungültigen Sendungsnummer.
+9. Den Testvorgang nach Abschluss des Tests wieder löschen.
+
+**Fehlerprotokoll:** Wenn nach Schritt 3 nichts sichtbar passiert, notieren, ob der Dialog offen bleibt, ob eine Meldung direkt im Dialog erscheint und ob der Vorgang nach erneutem Öffnen der Liste vorhanden ist. Keine zweite Buchung durch wiederholtes Tippen erzwingen, bevor der Bestand geprüft wurde.
+
+
 ## 3. Sicherheits- und Fehlerprüfungen
 
 - Vorgangshistorie nach der Erfassung öffnen: Der Eintrag „Vorgang angelegt“ muss mit dem korrekten Datum und der Uhrzeit erscheinen.
