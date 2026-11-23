@@ -18,6 +18,7 @@ Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: T
 | DPD-Handgerät ↔ DPD-Drucker | Bestehender DPD-Etikettendruck | Laut Betreiber Bluetooth; nicht verändern |
 | Hermes MC3090BT ↔ Hermes-Drucker/System | Bestehender Hermes-Ablauf | Eigenständiger Altgeräteablauf; nicht verändern |
 | UPS-Gerät/Arbeitsplatz ↔ UPS-System/Drucker | UPS-Paketshop-Ablauf | Hardware und Verbindung noch nicht erhoben; vor Ort aufnehmen, nichts verändern |
+| Alle vier Zebra-Handhelds ↔ WLAN | Netzwerkzugang der vorhandenen Geräte | Laut Betreiber sind alle vier Handhelds mit WLAN verbunden; gemeinsame SSID/Subnetz und gegenseitige Erreichbarkeit noch nicht geprüft |
 | TRAKUNA ↔ andere TRAKUNA-Geräte | Gemeinsame Daten/Synchronisierung | Noch nicht implementiert; lokale Datenspeicherung ist derzeit nicht automatisch zwischen Geräten synchronisiert |
 
 ## 2. Vorbereitete Startreihenfolge vor Ort
@@ -95,7 +96,7 @@ Es werden keine WLAN-Passwörter, Carrier-Passwörter, privaten Schlüssel oder 
 
 ## 7. Ehrlicher Status
 
-**Vorbereitet:** Android-App, lokale Erfassung, Kamera-/manuelle Eingabe, DataWedge-Empfangscode, WLAN-Statusanzeige des aktuellen Geräts, Hardwareinventar, DataWedge-Konfigurationsanleitung und dieser Startplan. Die aktuelle App läuft lokal; WLAN schaltet keine noch nicht vorhandene Cloud-Synchronisierung frei. Die Anzeige bestätigt weder, dass alle vier Handgeräte im selben WLAN sind, noch dass sie untereinander erreichbar sind.
+**Vorbereitet:** Android-App, lokale Erfassung, Kamera-/manuelle Eingabe, DataWedge-Empfangscode, WLAN-Statusanzeige des aktuellen Geräts, Hardwareinventar, DataWedge-Konfigurationsanleitung und dieser Startplan. Die aktuelle App läuft lokal; WLAN schaltet keine noch nicht vorhandene Cloud-Synchronisierung frei. Der Betreiber hat bestätigt, dass alle vier Zebra-Handhelds mit WLAN verbunden sind. Das bestätigt noch nicht dieselbe SSID/dasselbe Subnetz oder die gegenseitige Erreichbarkeit.
 
 **Noch nicht vor Ort verifiziert:** WLAN-Zugang, DataWedge-Profil, echter TC26-Scan, Hermes-Anbindung, zentrale Synchronisierung und produktive Freigabe.
 
