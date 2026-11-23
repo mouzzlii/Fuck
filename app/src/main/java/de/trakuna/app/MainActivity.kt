@@ -483,7 +483,7 @@ class MainActivity : ComponentActivity() {
                                 onDismissRequest = { confirmCsvExport = false },
                                 title = { Text("CSV-Datei exportieren?") },
                                 text = {
-                                    Text("Die CSV-Datei enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird unverschlüsselt gespeichert. Wähle einen geschützten Speicherort und gib die Datei nur an berechtigte Personen weiter.")
+                                    Text("Die CSV-Datei enthält Sendungsnummern, Empfängernamen, interne Notizen und die lokal gespeicherte Vorgangshistorie. Sie wird unverschlüsselt gespeichert. Die Historie ist kein manipulationssicherer Prüfbeleg. Wähle einen geschützten Speicherort und gib die Datei nur an berechtigte Personen weiter.")
                                 },
                                 confirmButton = {
                                     TextButton(onClick = {
