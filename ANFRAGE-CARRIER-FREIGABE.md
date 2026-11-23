@@ -90,9 +90,10 @@ Offizielle Einstiege:
 
 ## 5. UPS Österreich – standortspezifische Ergänzung
 
-Die konkrete UPS-Hardware und die tatsächlich installierte UPS-Scanning-App des Standorts sind noch nicht erhoben.
+Die konkrete UPS-Hardware und die tatsächlich installierte UPS-Scanning-App des Standorts sind noch nicht erhoben. Im Google Play Store ist die offizielle Android-App **UPS Access Point** (Paketname `com.ups.accesspoint`) gelistet. Laut Store-Beschreibung deckt sie Fahrerlieferung, Selbstabholung, Kundenabgabe und Bestandsverwaltung ab und benötigt Android 9.0 oder höher. Ob diese App am Standort vorgesehen und freigeschaltet ist, muss UPS bestätigen.
 
 UPS Österreich beschreibt für Access-Point-Standorte eine Scanning-App für PC, Android oder Apple-Geräte sowie das Scannen von Kundenabgaben und Fahrersendungen. Bitte teilen Sie uns mit:
+- Ist die offizielle Android-App UPS Access Point (`com.ups.accesspoint`) die für unseren Standort vorgesehene App? Falls nein: Wie lautet der genaue App-Name und offizielle Bezugsweg?
 - Welche UPS-Scanning-App und Version für unseren Standort bereitgestellt wurde.
 - Auf welchem Gerät diese App betrieben werden soll und ob Zebra-Geräte unterstützt werden.
 - Ob die App einen offiziellen Datenexport, Android-Intent oder eine andere freigegebene Übergabe an TRAKUNA unterstützt.
@@ -102,6 +103,7 @@ UPS Österreich beschreibt für Access-Point-Standorte eine Scanning-App für PC
 Offizielle Einstiege:
 - [UPS Österreich – Access Point Standort werden](https://www.ups.com/at/de/business-solutions/grow-your-business)
 - [UPS Österreich – Access Point Überblick](https://www.ups.com/at/de/business-solutions/expand-your-online-business/ups-access-point)
+- [UPS Access Point – offizielle Android-App im Google Play Store](https://play.google.com/store/apps/details?id=com.ups.accesspoint&hl=de_AT)
 - [UPS Developer Portal](https://developer.ups.com/get-started?loc=de_AT)
 
 ---
