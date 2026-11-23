@@ -89,7 +89,7 @@ Ereignisse werden nicht stillschweigend überschrieben. Korrekturen erzeugen ein
 |---|---|---|
 | DPD | Lokale Erfassung und später freigegebene Ereignisübergabe | Bestehende DPD-App, Scannerprofil oder Druckerkopplung ersetzen |
 | GLS | Lokale Erfassung und später freigegebene Ereignisübergabe | Bestehende GLS-App oder Druckerkopplung verändern |
-| Hermes | TRAKUNA auf separatem freigegebenem Android-Gerät | APK auf dem MC3090BT installieren oder Hermes-Ablauf verändern |
+| Hermes | Nach Ankunft des angekündigten Nachfolgegeräts dessen Android-/Scanner-Kompatibilität prüfen; TRAKUNA nur auf einem ausdrücklich freigegebenen Gerät betreiben | APK auf dem bisherigen MC3090BT installieren oder den laufenden Hermes-Ablauf ohne Freigabe verändern |
 | UPS | Lokale Erfassung nach Erhebung der tatsächlichen Shop-Hardware | Nicht freigegebene UPS-App installieren oder Buchungen simulieren |
 
 Eine Sendungsnummer oder ein Status in TRAKUNA ist keine bestätigte Carrier-Buchung.
