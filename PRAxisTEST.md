@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Version 1.49 · versionCode 50)
 
-Version 1.49 enthält die WLAN-Statusanzeige für das aktuelle Gerät, die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS sowie die ausdrücklich lokale Kennzeichnung einer Paketdienst-Übergabe. CI-Lauf 45257771904 ist erfolgreich (Unit-Tests, Android-Lint, Debug-APK). [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45257771904). APK-SHA-256: `38716f1d1d6b4e31e5e4f63f534eeb626b3540ee9837a086a8371ad8a064cd0f`.
+Version 1.49 enthält die WLAN-Statusanzeige für das aktuelle Gerät, die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS sowie die ausdrücklich lokale Kennzeichnung einer Paketdienst-Übergabe. CI-Lauf 45263992780 ist erfolgreich (Unit-Tests, Android-Lint, Debug-APK). [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45263992780). APK-SHA-256: `7bb30957a7bd288c6e9a2748b773d76b46d3229425c0725f738572685e0fd8d3`.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
