@@ -321,6 +321,63 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun archivedRecordsRemainValidButRequireAConsistentArchiveTimestamp() {
+        val active = ShipmentRecord(
+            id = "archive-1", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER, status = ShipmentStatus.HANDED_TO_CUSTOMER,
+            createdAt = 100L, updatedAt = 200L
+        )
+        val archived = active.copy(
+            updatedAt = 300L,
+            archivedAt = 300L,
+            history = listOf(ShipmentEvent(300L, ShipmentEventType.ARCHIVED))
+        )
+        assertTrue(ShipmentRules.isValidRecord(active))
+        assertTrue(ShipmentRules.isValidRecord(archived))
+        assertFalse(ShipmentRules.isValidRecord(archived.copy(archivedAt = 250L)))
+        assertFalse(ShipmentRules.isValidRecord(archived.copy(archivedAt = 0L)))
+        assertTrue(ShipmentRules.isValidRecord(archived.copy(archivedAt = null, updatedAt = 300L)))
+    }
+
+    @Test
+    fun archivedShipmentsDoNotBlockReRegistrationOfTheSameTrackingNumber() {
+        val archived = ShipmentRecord(
+            id = "archived-old", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER, status = ShipmentStatus.READY_FOR_PICKUP,
+            createdAt = 100L, updatedAt = 200L, archivedAt = 200L
+        )
+        val newActive = archived.copy(
+            id = "new-active", createdAt = 300L, updatedAt = 300L, archivedAt = null
+        )
+        assertEquals(null, ShipmentRules.findActiveDuplicate(listOf(archived), "ABC1234567"))
+        assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(archived, newActive)))
+        assertEquals(newActive, ShipmentRules.findActiveDuplicate(listOf(archived, newActive), "ABC1234567"))
+    }
+
+    @Test
+    fun archiveAndRestoreEventsAreAcceptedAsNonStatusHistoryEntries() {
+        val record = ShipmentRecord(
+            id = "archive-history", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER, status = ShipmentStatus.HANDED_TO_CUSTOMER,
+            createdAt = 100L, updatedAt = 300L,
+            history = listOf(
+                ShipmentEvent(100L, ShipmentEventType.CREATED, toStatus = ShipmentStatus.RECEIVED_BY_SHOP),
+                ShipmentEvent(200L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.RECEIVED_BY_SHOP, ShipmentStatus.READY_FOR_PICKUP),
+                ShipmentEvent(250L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.READY_FOR_PICKUP, ShipmentStatus.HANDED_TO_CUSTOMER),
+                ShipmentEvent(300L, ShipmentEventType.ARCHIVED)
+            ),
+            archivedAt = 300L
+        )
+        assertTrue(ShipmentRules.isValidRecord(record))
+        val restored = record.copy(
+            updatedAt = 400L,
+            archivedAt = null,
+            history = record.history + ShipmentEvent(400L, ShipmentEventType.RESTORED)
+        )
+        assertTrue(ShipmentRules.isValidRecord(restored))
+    }
+
+    @Test
     fun completedShipmentsDoNotBlockFutureActiveRecords() {
         val completed = ShipmentRecord(
             id = "old", trackingNumber = "ABC1234567", carrier = "DHL",
