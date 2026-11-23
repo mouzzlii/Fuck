@@ -72,7 +72,7 @@ TRAKUNA darf die bestehenden DPD-, GLS- und Hermes-Systeme zunächst nicht erset
 
 1. TRAKUNA erfasst lokale Testvorgänge unabhängig von den Carrier-Geräten.
 2. Vorhandene DPD-/GLS-Handgeräte und Bluetooth-Druckverbindungen bleiben unverändert.
-3. Der bisherige Hermes-Ablauf bleibt bis zur freigegebenen Umstellung unverändert; das MC3090BT ist das Altgerät und wird nächste Woche ersetzt.
+3. Der bisherige Hermes-Ablauf bleibt bis zur freigegebenen Umstellung unverändert; das MC3090BT ist das Altgerät; ein Ersatz für die kommende Woche wurde angekündigt, die tatsächliche Ankunft ist noch zu bestätigen.
 4. Ein Scan in TRAKUNA gilt nicht als Carrier-Buchung.
 5. Ein Etikettendruck in der vorhandenen Carrier-App gilt nicht automatisch als in TRAKUNA bestätigter Druck.
 6. Erst eine offiziell freigegebene API, ein SDK, eine dokumentierte Geräteintegration oder ein vereinbarter Datenaustausch kann eine echte Integration begründen.
