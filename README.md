@@ -4,13 +4,26 @@ TRAKUNA 1.44 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 ## Aktueller Praxistest-Build – Stand 23.11.2026
 
-- [Letzten erfolgreichen Build öffnen und APK-Artefakt herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45221331671)
-- Unit-Tests und Android-Lint: erfolgreich
-- Artefakt: `TRAKUNA-Android`
-- SHA-256: `cc3911e62d4024bb8869559b48ad5c2b3bf35c4e81e65591dc541329ed180ab7`
-- Artefakt läuft am 07.12.2026 ab.
+- [Erfolgreichen Build öffnen und APK-Artefakt herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45227305052)
+- Build-Run: `45227305052` (Commit `e5d59c7ffa40268f7f922297089965f8550eadaa`)
+- Unit-Tests: erfolgreich
+- Android-Lint: erfolgreich
+- Debug-APK: erfolgreich erstellt
+- Artefakt: `TRAKUNA-Android` (20.748.925 Byte ZIP)
+- APK-Datei im Artefakt: `app-debug.apk`
+- APK-SHA-256: `db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
+- Artefakt läuft am 07.12.2026 um 17:26 UTC ab.
 
-Das ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren.
+**Wichtig:** Das ist ein Debug-Testpaket, kein produktiv signiertes Release. Das Release-Signing wurde im Build übersprungen, weil die privaten Betreiber-Schlüssel nicht hinterlegt sind. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+
+## Aktuelle Betriebsgrenzen
+
+- Die Daten werden lokal auf diesem Gerät gespeichert und verschlüsselt.
+- Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
+- WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung.
+- DataWedge-Empfangscode ist vorhanden; das Profil muss auf dem jeweiligen Zebra-Gerät eingerichtet und vor Ort getestet werden.
+- Hermes ist als Paketdienst manuell auswählbar; eine offizielle Hermes-Buchungs-/Paketshop-Schnittstelle ist noch nicht umgesetzt. Hermes bleibt Pflicht-Blocker für den vorgesehenen Pilot.
+- Die vorhandenen GLS-/DPD-/Hermes-Systeme und Druckerkopplungen dürfen nicht verändert werden.
 
 ## Release-Build
 
