@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · Softwarestand: 1.44 · Build 266
+Stand: 23. November 2026 · Softwarestand: 1.44 · letzter erfolgreicher CI-Lauf: 45221331671
 
 ## 1. Zweck und Freigabestatus
 
@@ -13,9 +13,9 @@ Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetr
 
 ## 2. Download des aktuellen Testpakets
 
-- GitHub Actions Build 266: https://github.com/mouzzlii/Fuck/actions/runs/45166820754
+- GitHub Actions Build 266 (vorheriger App-Code-Stand; Dokumentationsänderungen danach separat gebaut): https://github.com/mouzzlii/Fuck/actions/runs/45221331671
 - Artefakt: `TRAKUNA-Android`
-- SHA-256: `b2af51c5c910a4378c548071dbae9d80058310fc5821c50f106a2941037d6387`
+- SHA-256: `cc3911e62d4024bb8869559b48ad5c2b3bf35c4e81e65591dc541329ed180ab7`
 - Artefakt erstellt: 23.11.2026
 - Voraussichtlicher Ablauf des Artefakts: 07.12.2026
 
