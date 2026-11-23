@@ -16,7 +16,7 @@ Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: T
 | TC26 ↔ Shop-WLAN | Internetzugang für spätere freigegebene Online-Dienste | WLAN-Fähigkeit des wahrscheinlichen TC26 vorhanden; Shop-Zugangsdaten/Netzrichtlinien vor Ort unbekannt |
 | GLS-Handgerät ↔ GLS-Drucker | Bestehender GLS-Etikettendruck | Laut Betreiber Bluetooth; nicht verändern |
 | DPD-Handgerät ↔ DPD-Drucker | Bestehender DPD-Etikettendruck | Laut Betreiber Bluetooth; nicht verändern |
-| Hermes MC3090BT ↔ Hermes-Drucker/System | Bestehender Hermes-Ablauf | Eigenständiger Altgeräteablauf; nicht verändern |
+| Bisheriges Hermes-MC3090BT ↔ Hermes-Drucker/System | Bisheriger Hermes-Ablauf bis zur Umstellung | Altgerät; laut Betreiber nächste Woche Austausch, bis dahin nicht verändern |
 | UPS-Gerät/Arbeitsplatz ↔ UPS-System/Drucker | UPS-Paketshop-Ablauf | Hardware und Verbindung noch nicht erhoben; vor Ort aufnehmen, nichts verändern |
 | Alle vier Zebra-Handhelds ↔ WLAN | Netzwerkzugang der vorhandenen Geräte | Laut Betreiber sind alle vier Handhelds mit WLAN verbunden; gemeinsame SSID/Subnetz und gegenseitige Erreichbarkeit noch nicht geprüft |
 | TRAKUNA ↔ andere TRAKUNA-Geräte | Gemeinsame Daten/Synchronisierung | Noch nicht implementiert; lokale Datenspeicherung ist derzeit nicht automatisch zwischen Geräten synchronisiert |
