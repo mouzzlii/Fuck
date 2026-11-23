@@ -32,7 +32,7 @@ Version 1.45 (versionCode 46) mit der direkten Carrier-Schnellauswahl wurde erfo
 - APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`
 - ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 17:48 UTC; Ablauf 07.12.2026, 17:48 UTC
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45229834365)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45231195765)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
