@@ -16,7 +16,7 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 
 - APK-SHA-256: `e47b845dcd5a8dcc57760d61bd7ab3fa73064c0a19dce4c6eb7bfa7b10b2012e`
 - ZIP-SHA-256: `9ff08004e9bef4665c2399c64f79aab17b7c6b52182490a489278d15ea7823d4`
-- Erstellt: 23.11.2026, 21:49 UTC
+- Erstellt: 23.11.2026, 22:40 UTC
 - Artefakt verfügbar bis: 07.12.2026, 21:49 UTC
 
 Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.51 enthält den zusätzlichen Löschschutz für inkonsistente Archivdatensätze. CI bestätigte Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
@@ -85,7 +85,7 @@ Ein Scan wird nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Die Dat
 
 ## 7. Hermes – neues Handgerät angekündigt
 
-Das bisherige Hermes-Handgerät MC3090BT ist laut Betreiber zu alt und wird nächste Woche durch ein neues Gerät ersetzt. Das alte Gerät bleibt bis zur regulären Umstellung ausschließlich für den bestehenden Hermes-Ablauf vorgesehen; TRAKUNA verändert daran nichts.
+Das bisherige Hermes-Handgerät MC3090BT ist laut Betreiber zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen. Das alte Gerät bleibt bis zur regulären Umstellung ausschließlich für den bestehenden Hermes-Ablauf vorgesehen; TRAKUNA verändert daran nichts.
 
 **Nach Ankunft des neuen Geräts** werden zuerst Hersteller, exaktes Modell, Betriebssystem-/Android-Version, Hermes-App-Version, Scannerart, Druckermodell und Verbindung dokumentiert. Danach prüfen wir ausschließlich mit Betreiberzustimmung, ob ein freigegebener Scan- oder Datenaustauschweg existiert. Eine Android-Installation, DataWedge-Konfiguration oder Änderung der Hermes-App erfolgt nicht ohne ausdrückliche Freigabe.
 
