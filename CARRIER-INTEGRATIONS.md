@@ -45,14 +45,14 @@ Offizielle Einstiege:
 - [Hermes Österreich – PaketShop-Partner](https://www.hermesworld.com/de/ueber-uns/hermes-gruppe/hermes-logistik-at/paketshop-partner/): beschreibt für österreichische PaketShops Annahme privater Pakete, Retourenannahme und Ausgabe von Paketen. Kontakt: Hermes Logistik GmbH, Wien, +43 (0)50 4376 37.
 - [Hermes Österreich – PaketShops und Partner](https://www.hermesworld.com/at/unsere-dienstleistungen/distribution/paketversand/paketshops/)
 
-Zusätzlicher technischer Gesprächseinstieg für Geschäftskunden-Versand (nicht als Freigabe für das österreichische MC3090BT-PaketShop-System zu verstehen):
+Zusätzlicher technischer Gesprächseinstieg für Geschäftskunden-Versand (nicht als Freigabe für die österreichische PaketShop-Hardware oder -Software zu verstehen):
 - [Hermes IT-Anbindungen (Deutschland)](https://www.myhermes.de/geschaeftskunden/produkte-und-services/it-anbindungen/)
 - [Hermes FAQ zur Umstellung auf HSI](https://www.myhermes.de/geschaeftskunden/faq-umstellung-hsi/)
 - [Hermes Partnersysteme](https://www.myhermes.de/geschaeftskunden/produkte-und-services/partnersysteme/)
 
-**Wichtige Einschränkung:** Die österreichische Hermes-Seite beschreibt die PaketShop-Abläufe, aber keine öffentlich dokumentierte Entwickler-API für das vorhandene MC3090BT-Handgerät. Die deutsche HSI-Dokumentation betrifft Geschäftskunden-/Versandintegrationen und ist keine bestätigte Lösung für den österreichischen PaketShop.
+**Wichtige Einschränkung:** Die österreichische Hermes-Seite beschreibt die PaketShop-Abläufe, aber keine öffentlich dokumentierte Entwickler-API für die konkrete österreichische PaketShop-Hardware oder -Software. Die deutsche HSI-Dokumentation betrifft Geschäftskunden-/Versandintegrationen und ist keine bestätigte Lösung für den österreichischen PaketShop.
 
-**Nächster technischer Schritt:** Hermes-Paketshop-Support bzw. zuständigen Vertragspartner gezielt nach einer freigegebenen Schnittstelle für das vorhandene MC3090BT-System und die konkrete Hermes-Paketshop-Software fragen. Dabei ausdrücklich nach Paketannahme, Kundenausgabe, Retourenannahme, Rücklauf/Fahrerübergabe, Quittung und Drucker fragen. Bestehenden Hermes-Ablauf nicht verändern.
+**Nächster technischer Schritt:** Nach Ankunft des vom Betreiber für nächste Woche angekündigten Hermes-Nachfolgers Modell, Betriebssystem, App-Version, Scanner und Drucker dokumentieren. Danach Hermes-Paketshop-Support bzw. Vertragspartner gezielt nach einer freigegebenen Schnittstelle für genau dieses Gerät und die konkrete PaketShop-Software fragen. Dabei Paketannahme, Kundenausgabe, Retourenannahme, Rücklauf/Fahrerübergabe, Quittung und Drucker abklären. Bestehenden Hermes-Ablauf bis zur freigegebenen Umstellung nicht verändern.
 
 ## 4. UPS
 
@@ -101,7 +101,7 @@ Für jeden Carrier wird dieselbe Adapter-Grenze vorgesehen, aber die technischen
 |---|---|---|---|
 | DPD | DPD Österreich beschreibt PaketShop-Technik, Einrichtung und individuelles Training; allgemeine DPD-Webservices/SOAP-API sind separat dokumentiert | Nein | Bestehende TC26-App, erlaubter Datenaustausch und PaketShop-Freigabe durch DPD Österreich |
 | GLS | GLS Österreich beschreibt YourGLS/ShipIT und Versand-Anbindungen | Nein | Bestehende TC26-App, PaketShop-Freigabe und Geräte-/Vorgangsschnittstelle |
-| Hermes | Hermes Österreich beschreibt Annahme privater Pakete, Retouren und Kundenausgabe; deutsche HSI-REST-API ist ein separater Geschäftskunden-Versandweg | Nein | MC3090BT-Support, österreichische Shopsoftware und freigegebene Schnittstelle |
+| Hermes | Hermes Österreich beschreibt Annahme privater Pakete, Retouren und Kundenausgabe; deutsche HSI-REST-API ist ein separater Geschäftskunden-Versandweg | Nein | Nachfolger des MC3090BT, österreichische Shopsoftware und freigegebene Schnittstelle |
 | UPS | UPS Österreich beschreibt eine Scanning-App; offizielle Android-App UPS Access Point (com.ups.accesspoint) nennt Fahrerlieferung, Selbstabholung, Kundenabgabe und Bestandsverwaltung, Android 9+ | Nein | Installierte App/Version und Hardware am Standort bestätigen; autorisierte Übergabe/API klären |
 
 **Freigaberegel:** Kein Carrier wird als integriert oder produktionsbereit markiert, bevor die konkrete Schnittstelle für diesen Standort schriftlich freigegeben, technisch implementiert und mit echten autorisierten Testfällen erfolgreich abgenommen wurde.
@@ -130,12 +130,12 @@ Offizielle Referenzen:
 
 ## Hermes Österreich – bestätigte Partnerleistungen, offene Technik
 
-Hermes Österreich beschreibt PaketShop-Aufgaben öffentlich als Annahme privater Pakete, Annahme von Retouren und Ausgabe zugestellter Pakete an Kunden. Hermes stellt nach eigener Beschreibung Unterstützung und Ausstattung für PaketShop-Partner bereit. Die öffentlich zugängliche Seite nennt aber keine technische API, keinen Intent-Vertrag und keine Freigabe zur Anbindung einer Fremd-App an den bestehenden MC3090BT.
+Hermes Österreich beschreibt PaketShop-Aufgaben öffentlich als Annahme privater Pakete, Annahme von Retouren und Ausgabe zugestellter Pakete an Kunden. Hermes stellt nach eigener Beschreibung Unterstützung und Ausstattung für PaketShop-Partner bereit. Die öffentlich zugängliche Seite nennt aber keine technische API, keinen Intent-Vertrag und keine Freigabe zur Anbindung einer Fremd-App an das konkrete PaketShop-System oder das angekündigte Nachfolgegerät.
 
 - [Hermes Österreich – PaketShop-Partner](https://www.hermesworld.com/de/ueber-uns/hermes-gruppe/hermes-logistik-at/paketshop-partner/)
 - [Hermes Österreich – Partnerübersicht und Ausstattung](https://www.myhermes.at/paketshop-partner/uebersicht/)
 
-Für den Pilot ist Hermes deshalb weiterhin ein Pflicht-Blocker: bestehendes Gerät und Programm nicht verändern; Hermes muss die tatsächlich vorgesehene Hardware, den App-/Softwarezugang, die Freigabe für eine zusätzliche Lösung und eine mögliche Schnittstelle schriftlich bestätigen.
+Für den Pilot ist Hermes deshalb weiterhin ein Pflicht-Blocker: bestehendes Gerät und Programm bis zur regulären Umstellung nicht verändern; nach Ankunft des Nachfolgers muss Hermes die tatsächlich vorgesehene Hardware, den App-/Softwarezugang, die Freigabe für eine zusätzliche Lösung und eine mögliche Schnittstelle schriftlich bestätigen.
 
 
 ## GLS Österreich – Partnerabläufe und Quittierung
