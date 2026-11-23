@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version 1.49 (versionCode 50) · CI erfolgreich: Lauf 45257771904
+Stand: 23. November 2026 · App-Version 1.49 (versionCode 50) · CI erfolgreich: Lauf 45263992780
 
 ## 1. Zweck und Freigabestatus
 
@@ -24,15 +24,15 @@ Version 1.49 wurde erfolgreich durch CI gebaut. Die Übergabe an einen Paketdien
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.49 (versionCode 50) mit WLAN-Statusanzeige und getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45257771904 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45257771904).
+Version 1.49 (versionCode 50) mit WLAN-Statusanzeige und getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45263992780 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45263992780).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `38716f1d1d6b4e31e5e4f63f534eeb626b3540ee9837a086a8371ad8a064cd0f`
+- APK-SHA-256: `7bb30957a7bd288c6e9a2748b773d76b46d3229425c0725f738572685e0fd8d3`
 - ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 20:19 UTC; Ablauf 07.12.2026, 20:19 UTC
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45257771904)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45263992780)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
