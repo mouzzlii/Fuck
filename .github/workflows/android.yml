@@ -76,6 +76,30 @@ jobs:
       - name: APK bauen
         run: gradle --no-daemon assembleDebug
 
+      - name: Zusammengeführtes Android-Manifest prüfen
+        shell: bash
+        run: |
+          mapfile -d '' manifests < <(find app/build/intermediates -type f -name AndroidManifest.xml -print0)
+          if [ ${#manifests[@]} -eq 0 ]; then
+            echo "FEHLER: Kein von Gradle erzeugtes Manifest für die Prüfung gefunden."
+            exit 1
+          fi
+          for merged in "${manifests[@]}"; do
+            if grep -Fq 'android.permission.INTERNET' "$merged"; then
+              echo "FEHLER: Eine Abhängigkeit oder Manifest-Zusammenführung fügt INTERNET hinzu: $merged"
+              exit 1
+            fi
+            if grep -Eq 'android:allowBackup="true"' "$merged"; then
+              echo "FEHLER: Android-Backup ist im zusammengeführten Manifest aktiviert: $merged"
+              exit 1
+            fi
+            if grep -Eq 'android:usesCleartextTraffic="true"' "$merged"; then
+              echo "FEHLER: Klartextverkehr ist im zusammengeführten Manifest aktiviert: $merged"
+              exit 1
+            fi
+          done
+          echo "OK: Zusammengeführte Manifeste enthalten keine INTERNET-Berechtigung, kein aktiviertes Backup und keinen Klartextverkehr."
+
       - name: Signiertes Release bauen (nur mit Betreiber-Secrets)
         if: ${{ env.ANDROID_KEYSTORE_BASE64 != '' && env.ANDROID_KEYSTORE_PASSWORD != '' && env.ANDROID_KEY_ALIAS != '' && env.ANDROID_KEY_PASSWORD != '' }}
         env:
