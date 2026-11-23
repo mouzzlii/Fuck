@@ -76,7 +76,15 @@ jobs:
         run: gradle --no-daemon testDebugUnitTest
 
       - name: Android-Keystore- und Speicher-Instrumentierungstests auf Emulator
-        run: gradle --no-daemon pixel2Api35DebugAndroidTest
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: default
+          arch: x86_64
+          profile: Pixel_2
+          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
+          disable-animations: true
+          script: gradle --no-daemon connectedDebugAndroidTest
 
       - name: Android-Lint ausführen
         run: gradle --no-daemon lintDebug
