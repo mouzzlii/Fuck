@@ -32,8 +32,13 @@ internal fun readBoundedUtf8(input: InputStream, maxBytes: Int): String {
         total += count
     }
 
+    return decodeStrictUtf8(output.toByteArray())
+}
+
+/** Decode UTF-8 without replacing malformed bytes with the Unicode replacement character. */
+internal fun decodeStrictUtf8(bytes: ByteArray): String {
     val decoder = Charsets.UTF_8.newDecoder()
         .onMalformedInput(CodingErrorAction.REPORT)
         .onUnmappableCharacter(CodingErrorAction.REPORT)
-    return decoder.decode(ByteBuffer.wrap(output.toByteArray())).toString()
+    return decoder.decode(ByteBuffer.wrap(bytes)).toString()
 }
