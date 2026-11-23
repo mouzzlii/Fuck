@@ -14,7 +14,7 @@ TRAKUNA 1.52 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Das ZIP-Artefakt wurde am 23.11.2026, 23:12 UTC erstellt und läuft am 07.12.2026, 23:12 UTC ab.
 - CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45286415077
 
-**Wichtig:** Version 1.52 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.52 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
