@@ -672,6 +672,14 @@ object ShipmentRules {
         val history = record.history
         if (history.isEmpty()) return true
 
+        val lastArchiveEvent = history.lastOrNull {
+            it.type == ShipmentEventType.ARCHIVED || it.type == ShipmentEventType.RESTORED
+        }
+        if (record.archivedAt != null &&
+            (lastArchiveEvent?.type != ShipmentEventType.ARCHIVED || lastArchiveEvent.at != record.archivedAt)
+        ) return false
+        if (record.archivedAt == null && lastArchiveEvent?.type == ShipmentEventType.ARCHIVED) return false
+
         val createdEvents = history.withIndex().filter { it.value.type == ShipmentEventType.CREATED }
         if (createdEvents.size > 1) return false
         if (createdEvents.isNotEmpty()) {
