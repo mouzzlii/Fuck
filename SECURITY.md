@@ -30,7 +30,7 @@
 
 ## Automatische CI-Sicherheitsprüfungen
 
-Der Android-CI-Workflow prüft vor Unit-Tests und APK-Bau zusätzlich die aktuell beabsichtigten Manifest-Grenzen:
+Der Android-CI-Workflow prüft vor Unit-Tests die Quellmanifest-Grenzen und nach dem APK-Bau zusätzlich die von Gradle zusammengeführten Manifeste. Damit werden auch Berechtigungen geprüft, die eine Android-Abhängigkeit über die Manifest-Zusammenführung einbringen könnte. Die aktuell beabsichtigten Grenzen sind:
 
 - Keine Android-`INTERNET`-Berechtigung, solange keine freigegebene Backend-Architektur umgesetzt ist.
 - `android:allowBackup="false"` muss gesetzt bleiben.
