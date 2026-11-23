@@ -481,4 +481,17 @@ class ShipmentStoreTest {
         assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/track?id=ＡＢ123456789AT"))
         assertEquals(null, ShipmentRules.extractTrackingNumber("javascript://example.test/track?id=AB123456789AT"))
     }
+
+    @Test
+    fun permanentDeletionIsAllowedOnlyAfterArchival() {
+        val active = ShipmentRecord(
+            id = "delete-active", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
+            status = ShipmentStatus.HANDED_TO_CUSTOMER, createdAt = 100L, updatedAt = 200L
+        )
+        val archived = active.copy(archivedAt = 300L, updatedAt = 300L)
+        assertFalse(ShipmentRules.canPermanentlyDelete(active))
+        assertTrue(ShipmentRules.canPermanentlyDelete(archived))
+        assertFalse(ShipmentRules.canPermanentlyDelete(archived.copy(archivedAt = null)))
+    }
 }
