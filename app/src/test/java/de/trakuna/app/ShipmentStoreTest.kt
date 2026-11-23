@@ -201,6 +201,25 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun manualCarrierNamesAreCanonicalizedWithoutGuessingAliases() {
+        assertEquals("Hermes", ShipmentRules.normalizeCarrierLabel(" hermes "))
+        assertEquals("DPD", ShipmentRules.normalizeCarrierLabel("dpd"))
+        assertEquals("GLS", ShipmentRules.normalizeCarrierLabel("gls"))
+        assertEquals("DHL Paket", ShipmentRules.normalizeCarrierLabel("dhl"))
+        assertEquals("UPS", ShipmentRules.normalizeCarrierLabel("ups"))
+        assertEquals("Österreichische Post", ShipmentRules.normalizeCarrierLabel("Austrian Post"))
+        assertEquals("Post", ShipmentRules.normalizeCarrierLabel("Post"))
+    }
+
+    @Test
+    fun dhlHintsRequireTheFullRecognizedStructure() {
+        assertEquals("DHL Paket", ShipmentRules.identifyCarrier("JVGL1234567890"))
+        assertEquals("DHL Paket", ShipmentRules.identifyCarrier("JJD1234567890"))
+        assertEquals(null, ShipmentRules.identifyCarrier("JVGL"))
+        assertEquals(null, ShipmentRules.identifyCarrier("JD123456789012"))
+    }
+
+    @Test
     fun manualHermesSelectionIsPreservedWithoutInventingAutomaticRecognition() {
         assertEquals("Hermes", ShipmentRules.resolveCarrierLabel(" Hermes ", "12345678901234"))
         assertEquals("Hermes", ShipmentRules.resolveCarrierLabel("Hermes", "ABC1234567"))
