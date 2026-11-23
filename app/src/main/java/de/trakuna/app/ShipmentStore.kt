@@ -207,10 +207,7 @@ class ShipmentStore(context: Context) {
         }.toMutableList()
         // A tracking number represents one physical parcel. Do not allow the same
         // active parcel to be registered in a second workflow by mistake.
-        val existing = records.firstOrNull {
-            it.trackingNumber.equals(number, ignoreCase = true) &&
-                it.status !in TERMINAL_STATUSES
-        }
+        val existing = ShipmentRules.findActiveDuplicate(records, number)
         if (existing != null) return ShipmentUpdate.AlreadyExists(existing)
         if (records.size >= MAX_RECORDS) {
             return ShipmentUpdate.Rejected(
@@ -713,10 +710,22 @@ object ShipmentRules {
             }
         }
 
+    /** Find an already active parcel regardless of workflow, preventing a second live record. */
+    fun findActiveDuplicate(records: List<ShipmentRecord>, trackingNumber: String): ShipmentRecord? =
+        records.firstOrNull {
+            it.trackingNumber.equals(trackingNumber, ignoreCase = true) &&
+                it.status !in setOf(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentStatus.HANDED_TO_CARRIER)
+        }
+
+    /**
+     * Validate duplicates within each workflow for stored/legacy data compatibility.
+     * New writes use findActiveDuplicate() across all workflows, but older backups
+     * created before that rule may legitimately contain cross-workflow duplicates.
+     */
     fun hasNoDuplicateActiveShipments(records: List<ShipmentRecord>): Boolean {
         val activeKeys = records
             .filter { it.status !in setOf(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentStatus.HANDED_TO_CARRIER) }
-            .map { it.trackingNumber.uppercase() }
+            .map { it.trackingNumber.uppercase() to it.flow }
         return activeKeys.distinct().size == activeKeys.size
     }
 
