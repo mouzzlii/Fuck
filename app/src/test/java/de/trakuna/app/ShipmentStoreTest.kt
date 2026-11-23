@@ -355,6 +355,16 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun onlyActuallyHandedOverShipmentsAreTerminalAndArchivable() {
+        assertFalse(ShipmentRules.isTerminalStatus(ShipmentStatus.RECEIVED_BY_SHOP))
+        assertFalse(ShipmentRules.isTerminalStatus(ShipmentStatus.READY_FOR_PICKUP))
+        assertFalse(ShipmentRules.isTerminalStatus(ShipmentStatus.ACCEPTED_FROM_CUSTOMER))
+        assertFalse(ShipmentRules.isTerminalStatus(ShipmentStatus.RETURN_ACCEPTED))
+        assertTrue(ShipmentRules.isTerminalStatus(ShipmentStatus.HANDED_TO_CUSTOMER))
+        assertTrue(ShipmentRules.isTerminalStatus(ShipmentStatus.HANDED_TO_CARRIER))
+    }
+
+    @Test
     fun archiveAndRestoreEventsAreAcceptedAsNonStatusHistoryEntries() {
         val record = ShipmentRecord(
             id = "archive-history", trackingNumber = "ABC1234567", carrier = "DHL",
