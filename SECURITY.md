@@ -54,6 +54,8 @@ Die Gradle-Konfiguration unterstützt einen signierten Release-Build, ohne einen
 - `ANDROID_KEY_ALIAS` – Alias des App-Signaturschlüssels
 - `ANDROID_KEY_PASSWORD` – Passwort des privaten Schlüssels
 
+Das CI stellt diese vier Secrets nicht global für den gesamten Build-Job bereit: Sie werden nur im separaten Konfigurationscheck und – falls alle vorhanden sind – im Release-Signierschritt eingeblendet. Unit-Tests, Lint, Manifestprüfung und Debug-Build erhalten diese Betreiber-Secrets nicht.
+
 Der Keystore muss vom Betreiber erzeugt und sicher verwahrt werden. Er darf niemals in Git eingecheckt, in Chat-Nachrichten geteilt oder zusammen mit der APK veröffentlicht werden. Ohne diese Secrets wird ausschließlich das Debug-Testpaket gebaut; es entsteht kein signiertes Produktionsrelease. Vor dem Einrichten muss der Betreiber festlegen, wer Schlüsselinhaber und Wiederherstellungsverantwortlicher ist.
 
 ## Bekannte Restrisiken / nicht abgeschlossene Arbeiten
