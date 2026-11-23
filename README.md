@@ -6,8 +6,8 @@ TRAKUNA 1.49 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 - Neue direkte Carrier-Auswahl für die vier Start-Prioritäten: **DPD, GLS, Hermes und UPS**.
 - Der Auswahlknopf kennzeichnet den lokalen Vorgang; er führt keine externe Buchung aus.
-- CI-Lauf 45257771904: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45257771904). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
-- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `38716f1d1d6b4e31e5e4f63f534eeb626b3540ee9837a086a8371ad8a064cd0f`. ZIP-Artefakt-SHA-256: `3a6413497fd600ab045a96d5afe715243891586084a8086b3593a6cde4f29879`. Das ZIP-Artefakt wurde am 23.11.2026, 20:19 UTC erstellt und läuft am 07.12.2026, 20:19 UTC ab.
+- CI-Lauf 45263992780: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45263992780). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
+- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `7bb30957a7bd288c6e9a2748b773d76b46d3229425c0725f738572685e0fd8d3`. ZIP-Artefakt-SHA-256: `e009c61993301453c8ee12617f7ac7859fb30ea05205ab7e31baf23291f2ea3a`. Das ZIP-Artefakt wurde am 23.11.2026, 20:55 UTC erstellt und läuft am 07.12.2026, 20:55 UTC ab.
 
 **Wichtig:** Version 1.49 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
