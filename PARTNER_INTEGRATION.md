@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: App-Version 1.48 (versionCode 49)
+Stand: App-Version 1.49 (versionCode 50)
 
 ## Zweck
 Dieses Dokument beschreibt die technische Vereinbarung für eine autorisierte Übergabe zwischen TRAKUNA und der jeweiligen Paketshop-Betriebssoftware.
