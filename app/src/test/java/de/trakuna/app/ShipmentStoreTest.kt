@@ -62,6 +62,21 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun creationEventMustMatchInitialWorkflowStatusAndAppearOnlyOnce() {
+        val valid = ShipmentRecord(
+            id = "created-event", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER, status = ShipmentStatus.RECEIVED_BY_SHOP,
+            createdAt = 100L, updatedAt = 100L,
+            history = listOf(ShipmentEvent(100L, ShipmentEventType.CREATED, toStatus = ShipmentStatus.RECEIVED_BY_SHOP))
+        )
+        assertTrue(ShipmentRules.isValidRecord(valid))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(
+            history = listOf(ShipmentEvent(100L, ShipmentEventType.CREATED, toStatus = ShipmentStatus.READY_FOR_PICKUP))
+        )))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(history = valid.history + valid.history.first())))
+    }
+
+    @Test
     fun olderRecordsWithoutHistoryRemainValidForBackwardCompatibility() {
         val legacy = ShipmentRecord(
             id = "legacy-1", trackingNumber = "ABC1234567", carrier = "DHL",
