@@ -1,6 +1,6 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.45 (versionCode 46) · CI-Prüfung ausstehend; letzter erfolgreicher Build: Version 1.44
+Stand: App-Version 1.45 (versionCode 46) · CI erfolgreich: Lauf 45229834365
 
 Dieses Handbuch erklärt die Bedienung der aktuellen TRAKUNA-Testversion. Es richtet sich an Paketshop-Mitarbeiter ohne technische Vorkenntnisse.
 
@@ -20,7 +20,7 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 
 ## 2. Aktuelles Testpaket herunterladen
 
-1. Den [Android-Build-Workflow öffnen](https://github.com/mouzzlii/Fuck/actions/workflows/android.yml) und den erfolgreichen Lauf für Version 1.45 auswählen. Der frühere Lauf 45227305052 enthält noch Version 1.44 ohne Carrier-Schnellauswahl.
+1. Den [erfolgreichen Android-Build 45229834365 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45229834365).
 2. Im Build den Bereich **Artifacts** öffnen.
 3. Das Paket **TRAKUNA-Android** herunterladen.
 4. Das ZIP auf dem Android-Gerät entpacken.
@@ -28,11 +28,7 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 6. Android kann eine einmalige Freigabe für die Installation aus dieser Datei-App verlangen. Nur für die vertrauenswürdige Datei-App freigeben und die Freigabe danach wieder deaktivieren.
 7. Die App starten und zunächst die Tests aus `PRAxisTEST.md` durchführen.
 
-**Historisches Artefakt Version 1.44:** Debug-Testpaket, kein signiertes Produktionsrelease. Die folgende SHA-256-Prüfsumme gilt ausschließlich für diese alte APK, nicht für Version 1.45:
-
-`db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
-
-Das historische Artefakt ist bis 07.12.2026, 17:26 UTC verfügbar. Version 1.45 erst installieren, wenn der zugehörige CI-Build erfolgreich abgeschlossen ist.
+**Aktuelles Artefakt Version 1.45:** APK-SHA-256: `06e847103a51cbf7ba04e6ab6383e200ba856dedc37cefeaf2dba0b220509441`. Das ZIP-Artefakt ist bis 07.12.2026, 17:39 UTC verfügbar. Es handelt sich um ein Debug-Testpaket, nicht um ein signiertes Produktionsrelease.
 
 ## 3. Sicher aktualisieren – vorhandene Daten schützen
 
