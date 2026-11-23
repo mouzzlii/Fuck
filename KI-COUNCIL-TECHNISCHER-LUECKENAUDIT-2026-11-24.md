@@ -10,7 +10,7 @@ Die Repositories dokumentieren nützliche Entwicklungsstände und teils erfolgre
 ## 1. TRAKUNA – Paketshop-App
 
 ### Belegt
-- README beschreibt Version 1.52 / versionCode 53 und einen erfolgreichen CI-Lauf (Unit-Tests, Lint, Manifestprüfung, Debug-APK und Artefakt-Upload).
+- README beschreibt Version 1.53 / versionCode 54 und CI-Lauf 45291370834 (Unit-Tests, Instrumentierungstest-Kompilierung, Lint, Manifestprüfung, Debug-APK und Artefakt-Upload erfolgreich; Instrumentierungstests nicht auf Emulator/Gerät ausgeführt).
 - Lokale verschlüsselte Speicherung, Archivpflicht für abgeschlossene Vorgänge und Backup-Schema 2 sind dokumentiert.
 - Manuelle Erfassung und Kamera-/DataWedge-Unterstützung sind dokumentiert.
 
