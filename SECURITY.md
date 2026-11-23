@@ -21,7 +21,7 @@
 - Unverschlüsselter Netzwerkverkehr ist standardmäßig deaktiviert.
 - Lokale Datensätze werden vor Anzeige und Wiederherstellung auf Struktur, Status, IDs und Duplikate geprüft.
 - Abgeschlossene Sendungen können lokal archiviert und wiederhergestellt werden; offene Sendungen werden durch die Geschäftsregel nicht archiviert. Archivstatus und Archivereignisse werden mit dem Datensatz verschlüsselt gespeichert.
-- Archivierte Datensätze bleiben im 500-Einträge-Limit. Endgültiges Löschen ist in der Oberfläche nur aus dem Archiv möglich und entfernt Datensatz und lokale Historie dauerhaft.
+- Archivierte Datensätze bleiben im 500-Einträge-Limit. Endgültiges Löschen ist in der Oberfläche nur aus dem Archiv möglich; zusätzlich verweigert auch die Speicherschicht das Löschen nicht archivierter Vorgänge. Das endgültige Löschen eines archivierten Datensatzes entfernt Datensatz und lokale Historie dauerhaft.
 - JSON-Backup-Schema 2 speichert den Archivzeitpunkt; Schema-1-Backups ohne Archivfeld bleiben für die Wiederherstellung lesbar. CSV enthält den Archivzeitpunkt zusätzlich zur lokalen Historie.
 - Archivierung und lokale Historie sind keine manipulationssicheren oder zentralen Audit-Nachweise.
 - Backup-Import ist auf 2 MiB begrenzt und erfordert eine Bestätigung, da der vorhandene lokale Bestand ersetzt wird.
