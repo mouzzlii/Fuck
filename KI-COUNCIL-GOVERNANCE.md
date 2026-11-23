@@ -12,12 +12,12 @@ Das Council koordiniert die vier eigenständigen Softwareprojekte TRAKUNA, SCAN-
 
 | Projekt | GitHub-Repository | bekannte Ausgangslage |
 |---|---|---|
-| TRAKUNA | mouzzlii/Fuck | Android-Paketshop-App; README dokumentiert Version 1.52 als Debug-Testpaket, keine produktive Carrier-Buchung oder bestätigte Cloud-Synchronisierung |
-| SCAN-PROFIT | mouzzlii/SCAN-PROFIT | Reseller-Cockpit; README nennt Quellarchiv 2.0.64 und 153 bestandene lokale Tests, weist aber ausdrücklich darauf hin, dass der vollständige Quellcode noch nicht im Repository liegt und Live-/Produktionsfreigaben offen sind |
-| CHRONOS | mouzzlii/CHRONOS | Private-first Fotoarchiv; lokaler Prototyp/Milestone 0.5 mit Desktop- und Android-Bestandteilen; reale Großbibliotheks- und Gerätevalidierung offen |
-| KREISLAUF | mouzzlii/Kreislauf | Regionales Tauschsystem Yspertal; Repository-README enthält derzeit nur eine Kurzbeschreibung; Projektanforderungen müssen aus dem bestehenden Projektstand übernommen und verifiziert werden |
+| TRAKUNA | mouzzlii/Fuck | Version 1.52 / versionCode 53; CI erfolgreich, aber nur Debug-Testpaket. Keine bestätigte Carrier-Buchung; Hermes-Nachfolgegerät, DataWedge und Shopgeräte-Abnahme offen. |
+| SCAN-PROFIT | mouzzlii/SCAN-PROFIT | README dokumentiert Version 2.0.65, 154 Tests und einen Vercel-READY-Deployment-Alias. Deployment basiert auf älterem Commit; neuerer GitHub-Stand und Android-Praxistest offen. |
+| CHRONOS | mouzzlii/CHRONOS | Milestone 0.5 mit Desktop- und Android-Prototyp, lokaler API, Backup/Restore und CI. Authentifizierung, Android-Gerätetests, Verschlüsselung und Großlasttests offen. |
+| KREISLAUF | mouzzlii/Kreislauf | Demo mit Marktplatz, Karma-Ledger, Profilen, Übergabe-/Treuhandmodell und PGlite. Keine öffentliche Freigabe; echte Konten, Ende-zu-Ende-Abnahme und produktive Datenhaltung offen. |
 
-Dieses Register ist eine Momentaufnahme der eingesehenen Repository-README-Dateien, keine vollständige technische Prüfung aller Branches oder Artefakte.
+Die laufend aktualisierte, dokumentengestützte Restarbeitenliste liegt in [KI-COUNCIL-PROJEKTSTATUS-2026-11-24.md](KI-COUNCIL-PROJEKTSTATUS-2026-11-24.md). Dieses Register ist eine Momentaufnahme der eingesehenen Repository-README-Dateien, keine vollständige technische Prüfung aller Branches oder Artefakte.
 
 ## Council-Mitglieder und Rollen
 
