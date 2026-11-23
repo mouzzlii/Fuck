@@ -8,13 +8,13 @@ TRAKUNA 1.52 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- 58 Unit-Tests im Testbestand. Version 1.52 ergänzt strikte UTF-8-Dekodierung auch für entschlüsselte lokale Speicherdaten. CI-Lauf 45285731190 für versionCode 53 war erfolgreich: Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
-- Debug-APK-SHA-256: `9e721394925265c1a9316089afefa04233aeb58b9461c8f8314b74c7f8a5eae7`.
-- ZIP-Artefakt-SHA-256: `e496571dc273fa43f7b2d077d143eb47da8f20f7691e726db095e27c54891587`.
-- Das ZIP-Artefakt wurde am 23.11.2026, 23:07 UTC erstellt und läuft am 07.12.2026, 23:07 UTC ab.
-- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45285731190
+- 58 Unit-Tests im Testbestand. Version 1.52 ergänzt strikte UTF-8-Dekodierung auch für entschlüsselte lokale Speicherdaten. CI-Lauf 45286415077 für versionCode 53 war erfolgreich: Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
+- Debug-APK-SHA-256: `15633c1200e1615f5b5826a3fa00d5955863d20d53b86d7bcf17f92fcee4137a`.
+- ZIP-Artefakt-SHA-256: `b14cb60485a1278bf085981dbfbba544a32fa0b0ee146b31296e10b3b8502e02`.
+- Das ZIP-Artefakt wurde am 23.11.2026, 23:12 UTC erstellt und läuft am 07.12.2026, 23:12 UTC ab.
+- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45286415077
 
-**Wichtig:** Version 1.51 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.52 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
@@ -22,7 +22,7 @@ TRAKUNA 1.52 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
 - WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden noch nicht gesucht.
 - DataWedge-Empfangscode ist vorhanden; das Profil muss auf dem jeweiligen Zebra-Gerät eingerichtet und vor Ort getestet werden.
-- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.51 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das bisherige Hermes-Handgerät MC3090BT ist zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen.** Modell, Betriebssystem, Scanner, Drucker und freigegebene Integrationsmöglichkeiten des Nachfolgers sind noch unbekannt. Bis zur Ankunft bleibt das bestehende Hermes-System unangetastet; danach wird das neue Gerät zunächst nur inventarisiert und geprüft, ohne Einstellungen oder den laufenden Hermes-Ablauf eigenmächtig zu verändern.
+- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.52 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das bisherige Hermes-Handgerät MC3090BT ist zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen.** Modell, Betriebssystem, Scanner, Drucker und freigegebene Integrationsmöglichkeiten des Nachfolgers sind noch unbekannt. Bis zur Ankunft bleibt das bestehende Hermes-System unangetastet; danach wird das neue Gerät zunächst nur inventarisiert und geprüft, ohne Einstellungen oder den laufenden Hermes-Ablauf eigenmächtig zu verändern.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
 ## Release-Build
