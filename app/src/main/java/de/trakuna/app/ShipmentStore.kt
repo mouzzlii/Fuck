@@ -144,7 +144,7 @@ class ShipmentStore(context: Context) {
 
     private fun encrypt(plainText: String): String {
         val plainBytes = plainText.toByteArray(Charsets.UTF_8)
-        require(plainBytes.size <= MAX_BACKUP_BYTES) { "Lokaler Datenbestand überschreitet die sichere Speichergrenze." }
+        require(plainBytes.size <= MAX_STORAGE_BYTES) { "Lokaler Datenbestand überschreitet die sichere Speichergrenze." }
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, encryptionKey())
         val encrypted = cipher.doFinal(plainBytes)
@@ -155,7 +155,7 @@ class ShipmentStore(context: Context) {
         require(encoded.length <= MAX_ENCRYPTED_STORAGE_CHARS) { "Verschlüsselte lokale Daten überschreiten die zulässige Größe." }
         val payload = Base64.decode(encoded, Base64.NO_WRAP)
         require(payload.size > GCM_IV_BYTES) { "Verschlüsselte lokale Daten sind beschädigt." }
-        require(payload.size <= MAX_BACKUP_BYTES + GCM_IV_BYTES + GCM_TAG_BYTES) {
+        require(payload.size <= MAX_STORAGE_BYTES + GCM_IV_BYTES + GCM_TAG_BYTES) {
             "Verschlüsselte lokale Daten überschreiten die zulässige Größe."
         }
         val iv = payload.copyOfRange(0, GCM_IV_BYTES)
@@ -341,7 +341,7 @@ class ShipmentStore(context: Context) {
                     })
                 }
             })
-        }.toString(2)
+        }.toString()
     }
 
     @Synchronized
@@ -528,7 +528,8 @@ class ShipmentStore(context: Context) {
         private const val MAX_ENCRYPTED_STORAGE_CHARS = 2_800_000
         const val MAX_RECORDS = 500
         private const val MAX_HISTORY_EVENTS = 100
-        const val MAX_BACKUP_BYTES = 2 * 1024 * 1024
+        private const val MAX_STORAGE_BYTES = 2 * 1024 * 1024
+        const val MAX_BACKUP_BYTES = 4 * 1024 * 1024
         private val TERMINAL_STATUSES = setOf(
             ShipmentStatus.HANDED_TO_CUSTOMER,
             ShipmentStatus.HANDED_TO_CARRIER
