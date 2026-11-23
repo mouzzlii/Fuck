@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version 1.48 (versionCode 49) · CI erfolgreich: Lauf 45250580288
+Stand: 23. November 2026 · App-Version 1.49 (versionCode 50) · CI erfolgreich: Lauf 45257771904
 
 ## 1. Zweck und Freigabestatus
 
@@ -18,25 +18,29 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
-Version 1.48 wurde erfolgreich durch CI gebaut. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.49 wurde erfolgreich durch CI gebaut. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.48 (versionCode 49) mit getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45250580288 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45250580288).
+Version 1.49 (versionCode 50) mit WLAN-Statusanzeige und getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45257771904 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45250580288).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `d7ad261d2f29860a8e7d3e07c7365bad4c23118cc0064dc43c4ec17d8c6a71cc`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 19:37 UTC; Ablauf 07.12.2026, 19:37 UTC
+- APK-SHA-256: `38716f1d1d6b4e31e5e4f63f534eeb626b3540ee9837a086a8371ad8a064cd0f`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 20:19 UTC; Ablauf 07.12.2026, 20:19 UTC
 
 [Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45250580288)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
 Das Artefakt im Actions-Lauf herunterladen und das enthaltene ZIP entpacken. Die Debug-APK kann eine andere Signatur als spätere Builds haben. Vor einem Update bestehende lokale Daten sichern und die App nicht deinstallieren.
+
+### Neue Gerätefunktion in Version 1.49
+
+Die App zeigt, ob das aktuelle Gerät über WLAN verbunden ist. Dies ist nur eine lokale Statusanzeige: andere Geräte werden nicht erkannt, es findet keine Netzwerksuche statt und es werden keine Daten übertragen. Die WLAN-Anzeige ist kein Nachweis, dass alle vier Handgeräte im selben Netzwerk erreichbar sind.
 
 ### Neue Gerätefunktion in Version 1.48
 
