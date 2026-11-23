@@ -14,7 +14,7 @@ Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetr
 Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TRAKUNA-Oberfläche bietet dafür eine direkte manuelle Auswahl in dieser Reihenfolge. Die Auswahl dient ausschließlich der Zuordnung des lokalen Vorgangs. Sie ersetzt keine Carrier-Authentifizierung, Buchung, Annahmebestätigung oder Label-Erstellung.
 
 - DPD/GLS: TC26-/DataWedge-Scan und bestehende Bluetooth-Druckabläufe getrennt und ohne Eingriff in die Carrier-Systeme testen.
-- Hermes: Das bisherige MC3090BT ist laut Betreiber zu alt und wird nächste Woche durch ein neues Gerät ersetzt. Das bestehende Hermes-System bis zur regulären Umstellung unverändert lassen. Nach Ankunft des Nachfolgers zuerst Modell, Betriebssystem, Hermes-App, Scanner und Drucker erfassen; anschließend nur mit Freigabe einen Integrationsweg prüfen.
+- Hermes: Das bisherige MC3090BT ist laut Betreiber zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen. Das bestehende Hermes-System bis zur regulären Umstellung unverändert lassen. Nach Ankunft des Nachfolgers zuerst Modell, Betriebssystem, Hermes-App, Scanner und Drucker erfassen; anschließend nur mit Freigabe einen Integrationsweg prüfen.
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
