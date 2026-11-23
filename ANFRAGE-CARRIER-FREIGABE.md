@@ -68,7 +68,7 @@ Offizielle Einstiege:
 
 ## 4. Hermes Österreich – standortspezifische Ergänzung
 
-Bisherige Ausstattung laut Betreiberangabe (wird nächste Woche ersetzt):
+Bisherige Ausstattung laut Betreiberangabe (Ersatzgerät für die kommende Woche angekündigt; tatsächliche Ankunft noch zu bestätigen):
 - Eigenständiges Symbol/Zebra MC3090BT-Handterminal, laut Betreiber zu alt
 - Herstellungskennzeichnung: 18. Oktober 2006
 - Hermes-Anwendungsversion laut Betreiber: V.2.1.1.0
