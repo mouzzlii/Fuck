@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version: 1.44 (versionCode 45) · CI-Lauf: 45227305052
+Stand: 23. November 2026 · App-Version: 1.45 (versionCode 46) · CI-Lauf: 45227305052
 
 ## 1. Zweck und Freigabestatus
 ## Start-Priorität der Paketdienste
@@ -15,11 +15,17 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben.
 
 
-Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetrieb. App-Version 1.44 (versionCode 45) ist als **Debug-Testpaket** erfolgreich gebaut. Unit-Tests und Android-Lint sind erfolgreich. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetrieb. App-Version 1.45 (versionCode 46) ist als **Debug-Testpaket** erfolgreich gebaut. Unit-Tests und Android-Lint sind erfolgreich. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
+
+Version 1.45 (versionCode 46) enthält die neue Schnellauswahl für DPD, GLS, Hermes und UPS. Der zugehörige CI-Build ist noch zu prüfen; erst nach erfolgreichem Lauf das neue Artefakt herunterladen. [Android-Workflow](https://github.com/mouzzlii/Fuck/actions/workflows/android.yml).
+
+Der bisherige Download-Link und die Prüfsumme beziehen sich auf Version 1.44 und enthalten die neue Schnellauswahl noch nicht.
+
+
 
 - [GitHub Actions CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052)
 - Unit-Tests, Android-Lint und Debug-APK-Erstellung: erfolgreich
