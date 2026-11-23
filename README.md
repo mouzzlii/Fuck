@@ -6,8 +6,8 @@ TRAKUNA 1.45 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 - Neue direkte Carrier-Auswahl für die vier Start-Prioritäten: **DPD, GLS, Hermes und UPS**.
 - Der Auswahlknopf kennzeichnet den lokalen Vorgang; er führt keine externe Buchung aus.
-- CI-Prüfung für Version 1.45: [Android-Workflow öffnen](https://github.com/mouzzlii/Fuck/actions/workflows/android.yml). Der Build muss erfolgreich abgeschlossen sein, bevor das neue APK verteilt wird.
-- Der letzte nachweislich erfolgreiche APK-Build ist Version 1.44 (versionCode 45), CI-Lauf 45227305052. Er enthält den neuen Carrier-Auswahlknopf noch nicht.
+- CI-Lauf 45229834365: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45229834365). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
+- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `06e847103a51cbf7ba04e6ab6383e200ba856dedc37cefeaf2dba0b220509441`. Das ZIP-Artefakt läuft am 07.12.2026, 17:39 UTC ab.
 
 **Wichtig:** Die letzte verfügbare Version 1.44 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
@@ -35,6 +35,11 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 - [Betriebshandbuch](BETRIEBSHANDBUCH.md): einfache Schritt-für-Schritt-Anleitung für Paketannahme, Kundenausgabe, Retouren, Zebra DataWedge, Partner-App und Datensicherung.
 - [Freigabe-Checkliste](FREIGABE-CHECKLISTE.md): verbindliche Nachweise und externe Voraussetzungen vor einem echten Paketshop-Einsatz.
 - [Praxis-Testplan](PRAxisTEST.md): Testfälle für den kontrollierten Gerätetest.
+
+## Neu in Version 1.45
+
+- Direkte Carrier-Schnellauswahl für die vier Start-Prioritäten DPD, GLS, Hermes und UPS.
+- Manuelle Änderung der Auswahl bleibt möglich; die Auswahl kennzeichnet nur den lokalen Vorgang und löst keine externe Buchung aus.
 
 ## Neu in Version 1.44
 
