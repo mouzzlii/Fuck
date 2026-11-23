@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45290269045 (Debug-Testpaket)
+Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45290932535 (Debug-Testpaket)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45290269045 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45290269045).
+1. Den [erfolgreichen Android-Build 45290932535 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45290932535).
 2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
@@ -14,12 +14,12 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 
 **Prüfsummen des bereitgestellten Testpakets**
 
-- APK-SHA-256: `16b69023df943ab0c7a350eee4f2baef298019929bbe87fbeb9d9fc91cfddc69`
-- ZIP-SHA-256: `7553840bb5f337d7d537604ae947cf72a8c0420f934a16097e68cf95bc83f9e4`
-- Erstellt: 23.11.2026, 23:38 UTC
+- APK-SHA-256: `c6d787d3cea6a5e0359bab8cc2f1a9b6759429cbea42dc1e2baf79b916e94965`
+- ZIP-SHA-256: `9bfd1ce4fe02c947abfcba6df8836844a2d810b5ac5c3aeba0e51ece808179cb`
+- Erstellt: 23.11.2026, 23:43 UTC
 - Artefakt verfügbar bis: 07.12.2026, 22:40 UTC
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die bisherigen Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstests wurden noch nicht auf einem Emulator oder echten Gerät ausgeführt. CI bestätigte Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
+Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die bisherigen Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstests wurden noch nicht auf einem Emulator oder echten Gerät ausgeführt. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
