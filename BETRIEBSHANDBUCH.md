@@ -106,7 +106,18 @@ Die UPS-App nicht eigenmächtig installieren oder konfigurieren. Vorhandene App-
 - Keine echten Kundendaten in öffentliche Screenshots, GitHub-Issues oder Chat-Nachrichten aufnehmen.
 - Vor dem produktiven Einsatz sind Datenschutzprüfung, Mehrgeräte-/Mitarbeitermodell, Backup-Wiederherstellung und signiertes Produktionsrelease erforderlich.
 
-## 10. Verbindliche Unterlagen
+## 10. Vorgänge löschen – wichtige Warnung
+
+Das Löschen eines Vorgangs entfernt den Datensatz einschließlich seiner lokal gespeicherten Historie dauerhaft von diesem Gerät. Es gibt derzeit keine Archivierungs- oder Wiederherstellungsfunktion für einzelne gelöschte Vorgänge und kein manipulationssicheres zentrales Prüfprotokoll.
+
+Vor dem Löschen:
+1. Prüfen, ob der Vorgang wirklich nicht mehr benötigt wird.
+2. Falls er noch als Nachweis gebraucht werden könnte, zuerst eine vollständige Datensicherung erstellen und geschützt ablegen.
+3. Die zusätzliche Warnung in der App aufmerksam lesen. Erst danach endgültig löschen.
+
+Eine Sicherung ist kein Ersatz für eine gesetzlich oder vertraglich erforderliche Aufbewahrung. Solche Fristen und Verantwortlichkeiten muss der Betreiber vor dem Produktiveinsatz festlegen.
+
+## 11. Verbindliche Unterlagen
 
 - [Pilotpaket und Produktionssperren](PILOT-PAKETSHOP.md)
 - [Praxis-Testplan für DPD, GLS, Hermes und UPS](PRAxisTEST.md)
