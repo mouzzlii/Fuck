@@ -29,10 +29,13 @@ Allgemeine technische Versand-API-Einstiege (nicht als österreichische Paketsho
 Offizielle Einstiege:
 - [GLS Österreich – Versandsysteme und Anbindungen](https://gls-group.com/AT/de/pakete-versenden/versendinfos/versandsysteme-anbindungen/)
 - [GLS Österreich – PaketShop-Partner FAQ](https://assistantapi.gls-group.eu/AT/de/faq/paketshop-partner/)
+- [GLS Österreich – Partnerausstattung und PaketShop-Abläufe](https://gls-group.com/AT/de/uber-us/unsere-partner/unsere-paketshop-partner/)
 
-**Was noch nicht belegt ist:** Ob ShipIT oder eine der veröffentlichten Versand-APIs die benötigten PaketShop-Prozesse des konkreten Standorts abdeckt. Die öffentlich beschriebene API bezieht sich auf Versandabwicklung; daraus folgt keine Berechtigung zur Übernahme der bestehenden GLS-Handgeräte-App oder zu Paketshop-Buchungen.
+**Zusätzlicher Abgleich mit der offiziellen Partnerausstattung:** GLS Österreich beschreibt für neue PaketShop-Partner ein bereitgestelltes Smartphone, einen Bluetooth-Drucker und eine eigens entwickelte GLS-App. Der vom Betreiber beschriebene Zebra-TC26-/CD421-Bestand kann eine ältere oder abweichende Ausstattung sein. GLS muss bestätigen, ob diese Geräte und die installierte Version am konkreten Standort noch der freigegebene Betriebsstand sind.
 
-**Nächster technischer Schritt:** GLS nach der für diesen Standort freigegebenen PaketShop-Software-/Geräteschnittstelle fragen. Falls ShipIT für den Betreiber tatsächlich zulässig ist, API-Version, Zugangsdaten, Testumgebung, Label- und Statusformate sowie die vier Paketshop-Vorgänge schriftlich bestätigen lassen. GLS-TC26 und Bluetooth-Drucker nicht verändern.
+**Was noch nicht belegt ist:** Ob ShipIT oder eine der veröffentlichten Versand-APIs die benötigten PaketShop-Prozesse des konkreten Standorts abdeckt. Die öffentlich beschriebene API bezieht sich auf Versandabwicklung; daraus folgt keine Berechtigung zur Übernahme der bestehenden GLS-Handgeräte-App oder zu PaketShop-Buchungen.
+
+**Nächster technischer Schritt:** GLS nach der für diesen Standort freigegebenen PaketShop-Software-/Geräteschnittstelle und der Aktualität der vorhandenen TC26-/Drucker-Ausstattung fragen. Falls ShipIT für den Betreiber tatsächlich zulässig ist, API-Version, Zugangsdaten, Testumgebung, Label- und Statusformate sowie die vier Paketshop-Vorgänge schriftlich bestätigen lassen. GLS-TC26 und Bluetooth-Drucker nicht verändern.
 
 ## 3. Hermes
 
