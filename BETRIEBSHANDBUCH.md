@@ -19,7 +19,7 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 - Erstellt: 23.11.2026, 21:49 UTC
 - Artefakt verfügbar bis: 07.12.2026, 21:49 UTC
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.50 ergänzt die Archivierung abgeschlossener Vorgänge und die Wiederherstellung aus dem Archiv.
+Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.50 ergänzte die Archivierung abgeschlossener Vorgänge und die Wiederherstellung aus dem Archiv. Version 1.51 ergänzt den strengeren Löschschutz; dafür liegt noch kein bestätigter Build vor.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
