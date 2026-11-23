@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.49 (versionCode 50) · CI erfolgreich: Lauf 45265965503
+Stand: App-Version 1.50 (versionCode 51) · CI erfolgreich: Lauf 45273220299
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45265965503 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45265965503).
+1. Den [erfolgreichen Android-Build 45273220299 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45273220299).
 2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
@@ -14,12 +14,12 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 
 **Prüfsummen des bereitgestellten Testpakets**
 
-- APK-SHA-256: `2608aaa39ac9d8e1e38cecadc219e75f733bd868c36064fa6fd43cb7a94bbc54`
-- ZIP-SHA-256: `92fe7d6602252f099e87d01a1c030abda0132d25bdab2c00fd1bbffcad33a153`
-- Erstellt: 23.11.2026, 21:06 UTC
-- Artefakt verfügbar bis: 07.12.2026, 21:06 UTC
+- APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`
+- ZIP-SHA-256: `a4d75dee23c876d26aa9fbeb696d5a6dd8c9c4c0c9aad2032dbd195dc9f4fe0f`
+- Erstellt: 23.11.2026, 21:49 UTC
+- Artefakt verfügbar bis: 07.12.2026, 21:49 UTC
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease.
+Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.50 ergänzt die Archivierung abgeschlossener Vorgänge und die Wiederherstellung aus dem Archiv.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
@@ -101,7 +101,7 @@ Die UPS-App nicht eigenmächtig installieren oder konfigurieren. Vorhandene App-
 
 - Lokale Daten liegen nur auf diesem Gerät; es gibt keine zentrale Synchronisierung und keine Cloud-Verbindung.
 - Es gibt keine Mitarbeiterkonten oder Rollen.
-- Maximal 500 Vorgänge werden lokal gespeichert.
+- Maximal 500 Vorgänge werden lokal gespeichert; archivierte Vorgänge belegen weiterhin einen Platz.
 - JSON-Backups und CSV-Exporte enthalten vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
 - Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge mit Zeitstempel und Ereignistyp. Diese Historie ist weiterhin nur lokal und nicht manipulationssicher oder zentral bestätigt.
 - Keine echten Kundendaten in öffentliche Screenshots, GitHub-Issues oder Chat-Nachrichten aufnehmen.
