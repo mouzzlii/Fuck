@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version 1.50 (versionCode 51) · CI erfolgreich: Lauf 45273220299
+Stand: 23. November 2026 · Zielversion 1.51 (versionCode 52) · letzter erfolgreicher CI-Stand 1.50
 
 ## 1. Zweck und Freigabestatus
 
@@ -18,13 +18,13 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
-Version 1.50 wurde erfolgreich durch CI gebaut. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.50 wurde erfolgreich durch CI gebaut; Version 1.51 mit zusätzlichem Schutz vor dem Löschen inkonsistenter Archivdatensätze benötigt noch einen eigenen erfolgreichen CI-Lauf. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.50 (versionCode 51) ergänzt Archivierung abgeschlossener Vorgänge, Wiederherstellung, Backup-Schema 2 und Archivzeitpunkt im CSV-Export. [CI-Lauf 45273220299 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45273220299).
+Version 1.50 (versionCode 51) ergänzt Archivierung abgeschlossener Vorgänge, Wiederherstellung, Backup-Schema 2 und Archivzeitpunkt im CSV-Export. Version 1.51 (versionCode 52) ergänzt die Prüfung der Datensatzgültigkeit vor endgültigem Löschen; Build ausstehend. [CI-Lauf 45273220299 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45273220299).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
