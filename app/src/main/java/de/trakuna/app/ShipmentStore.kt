@@ -498,14 +498,20 @@ object ShipmentRules {
      * Kept in the pure rules layer so scanner formats can be covered by JVM tests.
      */
     fun extractTrackingNumber(raw: String, maxInputChars: Int = 4096): String? {
-        if (raw.length > maxInputChars) return null
+        if (raw.isEmpty() || raw.length > maxInputChars) return null
+
+        // Zebra/DataWedge and GS1 scanners may prepend an AIM symbology identifier.
+        // Strip only known, leading identifiers; never remove arbitrary punctuation.
         val cleaned = raw.trim()
-            .removePrefix("]C1").removePrefix("]d2").removePrefix("]Q3")
+            .replace(Regex("^(?:\\]C[0-9]|\\]d[0-9]|\\]Q[0-9])"), "")
             .trim()
         if (cleaned.isBlank()) return null
 
         fun plausible(value: String?): String? =
             value?.let(::normalizeTrackingNumber)?.takeIf(::isValidTrackingNumber)
+
+        fun unique(values: List<String>): String? =
+            values.distinctBy { it.uppercase() }.singleOrNull()
 
         val isHttpUrl = cleaned.startsWith("http://", true) || cleaned.startsWith("https://", true)
         val hasUrlScheme = Regex("^[A-Za-z][A-Za-z0-9+.-]*://").containsMatchIn(cleaned)
@@ -514,45 +520,56 @@ object ShipmentRules {
 
         if (isHttpUrl) {
             val uri = runCatching { java.net.URI(cleaned) }.getOrNull() ?: return null
-            if (uri.scheme?.lowercase() !in setOf("http", "https")) return null
+            if (uri.scheme?.lowercase() !in setOf("http", "https") ||
+                uri.host.isNullOrBlank() || uri.rawUserInfo != null
+            ) return null
+
             val acceptedKeys = setOf(
                 "trackingnumber", "tracking_number", "tracking", "trackid", "shipment",
                 "shipmentid", "shipment_id", "consignment", "consignmentnumber",
                 "parcel", "parcelnumber", "barcode", "piececode", "sendungsnummer", "snr", "id"
             )
-            val query = uri.rawQuery.orEmpty()
-            for (part in query.split("&")) {
+            val queryCandidates = mutableListOf<String>()
+            for (part in uri.rawQuery.orEmpty().split("&")) {
+                if (part.isBlank()) continue
                 val key = part.substringBefore("=", "")
                 val value = part.substringAfter("=", "")
                 val decodedKey = runCatching { java.net.URLDecoder.decode(key, "UTF-8") }.getOrNull()
-                if (decodedKey?.lowercase() in acceptedKeys) {
-                    val decodedValue = runCatching { java.net.URLDecoder.decode(value, "UTF-8") }.getOrNull()
-                    plausible(decodedValue)?.let { return it }
-                }
+                    ?: continue
+                if (decodedKey.lowercase() !in acceptedKeys) continue
+                val decodedValue = runCatching { java.net.URLDecoder.decode(value, "UTF-8") }.getOrNull()
+                    ?: continue
+                val candidate = plausible(decodedValue) ?: continue
+                // Generic "id" is too ambiguous unless it has a known carrier structure.
+                if (decodedKey.equals("id", ignoreCase = true) && identifyCarrier(candidate) == null) continue
+                queryCandidates += candidate
             }
-            val pathSegments = uri.path.orEmpty().split("/").filter { it.isNotBlank() }
-            pathSegments.asReversed().firstOrNull { segment ->
-                plausible(segment)?.let { isValidTrackingNumber(it) && identifyCarrier(it) != null } == true
-            }?.let { plausible(it)?.let { value -> return value } }
-            pathSegments.lastOrNull()?.let { plausible(it)?.let { value -> return value } }
-            return null
+            if (queryCandidates.isNotEmpty()) return unique(queryCandidates)
+
+            // A path segment is accepted only when it has a distinctive known format.
+            // Arbitrary IDs in unrelated URLs are not treated as parcel tracking numbers.
+            val pathCandidates = uri.path.orEmpty().split("/")
+                .filter { it.isNotBlank() }
+                .mapNotNull(::plausible)
+                .filter { identifyCarrier(it) != null }
+            return unique(pathCandidates)
         }
 
         val compact = plausible(cleaned)
-        // Whitespace inside a scan can indicate surrounding label text ("Parcel 123456"),
-        // not a deliberately grouped tracking number. Only compact whitespace-bearing
-        // scans when the resulting value has a known carrier-specific structure.
+        // A complete, compact scan can be retained as an unknown tracking number.
+        // Whitespace-bearing text is only compacted when the result has a known structure.
         if (compact != null && (!cleaned.any(Char::isWhitespace) || identifyCarrier(compact) != null)) {
             return compact
         }
 
         // Extract only structurally distinctive formats from surrounding label text.
+        // Word boundaries prevent matching a short valid-looking ID inside a longer token.
         val candidates = listOf(
-            Regex("(?i)1Z[A-Z0-9]{16}").find(cleaned)?.value,
-            Regex("(?i)[A-Z]{2}[0-9]{9}AT").find(cleaned)?.value,
-            Regex("(?i)(?:JVGL|JJD)[A-Z0-9]{8,26}").find(cleaned)?.value
-        )
-        return candidates.firstNotNullOfOrNull(::plausible)
+            Regex("(?i)(?<![A-Z0-9])1Z[A-Z0-9]{16}(?![A-Z0-9])").findAll(cleaned).map { it.value },
+            Regex("(?i)(?<![A-Z0-9])[A-Z]{2}[0-9]{9}AT(?![A-Z0-9])").findAll(cleaned).map { it.value },
+            Regex("(?i)(?<![A-Z0-9])(?:JVGL|JJD)[A-Z0-9]{8,26}(?![A-Z0-9])").findAll(cleaned).map { it.value }
+        ).flatten().mapNotNull(::plausible).toList()
+        return unique(candidates)
     }
 
     fun formatTimestamp(timestamp: Long, zoneId: java.time.ZoneId = java.time.ZoneId.systemDefault()): String =
