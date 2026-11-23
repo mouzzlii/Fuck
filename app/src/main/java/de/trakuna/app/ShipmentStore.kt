@@ -405,15 +405,7 @@ class ShipmentStore(context: Context) {
             "Vorgangshistorie (lokal)"
         )
         val rows = readRecords().getOrElse { error("Lokaler Datenspeicher ist beschädigt; CSV wurde nicht erstellt.") }.map { record ->
-            val history = record.history.joinToString(" | ") { event ->
-                val transition = when {
-                    event.fromStatus != null && event.toStatus != null ->
-                        " (${event.fromStatus.name} -> ${event.toStatus.name})"
-                    event.toStatus != null -> " (${event.toStatus.name})"
-                    else -> ""
-                }
-                "${ShipmentRules.formatTimestampForExport(event.at)} ${event.type.name}$transition"
-            }
+            val history = ShipmentRules.formatHistoryForExport(record.history)
             listOf(
                 record.id,
                 record.trackingNumber,
@@ -600,6 +592,18 @@ object ShipmentRules {
 
     fun formatTimestampForExport(timestamp: Long): String =
         java.time.Instant.ofEpochMilli(timestamp).toString()
+
+    /** Stable, locale-independent representation of the device-local event history for CSV export. */
+    fun formatHistoryForExport(history: List<ShipmentEvent>): String =
+        history.joinToString(" | ") { event ->
+            val transition = when {
+                event.fromStatus != null && event.toStatus != null ->
+                    " (${event.fromStatus.name} -> ${event.toStatus.name})"
+                event.toStatus != null -> " (${event.toStatus.name})"
+                else -> ""
+            }
+            "${formatTimestampForExport(event.at)} ${event.type.name}$transition"
+        }
 
     /** Keep record chronology valid even if the device clock is moved backwards. */
     fun nextUpdateTimestamp(previousUpdatedAt: Long, now: Long): Long = maxOf(previousUpdatedAt, now)
