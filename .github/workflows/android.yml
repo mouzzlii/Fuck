@@ -25,11 +25,6 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
-    env:
-      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
     permissions:
       contents: read
 
@@ -126,9 +121,30 @@ jobs:
           done
           echo "OK: Zusammengeführte Manifeste enthalten keine INTERNET-Berechtigung, kein aktiviertes Backup und keinen Klartextverkehr."
 
-      - name: Signiertes Release bauen (nur mit Betreiber-Secrets)
-        if: ${{ env.ANDROID_KEYSTORE_BASE64 != '' && env.ANDROID_KEYSTORE_PASSWORD != '' && env.ANDROID_KEY_ALIAS != '' && env.ANDROID_KEY_PASSWORD != '' }}
+      - name: Prüfen, ob Betreiber-Release-Signierung konfiguriert ist
+        id: signing
         env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          if [[ -n "$ANDROID_KEYSTORE_BASE64" && -n "$ANDROID_KEYSTORE_PASSWORD" && -n "$ANDROID_KEY_ALIAS" && -n "$ANDROID_KEY_PASSWORD" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Betreiber-Signierung ist konfiguriert."
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Keine Betreiber-Signierung konfiguriert; Debug-Testpaket wird erstellt."
+          fi
+
+      - name: Signiertes Release bauen (nur mit Betreiber-Secrets)
+        if: steps.signing.outputs.configured == 'true'
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/trakuna-release.jks
         run: |
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$ANDROID_KEYSTORE_PATH"
@@ -136,11 +152,11 @@ jobs:
           gradle --no-daemon assembleRelease
 
       - name: Release-Prüfsumme erstellen
-        if: ${{ env.ANDROID_KEYSTORE_BASE64 != '' && env.ANDROID_KEYSTORE_PASSWORD != '' && env.ANDROID_KEY_ALIAS != '' && env.ANDROID_KEY_PASSWORD != '' }}
+        if: steps.signing.outputs.configured == 'true'
         run: sha256sum app/build/outputs/apk/release/app-release.apk > app/build/outputs/apk/release/SHA256SUMS.txt
 
       - name: Signiertes Release bereitstellen
-        if: ${{ env.ANDROID_KEYSTORE_BASE64 != '' && env.ANDROID_KEYSTORE_PASSWORD != '' && env.ANDROID_KEY_ALIAS != '' && env.ANDROID_KEY_PASSWORD != '' }}
+        if: steps.signing.outputs.configured == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: TRAKUNA-Android-Release
