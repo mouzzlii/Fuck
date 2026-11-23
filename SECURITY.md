@@ -41,7 +41,9 @@ Der Android-CI-Workflow prüft vor Unit-Tests die Quellmanifest-Grenzen und nach
 - `android:allowBackup="false"` muss gesetzt bleiben.
 - `android:usesCleartextTraffic="false"` muss gesetzt bleiben.
 
-Ein Verstoß lässt den Build fehlschlagen. Diese Prüfung ist eine gezielte Schutzschranke für den jetzigen Offline-Stand; sie ist kein vollständiger Sicherheitstest und ersetzt weder Codeanalyse noch Penetrationstest. Wenn eine echte Synchronisierung später beschlossen wird, muss diese Schutzschranke gemeinsam mit TLS, Authentifizierung, Berechtigungen, Datenschutzkonzept und Backend-Abnahme bewusst angepasst werden.
+Ein Verstoß lässt den Build fehlschlagen. Diese Prüfung ist eine gezielte Schutzschranke für den jetzigen Offline-Stand; sie ist kein vollständiger Sicherheitstest und ersetzt weder Codeanalyse noch Penetrationstest.
+
+Der CI-Lauf 45291370834 hat zusätzlich die JVM-Unit-Tests ausgeführt und die Android-Instrumentierungstestfälle erfolgreich kompiliert. Die Instrumentierungstestfälle für Android Keystore und verschlüsselten Speicher wurden **nicht ausgeführt**, weil der verfügbare GitHub-Runner keinen zuverlässigen Android-Emulator starten konnte. Die erfolgreiche Kompilierung belegt daher nur die technische Übersetzbarkeit der Testfälle, nicht das Laufzeitverhalten auf einem echten Gerät. Wenn eine echte Synchronisierung später beschlossen wird, muss diese Schutzschranke gemeinsam mit TLS, Authentifizierung, Berechtigungen, Datenschutzkonzept und Backend-Abnahme bewusst angepasst werden.
 
 ## Release-Signierung vorbereitet
 
