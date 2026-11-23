@@ -8,6 +8,11 @@ import org.junit.Test
 
 class BackupIoTest {
     @Test
+    fun backupImportLimitKeepsFourMibOfHeadroomForPortableJsonBackups() {
+        assertEquals(4 * 1024 * 1024, ShipmentStore.MAX_BACKUP_BYTES)
+    }
+
+    @Test
     fun readsUtf8WithinLimit() {
         val value = "TRAKUNA-Sicherung – Österreich"
         assertEquals(value, readBoundedUtf8(ByteArrayInputStream(value.toByteArray(Charsets.UTF_8)), 128))
