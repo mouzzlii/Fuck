@@ -1,20 +1,20 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.52 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.52 (versionCode 53)
+## Aktueller Entwicklungsstand – Version 1.53 (versionCode 54)
 
 - Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- 58 Unit-Tests im Testbestand. Version 1.52 ergänzt strikte UTF-8-Dekodierung auch für entschlüsselte lokale Speicherdaten. CI-Lauf 45286415077 für versionCode 53 war erfolgreich: Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
-- Debug-APK-SHA-256: `15633c1200e1615f5b5826a3fa00d5955863d20d53b86d7bcf17f92fcee4137a`.
-- ZIP-Artefakt-SHA-256: `b14cb60485a1278bf085981dbfbba544a32fa0b0ee146b31296e10b3b8502e02`.
-- Das ZIP-Artefakt wurde am 23.11.2026, 23:12 UTC erstellt und läuft am 07.12.2026, 23:12 UTC ab.
-- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45286415077
+- Version 1.53 ergänzt Android-Instrumentierungstests für Keystore-Verschlüsselung, Wiederöffnung des lokalen Speichers und Fail-closed-Verhalten bei beschädigten Daten. CI-Lauf 45290269045 für versionCode 54 war erfolgreich: Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. **Die Emulator-Instrumentierungstests wurden in diesem CI-Lauf nicht ausgeführt**; sie bleiben bis zu einem geeigneten Emulator-/Gerätelauf offen. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
+- Debug-APK-SHA-256: `16b69023df943ab0c7a350eee4f2baef298019929bbe87fbeb9d9fc91cfddc69`.
+- ZIP-Artefakt-SHA-256: `7553840bb5f337d7d537604ae947cf72a8c0420f934a16097e68cf95bc83f9e4`.
+- Das ZIP-Artefakt wurde am 23.11.2026, 23:38 UTC erstellt und läuft am 07.12.2026, 23:38 UTC ab.
+- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45290269045
 
-**Wichtig:** Version 1.52 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.53 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
@@ -22,7 +22,7 @@ TRAKUNA 1.52 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
 - WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden noch nicht gesucht.
 - DataWedge-Empfangscode ist vorhanden; das Profil muss auf dem jeweiligen Zebra-Gerät eingerichtet und vor Ort getestet werden.
-- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.52 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das bisherige Hermes-Handgerät MC3090BT ist zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen.** Modell, Betriebssystem, Scanner, Drucker und freigegebene Integrationsmöglichkeiten des Nachfolgers sind noch unbekannt. Bis zur Ankunft bleibt das bestehende Hermes-System unangetastet; danach wird das neue Gerät zunächst nur inventarisiert und geprüft, ohne Einstellungen oder den laufenden Hermes-Ablauf eigenmächtig zu verändern.
+- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.53 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das bisherige Hermes-Handgerät MC3090BT ist zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen.** Modell, Betriebssystem, Scanner, Drucker und freigegebene Integrationsmöglichkeiten des Nachfolgers sind noch unbekannt. Bis zur Ankunft bleibt das bestehende Hermes-System unangetastet; danach wird das neue Gerät zunächst nur inventarisiert und geprüft, ohne Einstellungen oder den laufenden Hermes-Ablauf eigenmächtig zu verändern.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
 ## Release-Build
