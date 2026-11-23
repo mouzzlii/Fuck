@@ -166,7 +166,7 @@ jobs:
 
       - name: Release-Prüfsumme erstellen
         if: steps.signing.outputs.configured == 'true'
-        run: sha256sum app/build/outputs/apk/release/app-release.apk > app/build/outputs/apk/release/SHA256SUMS.txt
+        run: (cd app/build/outputs/apk/release && sha256sum app-release.apk > SHA256SUMS.txt)
 
       - name: Signiertes Release bereitstellen
         if: steps.signing.outputs.configured == 'true'
