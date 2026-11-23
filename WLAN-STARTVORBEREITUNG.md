@@ -39,13 +39,13 @@ Diese Schritte erst mit Zustimmung des Paketshop-Betreibers ausführen.
 8. Prüfen, dass ein Scan allein keine Buchung und keinen Etikettendruck auslöst.
 9. Erst nach dokumentierter Freigabe weitere Tests durchführen.
 
-Die DataWedge-Konfiguration muss auf jedem Zebra-Gerät separat vorgenommen werden. Sie ist nicht automatisch durch die Installation von TRAKUNA eingerichtet.
+Die DataWedge-Konfiguration muss auf jedem Zebra-Gerät separat vorgenommen werden. Sie ist nicht automatisch durch die Installation von TRAKUNA eingerichtet. DataWedge Component Information schützt die Zustellung **von DataWedge an TRAKUNA** (Paketname und optional App-Signatur). Es schützt nicht den dynamischen Broadcast-Empfänger von TRAKUNA vor beliebigen Apps, die auf demselben Gerät einen gleichartigen Broadcast fälschen. Deshalb bleiben Eingaben nicht vertrauenswürdig und müssen geprüft werden.
 
 ## 3. Netzwerkanforderungen
 
-Für den derzeitigen lokalen TRAKUNA-Funktionsumfang ist kein direkter WLAN-Zugriff auf die GLS-, DPD- oder Hermes-Geräte erforderlich. Es wird auch kein Netzwerk-Port an den Paketshop-Routern geöffnet.
+Für den derzeitigen lokalen TRAKUNA-Funktionsumfang ist kein direkter WLAN-Zugriff auf die GLS-, DPD- oder Hermes-Geräte erforderlich. Die aktuelle Android-Manifestdatei fordert keine `INTERNET`-Berechtigung an; TRAKUNA verwendet daher derzeit keine Netzwerkverbindung und synchronisiert keine Daten über WLAN oder 4G. WLAN ist für den lokalen Scannerbetrieb nicht erforderlich. Es wird auch kein Netzwerk-Port an den Paketshop-Routern geöffnet.
 
-Für einen späteren zentralen Betrieb/Synchronisierung sind vorab festzulegen:
+Erst wenn eine freigegebene Online-Funktion oder zentrale Synchronisierung entwickelt wird, sind vorab festzulegen:
 - ein vom Betreiber freigegebener HTTPS-Dienst,
 - Benutzerkonten und Rollen,
 - verschlüsselte Übertragung und sichere Geräteauthentisierung,
@@ -83,7 +83,7 @@ Offizielle Android-Dokumentation:
 ## 6. Was vor dem Start noch nicht automatisch erledigt werden kann
 
 Diese Punkte hängen von Informationen oder Freigaben außerhalb des Repositorys ab:
-- WLAN-Name, WLAN-Passwort und etwaige Geräte-/Gastnetzrichtlinien des Betreibers.
+- WLAN-Name, WLAN-Passwort und etwaige Geräte-/Gastnetzrichtlinien des Betreibers (nur nötig, wenn ein späterer Online-Dienst tatsächlich freigegeben wird).
 - Installation und Freigabe auf den tatsächlichen Shopgeräten.
 - DataWedge-Profil auf jedem TC26 und der echte Scan-Test.
 - Stabiler Release-Signaturschlüssel des Betreibers.
@@ -94,7 +94,7 @@ Es werden keine WLAN-Passwörter, Carrier-Passwörter, privaten Schlüssel oder 
 
 ## 7. Ehrlicher Status
 
-**Vorbereitet:** Android-App, lokale Erfassung, Kamera-/manuelle Eingabe, DataWedge-Empfangscode, Hardwareinventar, DataWedge-Konfigurationsanleitung und dieser WLAN-Startplan.
+**Vorbereitet:** Android-App, lokale Erfassung, Kamera-/manuelle Eingabe, DataWedge-Empfangscode, Hardwareinventar, DataWedge-Konfigurationsanleitung und dieser Startplan. Die aktuelle App läuft lokal; WLAN schaltet keine noch nicht vorhandene Cloud-Synchronisierung frei.
 
 **Noch nicht vor Ort verifiziert:** WLAN-Zugang, DataWedge-Profil, echter TC26-Scan, Hermes-Anbindung, zentrale Synchronisierung und produktive Freigabe.
 
