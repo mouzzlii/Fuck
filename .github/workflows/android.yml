@@ -80,6 +80,7 @@ jobs:
         with:
           api-level: 35
           target: default
+          profile: pixel_2
           arch: x86_64
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
           disable-animations: true
