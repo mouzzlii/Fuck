@@ -212,7 +212,7 @@ class ShipmentStore(context: Context) {
         if (existing != null) return ShipmentUpdate.AlreadyExists(existing)
         if (records.size >= MAX_RECORDS) {
             return ShipmentUpdate.Rejected(
-                "Speicherlimit von $MAX_RECORDS Vorgängen erreicht. Bitte zuerst eine CSV-Sicherung exportieren und nicht mehr benötigte Einträge löschen."
+                "Speicherlimit von $MAX_RECORDS Vorgängen erreicht. Bitte zuerst eine CSV- oder JSON-Sicherung erstellen und nur archivierte Vorgänge nach Prüfung der Aufbewahrungsfristen endgültig löschen."
             )
         }
 
