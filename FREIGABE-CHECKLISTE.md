@@ -1,6 +1,6 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.45 (versionCode 46) · erfolgreicher CI-Lauf 45229834365
+Stand: App-Version 1.45 (versionCode 46) · erfolgreicher CI-Lauf 45231195765
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
@@ -14,9 +14,9 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Update von der vorherigen freigegebenen Version getestet
 
 Aktueller Build 1.45: https://github.com/mouzzlii/Fuck/actions/runs/45229834365
-APK-SHA-256: `06e847103a51cbf7ba04e6ab6383e200ba856dedc37cefeaf2dba0b220509441`
+APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`
 
-ZIP-Artefakt erstellt am 23.11.2026, 17:39 UTC; Ablauf am 07.12.2026, 17:39 UTC. Produktionssignierung ist weiterhin offen.
+ZIP-Artefakt erstellt am 23.11.2026, 17:48 UTC; Ablauf am 07.12.2026, 17:48 UTC. Produktionssignierung ist weiterhin offen.
 
 ## B. Geräte- und Scannerabnahme
 
