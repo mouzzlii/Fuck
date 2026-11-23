@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Version 1.49 · versionCode 50)
 
-Version 1.49 enthält die WLAN-Statusanzeige für das aktuelle Gerät, die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS sowie die ausdrücklich lokale Kennzeichnung einer Paketdienst-Übergabe. CI-Lauf 45263992780 ist erfolgreich (Unit-Tests, Android-Lint, Debug-APK). [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45263992780). APK-SHA-256: `7bb30957a7bd288c6e9a2748b773d76b46d3229425c0725f738572685e0fd8d3`.
+Version 1.49 enthält die WLAN-Statusanzeige für das aktuelle Gerät, die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS sowie die ausdrücklich lokale Kennzeichnung einer Paketdienst-Übergabe. CI-Lauf 45265965503 ist erfolgreich (Unit-Tests, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK). [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45265965503). APK-SHA-256: `2608aaa39ac9d8e1e38cecadc219e75f733bd868c36064fa6fd43cb7a94bbc54`.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -70,7 +70,7 @@ Jeder Paketdienst wird getrennt mit freigegebenen Testetiketten bzw. fiktiven Te
 |---|---|---|---|---|
 | DPD | DPD im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische DPD-Erkennung voraussetzen | Bestehendes DPD-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
 | GLS | GLS im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische GLS-Erkennung voraussetzen | Bestehendes GLS-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
-| Hermes | Hermes im Schnellauswahlmenü | MC3090BT bleibt ausschließlich beim bestehenden Hermes-System. TRAKUNA auf einem separaten freigegebenen Android-Gerät mit manueller Testnummer prüfen; keine direkte Android-/DataWedge-Integration des MC3090BT voraussetzen | Bestehenden Hermes-Ablauf und Drucker nicht verändern; offizielle Schnittstelle und Betreiberfreigabe sind Pflicht | Offen – Pilotblocker |
+| Hermes | Hermes im Schnellauswahlmenü | Das bisherige MC3090BT wird nächste Woche durch ein neues Gerät ersetzt. Nach Ankunft exaktes Modell, Betriebssystem, Hermes-App und Scanner erfassen; bis dahin keine Integrationstests am Altgerät | Bestehenden Hermes-Ablauf und Drucker nicht verändern. Neues Gerät erst nach Betreiberfreigabe untersuchen; offizielle Schnittstelle und Abnahme bleiben Pflicht | Offen – Pilotblocker |
 | UPS | UPS im Schnellauswahlmenü | Bekannte 1Z-Format-Erkennung nur als Hinweis prüfen; zusätzlich manuelle Nummern testen | Prüfen, ob die offizielle App `UPS Access Point` (`com.ups.accesspoint`) installiert und vom Standort freigegeben ist; Version und Android-Gerät erfassen. Die App verlangt laut Google-Play-Angabe Android 9.0 oder höher. Nicht eigenmächtig installieren oder konfigurieren. | Offen |
 
 
@@ -86,7 +86,7 @@ Für **jeden** der vier Paketdienste müssen mindestens diese Fälle protokollie
 5. Partner-App nicht installiert bzw. nicht integrationsfähig: TRAKUNA muss ehrlich melden, dass keine Buchung bestätigt wurde.
 6. Annahme, Kundenausgabe, Retoure und Übergabe an den Zusteller nur dann als abgeschlossen markieren, wenn der lokale Testablauf dies ausdrücklich vorsieht bzw. das autorisierte Partnersystem die Aktion bestätigt.
 
-Die Carrier-Schnellauswahl und die getrennten App-Zuordnungen in Version 1.48 sind **keine** offizielle Integration. Ein grüner CI-Build ersetzt keinen dieser Gerätetests und keine schriftliche Freigabe.
+Die Carrier-Schnellauswahl und die getrennten App-Zuordnungen in Version 1.49 sind **keine** offizielle Integration. Ein grüner CI-Build ersetzt keinen dieser Gerätetests und keine schriftliche Freigabe.
 
 ## 3. Sicherheits- und Fehlerprüfungen
 
