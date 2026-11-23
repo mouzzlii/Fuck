@@ -6,6 +6,14 @@
 Stand: 23. November 2026 · App-Version: 1.44 (versionCode 45) · CI-Lauf: 45227305052
 
 ## 1. Zweck und Freigabestatus
+## Start-Priorität der Paketdienste
+
+Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TRAKUNA-Oberfläche bietet dafür eine direkte manuelle Auswahl in dieser Reihenfolge. Die Auswahl dient ausschließlich der Zuordnung des lokalen Vorgangs. Sie ersetzt keine Carrier-Authentifizierung, Buchung, Annahmebestätigung oder Label-Erstellung.
+
+- DPD/GLS: TC26-/DataWedge-Scan und bestehende Bluetooth-Druckabläufe getrennt und ohne Eingriff in die Carrier-Systeme testen.
+- Hermes: MC3090BT-Ablauf erhalten; offizielle Hermes-Anbindung vor Produktivpilot klären.
+- UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben.
+
 
 Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetrieb. App-Version 1.44 (versionCode 45) ist als **Debug-Testpaket** erfolgreich gebaut. Unit-Tests und Android-Lint sind erfolgreich. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
