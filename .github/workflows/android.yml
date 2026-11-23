@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
     env:
       ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -74,6 +74,9 @@ jobs:
 
       - name: Unit-Tests ausführen
         run: gradle --no-daemon testDebugUnitTest
+
+      - name: Android-Keystore- und Speicher-Instrumentierungstests auf Emulator
+        run: gradle --no-daemon pixel2Api35DebugAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 
       - name: Android-Lint ausführen
         run: gradle --no-daemon lintDebug
