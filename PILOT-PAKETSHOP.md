@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 24. November 2026 · Testversion 1.52 (versionCode 53) · CI-Lauf 45286415077 erfolgreich (Debug-Testpaket)
+Stand: 24. November 2026 · Testversion 1.53 (versionCode 54) · CI-Lauf 45290269045 erfolgreich (Debug-Testpaket)
 
 ## 1. Zweck und Freigabestatus
 
@@ -18,20 +18,20 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
-Version 1.52 wurde erfolgreich durch CI gebaut. Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.53 wurde erfolgreich durch CI gebaut. Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die neuen Android-Instrumentierungstestfälle sind vorhanden, wurden wegen des nicht zuverlässig startenden CI-Emulators aber noch nicht ausgeführt. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.52 (versionCode 53) enthält Archivierung/Wiederherstellung, Backup-Schema 2, Archivzeitpunkt im CSV-Export und den zusätzlichen Löschschutz für ungültige Archivdatensätze. [Erfolgreichen CI-Lauf 45286415077 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45286415077).
+Version 1.53 (versionCode 54) enthält Archivierung/Wiederherstellung, Backup-Schema 2, Archivzeitpunkt im CSV-Export und den zusätzlichen Löschschutz für ungültige Archivdatensätze. [Erfolgreichen CI-Lauf 45290269045 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45286415077).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `15633c1200e1615f5b5826a3fa00d5955863d20d53b86d7bcf17f92fcee4137a`
-- ZIP-SHA-256: `b14cb60485a1278bf085981dbfbba544a32fa0b0ee146b31296e10b3b8502e02`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 23:12 UTC; Ablauf 07.12.2026, 23:12 UTC
+- APK-SHA-256: `16b69023df943ab0c7a350eee4f2baef298019929bbe87fbeb9d9fc91cfddc69`
+- ZIP-SHA-256: `7553840bb5f337d7d537604ae947cf72a8c0420f934a16097e68cf95bc83f9e4`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 23:38 UTC; Ablauf 07.12.2026, 23:38 UTC
 
 [Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45286415077)
 
