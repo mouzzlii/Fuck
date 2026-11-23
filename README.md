@@ -6,10 +6,10 @@ TRAKUNA 1.45 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 - Neue direkte Carrier-Auswahl für die vier Start-Prioritäten: **DPD, GLS, Hermes und UPS**.
 - Der Auswahlknopf kennzeichnet den lokalen Vorgang; er führt keine externe Buchung aus.
-- CI-Lauf 45229834365: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45229834365). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
-- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `06e847103a51cbf7ba04e6ab6383e200ba856dedc37cefeaf2dba0b220509441`. ZIP-Artefakt-SHA-256: `7cff57a9febd908470e43ae193521955f90a148fda1a772cf357810056536d43`. Das ZIP-Artefakt läuft am 07.12.2026, 17:39 UTC ab.
+- CI-Lauf 45231195765: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45231195765). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
+- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`. ZIP-Artefakt-SHA-256: `bbca90d53b608fce4c7b0784b92ebcf5fe7063096a35244af99cd4413b0bd978`. Das ZIP-Artefakt wurde am 23.11.2026 um 17:48 UTC erstellt und läuft am 07.12.2026 um 17:48 UTC ab.
 
-**Wichtig:** Die letzte verfügbare Version 1.44 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.45 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
