@@ -1,18 +1,18 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.51 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.52 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.51 (versionCode 52)
+## Aktueller Entwicklungsstand – Version 1.52 (versionCode 53)
 
 - Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- 44 Unit-Tests im Testbestand. Version 1.51 enthält einen zusätzlichen Löschschutz für inkonsistente Archivdatensätze. CI-Lauf 45281621801 für versionCode 52 war erfolgreich: Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
-- Debug-APK-SHA-256: `e47b845dcd5a8dcc57760d61bd7ab3fa73064c0a19dce4c6eb7bfa7b10b2012e`.
-- ZIP-Artefakt-SHA-256: `9ff08004e9bef4665c2399c64f79aab17b7c6b52182490a489278d15ea7823d4`.
-- Das ZIP-Artefakt wurde am 23.11.2026, 22:40 UTC erstellt und läuft am 07.12.2026, 22:40 UTC ab.
-- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45281621801
+- 45 Unit-Tests im Testbestand. Version 1.52 ergänzt strikte UTF-8-Dekodierung auch für entschlüsselte lokale Speicherdaten. CI-Lauf 45285731190 für versionCode 53 war erfolgreich: Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
+- Debug-APK-SHA-256: `9e721394925265c1a9316089afefa04233aeb58b9461c8f8314b74c7f8a5eae7`.
+- ZIP-Artefakt-SHA-256: `e496571dc273fa43f7b2d077d143eb47da8f20f7691e726db095e27c54891587`.
+- Das ZIP-Artefakt wurde am 23.11.2026, 23:07 UTC erstellt und läuft am 07.12.2026, 23:07 UTC ab.
+- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45285731190
 
 **Wichtig:** Version 1.51 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
@@ -47,6 +47,11 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 ## CI-Schutzprüfungen
 
 Der Android-Workflow startet nur bei App-/Build-Änderungen und prüft vor dem Build, dass die aktuelle Offline-Version keine INTERNET-Berechtigung anfordert, Android-Backups deaktiviert und Klartextverkehr deaktiviert bleibt. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden.
+
+## Neu in Version 1.52
+
+- Die UTF-8-Dekodierung verschlüsselter lokaler Speicherdaten ist strikt: ungültige Bytefolgen werden als Speicherfehler behandelt und nicht stillschweigend durch Ersatzzeichen verändert.
+- Ein zusätzlicher Unit-Test deckt die Ablehnung fehlerhafter UTF-8-Sequenzen direkt ab.
 
 ## Neu in Version 1.51
 
