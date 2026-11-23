@@ -1,20 +1,15 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.44 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.45 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Praxistest-Build – Stand 23.11.2026
+## Aktueller Entwicklungsstand – Version 1.45 (versionCode 46)
 
-- [Erfolgreichen Build öffnen und APK-Artefakt herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45227305052)
-- Build-Run: `45227305052` (Commit `e5d59c7ffa40268f7f922297089965f8550eadaa`)
-- Unit-Tests: erfolgreich
-- Android-Lint: erfolgreich
-- Debug-APK: erfolgreich erstellt
-- Artefakt: `TRAKUNA-Android` (20.748.925 Byte ZIP)
-- APK-Datei im Artefakt: `app-debug.apk`
-- APK-SHA-256: `db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
-- Artefakt läuft am 07.12.2026 um 17:26 UTC ab.
+- Neue direkte Carrier-Auswahl für die vier Start-Prioritäten: **DPD, GLS, Hermes und UPS**.
+- Der Auswahlknopf kennzeichnet den lokalen Vorgang; er führt keine externe Buchung aus.
+- CI-Prüfung für Version 1.45: [Android-Workflow öffnen](https://github.com/mouzzlii/Fuck/actions/workflows/android.yml). Der Build muss erfolgreich abgeschlossen sein, bevor das neue APK verteilt wird.
+- Der letzte nachweislich erfolgreiche APK-Build ist Version 1.44 (versionCode 45), CI-Lauf 45227305052. Er enthält den neuen Carrier-Auswahlknopf noch nicht.
 
-**Wichtig:** Das ist ein Debug-Testpaket, kein produktiv signiertes Release. Das Release-Signing wurde im Build übersprungen, weil die privaten Betreiber-Schlüssel nicht hinterlegt sind. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Die letzte verfügbare Version 1.44 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
