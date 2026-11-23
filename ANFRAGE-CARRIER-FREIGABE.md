@@ -68,21 +68,26 @@ Offizielle Einstiege:
 
 ## 4. Hermes Österreich – standortspezifische Ergänzung
 
-Vorhandene Ausstattung laut Betreiberangabe:
-- Eigenständiges Symbol/Zebra MC3090BT-Handterminal
+Bisherige Ausstattung laut Betreiberangabe (wird nächste Woche ersetzt):
+- Eigenständiges Symbol/Zebra MC3090BT-Handterminal, laut Betreiber zu alt
 - Herstellungskennzeichnung: 18. Oktober 2006
 - Hermes-Anwendungsversion laut Betreiber: V.2.1.1.0
 - Eigenständiger Hermes-Drucker; Modell und Anschluss noch offen
 - Sichtbare Funktionen: Retoure, PrivatPaketService, Zustellung, Rücklauf und Hermes Karte
 
+Angekündigter Nachfolger:
+- Neues Hermes-Gerät wird laut Betreiber nächste Woche bereitgestellt.
+- Hersteller, Modell, Betriebssystem, Hermes-App-Version, Scanner und Drucker sind noch unbekannt und werden nach Erhalt aufgenommen.
+
 Bitte bestätigen Sie insbesondere:
-- Ob das vorhandene MC3090BT-System weiterhin offiziell unterstützt wird.
-- Welche aktuelle Hermes-PaketShop-Software bzw. Gerätegeneration vorgesehen ist.
+- Welches genaue Nachfolgegerät und welche Hermes-PaketShop-Software für den Standort bereitgestellt werden.
+- Welche Betriebssystem-/App-Version und welche Scanner-/Druckerkonfiguration vorgesehen sind.
+- Ob das bisherige MC3090BT bis zur Umstellung weiter genutzt werden soll und wie ein unterbrechungsfreier Wechsel erfolgt.
 - Ob eine offizielle Schnittstelle oder ein freigegebener Nachfolgeprozess existiert.
 - Wie die Vorgänge Annahme, Ausgabe, Retoure und Rücklauf/Fahrerübergabe technisch bestätigt werden.
 - Ob eine technische Modernisierung erforderlich ist und wie diese ohne Unterbrechung des laufenden Shopbetriebs erfolgt.
 
-Hermes Österreich beschreibt öffentlich PaketShop-Annahme, Retourenannahme und Kundenausgabe. Für das konkrete MC3090BT-System ist aber noch keine Entwickler-Schnittstelle nachgewiesen.
+Hermes Österreich beschreibt öffentlich PaketShop-Annahme, Retourenannahme und Kundenausgabe. Für das bisherige MC3090BT-System und den angekündigten Nachfolger ist bislang keine Entwickler-Schnittstelle nachgewiesen.
 
 Offizielle Einstiege:
 - [Hermes Österreich – PaketShop-Partner](https://www.hermesworld.com/de/ueber-uns/hermes-gruppe/hermes-logistik-at/paketshop-partner/)
