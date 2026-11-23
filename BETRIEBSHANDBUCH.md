@@ -29,6 +29,23 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 
 Das ist ein Debug-Testpaket, kein signiertes Produktionsrelease.
 
+
+## 2a. Sicher aktualisieren – vorhandene Daten schützen
+
+**Wichtig: TRAKUNA nicht zuerst deinstallieren.** Die Sendungsdaten liegen lokal auf dem Gerät. Eine Deinstallation kann diese Daten und den dazugehörigen Android-Keystore-Schlüssel löschen.
+
+Vor jedem Update:
+
+1. TRAKUNA öffnen und **Vollständige Datensicherung erstellen** wählen.
+2. Die JSON-Sicherung an einem geschützten Ort speichern. Sie enthält Sendungsnummern, Empfängernamen und Notizen im Klartext. Nicht öffentlich teilen und nicht ungeschützt weiterleiten.
+3. Prüfen, dass die Sicherungsdatei tatsächlich vorhanden ist und sich am gewählten Ort wiederfinden lässt.
+4. Erst danach das neue APK installieren. Wenn Android eine Aktualisierung anbietet, die vorhandene App aktualisieren und nicht deinstallieren.
+5. Nach dem Update TRAKUNA öffnen und einige vorhandene Vorgänge kontrollieren.
+
+**Wenn Android meldet „App nicht installiert“, „Signatur stimmt nicht überein“ oder eine ähnliche Meldung:** Installation abbrechen. Die bestehende App nicht löschen und keine Daten löschen. Debug-Testpakete aus verschiedenen Build-Läufen können unterschiedlich signiert sein. In diesem Fall muss zuerst ein Update mit passender Signatur bereitgestellt oder ein sicherer Datenexport und Wiederherstellungsweg vorbereitet werden.
+
+Eine erfolgreiche Installation ist noch kein Funktionsnachweis. Nach dem Update mindestens einen Testvorgang mit einer ausdrücklich erfundenen Testnummer durchführen und danach wieder entfernen. Keine echte Kundensendung für einen Funktionstest verwenden.
+
 ## 3. Sendungsnummer erfassen
 
 Es gibt drei Eingabewege:
@@ -179,20 +196,3 @@ Vor dem Produktiveinsatz müssen Betreiber und Softwareanbieter gemeinsam bestä
 - signiertes Produktionsrelease mit sicher verwahrtem Signaturschlüssel erstellt.
 
 Ein erfolgreicher GitHub-Build bestätigt nur automatisierte Tests und APK-Erstellung. Er ersetzt keine Geräte-, Betriebs- oder Sicherheitsabnahme.
-
-
-## 2a. Sicher aktualisieren – vorhandene Daten schützen
-
-**Wichtig: TRAKUNA nicht zuerst deinstallieren.** Die Sendungsdaten liegen lokal auf dem Gerät. Eine Deinstallation kann diese Daten und den dazugehörigen Android-Keystore-Schlüssel löschen.
-
-Vor jedem Update:
-
-1. TRAKUNA öffnen und **Vollständige Datensicherung erstellen** wählen.
-2. Die JSON-Sicherung an einem geschützten Ort speichern. Sie enthält Sendungsnummern, Empfängernamen und Notizen im Klartext. Nicht öffentlich teilen und nicht ungeschützt weiterleiten.
-3. Prüfen, dass die Sicherungsdatei tatsächlich vorhanden ist und sich am gewählten Ort wiederfinden lässt.
-4. Erst danach das neue APK installieren. Wenn Android eine Aktualisierung anbietet, die vorhandene App aktualisieren und nicht deinstallieren.
-5. Nach dem Update TRAKUNA öffnen und einige vorhandene Vorgänge kontrollieren.
-
-**Wenn Android meldet „App nicht installiert“, „Signatur stimmt nicht überein“ oder eine ähnliche Meldung:** Installation abbrechen. Die bestehende App nicht löschen und keine Daten löschen. Debug-Testpakete aus verschiedenen Build-Läufen können unterschiedlich signiert sein. In diesem Fall muss zuerst ein Update mit passender Signatur bereitgestellt oder ein sicherer Datenexport und Wiederherstellungsweg vorbereitet werden.
-
-Eine erfolgreiche Installation ist noch kein Funktionsnachweis. Nach dem Update mindestens einen Testvorgang mit einer ausdrücklich erfundenen Testnummer durchführen und danach wieder entfernen. Keine echte Kundensendung für einen Funktionstest verwenden.
