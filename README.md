@@ -2,16 +2,28 @@
 
 TRAKUNA 1.44 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
+## Aktueller Praxistest-Build 266
+
+- [Build 266 öffnen und APK-Artefakt herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45166820754)
+- Unit-Tests und Android-Lint: erfolgreich
+- Artefakt: `TRAKUNA-Android`
+- SHA-256: `b2af51c5c910a4378c548071dbae9d80058310fc5821c50f106a2941037d6387`
+- Artefakt läuft voraussichtlich am 07.12.2026 ab.
+
+Das ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren.
+
 ## Release-Build
 
 Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald der Betreiber die vier Signierungs-Secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` und `ANDROID_KEY_PASSWORD` in den GitHub-Repository-Secrets hinterlegt hat. Der private Keystore bleibt außerhalb des Repositorys. Ohne diese Betreiber-Schlüssel wird bewusst nur die Debug-Testversion veröffentlicht.
 
 ## Integrations- und Sicherheitsdokumentation
 
+- [Pilotpaket für den ersten Paketshop](PILOT-PAKETSHOP.md): aktueller Build, Testablauf, Zielarchitektur, Integrationsvoraussetzungen und Produktionssperren.
 - [Partner-Schnittstelle und Abnahmekriterien](PARTNER_INTEGRATION.md): beschreibt den aktuellen Android-Übergabeversuch, den notwendigen Vertrag mit dem Softwareanbieter und die Tests für eine echte Integration.
 - [Sicherheitsstatus und Produktionsfreigabe](SECURITY.md): dokumentiert umgesetzte Schutzmaßnahmen, bekannte Restrisiken und verbindliche Freigabekriterien.
 - [Betriebshandbuch](BETRIEBSHANDBUCH.md): einfache Schritt-für-Schritt-Anleitung für Paketannahme, Kundenausgabe, Retouren, Zebra DataWedge, Partner-App und Datensicherung.
 - [Freigabe-Checkliste](FREIGABE-CHECKLISTE.md): verbindliche Nachweise und externe Voraussetzungen vor einem echten Paketshop-Einsatz.
+- [Praxis-Testplan](PRAxisTEST.md): Testfälle für den kontrollierten Gerätetest.
 
 ## Neu in Version 1.44
 
@@ -21,175 +33,3 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 - Paketdienstnamen werden bei bekannten manuellen Eingaben vereinheitlicht. Die DHL-Erkennung verlangt jetzt ein vollständiges bekanntes Muster; unklare JD-Präfixe werden nicht mehr automatisch als DHL eingestuft.
 - Dieselbe aktive Sendungsnummer kann nicht mehr versehentlich in mehreren Vorgangsarten angelegt werden. Die Rückmeldung zeigt die bereits vorhandene Vorgangsart.
 - Kamera-Barcodes verwenden den Anzeigewert als Rückfall, wenn der Rohwert leer ist.
-
-## Neu in Version 1.43
-
-- Die manuelle Paketdienstangabe steht jetzt direkt in der Hauptmaske und wird sowohl bei der lokalen Erfassung als auch bei der Übergabe an eine Partner-App verwendet. Zuvor wurde sie nur beim Anlegen eines Paketshop-Vorgangs berücksichtigt.
-- Eine manuelle Paketdienstangabe hat Vorrang vor einem Format-Hinweis; ohne manuelle Angabe bleibt die automatische Erkennung nur ein unverbindlicher Hinweis.
-
-## Neu in Version 1.42
-
-- Rein numerische Sendungsnummern werden nicht mehr anhand ihrer Länge einem Paketdienst zugeordnet. Solche Nummern sind zwischen Paketdiensten nicht eindeutig; TRAKUNA lässt den Paketdienst offen, bis er manuell bestätigt wurde.
-- Die Carrier-Tests prüfen ausdrücklich, dass numerische IDs unbekannt bleiben und nicht zu einer falschen Paketdienst-Zuordnung verleiten.
-
-## Neu in Version 1.41
-
-- Die Partnerübergabe verwendet dieselbe Normalisierung wie das Speichern. Eingebettete Steuerzeichen werden nicht mehr stillschweigend entfernt, sondern führen zur Ablehnung.
-- Ein zusätzlicher Unit-Test prüft, dass fehlerhafte Eingaben nicht durch das Entfernen eines eingebetteten Steuerzeichens in eine andere gültige Sendungsnummer umgewandelt werden.
-
-## Neu in Version 1.40
-
-- CSV-Exporte erkennen Formel-Einstiege jetzt auch dann, wenn vor dem Zeichen unsichtbare Unicode-Leerzeichen, Zero-Width-Zeichen oder eine BOM stehen. Solche Zellen werden ebenfalls als Text markiert.
-- Zusätzliche Tests prüfen Tabulator-, BOM- und Zero-Width-Präfixe.
-
-## Neu in Version 1.39
-
-- Die Sendungsnummer wird bei der Übergabe an eine Partner-App mit derselben strengen Regel geprüft wie beim Speichern und Scannen. Unicode-Zeichen, die normalen Buchstaben oder Zahlen nur ähnlich sehen, werden auch bei der Übergabe abgelehnt.
-- Die bisherige doppelte, abweichende Übergabe-Prüfung wurde entfernt.
-
-## Neu in Version 1.38
-
-- Ungültige oder falsch typisierte Zebra-DataWedge-Nutzdaten werden sicher ignoriert, statt den Scan-Empfänger durch eine fehlerhafte Intent-Extra-Angabe abstürzen zu lassen.
-
-## Neu in Version 1.37
-
-- Zebra-DataWedge-Scans werden nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Hintergrund-Broadcasts ändern nicht mehr unbemerkt die Eingabemaske.
-
-## Neu in Version 1.36
-
-- Eine ausdrücklich ausgewählte Betriebssoftware hat Vorrang vor einer später ergänzten Paketdienst-Standardzuordnung.
-
-## Neu in Version 1.35
-
-- Ergänzt die von Android-Lint geforderte explizite Opt-in-Kennzeichnung für den CameraX-Bildzugriff. Die Lint-Prüfung bleibt als verpflichtender CI-Schritt aktiv.
-
-## Neu in Version 1.34
-
-- Der Zebra-DataWedge-Broadcast wird jetzt auf allen unterstützten Android-Versionen mit einer expliziten Export-Freigabe registriert. Die Android-Lint-Prüfung hat diese notwendige Angabe auf älteren API-Versionen erkannt.
-- Ein redundanter Test-Ausdruck wurde entfernt, damit die Unit-Test-Ausgabe keine vermeidbare Compilerwarnung enthält.
-
-## Neu in Version 1.33
-
-- Die App nutzt pro Bildschirm-Sitzung eine gemeinsame Instanz des lokalen Datenspeichers, statt sie für einzelne Aktionen neu zu initialisieren.
-- Der Android-Build führt zusätzlich Android-Lint aus, damit typische Manifest-, Ressourcen- und Android-API-Probleme vor der APK-Bereitstellung auffallen.
-
-- Die Migration verschlüsselter Paketdaten prüft jetzt auch JSON-Struktur, Datensatzregeln und Duplikate, bevor ein eventuell vorhandener alter Klartextbestand entfernt wird.
-- Der verschlüsselte Partner-Übergabe-Cache prüft Sendungsnummer, Paketdienstlänge und Zeitstempel sowohl beim Lesen als auch vor der Migration. Fehlerhafte Daten werden nicht stillschweigend als gültige Übergabe übernommen.
-
-## Neu in Version 1.32
-
-- Das App-Symbol wurde passend zur Waldgrün-Oberfläche ergänzt.
-- Die Zebra-Einrichtungsanleitung verweist auf die offizielle DataWedge-Dokumentation und erklärt, dass die Signaturprüfung bei neuen Debug-Testpaketen gegebenenfalls erneut eingerichtet werden muss.
-
-## Neu in Version 1.31
-
-- Vor dem CSV-Export erscheint jetzt wie bei der JSON-Sicherung eine deutliche Warnung: Die Datei enthält Sendungsnummern, Empfängerdaten und Notizen und ist unverschlüsselt.
-- Die Hauptoberfläche berücksichtigt sichere Display-Ränder und die Bildschirmtastatur, damit Inhalte auf neueren Android-Versionen und kleinen Displays nicht hinter Systemleisten oder Tastatur verschwinden.
-- Die Auswahl installierter Betriebssoftware ist auf kleinen Bildschirmen scrollbar.
-
-## Neu in Version 1.30
-
-- In der Sendungsliste werden Erfassungszeitpunkt und letzte Änderung direkt angezeigt.
-- CSV-Exporte enthalten Erfassungs- und Änderungszeitpunkte als eindeutige UTC-Zeitstempel im ISO-8601-Format.
-- Empfänger-, Paketdienst-, Notiz- und Suchfelder begrenzen Eingaben bereits während der Eingabe auf ihre vorgesehenen Feldlängen.
-
-## Neu in Version 1.29
-
-- Zebra-Scans und Kamera-Barcodes werden vor der Auswertung auf eine maximale Eingabelänge begrenzt. Überlange Broadcast-Inhalte werden ausdrücklich abgelehnt.
-- Die manuelle Sendungsnummerneingabe ist begrenzt, damit versehentlich eingefügte sehr lange Inhalte nicht unnötig verarbeitet werden.
-- Der Hinweis bei beschädigtem lokalem Speicher erklärt jetzt korrekt, dass neue Vorgänge und Exporte gesperrt sind, eine Wiederherstellung aus einer Sicherung aber möglich bleibt.
-
-## Neu in Version 1.28
-
-- Statuswechsel werden vor dem Speichern bestätigt. Bei tatsächlichen Übergaben an Kunden oder Paketdienste erinnert die Bestätigung daran, erst nach der physischen Übergabe zu bestätigen.
-- Die Sendungsliste zeigt mehr als 100 Treffer auf ausdrückliche Anforderung in weiteren Blöcken an; ältere Vorgänge bleiben damit erreichbar, ohne die Liste sofort vollständig aufzubauen.
-
-## Neu in Version 1.27
-
-- Wenn die Kamera mehrere unterschiedliche Sendungsnummern gleichzeitig erkennt, wählt TRAKUNA nicht mehr willkürlich eine davon aus. Der Scan wird abgebrochen und der Bediener wird zum einzelnen Scannen oder zur manuellen Eingabe aufgefordert.
-
-## Neu in Version 1.26
-
-- Bereits laufende Barcode-Erkennungen werden nach dem Schließen des Scanner-Bildschirms verworfen. Ein verspätetes Kamera-Ergebnis kann die Oberfläche nicht mehr nachträglich verändern.
-
-## Neu in Version 1.25
-
-- Der Kamera-Scanner beendet seine Analyse sauber, wenn der Scanner-Bildschirm geschlossen wird. Ein verzögert startender Kamera-Provider darf die Kamera nach dem Schließen nicht erneut an die Oberfläche binden.
-
-## Neu in Version 1.24
-
-- Eine geprüfte Datensicherung kann jetzt auch dann zur Wiederherstellung ausgewählt werden, wenn der lokale verschlüsselte Datenspeicher beschädigt ist. Die Wiederherstellung bleibt ausdrücklich bestätigungspflichtig und wird nur als erfolgreich gemeldet, wenn die verschlüsselten Daten dauerhaft gespeichert wurden.
-
-## Neu in Version 1.23
-
-- Kamera-Scans werden nur noch in das Sendungsnummernfeld übernommen. Eine Partner-App wird nicht mehr automatisch nach einem Scan geöffnet; vor der Übergabe kann der Bediener die Nummer prüfen.
-
-## Neu in Version 1.22
-
-- Der verschlüsselte Übergabe-Cache unterscheidet jetzt zwischen „kein gespeicherter Wert“ und einem Entschlüsselungs-/Lesefehler. Ein beschädigter Cache wird nicht mehr stillschweigend als leer ausgegeben.
-- Fehler beim Speichern des Übergabe-Caches liefern eine konkrete Fehlermeldung; ein App-Wechsel wird weiterhin nur nach bestätigtem Speichern gestartet.
-
-## Neu in Version 1.20
-
-- Lokale Paketdatensätze werden mit AES-256-GCM verschlüsselt; der Schlüssel wird im Android Keystore verwahrt.
-- Vorhandene unverschlüsselte lokale Datensätze werden beim ersten Start kontrolliert migriert. Die alte Kopie wird erst zusammen mit dem erfolgreich gespeicherten verschlüsselten Bestand entfernt.
-- Bei fehlgeschlagener Migration, beschädigten Chiffretexten oder nicht verfügbarem Schlüssel zeigt die App einen Speicherfehler, statt einen leeren Datenbestand vorzutäuschen.
-- Verschlüsselte Speicherwerte und Klartext vor der Verschlüsselung sind größenbegrenzt, damit beschädigte oder übergroße lokale Einträge nicht unbegrenzt in den Speicher geladen werden.
-- Auch die zuletzt an die Partner-App übergebene Sendungsnummer und Paketdienstangabe werden separat mit AES-GCM und einem eigenen Android-Keystore-Schlüssel verschlüsselt; vorhandene Klartext-Cachewerte werden einmalig migriert.
-- JSON- und CSV-Exporte bleiben bewusst separat: exportierte Dateien sind weiterhin unverschlüsselt und müssen geschützt aufbewahrt werden.
-
-## Funktionen im aktuellen Entwicklungsstand
-
-- Zebra DataWedge-Intent-Eingang für integrierte Zebra-Hardware-Scanner (nach einmaliger Profilkonfiguration; siehe PARTNER_INTEGRATION.md).
-- Kamera-Scan für gängige 1D-Barcodes und QR-/2D-Codes (Google ML Kit).
-- Manuelle Eingabe von Sendungsnummern als Alternative zum Kamerascan.
-- Automatische Format-Hinweise sind derzeit nur für einige eindeutige UPS-, Österreichische-Post- und DHL-Muster hinterlegt. DPD, GLS und Hermes können manuell eingetragen werden; eine automatische Hermes-Erkennung ist noch nicht umgesetzt. Alle Erkennungshinweise sind unverbindlich und müssen mit echten Labels geprüft werden.
-- Zwischenspeicherung der letzten Sendungsnummer und Kopie in die Zwischenablage.
-- Auswahl einer installierten Betriebssoftware (dauerhaft gespeichert, mit Möglichkeit zum Entfernen/Wechseln) und Übergabeversuch per Android-Intent; die lokale Zwischenspeicherung wird vor dem App-Wechsel bestätigt, ein nicht verfügbarer Clipboard-Dienst blockiert den Ablauf nicht und die Zwischenablage wird auf Android 13+ als sensibel markiert.
-- Lokale Paketshop-Liste mit Eingang für Kunden, Annahme von Kundensendungen und Retouren.
-- Statusfortschritt, Empfänger-/Notizfelder (nachträglich bearbeitbar), Suche und Löschen einzelner Vorgänge.
-- Doppelte aktive Sendungen werden erkannt und ausdrücklich als bereits vorhanden gemeldet, statt fälschlich eine neue Speicherung zu behaupten.
-- Schutz vor unbemerktem Erreichen der lokalen Speichergrenze: maximal 500 Vorgänge; vor weiteren Einträgen wird ein CSV-Export und Aufräumen verlangt.
-- Anzeige der belegten Speicherkapazität und verständlicher Hinweis bei Suchanfragen ohne Treffer.
-- CSV-Export als echte Datei über den Android-Dateidialog (Speicherort frei wählbar); Tabellenkalkulations-Formelanfänge in Nutzereingaben werden beim Export entschärft.
-- Vollständige lokale Datensicherung als versioniertes JSON über den Android-Dateidialog.
-- Wiederherstellung mit Format-/Versions-/Datensatzprüfung, Prüfung der Vorgangsstatus, Schutz vor doppelten aktiven Vorgängen, Größenlimit für Sicherungsdateien (2 MiB, bereits beim Einlesen begrenzt) und ausdrücklicher Bestätigung; der vorhandene lokale Bestand wird beim Wiederherstellen ersetzt.
-- Lokale Datensätze werden vor der Anzeige auf gültige IDs, Sendungsnummern, Zeitstempel, Status, Feldlängen, Duplikate und Speichergrenzen geprüft; fehlerhafte Bestände werden ausdrücklich nicht als leer dargestellt.
-- Schreibvorgänge melden einen Speicherfehler, statt eine nicht bestätigte Speicherung als erfolgreich darzustellen.
-- Vor dem Export einer unverschlüsselten JSON-Sicherung warnt die App vor den enthaltenen Sendungsnummern, Empfängernamen und internen Notizen.
-- Strikte Statusübergänge je Vorgangsart, damit Retouren und ausgehende Sendungen nicht versehentlich vermischt werden.
-- Kamera- und DataWedge-Scans übernehmen die Nummer zunächst nur zur Prüfung; es erfolgt keine automatische Partnerübergabe oder Buchung.
-- Eine gültige Datensicherung kann nach ausdrücklicher Bestätigung auch bei beschädigtem lokalem Speicher wiederhergestellt werden.
-
-## Praxis-Test
-
-Der deutschsprachige [Praxis-Testplan](PRAxisTEST.md) enthält konkrete Prüfschritte für Scan, manuelle Eingabe, Paketshop-Abläufe, Bearbeitung, CSV-Export und Partnerübergabe.
-
-## Bauen
-
-Voraussetzungen: JDK 17 und Gradle 8.9.
-
-```bash
-gradle assembleDebug
-```
-
-APK-Ausgabe: `app/build/outputs/apk/debug/app-debug.apk`.
-
-## Wichtige Grenzen – noch kein produktiver Paketdienstbetrieb
-
-- Die Datenspeicherung erfolgt lokal in Android SharedPreferences; die Paketdatensätze werden mit AES-256-GCM verschlüsselt und der Schlüssel liegt im Android Keystore. Es gibt weiterhin keine zentrale Datenbank. Die Sendungsnummer wird vor der Partnerübergabe synchron in einen verschlüsselten lokalen Cache geschrieben; bei einem Schreibfehler wird der Übergabeversuch gestoppt. Es gibt keine Synchronisierung zwischen Geräten, Benutzerkonten, Rollen oder revisionssichere Audit-Protokolle.
-- Der CSV-Export erstellt eine Datei am vom Nutzer gewählten Speicherort. Es gibt keine automatische oder verschlüsselte Cloud-Sicherung; die JSON-Datei muss manuell erstellt und sicher aufbewahrt werden.
-- Datensicherungen enthalten Sendungsnummern, Empfängernamen und interne Notizen im Klartext. Die Datei muss wie ein vertrauliches Dokument geschützt und sicher gespeichert werden.
-- Eine Partner-App wird nur geöffnet und mit Intent-Extras gestartet. Eine automatische Übernahme der Sendungsnummer funktioniert nur, wenn die Zielsoftware diese Extras oder eine passende API ausdrücklich unterstützt. TRAKUNA kann die Unterstützung fremder Apps nicht erzwingen.
-- Carrier-Erkennung ist nicht verbindlich; Sendungsnummern müssen vor der Übergabe geprüft werden. Es bestehen keine direkten Tracking- oder Versanddienst-API-Verbindungen.
-- Es fehlen noch Tests mit realen Paketetiketten, echten Betriebssoftware-Versionen, verschiedenen Android-Geräten sowie ein Datenschutz-/Sicherheitsaudit.
-
-## Vor einem produktiven Einsatz erforderlich
-
-1. Ziel-Betriebssoftware und deren dokumentierte Integrationsschnittstelle festlegen.
-2. Datenschutz- und Sicherheitsanforderungen des Paketshops klären.
-3. Backend mit Authentifizierung, Rollen, verschlüsselter Übertragung, zentraler Speicherung und Audit-Log ergänzen, falls mehrere Geräte/Benutzer benötigt werden.
-4. Reale Scanner- und Paketlabeltests für alle eingesetzten Carrier durchführen.
-5. Abnahme- und Wiederherstellungstests einschließlich Fehlerfällen durchführen.
-
-**Status:** Entwicklungs-/Praxis-Testversion. Ein erfolgreicher Android-Build bestätigt nur, dass das APK gebaut wurde – nicht, dass alle Abläufe im Paketshop produktiv funktionieren.
