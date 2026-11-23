@@ -77,6 +77,45 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun shipmentHistoryRejectsInvalidEventPayloadsAndBrokenStatusChains() {
+        val valid = ShipmentRecord(
+            id = "history-payload", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER, status = ShipmentStatus.READY_FOR_PICKUP,
+            createdAt = 100L, updatedAt = 300L,
+            history = listOf(
+                ShipmentEvent(100L, ShipmentEventType.CREATED, toStatus = ShipmentStatus.RECEIVED_BY_SHOP),
+                ShipmentEvent(200L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.RECEIVED_BY_SHOP, ShipmentStatus.READY_FOR_PICKUP)
+            )
+        )
+        assertTrue(ShipmentRules.isValidRecord(valid))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(history = valid.history + ShipmentEvent(
+            250L, ShipmentEventType.DETAILS_UPDATED, fromStatus = ShipmentStatus.READY_FOR_PICKUP
+        ))))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(history = listOf(
+            valid.history.first(),
+            ShipmentEvent(200L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.RECEIVED_BY_SHOP, ShipmentStatus.HANDED_TO_CUSTOMER)
+        ))))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(history = listOf(
+            ShipmentEvent(100L, ShipmentEventType.CREATED, toStatus = ShipmentStatus.RECEIVED_BY_SHOP),
+            ShipmentEvent(200L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.READY_FOR_PICKUP, ShipmentStatus.HANDED_TO_CUSTOMER)
+        ), status = ShipmentStatus.HANDED_TO_CUSTOMER)))
+    }
+
+    @Test
+    fun shipmentHistoryEnforcesThePerRecordEventLimit() {
+        val valid = ShipmentRecord(
+            id = "history-limit", trackingNumber = "ABC1234567", carrier = "DHL",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER, status = ShipmentStatus.RECEIVED_BY_SHOP,
+            createdAt = 100L, updatedAt = 100L,
+            history = List(100) { ShipmentEvent(100L, ShipmentEventType.DETAILS_UPDATED) }
+        )
+        assertTrue(ShipmentRules.isValidRecord(valid))
+        assertFalse(ShipmentRules.isValidRecord(valid.copy(
+            history = valid.history + ShipmentEvent(100L, ShipmentEventType.DETAILS_UPDATED)
+        )))
+    }
+
+    @Test
     fun olderRecordsWithoutHistoryRemainValidForBackwardCompatibility() {
         val legacy = ShipmentRecord(
             id = "legacy-1", trackingNumber = "ABC1234567", carrier = "DHL",
