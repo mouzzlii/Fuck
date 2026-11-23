@@ -1,22 +1,24 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.49 (versionCode 50) · erfolgreicher CI-Lauf 45265965503
+Stand: App-Version 1.50 (versionCode 51) · erfolgreicher CI-Lauf 45273220299
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45265965503 für Version 1.49 (versionCode 50) erfolgreich – WLAN-Statusanzeige und Carrier-Auswahl für DPD/GLS/Hermes/UPS
-- [x] Unit-Tests und Android-Lint für Version 1.49 erfolgreich
-- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.49 als Artefakt bereitgestellt
+- [x] CI-Lauf 45273220299 für Version 1.50 (versionCode 51) erfolgreich – Archivierung abgeschlossener Vorgänge, Wiederherstellung, Backup-Schema 2
+- [x] Unit-Tests und Android-Lint für Version 1.50 erfolgreich
+- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.50 als Artefakt bereitgestellt
+- [x] Archivierungs- und Wiederherstellungslogik für abgeschlossene Vorgänge durch Unit-Tests abgedeckt
+- [ ] Archivieren/Wiederherstellen und Backup-Restore auf einem echten Android-Gerät praktisch geprüft
 - [ ] Release-Version und Versionsnummer fachlich geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Update von der vorherigen freigegebenen Version getestet
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
 
-Aktueller Build 1.49: https://github.com/mouzzlii/Fuck/actions/runs/45265965503
-APK-SHA-256: `2608aaa39ac9d8e1e38cecadc219e75f733bd868c36064fa6fd43cb7a94bbc54`
+Aktueller Build 1.50: https://github.com/mouzzlii/Fuck/actions/runs/45273220299
+APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`
 
 ZIP-Artefakt erstellt am 23.11.2026, 21:06 UTC; Ablauf am 07.12.2026, 21:06 UTC. Produktionssignierung ist weiterhin offen.
 
