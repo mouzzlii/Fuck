@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: App-Version 1.49 (versionCode 50)
+Stand: App-Version 1.51 (versionCode 52)
 
 ## Zweck
 Dieses Dokument beschreibt die technische Vereinbarung für eine autorisierte Übergabe zwischen TRAKUNA und der jeweiligen Paketshop-Betriebssoftware.
@@ -10,7 +10,7 @@ Dieses Dokument beschreibt die technische Vereinbarung für eine autorisierte Ü
 Für den ersten Start sind **DPD, GLS, Hermes und UPS** die vier priorisierten Paketdienste. Die Reihenfolge in der TRAKUNA-Auswahl ist DPD, GLS, Hermes, UPS. Alle vier müssen im Pilotablauf separat geprüft werden; eine manuelle Carrier-Auswahl ist zunächst nur eine Kennzeichnung des lokalen Vorgangs und keine Buchung im Partnersystem.
 
 - **DPD und GLS:** vorhandene separate Zebra-Handgeräte und Bluetooth-Drucker bleiben unangetastet. DataWedge-Scan auf den TC26-Geräten muss vor Ort getestet werden.
-- **Hermes:** Das bisherige MC3090BT ist laut Betreiber zu alt und wird nächste Woche ersetzt. Das bestehende System bleibt bis zur freigegebenen Umstellung unangetastet; das Nachfolgegerät wird nach Ankunft inventarisiert. Offizielle Hermes-Schnittstelle/Freigabe bleibt Pflicht.
+- **Hermes:** Das bisherige MC3090BT ist laut Betreiber zu alt und soll in der kommenden Woche ersetzt werden. Das bestehende System bleibt bis zur freigegebenen Umstellung unangetastet; das Nachfolgegerät wird nach Ankunft inventarisiert. Offizielle Hermes-Schnittstelle/Freigabe bleibt Pflicht.
 - **UPS:** Sendungsnummern im bekannten `1Z`-Format können als Format-Hinweis erkannt werden. Das bestätigt weder Gültigkeit noch UPS-Paketshop-Berechtigung. Hardware, Shopsoftware und offizieller Integrationsweg sind noch zu ermitteln.
 
 
@@ -106,7 +106,7 @@ Mindestanforderungen:
 - Testzugang und freigegebene Testsendungen.
 - Beschreibung, welche Paketshop-Aktionen die Schnittstelle tatsächlich unterstützt (Annahme, Kundenausgabe, Retoure, Übergabe an Zusteller).
 
-Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.49; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
+Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.51; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
 
 Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Übergabeversuch mit lokalem Cache und Zwischenablage-Fallback. Es werden keine Carrier-Endpunkte, Paketbuchungen oder Zugangsdaten erfunden.
 
