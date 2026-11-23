@@ -396,8 +396,24 @@ class ShipmentStore(context: Context) {
 
     @Synchronized
     fun exportCsv(): String {
-        val header = listOf("ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status", "Empfänger", "Notiz", "Erstellt (UTC)", "Aktualisiert (UTC)")
+        // Include the locally stored event history in the export so a CSV backup
+        // does not silently discard the chronology shown in the app. This remains
+        // a device-local history, not a tamper-proof or centrally verified audit log.
+        val header = listOf(
+            "ID", "Sendungsnummer", "Paketdienst", "Vorgang", "Status",
+            "Empfänger", "Notiz", "Erstellt (UTC)", "Aktualisiert (UTC)",
+            "Vorgangshistorie (lokal)"
+        )
         val rows = readRecords().getOrElse { error("Lokaler Datenspeicher ist beschädigt; CSV wurde nicht erstellt.") }.map { record ->
+            val history = record.history.joinToString(" | ") { event ->
+                val transition = when {
+                    event.fromStatus != null && event.toStatus != null ->
+                        " (${event.fromStatus.name} -> ${event.toStatus.name})"
+                    event.toStatus != null -> " (${event.toStatus.name})"
+                    else -> ""
+                }
+                "${ShipmentRules.formatTimestampForExport(event.at)} ${event.type.name}$transition"
+            }
             listOf(
                 record.id,
                 record.trackingNumber,
@@ -407,7 +423,8 @@ class ShipmentStore(context: Context) {
                 record.recipient,
                 record.note,
                 ShipmentRules.formatTimestampForExport(record.createdAt),
-                ShipmentRules.formatTimestampForExport(record.updatedAt)
+                ShipmentRules.formatTimestampForExport(record.updatedAt),
+                history
             )
         }
         return (listOf(header) + rows).joinToString("\n") { row -> row.joinToString(";") { ShipmentRules.csvSafeCell(it) } }
