@@ -107,16 +107,19 @@ Die UPS-App nicht eigenmächtig installieren oder konfigurieren. Vorhandene App-
 - Keine echten Kundendaten in öffentliche Screenshots, GitHub-Issues oder Chat-Nachrichten aufnehmen.
 - Vor dem produktiven Einsatz sind Datenschutzprüfung, Mehrgeräte-/Mitarbeitermodell, Backup-Wiederherstellung und signiertes Produktionsrelease erforderlich.
 
-## 10. Vorgänge löschen – wichtige Warnung
+## 10. Vorgänge archivieren, wiederherstellen und endgültig löschen
 
-Das Löschen eines Vorgangs entfernt den Datensatz einschließlich seiner lokal gespeicherten Historie dauerhaft von diesem Gerät. Es gibt derzeit keine Archivierungs- oder Wiederherstellungsfunktion für einzelne gelöschte Vorgänge und kein manipulationssicheres zentrales Prüfprotokoll.
+Abgeschlossene Vorgänge können über **Vorgang archivieren** aus der aktiven Liste ausgeblendet werden. Die Daten und die lokale Historie bleiben dabei erhalten.
 
-Vor dem Löschen:
-1. Prüfen, ob der Vorgang wirklich nicht mehr benötigt wird.
-2. Falls er noch als Nachweis gebraucht werden könnte, zuerst eine vollständige Datensicherung erstellen und geschützt ablegen.
-3. Die zusätzliche Warnung in der App aufmerksam lesen. Erst danach endgültig löschen.
+1. Einen Vorgang erst dann archivieren, wenn er tatsächlich an den Kunden bzw. Paketdienst übergeben und der Status in TRAKUNA entsprechend abgeschlossen wurde.
+2. In der aktiven Liste **Vorgang archivieren** antippen.
+3. Über **Archivierte Vorgänge anzeigen** kann der Vorgang gesucht und geprüft werden.
+4. Mit **Wiederherstellen** kommt er in die aktive Liste zurück. Eine Wiederherstellung wird verhindert, wenn dieselbe Sendungsnummer bereits als anderer aktiver Vorgang geführt wird.
+5. Erst im Archiv wird die Option zur endgültigen Löschung angezeigt. Sie entfernt Datensatz und Historie dauerhaft vom Gerät.
 
-Eine Sicherung ist kein Ersatz für eine gesetzlich oder vertraglich erforderliche Aufbewahrung. Solche Fristen und Verantwortlichkeiten muss der Betreiber vor dem Produktiveinsatz festlegen.
+Archivierte Vorgänge belegen weiterhin einen Platz des lokalen Limits von 500 Datensätzen. Nur eine endgültige Löschung gibt den Platz wieder frei. Vor jeder endgültigen Löschung sind Aufbewahrungspflichten und Betreiberregeln zu prüfen.
+
+Die Archivierung ist keine zentrale oder manipulationssichere Aufbewahrung. Das Gerät kann weiterhin verloren gehen oder lokale Daten können beschädigt werden. Vor wichtigen Änderungen eine geschützte Datensicherung erstellen.
 
 ## 11. Verbindliche Unterlagen
 
