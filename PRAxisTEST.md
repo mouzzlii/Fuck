@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Version 1.53 · versionCode 54)
 
-Aktueller Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der erfolgreiche CI-Lauf 45290932535 auf Commit `401a349d4dde2d98f14e23a5e1e8a28b6efef464` bestätigt Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK-Build und Artefakt-Upload. Die Android-Instrumentierungstests wurden in diesem CI-Lauf **nicht ausgeführt**; dafür ist ein echter Emulator-/Gerätelauf erforderlich. [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45290932535). APK-SHA-256: `c6d787d3cea6a5e0359bab8cc2f1a9b6759429cbea42dc1e2baf79b916e94965`.
+Aktueller Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der erfolgreiche CI-Lauf 45291370834 auf Commit `cf415c77a4e5ee0c325987e2e0f0bd12b029ea58` bestätigt Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK-Build und Artefakt-Upload. Die Android-Instrumentierungstests wurden in diesem CI-Lauf **nicht ausgeführt**; dafür ist ein echter Emulator-/Gerätelauf erforderlich. [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45290932535). APK-SHA-256: `9c4061b394cad26f7f76456fef738962e02237cffc084cc0b62bdd2ad8c3e6da`.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -33,7 +33,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 12 | Empfänger und Notiz bearbeiten | Geänderte Angaben bleiben nach erneutem Öffnen erhalten. |
 | 13 | Suche verwenden | Treffer werden anhand Sendungsnummer, Empfänger, Paketdienst oder Status gefiltert. |
 | 14 | CSV-Datei exportieren | Android-Dateidialog erscheint; die gespeicherte Datei enthält die Sendungsliste. |
-| 15 | Einzelnen Vorgang löschen | Nach Bestätigung wird nur der gewählte Vorgang entfernt. |
+| 15 | Abgeschlossenen Vorgang archivieren, im Archiv wiederherstellen und erst danach endgültig löschen | Offene Vorgänge lassen sich nicht archivieren oder endgültig löschen. Wiederherstellen entfernt den Archivstatus; endgültiges Löschen ist nur nach Archivierung möglich. |
 | 16 | App schließen und neu öffnen | Lokal gespeicherte Vorgänge sind weiterhin vorhanden. |
 | 17 | Zebra-Scanner mit DataWedge-Profil scannen | Sendungsnummer erscheint im Eingabefeld; es erfolgt keine automatische Buchung. Ungültige Inhalte werden abgelehnt. |
 | 18 | Partner-App auswählen und übergeben | Cache wird vor dem Wechsel dauerhaft gespeichert; Clipboard-Ausfall darf keinen Absturz verursachen, Android 13+ markiert den Clipboard-Inhalt als sensibel; Ziel-App wird nur bei installierter App geöffnet. |
