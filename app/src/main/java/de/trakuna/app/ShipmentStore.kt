@@ -801,7 +801,8 @@ object ShipmentRules {
     }
 
     /** Permanent deletion is allowed only after explicit archival. */
-    fun canPermanentlyDelete(record: ShipmentRecord): Boolean = record.archivedAt != null
+    fun canPermanentlyDelete(record: ShipmentRecord): Boolean =
+        record.archivedAt != null && isValidRecord(record)
 
     fun isTerminalStatus(status: ShipmentStatus): Boolean =
         status == ShipmentStatus.HANDED_TO_CUSTOMER || status == ShipmentStatus.HANDED_TO_CARRIER
