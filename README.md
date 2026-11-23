@@ -2,13 +2,13 @@
 
 TRAKUNA 1.44 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Praxistest-Build 266
+## Aktueller Praxistest-Build – Stand 23.11.2026
 
-- [Build 266 öffnen und APK-Artefakt herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45166820754)
+- [Build 266 öffnen und APK-Artefakt herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45221331671)
 - Unit-Tests und Android-Lint: erfolgreich
 - Artefakt: `TRAKUNA-Android`
-- SHA-256: `b2af51c5c910a4378c548071dbae9d80058310fc5821c50f106a2941037d6387`
-- Artefakt läuft voraussichtlich am 07.12.2026 ab.
+- SHA-256: `cc3911e62d4024bb8869559b48ad5c2b3bf35c4e81e65591dc541329ed180ab7`
+- Artefakt läuft am 07.12.2026 ab.
 
 Das ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren.
 
