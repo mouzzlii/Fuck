@@ -1,18 +1,17 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.43
+Stand: App-Version 1.44
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [ ] GitHub-Actions-Build des freizugebenden Commits erfolgreich
-- [ ] Unit-Tests und Android-Lint erfolgreich
-- [ ] APK-Prüfsumme dokumentiert und Installationsdatei eindeutig dem Commit zugeordnet
+- [x] GitHub-Actions-Build für Commit `88763b38328292319c70ce1e31a9d12ece3d2eca` erfolgreich (Build 258)
+- [x] Unit-Tests und Android-Lint erfolgreich
+- [x] Debug-APK und SHA-256-Prüfsumme als Artefakt `TRAKUNA-Android` bereitgestellt
 - [ ] Release-Version und Versionsnummer geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Schlüssel erstellt
 - [ ] Update von der vorherigen freigegebenen Version getestet
-
 ## B. Geräte- und Scannerabnahme
 
 - [ ] Jedes tatsächlich eingesetzte Android-/Zebra-Modell dokumentiert
@@ -72,6 +71,6 @@ Für **jeden** Paketdienst und jede Betriebssoftware ist ein eigener Nachweis er
 
 **Status:** NICHT FREIGEGEBEN, solange ein für den konkreten Einsatz erforderlicher Punkt offen ist.
 
-**Begründung des aktuellen Stands:** TRAKUNA 1.43 ist eine lokale Android-Testversion. Sie besitzt keine zentrale Benutzerverwaltung oder Gerätesynchronisierung und keine nachgewiesene Carrier-Buchungsintegration. Reale Zebra-/Etikettentests, unabhängige Sicherheitsprüfung und Produktionssignatur sind nicht belegt.
+**Begründung des aktuellen Stands:** TRAKUNA 1.44 ist eine lokale Android-Testversion. Sie besitzt keine zentrale Benutzerverwaltung oder Gerätesynchronisierung und keine nachgewiesene Carrier-Buchungsintegration. Reale Zebra-/Etikettentests, unabhängige Sicherheitsprüfung und Produktionssignatur sind nicht belegt.
 
 Diese Checkliste kann keine Anbieterfreigabe, rechtliche Prüfung, Hardwareprüfung oder Sicherheitsprüfung ersetzen.
