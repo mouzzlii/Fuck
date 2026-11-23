@@ -20,7 +20,7 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 
 ## 2. Aktuelles Testpaket herunterladen
 
-1. Den [erfolgreichen Android-Build 45229834365 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45229834365).
+1. Den [erfolgreichen Android-Build 45231195765 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45231195765).
 2. Im Build den Bereich **Artifacts** öffnen.
 3. Das Paket **TRAKUNA-Android** herunterladen.
 4. Das ZIP auf dem Android-Gerät entpacken.
