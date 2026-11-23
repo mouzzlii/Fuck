@@ -493,5 +493,7 @@ class ShipmentStoreTest {
         assertFalse(ShipmentRules.canPermanentlyDelete(active))
         assertTrue(ShipmentRules.canPermanentlyDelete(archived))
         assertFalse(ShipmentRules.canPermanentlyDelete(archived.copy(archivedAt = null)))
+        assertFalse(ShipmentRules.canPermanentlyDelete(archived.copy(archivedAt = 250L)))
+        assertFalse(ShipmentRules.canPermanentlyDelete(archived.copy(status = ShipmentStatus.READY_FOR_PICKUP)))
     }
 }
