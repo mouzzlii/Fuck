@@ -8,7 +8,7 @@
 - Vor dem CSV-Export weist die App ausdrücklich darauf hin, dass die Datei personenbezogene Sendungsdaten und interne Notizen unverschlüsselt enthält.
 
 - Lokale Paketdatensätze werden mit AES-256-GCM verschlüsselt; der AES-Schlüssel wird im Android Keystore gespeichert.
-- Entschlüsselte lokale Speicherbytes werden strikt als UTF-8 dekodiert. Fehlerhafte oder nicht abbildbare Bytefolgen werden als Speicherfehler behandelt und nicht stillschweigend durch Ersatzzeichen verändert.
+- Entschlüsselte Bytes sowohl des lokalen Sendungsbestands als auch des separaten Partner-Übergabe-Caches werden strikt als UTF-8 dekodiert. Fehlerhafte oder nicht abbildbare Bytefolgen werden als Speicherfehler behandelt und nicht stillschweigend durch Ersatzzeichen verändert.
 - Eine Einmalmigration übernimmt den bisherigen Klartextbestand. Der alte Eintrag wird erst nach erfolgreichem Commit des verschlüsselten Ersatzes entfernt.
 - Fehler bei Migration, Entschlüsselung oder Schlüsselzugriff führen zu einem sichtbaren Speicherfehler; die App darf solche Daten nicht als leeren Bestand behandeln.
 - Verschlüsselte Speicherwerte und Klartext vor der Verschlüsselung sind auf maximal 2 MiB Nutzdaten begrenzt; Base64-Eingaben werden vor dem Dekodieren zusätzlich begrenzt.
