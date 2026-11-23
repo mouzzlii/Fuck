@@ -1,15 +1,19 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.49 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.50 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.49 (versionCode 50)
+## Aktueller Entwicklungsstand – Version 1.50 (versionCode 51)
 
-- Neue direkte Carrier-Auswahl für die vier Start-Prioritäten: **DPD, GLS, Hermes und UPS**.
-- Der Auswahlknopf kennzeichnet den lokalen Vorgang; er führt keine externe Buchung aus.
-- CI-Lauf 45265965503: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45265965503). Unit-Tests, Android-Lint, Manifest-Sicherheitsprüfungen und Debug-APK-Erstellung erfolgreich.
-- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `2608aaa39ac9d8e1e38cecadc219e75f733bd868c36064fa6fd43cb7a94bbc54`. ZIP-Artefakt-SHA-256: `92fe7d6602252f099e87d01a1c030abda0132d25bdab2c00fd1bbffcad33a153`. Das ZIP-Artefakt wurde am 23.11.2026, 21:06 UTC erstellt und läuft am 07.12.2026, 21:06 UTC ab.
+- Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
+- Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten.
+- Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
+- CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
+- 43 Unit-Tests im Testbestand; CI-Lauf 45273220299: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45273220299). Unit-Tests, Android-Lint, Manifest-Sicherheitsprüfungen und Debug-APK-Erstellung erfolgreich.
+- Debug-APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`.
+- ZIP-Artefakt-SHA-256: `a4d75dee23c876d26aa9fbeb696d5a6dd8c9c4c0c9aad2032dbd195dc9f4fe0f`.
+- Das ZIP-Artefakt wurde am 23.11.2026, 21:49 UTC erstellt und läuft am 07.12.2026, 21:49 UTC ab.
 
-**Wichtig:** Version 1.49 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.50 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
@@ -41,6 +45,13 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 ## CI-Schutzprüfungen
 
 Der Android-Workflow startet nur bei App-/Build-Änderungen und prüft vor dem Build, dass die aktuelle Offline-Version keine INTERNET-Berechtigung anfordert, Android-Backups deaktiviert und Klartextverkehr deaktiviert bleibt. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden.
+
+## Neu in Version 1.50
+
+- Abgeschlossene Vorgänge können archiviert und später wiederhergestellt werden; offene Vorgänge bleiben in der aktiven Liste.
+- Endgültiges Löschen ist nur noch aus der Archivansicht möglich.
+- JSON-Backup-Schema 2 erhält den Archivstatus und akzeptiert weiterhin ältere Schema-1-Sicherungen.
+- CSV-Export enthält einen eigenen Archivierungszeitpunkt.
 
 ## Neu in Version 1.49
 
