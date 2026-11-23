@@ -24,7 +24,7 @@ Version 1.49 wurde erfolgreich durch CI gebaut. Die Übergabe an einen Paketdien
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.49 (versionCode 50) mit WLAN-Statusanzeige und getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45257771904 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45250580288).
+Version 1.49 (versionCode 50) mit WLAN-Statusanzeige und getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45257771904 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45257771904).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
@@ -32,7 +32,7 @@ Version 1.49 (versionCode 50) mit WLAN-Statusanzeige und getrennten Betriebssoft
 - APK-SHA-256: `38716f1d1d6b4e31e5e4f63f534eeb626b3540ee9837a086a8371ad8a064cd0f`
 - ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 20:19 UTC; Ablauf 07.12.2026, 20:19 UTC
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45250580288)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45257771904)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
