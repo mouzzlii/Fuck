@@ -6,14 +6,14 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45229834365 für Version 1.45 (versionCode 46) erfolgreich – Carrier-Auswahl für DPD/GLS/Hermes/UPS
+- [x] CI-Lauf 45231195765 für Version 1.45 (versionCode 46) erfolgreich – Carrier-Auswahl für DPD/GLS/Hermes/UPS
 - [x] Unit-Tests und Android-Lint für Version 1.45 erfolgreich
 - [x] Debug-APK und SHA-256-Prüfsumme für Version 1.45 als Artefakt bereitgestellt
 - [ ] Release-Version und Versionsnummer fachlich geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Update von der vorherigen freigegebenen Version getestet
 
-Aktueller Build 1.45: https://github.com/mouzzlii/Fuck/actions/runs/45229834365
+Aktueller Build 1.45: https://github.com/mouzzlii/Fuck/actions/runs/45231195765
 APK-SHA-256: `989ee18003ab6c3e0768400e259118f5dbd3abae5125929e9488b5dcbc550743`
 
 ZIP-Artefakt erstellt am 23.11.2026, 17:48 UTC; Ablauf am 07.12.2026, 17:48 UTC. Produktionssignierung ist weiterhin offen.
