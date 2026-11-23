@@ -12,6 +12,8 @@ Für den ersten Start sind **DPD, GLS, Hermes und UPS** die vier priorisierten P
 - **UPS:** Sendungsnummern im bekannten `1Z`-Format können als Format-Hinweis erkannt werden. Das bestätigt weder Gültigkeit noch UPS-Paketshop-Berechtigung. Hardware, Shopsoftware und offizieller Integrationsweg sind noch zu ermitteln.
 
 
+Die öffentlich dokumentierten Integrationswege für DPD, GLS, Hermes und UPS sind in [CARRIER-INTEGRATIONS.md](CARRIER-INTEGRATIONS.md) zusammengefasst. Diese Versand-APIs sind nicht automatisch Paketshop-Schnittstellen.
+
 Dieses Dokument beschreibt die minimale technische Vereinbarung, damit eine Paketshop- oder Carrier-App eine Sendungsnummer aus TRAKUNA übernehmen kann. Es ist **keine Behauptung**, dass eine bestehende Post-, DHL-, DPD-, GLS- oder UPS-App diese Schnittstelle bereits unterstützt.
 
 ## Aktueller Übergabeversuch von TRAKUNA
