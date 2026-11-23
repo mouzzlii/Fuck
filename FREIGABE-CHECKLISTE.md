@@ -1,12 +1,13 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.50 (versionCode 51) · erfolgreicher CI-Lauf 45273220299
+Stand: App-Version 1.51 (versionCode 52) · CI-Build ausstehend; Version 1.50 war der letzte erfolgreich gebaute Stand
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
 - [x] CI-Lauf 45273220299 für Version 1.50 (versionCode 51) erfolgreich – Archivierung abgeschlossener Vorgänge, Wiederherstellung, Backup-Schema 2
+- [ ] Version 1.51 (versionCode 52) mit zusätzlicher Validierung vor endgültigem Löschen erfolgreich bauen und testen
 - [x] Unit-Tests und Android-Lint für Version 1.50 erfolgreich
 - [x] Debug-APK und SHA-256-Prüfsumme für Version 1.50 als Artefakt bereitgestellt
 - [x] Archivierungsregeln, Archivstatus-Validierung und Historienereignisse durch Unit-Tests abgedeckt
@@ -17,7 +18,7 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
 
-Aktueller Build 1.50: https://github.com/mouzzlii/Fuck/actions/runs/45273220299
+Letzter erfolgreicher Build 1.50: https://github.com/mouzzlii/Fuck/actions/runs/45273220299. Build 1.51 ist ausstehend.
 APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`
 
 ZIP-Artefakt erstellt am 23.11.2026, 21:49 UTC; Ablauf am 07.12.2026, 21:49 UTC. Produktionssignierung ist weiterhin offen.
