@@ -564,11 +564,11 @@ object ShipmentRules {
 
         // Extract only structurally distinctive formats from surrounding label text.
         // Word boundaries prevent matching a short valid-looking ID inside a longer token.
-        val candidates = listOf(
-            Regex("(?i)(?<![A-Z0-9])1Z[A-Z0-9]{16}(?![A-Z0-9])").findAll(cleaned).map { it.value },
-            Regex("(?i)(?<![A-Z0-9])[A-Z]{2}[0-9]{9}AT(?![A-Z0-9])").findAll(cleaned).map { it.value },
-            Regex("(?i)(?<![A-Z0-9])(?:JVGL|JJD)[A-Z0-9]{8,26}(?![A-Z0-9])").findAll(cleaned).map { it.value }
-        ).flatten().mapNotNull(::plausible).toList()
+        val candidates = buildList {
+            addAll(Regex("(?i)(?<![A-Z0-9])1Z[A-Z0-9]{16}(?![A-Z0-9])").findAll(cleaned).map { it.value }.toList())
+            addAll(Regex("(?i)(?<![A-Z0-9])[A-Z]{2}[0-9]{9}AT(?![A-Z0-9])").findAll(cleaned).map { it.value }.toList())
+            addAll(Regex("(?i)(?<![A-Z0-9])(?:JVGL|JJD)[A-Z0-9]{8,26}(?![A-Z0-9])").findAll(cleaned).map { it.value }.toList())
+        }.mapNotNull(::plausible)
         return unique(candidates)
     }
 
