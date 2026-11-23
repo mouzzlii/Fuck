@@ -1,14 +1,14 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.52 (versionCode 53) · CI-Build 45285731190 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
+Stand: App-Version 1.52 (versionCode 53) · CI-Build 45286415077 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45285731190 für Version 1.52 (versionCode 53) erfolgreich – Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
+- [x] CI-Lauf 45286415077 für Version 1.52 (versionCode 53) erfolgreich – Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
 - [x] Zusätzlicher Löschschutz für inkonsistente Archivdatensätze durch Unit-Tests abgedeckt
-- [x] Strikte UTF-8-Dekodierung entschlüsselter lokaler Daten durch Unit-Test abgedeckt
+- [x] Strikte UTF-8-Dekodierung des lokalen Sendungsbestands und Partner-Übergabe-Caches durch Unit-Test abgedeckt
 - [x] Unit-Tests und Android-Lint für Version 1.52 erfolgreich
 - [x] Debug-APK und SHA-256-Prüfsumme für Version 1.52 als Artefakt bereitgestellt
 - [x] Archivierungsregeln, Archivstatus-Validierung und Historienereignisse durch Unit-Tests abgedeckt
@@ -19,12 +19,12 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
 
-Letzter erfolgreicher Build 1.52: https://github.com/mouzzlii/Fuck/actions/runs/45285731190 (Commit `71286c759bb0463a30980275b022a4d8a94d2618`). Alle CI-Schritte einschließlich Tests, Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
+Letzter erfolgreicher Build 1.52: https://github.com/mouzzlii/Fuck/actions/runs/45286415077 (Commit `506c1af4ea093d8734cafb69969393e997ad46b0`). Alle CI-Schritte einschließlich Tests, Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
 
-APK-SHA-256: `9e721394925265c1a9316089afefa04233aeb58b9461c8f8314b74c7f8a5eae7`
-ZIP-Artefakt-SHA-256: `e496571dc273fa43f7b2d077d143eb47da8f20f7691e726db095e27c54891587`
+APK-SHA-256: `15633c1200e1615f5b5826a3fa00d5955863d20d53b86d7bcf17f92fcee4137a`
+ZIP-Artefakt-SHA-256: `b14cb60485a1278bf085981dbfbba544a32fa0b0ee146b31296e10b3b8502e02`
 
-ZIP-Artefakt erstellt am 23.11.2026, 23:07 UTC; Ablauf am 07.12.2026, 23:07 UTC. Produktionssignierung ist weiterhin offen.
+ZIP-Artefakt erstellt am 23.11.2026, 23:12 UTC; Ablauf am 07.12.2026, 23:12 UTC. Produktionssignierung ist weiterhin offen.
 
 ## B. Geräte- und Scannerabnahme
 
