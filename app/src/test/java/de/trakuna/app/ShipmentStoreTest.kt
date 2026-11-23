@@ -278,7 +278,7 @@ class ShipmentStoreTest {
     }
 
     @Test
-    fun activeDuplicateDetectionIsCaseInsensitiveAndScopedToWorkflow() {
+    fun activeDuplicateDetectionIsCaseInsensitiveAcrossWorkflowTypes() {
         val first = ShipmentRecord(
             id = "first", trackingNumber = "abC1234567", carrier = "DHL",
             flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
@@ -287,7 +287,7 @@ class ShipmentStoreTest {
         val sameNumberDifferentCase = first.copy(id = "second", trackingNumber = "ABC1234567")
         assertFalse(ShipmentRules.hasNoDuplicateActiveShipments(listOf(first, sameNumberDifferentCase)))
         val otherFlow = sameNumberDifferentCase.copy(id = "third", flow = ShipmentFlow.CUSTOMER_RETURN, status = ShipmentStatus.RETURN_ACCEPTED)
-        assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(first, otherFlow)))
+        assertFalse(ShipmentRules.hasNoDuplicateActiveShipments(listOf(first, otherFlow)))
     }
 
     @Test
@@ -302,14 +302,14 @@ class ShipmentStoreTest {
     }
 
     @Test
-    fun sameTrackingNumberCanExistForDifferentWorkflowTypes() {
+    fun sameTrackingNumberCannotBeActiveInDifferentWorkflowTypes() {
         val incoming = ShipmentRecord(
             id = "in", trackingNumber = "ABC1234567", carrier = "DHL",
             flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
             status = ShipmentStatus.READY_FOR_PICKUP, createdAt = 1L, updatedAt = 2L
         )
         val returned = incoming.copy(id = "return", flow = ShipmentFlow.CUSTOMER_RETURN, status = ShipmentStatus.RETURN_ACCEPTED)
-        assertTrue(ShipmentRules.hasNoDuplicateActiveShipments(listOf(incoming, returned)))
+        assertFalse(ShipmentRules.hasNoDuplicateActiveShipments(listOf(incoming, returned)))
     }
 
     @Test
