@@ -1,12 +1,12 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.53 (versionCode 54) · CI-Build 45290932535 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
+Stand: App-Version 1.53 (versionCode 54) · CI-Build 45291370834 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45290932535 für Version 1.53 erfolgreich – Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
+- [x] CI-Lauf 45291370834 für Version 1.53 erfolgreich – Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
 - [x] Vorhandene Unit-Tests erfolgreich
 - [x] Android-Lint erfolgreich
 - [x] Zusammengeführtes Manifest ohne INTERNET-Berechtigung, aktiviertes Android-Backup oder Klartextverkehr geprüft
@@ -21,12 +21,12 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
 
-Letzter erfolgreicher Build 1.53: https://github.com/mouzzlii/Fuck/actions/runs/45290932535 (Commit `401a349d4dde2d98f14e23a5e1e8a28b6efef464`). Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build, Prüfsumme und Artefakt-Upload waren erfolgreich. Der Emulator-Schritt wurde aus dem blockierenden Standard-CI entfernt, weil der GitHub-Linux-Runner keinen zuverlässigen Emulatorstart ermöglichte. Die Instrumentierungstestfälle sind im Repository vorhanden und wurden erfolgreich kompiliert, aber in diesem Lauf **nicht auf einem Emulator oder Gerät ausgeführt**. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
+Letzter erfolgreicher Build 1.53: https://github.com/mouzzlii/Fuck/actions/runs/45291370834 (Commit `cf415c77a4e5ee0c325987e2e0f0bd12b029ea58`). Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build, Prüfsumme und Artefakt-Upload waren erfolgreich. Der Emulator-Schritt wurde aus dem blockierenden Standard-CI entfernt, weil der GitHub-Linux-Runner keinen zuverlässigen Emulatorstart ermöglichte. Die Instrumentierungstestfälle sind im Repository vorhanden und wurden erfolgreich kompiliert, aber in diesem Lauf **nicht auf einem Emulator oder Gerät ausgeführt**. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
 
-APK-SHA-256: `c6d787d3cea6a5e0359bab8cc2f1a9b6759429cbea42dc1e2baf79b916e94965`
-ZIP-Artefakt-SHA-256: `9bfd1ce4fe02c947abfcba6df8836844a2d810b5ac5c3aeba0e51ece808179cb`
+APK-SHA-256: `9c4061b394cad26f7f76456fef738962e02237cffc084cc0b62bdd2ad8c3e6da`
+ZIP-Artefakt-SHA-256: `82b94fe97c53c19bcbc7f65e2a9d4eeb68f2801a775347efc4c036b29ec96ece`
 
-ZIP-Artefakt erstellt am 23.11.2026, 23:43 UTC; Ablauf am 07.12.2026, 23:43 UTC. Produktionssignierung und Emulator-Instrumentierungstest bleiben offen.
+ZIP-Artefakt erstellt am 23.11.2026, 23:46 UTC; Ablauf am 07.12.2026, 23:46 UTC. Produktionssignierung und Emulator-Instrumentierungstest bleiben offen.
 
 ## B. Geräte- und Scannerabnahme
 
