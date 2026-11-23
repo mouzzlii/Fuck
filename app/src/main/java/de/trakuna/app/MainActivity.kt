@@ -638,14 +638,21 @@ class MainActivity : ComponentActivity() {
                         pendingDelete?.let { record ->
                             AlertDialog(
                                 onDismissRequest = { pendingDelete = null },
-                                title = { Text("Vorgang löschen?") },
-                                text = { Text("Soll der Vorgang ${record.trackingNumber} endgültig von diesem Gerät gelöscht werden?") },
+                                title = { Text("Vorgang endgültig löschen?") },
+                                text = {
+                                    Text(
+                                        "Achtung: ${record.trackingNumber} wird dauerhaft von diesem Gerät entfernt. " +
+                                            "Auch die lokal gespeicherte Vorgangshistorie geht dabei verloren. " +
+                                            "Diese Löschung wird nicht in einem manipulationssicheren Prüfprotokoll festgehalten und kann nicht rückgängig gemacht werden. " +
+                                            "Wenn du den Vorgang noch dokumentieren musst, brich ab und erstelle zuerst eine Datensicherung."
+                                    )
+                                },
                                 confirmButton = { TextButton(onClick = {
                                     val removed = shipmentStore.remove(record.id)
-                                    status = if (removed) "Vorgang wurde gelöscht." else "Vorgang konnte nicht gelöscht werden. Datenspeicher prüfen."
+                                    status = if (removed) "Vorgang und lokale Historie wurden endgültig gelöscht." else "Vorgang konnte nicht gelöscht werden. Datenspeicher prüfen."
                                     shipmentRevision++
                                     pendingDelete = null
-                                }) { Text("Löschen") } },
+                                }) { Text("Endgültig löschen") } },
                                 dismissButton = { TextButton(onClick = { pendingDelete = null }) { Text("Abbrechen") } }
                             )
                         }
