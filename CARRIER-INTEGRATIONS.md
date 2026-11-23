@@ -53,16 +53,17 @@ Zusätzlicher technischer Gesprächseinstieg für Geschäftskunden-Versand (nich
 
 ## 4. UPS
 
-**Öffentlich dokumentiert:** UPS betreibt ein Entwicklerportal mit APIs und einem Authentifizierungsmodell auf OAuth-Basis. Für die direkte Integration muss eine Anwendung im UPS-Profil erstellt und mit einem Versenderkonto verknüpft werden. UPS beschreibt eine Customer Integration Environment (CIE) bzw. Sandbox zum Testen. UPS Access Point ist ein eigenes Retail-Partnerprogramm für berechtigte Paketabgabe und -abholung.
+**Österreichischer Paketshop-Ablauf – offiziell beschrieben:** UPS Österreich erklärt, dass Access-Point-Standorte eine Scanning-App für PC, Android oder Apple-Geräte erhalten. Die Aufgaben umfassen die Annahme und das Scannen von Kundenpaketen zur Übergabe an UPS-Fahrer sowie die Annahme und das Scannen von UPS-Fahrersendungen zur Aufbewahrung bis zur Kundenabholung. UPS nennt Einweisung, Support und technische Unterstützung. Damit ist UPS für den ersten Pilot konkreter beschrieben als eine reine Versand-API.
 
 Offizielle Einstiege:
+- [UPS Österreich – Access Point Standort werden](https://www.ups.com/at/de/business-solutions/grow-your-business)
+- [UPS Österreich – Access Point Überblick](https://www.ups.com/at/de/business-solutions/expand-your-online-business/ups-access-point)
 - [UPS Developer Portal – Start](https://developer.ups.com/get-started?loc=de_AT)
 - [UPS API-Katalog](https://developer.ups.com/catalog?loc=de_AT)
-- [UPS Österreich – Access Point](https://www.ups.com/at/de/business-solutions/expand-your-online-business/ups-access-point)
 
-**Was noch nicht belegt ist:** Ob ein vorhandenes UPS-Konto und die öffentlich angebotenen APIs für die Paketshop-Rolle dieses Standorts zugelassen sind. Versand-/Tracking-APIs allein bilden nicht automatisch Access-Point-Annahme, Kundenausgabe oder Rückgabe an Fahrer ab.
+**Was noch nicht belegt ist:** Welche UPS-Scanning-App, welches Gerät und welche Version der konkrete Standort verwendet; ob eine Partner-API oder ein freigegebener Datenaustausch für die bestehende App zur Verfügung steht. Das Developer-Portal betrifft allgemeine UPS APIs und ersetzt nicht die Access-Point-App oder eine Partnerfreigabe.
 
-**Nächster technischer Schritt:** UPS Access Point Partnerbetreuung nach der für diesen Standort autorisierten Betriebssoftware, Geräte-/Scannerintegration, Partner-API bzw. zertifizierter Drittsoftware und Testzugang fragen. Erst nach Bestätigung kann eine konkrete UPS-Integration entworfen werden.
+**Nächster technischer Schritt:** Vorhandene UPS-Scanning-App und das dafür verwendete Gerät samt Version aufnehmen. UPS Access Point Partnerbetreuung nach dem autorisierten Betriebsablauf, einer unterstützten Datenübergabe bzw. Partner-API und Testzugang fragen. Die offizielle UPS-App bleibt bis dahin das führende System; TRAKUNA darf keine UPS-Annahme oder Fahrerübergabe als bestätigt markieren, solange keine echte Rückmeldung vorliegt.
 
 ## 5. Gemeinsame Integrationsarchitektur für TRAKUNA
 
