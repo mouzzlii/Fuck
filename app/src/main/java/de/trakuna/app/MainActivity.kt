@@ -227,8 +227,8 @@ class MainActivity : ComponentActivity() {
                             onValueChange = { carrierOverride = it.take(80) },
                             modifier = Modifier.fillMaxWidth(),
                             label = { Text("Paketdienst (optional, manuell)") },
-                            placeholder = { Text("z. B. DHL, DPD, GLS, Österreichische Post, UPS") },
-                            supportingText = { Text("Bei manueller Angabe wird diese für Erfassung und Übergabe verwendet.") },
+                            placeholder = { Text("z. B. Hermes, DHL, DPD, GLS, Österreichische Post, UPS") },
+                            supportingText = { Text("Hermes derzeit manuell eintragen; automatische Erkennung und offizielle Hermes-Anbindung sind noch nicht verfügbar.") },
                             singleLine = true
                         )
                         Button(
