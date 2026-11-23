@@ -27,6 +27,17 @@
 - Partnerübergabe speichert die Sendungsnummer synchron im lokalen Cache, bevor TRAKUNA die andere App startet.
 - Clipboard-Fehler blockieren den lokalen Ablauf nicht; auf Android 13+ wird der Clip als sensibel markiert.
 
+## Release-Signierung vorbereitet
+
+Die Gradle-Konfiguration unterstützt einen signierten Release-Build, ohne einen privaten Schlüssel im Repository abzulegen. Der CI-Workflow baut ein Release nur, wenn alle vier GitHub-Actions-Secrets gesetzt sind:
+
+- `ANDROID_KEYSTORE_BASE64` – Base64-kodierte JKS/PKCS12-Keystore-Datei
+- `ANDROID_KEYSTORE_PASSWORD` – Keystore-Passwort
+- `ANDROID_KEY_ALIAS` – Alias des App-Signaturschlüssels
+- `ANDROID_KEY_PASSWORD` – Passwort des privaten Schlüssels
+
+Der Keystore muss vom Betreiber erzeugt und sicher verwahrt werden. Er darf niemals in Git eingecheckt, in Chat-Nachrichten geteilt oder zusammen mit der APK veröffentlicht werden. Ohne diese Secrets wird ausschließlich das Debug-Testpaket gebaut; es entsteht kein signiertes Produktionsrelease. Vor dem Einrichten muss der Betreiber festlegen, wer Schlüsselinhaber und Wiederherstellungsverantwortlicher ist.
+
 ## Bekannte Restrisiken / nicht abgeschlossene Arbeiten
 
 - Exportierte JSON- und CSV-Dateien sind weiterhin unverschlüsselt und müssen wie vertrauliche Unterlagen geschützt werden.
