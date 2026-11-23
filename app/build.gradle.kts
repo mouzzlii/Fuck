@@ -18,8 +18,8 @@ android {
         applicationId = "de.trakuna.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 48
-        versionName = "1.47"
+        versionCode = 49
+        versionName = "1.48"
     }
 
     compileOptions {
