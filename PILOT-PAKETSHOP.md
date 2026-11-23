@@ -3,10 +3,13 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version: 1.45 (versionCode 46) · CI-Prüfung: ausstehend
+Stand: 23. November 2026 · App-Version 1.45 (versionCode 46) · CI erfolgreich: Lauf 45229834365
 
 ## 1. Zweck und Freigabestatus
-## Start-Priorität der Paketdienste
+
+Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetrieb. Der aktuelle Stand ist eine lokale Testversion; kein Nachweis für produktiven Paketshop-Betrieb.
+
+### Start-Priorität der Paketdienste
 
 Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TRAKUNA-Oberfläche bietet dafür eine direkte manuelle Auswahl in dieser Reihenfolge. Die Auswahl dient ausschließlich der Zuordnung des lokalen Vorgangs. Sie ersetzt keine Carrier-Authentifizierung, Buchung, Annahmebestätigung oder Label-Erstellung.
 
@@ -15,24 +18,23 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben.
 
 
-Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetrieb. Version 1.45 (versionCode 46) enthält die neue Carrier-Schnellauswahl; der zugehörige Build muss noch erfolgreich durch CI laufen. Der letzte nachweislich erfolgreiche Build ist Version 1.44. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.45 wurde erfolgreich durch CI gebaut. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.45 (versionCode 46) enthält die neue Schnellauswahl für DPD, GLS, Hermes und UPS. Der zugehörige CI-Build ist noch zu prüfen; erst nach erfolgreichem Lauf das neue Artefakt herunterladen. [Android-Workflow](https://github.com/mouzzlii/Fuck/actions/workflows/android.yml).
+Version 1.45 (versionCode 46) mit der direkten Carrier-Schnellauswahl wurde erfolgreich gebaut. [CI-Lauf 45229834365 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45229834365).
 
-Der bisherige Download-Link und die Prüfsumme beziehen sich auf Version 1.44 und enthalten die neue Schnellauswahl noch nicht.
+- Unit-Tests: erfolgreich
+- Android-Lint: erfolgreich
+- Debug-APK-Erstellung: erfolgreich
+- APK-SHA-256: `06e847103a51cbf7ba04e6ab6383e200ba856dedc37cefeaf2dba0b220509441`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 17:39 UTC; Ablauf 07.12.2026, 17:39 UTC
 
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45229834365)
 
-
-**Historischer Download für Version 1.44 (ohne Carrier-Schnellauswahl):** [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052)
-- Unit-Tests, Android-Lint und Debug-APK-Erstellung für Version 1.44: erfolgreich
-- Historische APK-SHA-256: `db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
-- Artefakt erstellt: 23.11.2026, 17:26 UTC; Ablauf: 07.12.2026, 17:26 UTC
-
-**Version 1.45 erst herunterladen, wenn der [Android-Workflow](https://github.com/mouzzlii/Fuck/actions/workflows/android.yml) für den aktuellen Commit erfolgreich abgeschlossen ist.**
+**Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
 Das Artefakt im Actions-Lauf herunterladen und das enthaltene ZIP entpacken. Die Debug-APK kann eine andere Signatur als spätere Builds haben. Vor einem Update bestehende lokale Daten sichern und die App nicht deinstallieren.
 
