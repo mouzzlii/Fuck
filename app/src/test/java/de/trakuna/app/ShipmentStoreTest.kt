@@ -294,6 +294,37 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun scanParserRejectsAmbiguousValuesInsteadOfSilentlyTakingTheFirst() {
+        val ups = "1Z999AA10123456784"
+        val post = "AB123456789AT"
+        assertEquals(null, ShipmentRules.extractTrackingNumber("Label $ups and $post"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/track?tracking=$ups&tracking=$post"))
+    }
+
+    @Test
+    fun scanParserDoesNotExtractKnownFormatsFromInsideLongerTokens() {
+        assertEquals(null, ShipmentRules.extractTrackingNumber("X1Z999AA10123456784Y"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("XAB123456789ATY"))
+        assertEquals("1Z999AA10123456784", ShipmentRules.extractTrackingNumber("Tracking: 1Z999AA10123456784"))
+    }
+
+    @Test
+    fun scanParserRequiresStructuredOrRecognizableValuesInQrUrls() {
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/customer/12345678901234"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/track?id=12345678901234"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://user@example.test/track?tracking=AB123456789AT"))
+        assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber("https://example.test/track?tracking=AB123456789AT"))
+    }
+
+    @Test
+    fun scanParserAcceptsOneRecognizedValueAfterIgnoringInvalidQueryValues() {
+        assertEquals(
+            "AB123456789AT",
+            ShipmentRules.extractTrackingNumber("https://example.test/track?tracking=too-short&sendungsnummer=AB123456789AT")
+        )
+    }
+
+    @Test
     fun scanParserHandlesAIMPrefixesAndPlainTrackingNumbers() {
         assertEquals("1Z999AA10123456784", ShipmentRules.extractTrackingNumber("]C11Z999AA10123456784"))
         assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber(" AB123456789AT "))
