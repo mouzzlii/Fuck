@@ -105,3 +105,34 @@ Für jeden Carrier wird dieselbe Adapter-Grenze vorgesehen, aber die technischen
 | UPS | UPS Österreich beschreibt eine Scanning-App; offizielle Android-App UPS Access Point (com.ups.accesspoint) nennt Fahrerlieferung, Selbstabholung, Kundenabgabe und Bestandsverwaltung, Android 9+ | Nein | Installierte App/Version und Hardware am Standort bestätigen; autorisierte Übergabe/API klären |
 
 **Freigaberegel:** Kein Carrier wird als integriert oder produktionsbereit markiert, bevor die konkrete Schnittstelle für diesen Standort schriftlich freigegeben, technisch implementiert und mit echten autorisierten Testfällen erfolgreich abgenommen wurde.
+
+
+## DPD Pickup – offizieller Partnerablauf als Referenz (Deutschland)
+
+DPD Deutschland veröffentlicht ein Pickup-Partnerhandbuch mit Stand 01/2026. Es beschreibt deutlich mehr als das reine Scannen einer Sendungsnummer:
+
+- Kundenabgabe: Paketdaten und Paketklasse kontrollieren, Kundenlabel bzw. mobilen QR-Code scannen, DPD-Label und Quittung ausgeben und das Paket sicher verwahren.
+- Kundenausgabe: Identität des Abholers bzw. Vollmacht prüfen, Abholscan durchführen und Unterschrift auf dem Shop-Scanner dokumentieren.
+- Zusteller-Anlieferung: Jedes Paket scannen, QR-Code am Partnergerät anzeigen, vom Zusteller scannen lassen und den Eingang durch Gegenscan bestätigen.
+- Zusteller-Abholung: Pakete einzeln scannen, QR-Code anzeigen, Zusteller-Gegenscan abwarten und Übergabe quittieren.
+- Lagerfristüberschreitungen: Rückführung über einen eigenen Aufgabenablauf dokumentieren.
+
+**Wichtige Ländergrenze:** Das gefundene Handbuch ist ausdrücklich ein Handbuch von DPD Deutschland und nennt deutsche Vertrags-/Prozessdetails. Es ist daher kein Beleg, dass exakt dieselben Schritte, Maße, Haftungsregeln oder Scanner-Menüs für einen österreichischen Pickup-Standort gelten. Für TRAKUNA übernehmen wir diese Punkte als Prüf- und Anforderungsliste, nicht als verbindliche Österreich-Spezifikation. DPD Österreich muss den für diesen Shop gültigen Ablauf bestätigen.
+
+Offizielle Referenzen:
+- [DPD Pickup Partnerhandbuch (Deutschland, 01/2026, PDF)](https://www.dpd.com/wp-content/uploads/sites/227/2026/01/Pickup-Partner-Handbuch.pdf)
+- [DPD Österreich – Pickup Paketshop Partner werden](https://www.dpd.com/at/de/pickup-paketshops/paketshop-werden/)
+- [DPD Österreich – Kontakt und Partneranfragen](https://www.dpd.com/at/de/support/kontakt/?business_unit=dpd-at)
+- [DPD Entwicklerportal / Webservices](https://esolutions.dpd.com/entwickler.aspx)
+
+**Konsequenz für TRAKUNA:** Ein lokaler Datensatz „an Fahrer übergeben“ darf nicht als echte Übergabe gelten. Erst ein vom DPD-Partnergerät bzw. DPD-System bestätigter Gegenscan/Abschluss kann den Carrier-Vorgang bestätigen. Die DPD-Webservices, die öffentlich beschrieben sind, richten sich an Versandlösungen und belegen nicht automatisch die Berechtigung oder technische Eignung für die Pickup-Shop-Scannerabläufe.
+
+
+## Hermes Österreich – bestätigte Partnerleistungen, offene Technik
+
+Hermes Österreich beschreibt PaketShop-Aufgaben öffentlich als Annahme privater Pakete, Annahme von Retouren und Ausgabe zugestellter Pakete an Kunden. Hermes stellt nach eigener Beschreibung Unterstützung und Ausstattung für PaketShop-Partner bereit. Die öffentlich zugängliche Seite nennt aber keine technische API, keinen Intent-Vertrag und keine Freigabe zur Anbindung einer Fremd-App an den bestehenden MC3090BT.
+
+- [Hermes Österreich – PaketShop-Partner](https://www.hermesworld.com/de/ueber-uns/hermes-gruppe/hermes-logistik-at/paketshop-partner/)
+- [Hermes Österreich – Partnerübersicht und Ausstattung](https://www.myhermes.at/paketshop-partner/uebersicht/)
+
+Für den Pilot ist Hermes deshalb weiterhin ein Pflicht-Blocker: bestehendes Gerät und Programm nicht verändern; Hermes muss die tatsächlich vorgesehene Hardware, den App-/Softwarezugang, die Freigabe für eine zusätzliche Lösung und eine mögliche Schnittstelle schriftlich bestätigen.

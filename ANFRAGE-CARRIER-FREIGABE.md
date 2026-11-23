@@ -127,3 +127,16 @@ Je Carrier getrennt ausfüllen, sobald eine Antwort eintrifft:
 | UPS | Offen | Offen | Offen | Offen | Offen |
 
 Bis zur bestätigten Freigabe bleibt das jeweilige Originalsystem das führende Buchungssystem. TRAKUNA dokumentiert nur den lokalen Testvorgang und darf keine erfolgreiche Carrier-Buchung behaupten.
+
+
+## Zusätzliche DPD-Fragen (Pickup-Shop, Österreich)
+
+DPD Deutschland stellt ein Pickup-Partnerhandbuch mit Abläufen für Kundenabgabe, Kundenausgabe, Zusteller-Anlieferung, Zusteller-Abholung und Rückführung nicht abgeholter Pakete bereit. Bitte bestätigen Sie für unseren österreichischen Standort:
+
+- Welche dieser Abläufe gelten hier verbindlich?
+- Wie erfolgt die Bestätigung des Haftungsübergangs bei Kundenabgabe und Kundenausgabe?
+- Gibt es einen Gegenscan bzw. QR-Code-Ablauf zwischen Partnergerät und Fahrergerät?
+- Welche Ereignisse und Status darf eine Drittsoftware lokal erfassen, und welche müssen ausschließlich in der DPD-Partner-App bestätigt werden?
+- Gibt es für den österreichischen Pickup-Shop eine offiziell freigegebene API, Intent-Schnittstelle oder Geräteintegration?
+
+Referenz (Deutschland, nicht ungeprüft auf Österreich übertragbar): [DPD Pickup Partnerhandbuch 01/2026](https://www.dpd.com/wp-content/uploads/sites/227/2026/01/Pickup-Partner-Handbuch.pdf).

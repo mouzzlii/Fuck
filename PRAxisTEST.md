@@ -223,3 +223,17 @@ Die automatisierten Parser-Tests prüfen die Regeln ohne Kamera-Hardware. Sie er
 61. TRAKUNA in den Hintergrund wechseln, ohne die App zu beenden; einen weiteren Barcode scannen. Der Hintergrundscan darf die Eingabemaske nicht verändern.
 62. TRAKUNA wieder in den Vordergrund holen und erneut scannen. Der neue Scan muss wieder zur manuellen Prüfung übernommen werden.
 63. TRAKUNA über die Übersicht vollständig schließen und anschließend neu öffnen. Erst nach dem Öffnen darf der nächste Scan wieder verarbeitet werden.
+
+
+## Zusätzliche DPD-Pilotprüfungen aus dem Partnerhandbuch
+
+Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/2026). Die folgenden Punkte sind deshalb zunächst Prüffragen für DPD Österreich, keine bereits gültige österreichische Betriebsanweisung:
+
+- [ ] Kundenabgabe: Label/QR scannen, Annahme im DPD-System bestätigen, Beleg-/Labelausgabe und sichere Lagerung prüfen.
+- [ ] Kundenausgabe: Identität und ggf. Vollmacht nach DPD-Vorgabe prüfen; tatsächlichen Abholscan und Bestätigung des DPD-Systems abwarten.
+- [ ] Zusteller-Anlieferung: DPD-Gegenscan bzw. QR-basierte Bestätigung und dokumentierten Haftungsübergang im Originalsystem beobachten.
+- [ ] Zusteller-Abholung: vollständige Paketliste, Gegenscan des Fahrers und finale Quittierung im DPD-System beobachten.
+- [ ] Lagerfristüberschreitung / Rückführung nach DPD-Vorgabe prüfen.
+- [ ] DPD Österreich bestätigt schriftlich, welche dieser Schritte am konkreten österreichischen Standort gelten.
+
+**Abnahmekriterium:** TRAKUNA darf den lokalen Status nicht als Carrier-bestätigt darstellen, wenn nur ein eigener Scan oder das Öffnen der Partner-App erfolgt ist.

@@ -134,3 +134,8 @@ Diese Architektur ist ein Umsetzungsvorschlag, keine bereits vorhandene Funktion
 Für den nächsten Integrationsschritt wird genau eine Information benötigt: **Welche konkrete Paketshop- bzw. Versandsoftware verwendet der erste Paketshop (Hersteller, Produktname und möglichst Version)?**
 
 Keine Passwörter, API-Schlüssel oder Kundendaten übermitteln. Offizielle Dokumentation und ein Testzugang können später über einen sicheren Anbieterweg eingebunden werden.
+
+
+## Zusätzlicher DPD-Abnahmepunkt
+
+DPD Deutschland veröffentlicht ein Pickup-Partnerhandbuch (01/2026) mit Kundenabgabe, Kundenausgabe, Zusteller-Anlieferung, Zusteller-Abholung, Gegenscan/QR-Bestätigung und Rückführung nicht abgeholter Sendungen. Dieses Handbuch ist eine fachliche Referenz, aber nicht automatisch für Österreich gültig. DPD Österreich muss die entsprechenden Abläufe für den Pilotstandort bestätigen. Bis dahin sind diese DPD-Abläufe nicht als durch TRAKUNA umgesetzt oder abgenommen zu verstehen.
