@@ -33,7 +33,7 @@ Die Partner-App-Übergabe ist derzeit ein Android-Intent-Versuch. Das Öffnen ei
 
 - Lokale Sendungsdaten werden verschlüsselt im Android Keystore-gestützten Speicher gehalten.
 - Kamera-Scan und manuelle Eingabe sind vorgesehen.
-- Zebra DataWedge ist als Broadcast-Eingangsweg vorbereitet.
+- Zebra DataWedge ist als Broadcast-Eingangsweg vorbereitet. Die GLS- und DPD-Handgeräte werden nach den vorliegenden Gerätehinweisen als Zebra TC26 eingestuft (4G-Anzeige; endgültige Bestätigung über Typenschild/Teilenummer steht aus).\n- Für TC26 ist ein dediziertes DataWedge-Profil für TRAKUNA vorgesehen: Barcode Input + Intent Output, Action `de.trakuna.app.DATAWEDGE_SCAN`, Extra `com.symbol.datawedge.data_string`, Delivery `Broadcast Intent`. Das muss auf jedem Handgerät mit Betreiberfreigabe eingerichtet und praktisch getestet werden; eine erfolgreiche Übertragung ist bislang nicht nachgewiesen.
 - Sendungsstatus und begrenzte Ereignishistorie werden lokal gespeichert.
 - JSON-Backup und CSV-Export enthalten vertrauliche Daten im Klartext. Sie müssen geschützt gespeichert und übertragen werden.
 - Es gibt keine zentrale Synchronisierung, keine Mitarbeiterkonten und keine rollenbasierte Zugriffskontrolle.
@@ -75,7 +75,7 @@ Produktivbetrieb bleibt gesperrt, bis alle zutreffenden Punkte nachgewiesen sind
 - [ ] Betreiber und konkrete Paketshop-Software identifiziert
 - [ ] Hermes-Schnittstelle offiziell freigegeben und abgenommen
 - [ ] Weitere benötigte Carrier-Schnittstellen einzeln geprüft
-- [ ] Zebra-Modell und DataWedge-Profil auf echter Hardware getestet
+- [ ] GLS-/DPD-Zebra-TC26-Teilenummern und Android-/MX-/DataWedge-Versionen erfasst\n- [ ] TRAKUNA-DataWedge-Profil auf beiden TC26-Handgeräten mit Testetiketten praktisch getestet
 - [ ] Signierter Release-Build mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Update von der vorherigen Version mit Datenbestand geprüft
 - [ ] Mehrgeräte- und Mitarbeitermodell entschieden und sicher umgesetzt, falls benötigt
