@@ -1,17 +1,18 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.52 (versionCode 53) · CI-Build 45286415077 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
+Stand: App-Version 1.53 (versionCode 54) · CI-Build 45290269045 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45286415077 für Version 1.52 (versionCode 53) erfolgreich – Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
-- [x] Zusätzlicher Löschschutz für inkonsistente Archivdatensätze durch Unit-Tests abgedeckt
-- [x] Strikte UTF-8-Dekodierung des lokalen Sendungsbestands und Partner-Übergabe-Caches durch Unit-Test abgedeckt
-- [x] Unit-Tests und Android-Lint für Version 1.52 erfolgreich
-- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.52 als Artefakt bereitgestellt
-- [x] Archivierungsregeln, Archivstatus-Validierung und Historienereignisse durch Unit-Tests abgedeckt
+- [x] CI-Lauf 45290269045 für Version 1.53 erfolgreich – Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
+- [x] Vorhandene Unit-Tests erfolgreich
+- [x] Android-Lint erfolgreich
+- [x] Zusammengeführtes Manifest ohne INTERNET-Berechtigung, aktiviertes Android-Backup oder Klartextverkehr geprüft
+- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.53 als Artefakt bereitgestellt
+- [x] Android-Instrumentierungstestfälle für Keystore-Verschlüsselung, Speicher-Wiederöffnung und Fail-closed bei beschädigten Daten hinzugefügt
+- [ ] Android-Instrumentierungstestfälle auf Emulator oder echtem Android-Gerät tatsächlich ausgeführt
 - [ ] Archivieren/Wiederherstellen und Backup-Restore auf einem echten Android-Gerät praktisch geprüft
 - [ ] Release-Version und Versionsnummer fachlich geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
@@ -20,12 +21,12 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
 
-Letzter erfolgreicher Build 1.52: https://github.com/mouzzlii/Fuck/actions/runs/45286415077 (Commit `506c1af4ea093d8734cafb69969393e997ad46b0`). Alle CI-Schritte einschließlich Tests, Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
+Letzter erfolgreicher Build 1.53: https://github.com/mouzzlii/Fuck/actions/runs/45290269045 (Commit `9678ff54c49d3c97a9f8b180b8df9f46b753e370`). Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build, Prüfsumme und Artefakt-Upload waren erfolgreich. Der Emulator-Schritt wurde aus dem blockierenden Standard-CI entfernt, weil der GitHub-Linux-Runner keinen zuverlässigen Emulatorstart ermöglichte. Die Instrumentierungstestfälle sind im Repository vorhanden, wurden aber in diesem Lauf **nicht** ausgeführt. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
 
-APK-SHA-256: `15633c1200e1615f5b5826a3fa00d5955863d20d53b86d7bcf17f92fcee4137a`
-ZIP-Artefakt-SHA-256: `b14cb60485a1278bf085981dbfbba544a32fa0b0ee146b31296e10b3b8502e02`
+APK-SHA-256: `16b69023df943ab0c7a350eee4f2baef298019929bbe87fbeb9d9fc91cfddc69`
+ZIP-Artefakt-SHA-256: `7553840bb5f337d7d537604ae947cf72a8c0420f934a16097e68cf95bc83f9e4`
 
-ZIP-Artefakt erstellt am 23.11.2026, 23:12 UTC; Ablauf am 07.12.2026, 23:12 UTC. Produktionssignierung ist weiterhin offen.
+ZIP-Artefakt erstellt am 23.11.2026, 23:38 UTC; Ablauf am 07.12.2026, 23:38 UTC. Produktionssignierung und Emulator-Instrumentierungstest bleiben offen.
 
 ## B. Geräte- und Scannerabnahme
 
