@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.50 (versionCode 51) · CI erfolgreich: Lauf 45273220299
+Stand: App-Version 1.51 (versionCode 52) · CI erfolgreich: Lauf 45281621801 (Debug-Testpaket)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45273220299 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45273220299).
+1. Den [erfolgreichen Android-Build 45281621801 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45273220299).
 2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
@@ -14,12 +14,12 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 
 **Prüfsummen des bereitgestellten Testpakets**
 
-- APK-SHA-256: `57989edf288ed410f3a43c515eeadb2dbffce7b05a4630a3ccf7149af34edbe8`
-- ZIP-SHA-256: `a4d75dee23c876d26aa9fbeb696d5a6dd8c9c4c0c9aad2032dbd195dc9f4fe0f`
+- APK-SHA-256: `e47b845dcd5a8dcc57760d61bd7ab3fa73064c0a19dce4c6eb7bfa7b10b2012e`
+- ZIP-SHA-256: `9ff08004e9bef4665c2399c64f79aab17b7c6b52182490a489278d15ea7823d4`
 - Erstellt: 23.11.2026, 21:49 UTC
 - Artefakt verfügbar bis: 07.12.2026, 21:49 UTC
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.50 ergänzte die Archivierung abgeschlossener Vorgänge und die Wiederherstellung aus dem Archiv. Version 1.51 ergänzt den strengeren Löschschutz; dafür liegt noch kein bestätigter Build vor.
+Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.51 enthält den zusätzlichen Löschschutz für inkonsistente Archivdatensätze. CI bestätigte Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
@@ -35,7 +35,7 @@ Wenn Android eine abweichende Signatur meldet, Installation abbrechen. Die beste
 
 ## 3. DPD, GLS, Hermes und UPS getrennt zuordnen
 
-In Version 1.49 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
+In Version 1.51 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
 
 1. TRAKUNA öffnen.
 2. **Betriebssoftware pro Paketdienst zuordnen** antippen.
@@ -73,7 +73,7 @@ Wichtig:
 - Eine Sendung als abholbereit markieren und lokal an den Kunden übergeben.
 - Eine Kundenabgabe bzw. Retoure erfassen und den lokalen Ablauf bis zur Übergabe an den Paketdienst fortschreiben.
 
-Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.49 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
+Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.51 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
 
 ## 6. Zebra TC26 und DataWedge (DPD/GLS)
 
