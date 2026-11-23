@@ -201,6 +201,13 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun manualHermesSelectionIsPreservedWithoutInventingAutomaticRecognition() {
+        assertEquals("Hermes", ShipmentRules.resolveCarrierLabel(" Hermes ", "12345678901234"))
+        assertEquals("Hermes", ShipmentRules.resolveCarrierLabel("Hermes", "ABC1234567"))
+        assertEquals(null, ShipmentRules.identifyCarrier("12345678901234"))
+    }
+
+    @Test
     fun carrierHintsRecognizeOnlyDistinctiveFormatsAndLeaveNumericValuesUnknown() {
         assertEquals("UPS", ShipmentRules.identifyCarrier("1z999aa10123456784"))
         assertEquals("Österreichische Post", ShipmentRules.identifyCarrier("AB123456789AT"))
