@@ -144,7 +144,7 @@ class SecureHandoffCache(context: Context) {
         val encrypted = bytes.copyOfRange(IV_BYTES, bytes.size)
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.DECRYPT_MODE, key(), javax.crypto.spec.GCMParameterSpec(128, iv))
-        return String(cipher.doFinal(encrypted), Charsets.UTF_8)
+        return decodeStrictUtf8(cipher.doFinal(encrypted))
     }
 
     private companion object {
