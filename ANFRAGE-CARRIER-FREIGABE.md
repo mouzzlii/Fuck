@@ -94,7 +94,7 @@ Die konkrete UPS-Hardware und die tatsächlich installierte UPS-Scanning-App des
 
 UPS Österreich beschreibt für Access-Point-Standorte eine Scanning-App für PC, Android oder Apple-Geräte sowie das Scannen von Kundenabgaben und Fahrersendungen. Bitte teilen Sie uns mit:
 - Ist die offizielle Android-App UPS Access Point (`com.ups.accesspoint`) die für unseren Standort vorgesehene App? Falls nein: Wie lautet der genaue App-Name und offizielle Bezugsweg?
-- Welche UPS-Scanning-App und Version für unseren Standort bereitgestellt wurde.
+- Welche UPS-Scanning-App und Version für unseren Standort bereitgestellt wurde (Google Play führt „UPS Access Point“, Paketname `com.ups.accesspoint`, Android 9.0+).
 - Auf welchem Gerät diese App betrieben werden soll und ob Zebra-Geräte unterstützt werden.
 - Ob die App einen offiziellen Datenexport, Android-Intent oder eine andere freigegebene Übergabe an TRAKUNA unterstützt.
 - Wie die Übergabe an UPS-Fahrer und die Annahme von Fahrersendungen bestätigt werden.

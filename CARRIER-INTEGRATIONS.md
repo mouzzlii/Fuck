@@ -56,7 +56,7 @@ Zusätzlicher technischer Gesprächseinstieg für Geschäftskunden-Versand (nich
 
 ## 4. UPS
 
-**Österreichischer Paketshop-Ablauf – offiziell beschrieben:** UPS Österreich erklärt, dass Access-Point-Standorte eine Scanning-App für PC, Android oder Apple-Geräte erhalten. Die Aufgaben umfassen die Annahme und das Scannen von Kundenpaketen zur Übergabe an UPS-Fahrer sowie die Annahme und das Scannen von UPS-Fahrersendungen zur Aufbewahrung bis zur Kundenabholung. UPS nennt Einweisung, Support und technische Unterstützung.
+**Österreichischer Paketshop-Ablauf – offiziell beschrieben:** UPS Österreich erklärt, dass Access-Point-Standorte eine Scanning-App für PC, Android oder Apple-Geräte erhalten. Die offizielle Google-Play-Auflistung der App **UPS Access Point** nennt den Paketnamen `com.ups.accesspoint`, richtet sich an registrierte und autorisierte Access-Point-Standorte und verlangt Android 9.0 oder höher. Wenn TRAKUNA und die UPS-App auf demselben Gerät laufen sollen, ist deshalb Android 9.0 oder höher erforderlich. Die Aufgaben umfassen die Annahme und das Scannen von Kundenpaketen zur Übergabe an UPS-Fahrer sowie die Annahme und das Scannen von UPS-Fahrersendungen zur Aufbewahrung bis zur Kundenabholung. UPS nennt Einweisung, Support und technische Unterstützung.
 
 **Konkreter Android-App-Kandidat:** Im Google Play Store ist die offizielle App **UPS Access Point** von UPS gelistet (Paketname `com.ups.accesspoint`). Die Store-Beschreibung nennt vier Funktionen: Fahrerlieferung, Selbstabholung, Kundenabgabe und Bestandsverwaltung. Als Mindestanforderung wird Android 9.0 genannt; die Store-Seite zeigt ein Update vom 08.09.2026. Das ist ein konkreter Prüfhinweis, aber noch kein Beleg, dass genau diese App am Pilotstandort installiert oder für den Standort freigeschaltet ist. Vor Ort müssen App-Name, Version, Berechtigung und Gerät bestätigt werden.
 
@@ -66,6 +66,7 @@ Offizielle Einstiege:
 - [UPS Access Point – offizielle Android-App im Google Play Store](https://play.google.com/store/apps/details?id=com.ups.accesspoint&hl=de_AT)
 - [UPS Developer Portal – Start](https://developer.ups.com/get-started?loc=de_AT)
 - [UPS API-Katalog](https://developer.ups.com/catalog?loc=de_AT)
+- [UPS Access Point – offizielle Google-Play-Auflistung (Paketname und Android-Mindestversion)](https://play.google.com/store/apps/details?id=com.ups.accesspoint&hl=de_AT)
 
 **Was noch nicht belegt ist:** Welche UPS-Scanning-App, welches Gerät und welche Version der konkrete Standort verwendet; ob eine Partner-API oder ein freigegebener Datenaustausch für die bestehende App zur Verfügung steht. Das Developer-Portal betrifft allgemeine UPS APIs und ersetzt nicht die Access-Point-App oder eine Partnerfreigabe.
 

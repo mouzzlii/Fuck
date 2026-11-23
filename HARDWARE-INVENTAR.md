@@ -36,7 +36,7 @@ Quelle: [Zebra – Enterprise Browser Gerätekompatibilität (MC3090: Windows CE
 
 ## 1a. UPS – noch offene Bestandsaufnahme
 
-UPS gehört neben DPD, GLS und Hermes zu den vier Start-Prioritäten. Für UPS liegen für diesen konkreten Standort noch keine verifizierten Angaben zu Handgerät, tatsächlich installierter UPS-Scanning-App, Drucker, Verbindung oder App-Version vor. UPS Österreich beschreibt öffentlich eine bereitgestellte Scanning-App für PC, Android oder Apple-Geräte sowie Scans bei Paketannahme und Fahrerübergabe. Ob und wie diese App am Standort eingesetzt wird, muss vor Ort erhoben werden. Bis dahin darf TRAKUNA nur lokale Testvorgänge kennzeichnen; es darf keine UPS-Buchung oder Etikettenerstellung behaupten.
+UPS gehört neben DPD, GLS und Hermes zu den vier Start-Prioritäten. Für UPS liegen für diesen konkreten Standort noch keine verifizierten Angaben zu Handgerät, tatsächlich installierter UPS-Scanning-App, Drucker, Verbindung oder App-Version vor. Die offizielle App „UPS Access Point“ ist unter dem Android-Paketnamen `com.ups.accesspoint` gelistet und verlangt Android 9.0 oder höher; ob sie auf dem Standortgerät installiert und freigegeben ist, ist offen. UPS Österreich beschreibt öffentlich eine bereitgestellte Scanning-App für PC, Android oder Apple-Geräte sowie Scans bei Paketannahme und Fahrerübergabe. Ob und wie diese App am Standort eingesetzt wird, muss vor Ort erhoben werden. Bis dahin darf TRAKUNA nur lokale Testvorgänge kennzeichnen; es darf keine UPS-Buchung oder Etikettenerstellung behaupten.
 
 ## 2. Bestätigte Betriebsweise
 

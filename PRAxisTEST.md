@@ -33,9 +33,11 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 16 | App schließen und neu öffnen | Lokal gespeicherte Vorgänge sind weiterhin vorhanden. |
 | 17 | Zebra-Scanner mit DataWedge-Profil scannen | Sendungsnummer erscheint im Eingabefeld; es erfolgt keine automatische Buchung. Ungültige Inhalte werden abgelehnt. |
 | 18 | Partner-App auswählen und übergeben | Cache wird vor dem Wechsel dauerhaft gespeichert; Clipboard-Ausfall darf keinen Absturz verursachen, Android 13+ markiert den Clipboard-Inhalt als sensibel; Ziel-App wird nur bei installierter App geöffnet. |
-| 19 | Eine Betriebssoftware ausdrücklich auswählen und danach eine Paketdienst-Standardzuordnung konfigurieren (falls vorhanden) | Die bewusst gespeicherte Auswahl des Mitarbeiters hat Vorrang; eine Standardzuordnung darf sie nicht unbemerkt ersetzen. |
+| 19 | DPD, GLS, Hermes und UPS jeweils über „Betriebssoftware pro Paketdienst zuordnen“ einer installierten App zuweisen | Jede Zuordnung wird getrennt auf diesem Gerät gespeichert und in der Übersicht beim richtigen Carrier angezeigt. |
 | 20 | Carrier-Schnellauswahl öffnen und DPD, GLS, Hermes, UPS nacheinander auswählen | Der Auswahlknopf zeigt jeweils den gewählten Paketdienst; die Reihenfolge lautet DPD, GLS, Hermes, UPS. Die manuelle Auswahl wird bei allen drei lokalen Vorgangsarten gespeichert und an den Partner-App-Übergabeversuch weitergegeben. Es wird keine externe Buchung behauptet. |
 | 21 | „Ohne Auswahl“ wählen und einen bekannten UPS-1Z-Testcode eingeben | Die manuelle Auswahl wird geleert; der bekannte UPS-Format-Hinweis darf als Hinweis erscheinen. Der Format-Hinweis bestätigt keine Existenz oder Buchung. |
+| 22 | Nur DPD einer App zuordnen, danach einen GLS-Übergabeversuch starten | Die DPD-App darf nicht als Ersatz für GLS geöffnet werden. TRAKUNA meldet die fehlende GLS-Zuordnung; die lokale Cache-Sicherung bleibt erhalten. |
+| 23 | Eine Carrier-Zuordnung entfernen und denselben Übergabeversuch wiederholen | Es wird keine fremde Carrier-App als Fallback geöffnet. Die Nummer bleibt lokal gesichert; die Meldung erklärt die fehlende Zuordnung. |
 
 
 ### 2a. Zusätzlicher Erfassungstest nach der Rückmeldung „Speichern reagiert nicht“
@@ -64,8 +66,8 @@ Jeder Paketdienst wird getrennt mit freigegebenen Testetiketten bzw. fiktiven Te
 |---|---|---|---|---|
 | DPD | DPD im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische DPD-Erkennung voraussetzen | Bestehendes DPD-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
 | GLS | GLS im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische GLS-Erkennung voraussetzen | Bestehendes GLS-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
-| Hermes | Hermes im Schnellauswahlmenü | MC3090BT-Barcode und manuelle Nummer mit freigegebenen Testdaten prüfen | Bestehenden Hermes-Ablauf und Drucker nicht verändern; offizielle Schnittstelle und Betreiberfreigabe sind Pflicht | Offen – Pilotblocker |
-| UPS | UPS im Schnellauswahlmenü | Bekannte 1Z-Format-Erkennung nur als Hinweis prüfen; zusätzlich manuelle Nummern testen | Prüfen, ob die offizielle App `UPS Access Point` (`com.ups.accesspoint`) installiert und vom Standort freigegeben ist; Version und Android-Gerät erfassen. Nicht eigenmächtig installieren oder konfigurieren. | Offen |
+| Hermes | Hermes im Schnellauswahlmenü | MC3090BT bleibt ausschließlich beim bestehenden Hermes-System. TRAKUNA auf einem separaten freigegebenen Android-Gerät mit manueller Testnummer prüfen; keine direkte Android-/DataWedge-Integration des MC3090BT voraussetzen | Bestehenden Hermes-Ablauf und Drucker nicht verändern; offizielle Schnittstelle und Betreiberfreigabe sind Pflicht | Offen – Pilotblocker |
+| UPS | UPS im Schnellauswahlmenü | Bekannte 1Z-Format-Erkennung nur als Hinweis prüfen; zusätzlich manuelle Nummern testen | Prüfen, ob die offizielle App `UPS Access Point` (`com.ups.accesspoint`) installiert und vom Standort freigegeben ist; Version und Android-Gerät erfassen. Die App verlangt laut Google-Play-Angabe Android 9.0 oder höher. Nicht eigenmächtig installieren oder konfigurieren. | Offen |
 
 
 
