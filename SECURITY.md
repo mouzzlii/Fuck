@@ -28,6 +28,16 @@
 - Partnerübergabe speichert die Sendungsnummer synchron im lokalen Cache, bevor TRAKUNA die andere App startet.
 - Clipboard-Fehler blockieren den lokalen Ablauf nicht; auf Android 13+ wird der Clip als sensibel markiert.
 
+## Automatische CI-Sicherheitsprüfungen
+
+Der Android-CI-Workflow prüft vor Unit-Tests und APK-Bau zusätzlich die aktuell beabsichtigten Manifest-Grenzen:
+
+- Keine Android-`INTERNET`-Berechtigung, solange keine freigegebene Backend-Architektur umgesetzt ist.
+- `android:allowBackup="false"` muss gesetzt bleiben.
+- `android:usesCleartextTraffic="false"` muss gesetzt bleiben.
+
+Ein Verstoß lässt den Build fehlschlagen. Diese Prüfung ist eine gezielte Schutzschranke für den jetzigen Offline-Stand; sie ist kein vollständiger Sicherheitstest und ersetzt weder Codeanalyse noch Penetrationstest. Wenn eine echte Synchronisierung später beschlossen wird, muss diese Schutzschranke gemeinsam mit TLS, Authentifizierung, Berechtigungen, Datenschutzkonzept und Backend-Abnahme bewusst angepasst werden.
+
 ## Release-Signierung vorbereitet
 
 Die Gradle-Konfiguration unterstützt einen signierten Release-Build, ohne einen privaten Schlüssel im Repository abzulegen. Der CI-Workflow baut ein Release nur, wenn alle vier GitHub-Actions-Secrets gesetzt sind:
