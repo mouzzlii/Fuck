@@ -28,11 +28,11 @@ Bitte zuerst ausschließlich mit Testsendungen arbeiten.
 6. Android kann eine einmalige Freigabe für die Installation aus dieser Datei-App verlangen. Nur für die vertrauenswürdige Datei-App freigeben und die Freigabe danach wieder deaktivieren.
 7. Die App starten und zunächst die Tests aus `PRAxisTEST.md` durchführen.
 
-**Build 266 ist ein Debug-Testpaket, kein signiertes Produktionsrelease.** Die SHA-256-Prüfsumme lautet:
+**Das Artefakt ist ein Debug-Testpaket, kein signiertes Produktionsrelease.** Die SHA-256-Prüfsumme der enthaltenen `app-debug.apk` lautet:
 
-`b2af51c5c910a4378c548071dbae9d80058310fc5821c50f106a2941037d6387`
+`db9615463589ec1beb8f4fb55ce08744a06e4f5ec7fc591b59fcaf3053d73908`
 
-Das Artefakt ist voraussichtlich bis 07.12.2026 verfügbar. Danach muss ein neuer Build heruntergeladen werden.
+Das Artefakt ist bis 07.12.2026, 17:26 UTC verfügbar. Danach muss ein neuer Build heruntergeladen werden.
 
 ## 3. Sicher aktualisieren – vorhandene Daten schützen
 
