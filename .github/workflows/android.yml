@@ -53,7 +53,7 @@ jobs:
         run: |
           manifest="app/src/main/AndroidManifest.xml"
           test -f "$manifest"
-          if grep -Eq 'android\\.permission\\.INTERNET' "$manifest"; then
+          if grep -Fq 'android.permission.INTERNET' "$manifest"; then
             echo "FEHLER: Netzwerkberechtigung ist ohne freigegebene Backend-Architektur nicht erlaubt."
             exit 1
           fi
