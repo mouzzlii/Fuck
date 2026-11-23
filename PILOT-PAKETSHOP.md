@@ -1,4 +1,8 @@
 # TRAKUNA – Pilotpaket für den ersten Paketshop
+#
+
+**WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
+
 
 Stand: 23. November 2026 · Softwarestand: 1.44 · Build 266
 
