@@ -662,7 +662,7 @@ object ShipmentRules {
             record.carrier.length <= 80 && record.recipient.length <= 100 && record.note.length <= 500 &&
             record.createdAt > 0L && record.updatedAt >= record.createdAt &&
             record.history.size <= 100 &&
-            (record.archivedAt == null || record.archivedAt == record.updatedAt) &&
+            (record.archivedAt == null || (record.archivedAt == record.updatedAt && isTerminalStatus(record.status))) &&
             record.history.zipWithNext().all { (a, b) -> b.at >= a.at } &&
             record.history.all { it.at in record.createdAt..record.updatedAt } &&
             isValidHistory(record) &&
