@@ -7,8 +7,8 @@ Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters und Fotos/Ablesungen am Herme
 
 | Paketdienst | Handgerät | Etikettendrucker | Verbindung | Angegebene Version |
 |---|---|---|---|---|
-| GLS | Eigenes Handgerät; Hersteller/Modell noch offen | Zebra CD421 (Bezeichnung vom Etikettendrucker laut Betreiber) | Bluetooth zwischen Handgerät und Drucker | V.7.0.1632 (genaue Zuordnung innerhalb des GLS-Systems noch offen) |
-| DPD | Eigenes Handgerät; Hersteller/Modell noch offen | Zebra CD420 (Bezeichnung vom Etikettendrucker laut Betreiber) | Bluetooth zwischen Handgerät und Drucker | V.1.16.11 (genaue Zuordnung innerhalb des DPD-Systems noch offen) |
+| GLS | Zebra TC26 (aus Geräteansicht/Gehäusemerkmalen und 4G-Anzeige abgeleitet; Typenschild/Modellnummer noch nicht gegengeprüft) | Zebra CD421 (Bezeichnung vom Etikettendrucker laut Betreiber) | Bluetooth zwischen Handgerät und Drucker | V.7.0.1632 (genaue Zuordnung innerhalb des GLS-Systems noch offen) |
+| DPD | Zebra TC26 (aus Geräteansicht/Gehäusemerkmalen und 4G-Anzeige abgeleitet; Typenschild/Modellnummer noch nicht gegengeprüft) | Zebra CD420 (Bezeichnung vom Etikettendrucker laut Betreiber) | Bluetooth zwischen Handgerät und Drucker | V.1.16.11 (genaue Zuordnung innerhalb des DPD-Systems noch offen) |
 | Hermes | Symbol/Zebra MC3090BT, eigenständiges Handterminal | Eigener Hermes-Drucker; Modell noch offen | Eigenständiger Hermes-Geräteablauf; Druckeranschluss noch nicht verifiziert | V.2.1.1.0 (Hermes-Anwendung laut Vor-Ort-Angabe) |
 
 ### Hermes-Handgerät – sichtbare/abgelesene Informationen
@@ -21,6 +21,12 @@ Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters und Fotos/Ablesungen am Herme
 
 Die zusätzlich genannte Version V.7.0.1632 wurde GLS zugeordnet; V.1.16.11 wurde DPD zugeordnet. Es ist noch nicht geklärt, ob diese Nummern die Handgeräte-Anwendung, ein Gerätemodul oder eine andere Systemkomponente bezeichnen. Sie dürfen deshalb nicht als Betriebssystemversion oder Drucker-Firmware ausgegeben werden.
 
+### GLS-/DPD-Handgeräte – neue Identifikationsangabe
+
+- Die zuletzt übermittelten Gerätebeschreibungen ordnen beide Handgeräte der Zebra-TC21/TC26-Baureihe zu.
+- Wegen der sichtbaren 4G-Mobilfunkanzeige wird als wahrscheinlichstes Modell **Zebra TC26** dokumentiert. Zebra unterscheidet offiziell: TC21 mit WLAN, TC26 mit WLAN und Mobilfunk. Die Modellzuordnung ist plausibel, aber vor endgültiger Hardwarefreigabe am Typenschild bzw. in „Über das Gerät“ zu bestätigen.
+- Die genaue TC26-Teilenummer, Android-Version, Zebra-MX-/DataWedge-Version und Scanner-Engine sind noch unbekannt.
+
 ## 2. Bestätigte Betriebsweise
 
 - GLS und DPD haben jeweils ein eigenes Handgerät mit eigenem Programm.
@@ -28,6 +34,18 @@ Die zusätzlich genannte Version V.7.0.1632 wurde GLS zugeordnet; V.1.16.11 wurd
 - GLS- und DPD-Handgeräte sind jeweils per Bluetooth mit ihrem Etikettendrucker verbunden.
 - Der Etikettendruck bei GLS und DPD erfolgt laut Vor-Ort-Angabe automatisch.
 - Hermes verwendet ein eigenständiges MC3090BT-Handgerät mit eigenem Hermes-Menü und eigenem Drucker.
+
+### Bereits vorhandener technischer Ansatz in TRAKUNA
+
+Der aktuelle Android-Code enthält bereits einen DataWedge-Broadcast-Empfänger für den Scan-Intent:
+
+- Intent action: `de.trakuna.app.DATAWEDGE_SCAN`
+- Daten-Extra: `com.symbol.datawedge.data_string`
+- Der Empfänger verarbeitet Scans nur, solange TRAKUNA im Vordergrund aktiv ist.
+- Überlange oder nicht eindeutig interpretierbare Inhalte werden abgelehnt bzw. zur manuellen Prüfung gemeldet.
+- Der empfangene Code wird in das Sendungsnummernfeld übernommen; es wird dadurch keine Carrier-Buchung ausgelöst.
+
+Für einen TC26-Praxistest muss auf dem Gerät ein eigenes DataWedge-Profil für TRAKUNA eingerichtet werden: Barcode Input aktivieren, Intent Output aktivieren, als Action exakt `de.trakuna.app.DATAWEDGE_SCAN` setzen und als Delivery „Broadcast Intent“ wählen. Das Extra muss den DataWedge-Standard `com.symbol.datawedge.data_string` liefern. Profilkonfiguration und tatsächliche Scan-Zustellung sind auf den Shopgeräten noch nicht getestet. Zebra beschreibt DataWedge-Profile und Intent-Ausgabe in seiner offiziellen Dokumentation.
 
 ## 3. Was daraus für TRAKUNA folgt
 
