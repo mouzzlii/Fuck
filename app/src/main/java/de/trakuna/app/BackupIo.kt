@@ -20,13 +20,13 @@ internal fun readBoundedUtf8(input: InputStream, maxBytes: Int): String {
         if (count == 0) {
             val single = input.read()
             if (single < 0) break
-            require(total < maxBytes) { "Sicherungsdatei ist größer als 2 MiB und wurde nicht geladen." }
+            require(total < maxBytes) { "Sicherungsdatei überschreitet die zulässige Größenbegrenzung und wurde nicht geladen." }
             output.write(single)
             total++
             continue
         }
         require(count <= maxBytes - total) {
-            "Sicherungsdatei ist größer als 2 MiB und wurde nicht geladen."
+            "Sicherungsdatei überschreitet die zulässige Größenbegrenzung und wurde nicht geladen."
         }
         output.write(buffer, 0, count)
         total += count
