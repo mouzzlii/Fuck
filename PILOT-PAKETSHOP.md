@@ -65,6 +65,8 @@ Die Partner-App-Übergabe ist derzeit ein Android-Intent-Versuch. Das Öffnen ei
 - Zebra DataWedge ist als Broadcast-Eingangsweg vorbereitet. Die GLS- und DPD-Handgeräte werden nach den vorliegenden Gerätehinweisen als Zebra TC26 eingestuft (4G-Anzeige; endgültige Bestätigung über Typenschild/Teilenummer steht aus).
 - Für TC26 ist ein dediziertes DataWedge-Profil für TRAKUNA vorgesehen: Barcode Input + Intent Output, Action `de.trakuna.app.DATAWEDGE_SCAN`, Extra `com.symbol.datawedge.data_string`, Delivery `Broadcast Intent`. Das muss auf jedem Handgerät mit Betreiberfreigabe eingerichtet und praktisch getestet werden; eine erfolgreiche Übertragung ist bislang nicht nachgewiesen.
 - Sendungsstatus und begrenzte Ereignishistorie werden lokal gespeichert.
+- Abgeschlossene Vorgänge können lokal archiviert und wiederhergestellt werden; aktive Vorgänge können nicht archiviert werden. Archivierte Vorgänge bleiben Teil der Datensicherung und belegen weiterhin einen Platz des 500er-Limits.
+- Das JSON-Backup-Schema 2 enthält den Archivstatus; Schema-1-Sicherungen ohne Archivfeld bleiben lesbar.
 - JSON-Backup und CSV-Export enthalten vertrauliche Daten im Klartext. Sie müssen geschützt gespeichert und übertragen werden.
 - Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge. Diese können als lokale Arbeitsdokumentation dienen, sind aber kein manipulationssicherer oder zentral bestätigter Nachweis.
 - Es gibt keine zentrale Synchronisierung, keine Mitarbeiterkonten und keine rollenbasierte Zugriffskontrolle.
