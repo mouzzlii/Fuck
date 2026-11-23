@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.51 (versionCode 52) · CI erfolgreich: Lauf 45281621801 (Debug-Testpaket)
+Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45290269045 (Debug-Testpaket)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45281621801 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45281621801).
+1. Den [erfolgreichen Android-Build 45290269045 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45281621801).
 2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
@@ -14,12 +14,12 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 
 **Prüfsummen des bereitgestellten Testpakets**
 
-- APK-SHA-256: `e47b845dcd5a8dcc57760d61bd7ab3fa73064c0a19dce4c6eb7bfa7b10b2012e`
-- ZIP-SHA-256: `9ff08004e9bef4665c2399c64f79aab17b7c6b52182490a489278d15ea7823d4`
-- Erstellt: 23.11.2026, 22:40 UTC
+- APK-SHA-256: `16b69023df943ab0c7a350eee4f2baef298019929bbe87fbeb9d9fc91cfddc69`
+- ZIP-SHA-256: `7553840bb5f337d7d537604ae947cf72a8c0420f934a16097e68cf95bc83f9e4`
+- Erstellt: 23.11.2026, 23:38 UTC
 - Artefakt verfügbar bis: 07.12.2026, 22:40 UTC
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.51 enthält den zusätzlichen Löschschutz für inkonsistente Archivdatensätze. CI bestätigte Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
+Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die bisherigen Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstests wurden noch nicht auf einem Emulator oder echten Gerät ausgeführt. CI bestätigte Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
@@ -35,7 +35,7 @@ Wenn Android eine abweichende Signatur meldet, Installation abbrechen. Die beste
 
 ## 3. DPD, GLS, Hermes und UPS getrennt zuordnen
 
-In Version 1.51 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
+In Version 1.53 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
 
 1. TRAKUNA öffnen.
 2. **Betriebssoftware pro Paketdienst zuordnen** antippen.
