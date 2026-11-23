@@ -14,7 +14,7 @@ Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetr
 Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TRAKUNA-Oberfläche bietet dafür eine direkte manuelle Auswahl in dieser Reihenfolge. Die Auswahl dient ausschließlich der Zuordnung des lokalen Vorgangs. Sie ersetzt keine Carrier-Authentifizierung, Buchung, Annahmebestätigung oder Label-Erstellung.
 
 - DPD/GLS: TC26-/DataWedge-Scan und bestehende Bluetooth-Druckabläufe getrennt und ohne Eingriff in die Carrier-Systeme testen.
-- Hermes: MC3090BT-Ablauf erhalten; offizielle Hermes-Anbindung vor Produktivpilot klären.
+- Hermes: MC3090BT-Ablauf erhalten; das Gerät ist laut Zebra-Dokumentation ein Windows-CE-/Windows-Mobile-Gerät und nicht mit der Android-App kompatibel. Für TRAKUNA ist ein separates, freigegebenes Android-Gerät erforderlich. Offizielle Hermes-Anbindung vor Produktivpilot klären.
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben.
 
 
@@ -53,6 +53,7 @@ Die Partner-App-Übergabe ist derzeit ein Android-Intent-Versuch. Das Öffnen ei
 
 - Lokale Sendungsdaten werden verschlüsselt im Android Keystore-gestützten Speicher gehalten.
 - Kamera-Scan und manuelle Eingabe sind vorgesehen.
+- Das Hermes-MC3090BT ist kein Android-Zielgerät für TRAKUNA. Zebra führt die MC3090-Reihe mit Windows CE 5.0 bzw. Windows Mobile 6.1; TRAKUNA benötigt Android 8.0/API 26 oder neuer. Für Hermes kann TRAKUNA daher nur auf einem separaten kompatiblen Android-Gerät getestet werden. [Zebra-Kompatibilitätsübersicht](https://www.zebra.com/us/en/support-downloads/software/mobile-computer-software/enterprise-browser.html).
 - Zebra DataWedge ist als Broadcast-Eingangsweg vorbereitet. Die GLS- und DPD-Handgeräte werden nach den vorliegenden Gerätehinweisen als Zebra TC26 eingestuft (4G-Anzeige; endgültige Bestätigung über Typenschild/Teilenummer steht aus).
 - Für TC26 ist ein dediziertes DataWedge-Profil für TRAKUNA vorgesehen: Barcode Input + Intent Output, Action `de.trakuna.app.DATAWEDGE_SCAN`, Extra `com.symbol.datawedge.data_string`, Delivery `Broadcast Intent`. Das muss auf jedem Handgerät mit Betreiberfreigabe eingerichtet und praktisch getestet werden; eine erfolgreiche Übertragung ist bislang nicht nachgewiesen.
 - Sendungsstatus und begrenzte Ereignishistorie werden lokal gespeichert.
@@ -94,6 +95,7 @@ Für jede Paketshop-Software bzw. jeden Carrier sind folgende Informationen erfo
 Produktivbetrieb bleibt gesperrt, bis alle zutreffenden Punkte nachgewiesen sind:
 
 - [ ] Betreiber und konkrete Paketshop-Software identifiziert
+- [ ] Für Hermes ein separates kompatibles Android-Gerät und ein sicherer Parallelbetrieb zum MC3090BT festgelegt
 - [ ] Hermes-Schnittstelle offiziell freigegeben und abgenommen
 - [ ] Weitere benötigte Carrier-Schnittstellen einzeln geprüft
 - [ ] GLS-/DPD-Zebra-TC26-Teilenummern und Android-/MX-/DataWedge-Versionen erfasst

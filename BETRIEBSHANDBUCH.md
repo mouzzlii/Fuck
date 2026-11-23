@@ -14,6 +14,7 @@ TRAKUNA 1.45 ist eine **lokale Entwicklungs- und Praxistestversion**, noch keine
 - Die Paketdienst-Erkennung ist nur ein Hinweis. Nummer und Paketdienst müssen geprüft werden.
 - Maximal 500 Vorgänge können lokal gespeichert werden.
 - JSON- und CSV-Dateien enthalten vertrauliche Sendungs- und Empfängerdaten unverschlüsselt.
+- Das vorhandene Hermes-Handgerät MC3090BT ist kein kompatibles Android-Gerät für TRAKUNA. Es bleibt für den bisherigen Hermes-Ablauf bestehen; TRAKUNA muss für Hermes auf einem separaten, freigegebenen Android-Gerät laufen.
 - Vor echtem Betrieb sind Zebra-Gerätetests, echte Etikettentests, Partnerabnahme, Datenschutzprüfung und ein signiertes Produktionsrelease erforderlich.
 
 Bitte zuerst ausschließlich mit Testsendungen arbeiten.
