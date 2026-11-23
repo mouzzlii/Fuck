@@ -2,14 +2,14 @@
 
 TRAKUNA 1.47 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.47 (versionCode 48)
+## Aktueller Entwicklungsstand – Version 1.48 (versionCode 49)
 
 - Neue direkte Carrier-Auswahl für die vier Start-Prioritäten: **DPD, GLS, Hermes und UPS**.
 - Der Auswahlknopf kennzeichnet den lokalen Vorgang; er führt keine externe Buchung aus.
-- CI-Lauf 45248166890: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45248166890). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
-- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `6ac5eedac4bc130da3cb001f8bf3388b29dc2319fa39581b5031db5fbf968463`. ZIP-Artefakt-SHA-256: `3191ae35b86a88f7f677a837ae2dd63c2bc954088724ac6339c1ba7a6d17bc7f`. Das ZIP-Artefakt wurde am 23.11.2026 um 19:23 UTC erstellt und läuft am 07.12.2026 um 19:23 UTC ab.
+- CI-Lauf 45250580288: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45250580288). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
+- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `d7ad261d2f29860a8e7d3e07c7365bad4c23118cc0064dc43c4ec17d8c6a71cc`. ZIP-Artefakt-SHA-256: `9497543cfcbb5efaa80c156a800e49fe2098c67293f370db91a7d2193ab403c6`. Das ZIP-Artefakt wurde am 23.11.2026, 19:37 UTC erstellt und läuft am 07.12.2026, 19:37 UTC ab.
 
-**Wichtig:** Version 1.47 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.48 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
@@ -17,7 +17,7 @@ TRAKUNA 1.47 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
 - WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung.
 - DataWedge-Empfangscode ist vorhanden; das Profil muss auf dem jeweiligen Zebra-Gerät eingerichtet und vor Ort getestet werden.
-- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.47 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das vorhandene Hermes-Handgerät MC3090BT läuft laut Zebra-Dokumentation mit Windows CE 5.0 bzw. Windows Mobile 6.1 und kann die Android-App (Mindestversion Android 8/API 26) nicht ausführen.** Für TRAKUNA-Hermes-Tests wird deshalb ein separates, vom Betreiber/Carrier freigegebenes Android-Gerät benötigt; das bestehende Hermes-System bleibt unangetastet.
+- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.48 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das vorhandene Hermes-Handgerät MC3090BT läuft laut Zebra-Dokumentation mit Windows CE 5.0 bzw. Windows Mobile 6.1 und kann die Android-App (Mindestversion Android 8/API 26) nicht ausführen.** Für TRAKUNA-Hermes-Tests wird deshalb ein separates, vom Betreiber/Carrier freigegebenes Android-Gerät benötigt; das bestehende Hermes-System bleibt unangetastet.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
 ## Release-Build
@@ -37,7 +37,10 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 - [Freigabe-Checkliste](FREIGABE-CHECKLISTE.md): verbindliche Nachweise und externe Voraussetzungen vor einem echten Paketshop-Einsatz.
 - [Praxis-Testplan](PRAxisTEST.md): Testfälle für den kontrollierten Gerätetest.
 
-## Neu in Version 1.47
+## Neu in Version 1.48
+
+- Status bei Paketdienst-Übergaben wird ausdrücklich als lokale Dokumentation bezeichnet. Die Bestätigungsabfrage weist darauf hin, dass TRAKUNA keine Bestätigung von DPD, GLS, Hermes oder UPS erhält und der Vorgang erst nach Abschluss/Quittierung im offiziellen Carrier-System lokal markiert werden soll.
+- Die Pilotunterlagen enthalten jetzt die österreichischen GLS-Belegregeln, die offiziellen Hermes-Partnerabläufe sowie DPD-Pickup-Referenzabläufe (Deutschland ausdrücklich nicht ungeprüft auf Österreich übertragbar).
 
 - Für DPD, GLS, Hermes und UPS lässt sich jeweils eine eigene, auf dem Android-Gerät installierte Betriebssoftware zuordnen.
 - Sobald Einzelzuordnungen aktiv sind, wird eine fehlende Zuordnung nicht durch die App eines anderen Paketdienstes ersetzt.

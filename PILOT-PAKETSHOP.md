@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 23. November 2026 · App-Version 1.47 (versionCode 48) · CI erfolgreich: Lauf 45248166890
+Stand: 23. November 2026 · App-Version 1.48 (versionCode 49) · CI erfolgreich: Lauf 45250580288
 
 ## 1. Zweck und Freigabestatus
 
@@ -18,27 +18,27 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
-Version 1.47 wurde erfolgreich durch CI gebaut. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.48 wurde erfolgreich durch CI gebaut. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.47 (versionCode 48) mit getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45248166890 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45248166890).
+Version 1.48 (versionCode 49) mit getrennten Betriebssoftware-Zuordnungen für DPD, GLS, Hermes und UPS sowie Schutz vor paketdienstübergreifendem App-Fallback wurde erfolgreich gebaut. [CI-Lauf 45250580288 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45250580288).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `6ac5eedac4bc130da3cb001f8bf3388b29dc2319fa39581b5031db5fbf968463`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 19:23 UTC; Ablauf 07.12.2026, 19:23 UTC
+- APK-SHA-256: `d7ad261d2f29860a8e7d3e07c7365bad4c23118cc0064dc43c4ec17d8c6a71cc`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 19:37 UTC; Ablauf 07.12.2026, 19:37 UTC
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45248166890)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45250580288)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
 Das Artefakt im Actions-Lauf herunterladen und das enthaltene ZIP entpacken. Die Debug-APK kann eine andere Signatur als spätere Builds haben. Vor einem Update bestehende lokale Daten sichern und die App nicht deinstallieren.
 
-### Neue Gerätefunktion in Version 1.47
+### Neue Gerätefunktion in Version 1.48
 
 Für jeden der vier Start-Paketdienste kann auf dem Android-Gerät eine eigene installierte Betriebssoftware ausgewählt werden. Die Zuordnung wird lokal gespeichert. Sobald mindestens eine Einzelzuordnung eingerichtet ist, wird für einen anderen Paketdienst ohne eigene Zuordnung keine fremde Partner-App geöffnet. Das verhindert eine versehentliche Übergabe an das falsche Carrier-System. Die Zuordnung und das Öffnen einer App bestätigen weiterhin keine Datenübernahme oder Buchung.
 

@@ -1,6 +1,6 @@
-# TRAKUNA – Praxis-Testplan (Version 1.47 · versionCode 48)
+# TRAKUNA – Praxis-Testplan (Version 1.48 · versionCode 49)
 
-Version 1.47 enthält die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS. CI-Lauf 45248166890 ist erfolgreich (Unit-Tests, Android-Lint, Debug-APK). [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45248166890). APK-SHA-256: `6ac5eedac4bc130da3cb001f8bf3388b29dc2319fa39581b5031db5fbf968463`. Das Artefakt läuft am 07.12.2026, 19:23 UTC ab.
+Version 1.48 enthält die direkte Carrier-Schnellauswahl für DPD, GLS, Hermes und UPS sowie die ausdrücklich lokale Kennzeichnung einer Paketdienst-Übergabe. CI-Lauf 45250580288 ist erfolgreich (Unit-Tests, Android-Lint, Debug-APK). [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45250580288). APK-SHA-256: `d7ad261d2f29860a8e7d3e07c7365bad4c23118cc0064dc43c4ec17d8c6a71cc`. Das Artefakt läuft am 07.12.2026, 19:37 UTC ab.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -82,7 +82,7 @@ Für **jeden** der vier Paketdienste müssen mindestens diese Fälle protokollie
 5. Partner-App nicht installiert bzw. nicht integrationsfähig: TRAKUNA muss ehrlich melden, dass keine Buchung bestätigt wurde.
 6. Annahme, Kundenausgabe, Retoure und Übergabe an den Zusteller nur dann als abgeschlossen markieren, wenn der lokale Testablauf dies ausdrücklich vorsieht bzw. das autorisierte Partnersystem die Aktion bestätigt.
 
-Die Carrier-Schnellauswahl und die getrennten App-Zuordnungen in Version 1.47 sind **keine** offizielle Integration. Ein grüner CI-Build ersetzt keinen dieser Gerätetests und keine schriftliche Freigabe.
+Die Carrier-Schnellauswahl und die getrennten App-Zuordnungen in Version 1.48 sind **keine** offizielle Integration. Ein grüner CI-Build ersetzt keinen dieser Gerätetests und keine schriftliche Freigabe.
 
 ## 3. Sicherheits- und Fehlerprüfungen
 
@@ -245,3 +245,10 @@ Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/202
 - [ ] Offizielle GLS-Quittung/Übergabebeleg für Kundenabgabe und Fahrerabholung wird im bestehenden GLS-System erzeugt und geprüft.
 - [ ] TRAKUNA-eigene lokale Scans oder Quittungen werden nicht als GLS-Beleg oder GLS-Haftungsbestätigung bezeichnet.
 - [ ] GLS bestätigt schriftlich, ob eine zusätzliche App-/Scannerintegration zulässig und technisch unterstützt ist.
+
+
+## Neue Status-Sicherheitsprüfung in Version 1.48
+
+- [ ] Einen ausgehenden Vorgang bis zur Paketdienst-Übergabe fortschreiben.
+- [ ] Dialogtext kontrollieren: TRAKUNA erklärt, dass keine Carrier-Bestätigung empfangen wird und nur nach abgeschlossener Quittierung im Originalsystem lokal dokumentiert werden soll.
+- [ ] Nach Bestätigung kontrollieren: Status lautet ausdrücklich „Lokal als an Paketdienst übergeben dokumentiert“ und nicht „Carrier-Buchung bestätigt“.

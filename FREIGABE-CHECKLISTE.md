@@ -1,22 +1,22 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.47 (versionCode 48) · erfolgreicher CI-Lauf 45248166890
+Stand: App-Version 1.48 (versionCode 49) · erfolgreicher CI-Lauf 45250580288
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45248166890 für Version 1.47 (versionCode 48) erfolgreich – Carrier-Auswahl und getrennte Betriebssoftware-Zuordnung für DPD/GLS/Hermes/UPS
-- [x] Unit-Tests und Android-Lint für Version 1.47 erfolgreich
-- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.47 als Artefakt bereitgestellt
+- [x] CI-Lauf 45250580288 für Version 1.48 (versionCode 49) erfolgreich – Carrier-Auswahl und getrennte Betriebssoftware-Zuordnung für DPD/GLS/Hermes/UPS
+- [x] Unit-Tests und Android-Lint für Version 1.48 erfolgreich
+- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.48 als Artefakt bereitgestellt
 - [ ] Release-Version und Versionsnummer fachlich geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Update von der vorherigen freigegebenen Version getestet
 
-Aktueller Build 1.47: https://github.com/mouzzlii/Fuck/actions/runs/45248166890
-APK-SHA-256: `6ac5eedac4bc130da3cb001f8bf3388b29dc2319fa39581b5031db5fbf968463`
+Aktueller Build 1.47: https://github.com/mouzzlii/Fuck/actions/runs/45250580288
+APK-SHA-256: `d7ad261d2f29860a8e7d3e07c7365bad4c23118cc0064dc43c4ec17d8c6a71cc`
 
-ZIP-Artefakt erstellt am 23.11.2026, 19:23 UTC; Ablauf am 07.12.2026, 19:23 UTC. Produktionssignierung ist weiterhin offen.
+ZIP-Artefakt erstellt am 23.11.2026, 19:37 UTC; Ablauf am 07.12.2026, 19:37 UTC. Produktionssignierung ist weiterhin offen.
 
 ## B. Geräte- und Scannerabnahme
 
@@ -105,3 +105,10 @@ Keine Passwörter, API-Schlüssel oder Kundendaten in GitHub-Issues oder Chat-Na
 - [ ] Vorgesehene GLS-Quittungen und Übergabebelege sind für den Standort dokumentiert.
 - [ ] TRAKUNA unterscheidet strikt zwischen lokalem Scan und offizieller GLS-Quittung/Bestätigung.
 - [ ] GLS hat die parallele App-/Scannerintegration schriftlich freigegeben.
+
+
+### Lokale Paketdienst-Übergabe
+
+- [x] TRAKUNA kennzeichnet die Übergabe an DPD/GLS/Hermes/UPS ausdrücklich nur als lokale Dokumentation.
+- [ ] Vor Ort prüfen, dass die Original-Carrier-App bzw. der Partner-Scanner die Übergabe tatsächlich quittiert.
+- [ ] Schriftliche Schnittstellenfreigabe und technische Rückmeldung pro Carrier nachweisen.
