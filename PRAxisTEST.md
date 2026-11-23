@@ -53,6 +53,29 @@ Diesen Ablauf mit einer erfundenen Testnummer durchführen, nicht mit einer echt
 **Fehlerprotokoll:** Wenn nach Schritt 3 nichts sichtbar passiert, notieren, ob der Dialog offen bleibt, ob eine Meldung direkt im Dialog erscheint und ob der Vorgang nach erneutem Öffnen der Liste vorhanden ist. Keine zweite Buchung durch wiederholtes Tippen erzwingen, bevor der Bestand geprüft wurde.
 
 
+
+## 2b. Pflicht-Testmatrix der vier Start-Paketdienste
+
+Jeder Paketdienst wird getrennt mit freigegebenen Testetiketten bzw. fiktiven Testnummern geprüft. Vorhandene Carrier-Handgeräte, Apps und Drucker bleiben unverändert.
+
+| Paketdienst | Auswahl in TRAKUNA | Scan-/Eingabetest | Partner-/Gerätetest | Freigabestatus |
+|---|---|---|---|---|
+| DPD | DPD im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische DPD-Erkennung voraussetzen | Bestehendes DPD-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
+| GLS | GLS im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische GLS-Erkennung voraussetzen | Bestehendes GLS-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
+| Hermes | Hermes im Schnellauswahlmenü | MC3090BT-Barcode und manuelle Nummer mit freigegebenen Testdaten prüfen | Bestehenden Hermes-Ablauf und Drucker nicht verändern; offizielle Schnittstelle und Betreiberfreigabe sind Pflicht | Offen – Pilotblocker |
+| UPS | UPS im Schnellauswahlmenü | Bekannte 1Z-Format-Erkennung nur als Hinweis prüfen; zusätzlich manuelle Nummern testen | Hardware, Shopsoftware, Drucker und offizieller Integrationsweg erst erheben | Offen |
+
+Für **jeden** der vier Paketdienste müssen mindestens diese Fälle protokolliert werden:
+
+1. Manuelle Auswahl des richtigen Paketdienstes; Auswahl bleibt bei der lokalen Erfassung erhalten.
+2. Eine Testnummer scannen und vor dem Speichern sichtbar kontrollieren.
+3. Eine absichtlich falsche Paketdienst-Auswahl korrigieren; keine automatische Buchung darf ausgelöst werden.
+4. Dieselbe Testnummer erneut erfassen; aktive Duplikate müssen blockiert werden.
+5. Partner-App nicht installiert bzw. nicht integrationsfähig: TRAKUNA muss ehrlich melden, dass keine Buchung bestätigt wurde.
+6. Annahme, Kundenausgabe, Retoure und Übergabe an den Zusteller nur dann als abgeschlossen markieren, wenn der lokale Testablauf dies ausdrücklich vorsieht bzw. das autorisierte Partnersystem die Aktion bestätigt.
+
+Die Carrier-Schnellauswahl in Version 1.45 ist **keine** offizielle Integration. Ein grüner CI-Build ersetzt keinen dieser Gerätetests und keine schriftliche Freigabe.
+
 ## 3. Sicherheits- und Fehlerprüfungen
 
 - Vorgangshistorie nach der Erfassung öffnen: Der Eintrag „Vorgang angelegt“ muss mit dem korrekten Datum und der Uhrzeit erscheinen.
