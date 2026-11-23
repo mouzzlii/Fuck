@@ -6,8 +6,8 @@ TRAKUNA 1.49 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 - Neue direkte Carrier-Auswahl für die vier Start-Prioritäten: **DPD, GLS, Hermes und UPS**.
 - Der Auswahlknopf kennzeichnet den lokalen Vorgang; er führt keine externe Buchung aus.
-- CI-Lauf 45263992780: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45263992780). Unit-Tests, Android-Lint und Debug-APK-Erstellung erfolgreich.
-- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `7bb30957a7bd288c6e9a2748b773d76b46d3229425c0725f738572685e0fd8d3`. ZIP-Artefakt-SHA-256: `e009c61993301453c8ee12617f7ac7859fb30ea05205ab7e31baf23291f2ea3a`. Das ZIP-Artefakt wurde am 23.11.2026, 20:55 UTC erstellt und läuft am 07.12.2026, 20:55 UTC ab.
+- CI-Lauf 45265965503: [erfolgreicher Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45265965503). Unit-Tests, Android-Lint, Manifest-Sicherheitsprüfungen und Debug-APK-Erstellung erfolgreich.
+- Das aktuelle Debug-APK ist kein produktiv signiertes Release. APK-SHA-256: `2608aaa39ac9d8e1e38cecadc219e75f733bd868c36064fa6fd43cb7a94bbc54`. ZIP-Artefakt-SHA-256: `92fe7d6602252f099e87d01a1c030abda0132d25bdab2c00fd1bbffcad33a153`. Das ZIP-Artefakt wurde am 23.11.2026, 21:06 UTC erstellt und läuft am 07.12.2026, 21:06 UTC ab.
 
 **Wichtig:** Version 1.49 ist ein Debug-Testpaket, kein produktiv signiertes Release. Vor einem Update vorhandene Daten sichern und die App nicht deinstallieren. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
@@ -17,7 +17,7 @@ TRAKUNA 1.49 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
 - WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden noch nicht gesucht.
 - DataWedge-Empfangscode ist vorhanden; das Profil muss auf dem jeweiligen Zebra-Gerät eingerichtet und vor Ort getestet werden.
-- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.49 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das vorhandene Hermes-Handgerät MC3090BT läuft laut Zebra-Dokumentation mit Windows CE 5.0 bzw. Windows Mobile 6.1 und kann die Android-App (Mindestversion Android 8/API 26) nicht ausführen.** Für TRAKUNA-Hermes-Tests wird deshalb ein separates, vom Betreiber/Carrier freigegebenes Android-Gerät benötigt; das bestehende Hermes-System bleibt unangetastet.
+- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.49 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das bisherige Hermes-Handgerät MC3090BT ist zu alt und wird laut Betreiber nächste Woche durch ein neues Gerät ersetzt.** Modell, Betriebssystem, Scanner, Drucker und freigegebene Integrationsmöglichkeiten des Nachfolgers sind noch unbekannt. Bis zur Ankunft bleibt das bestehende Hermes-System unangetastet; danach wird das neue Gerät zunächst nur inventarisiert und geprüft, ohne Einstellungen oder den laufenden Hermes-Ablauf eigenmächtig zu verändern.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
 ## Release-Build
