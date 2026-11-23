@@ -289,6 +289,8 @@ class ShipmentStore(context: Context) {
         if (index < 0) return false
         val current = records[index]
         if ((current.archivedAt != null) == archive) return false
+        if (archive && !ShipmentRules.isTerminalStatus(current.status)) return false
+        if (!archive && ShipmentRules.findActiveDuplicate(records, current.trackingNumber) != null) return false
         val changedAt = ShipmentRules.nextUpdateTimestamp(current.updatedAt, System.currentTimeMillis())
         val updated = current.copy(
             updatedAt = changedAt,
@@ -345,7 +347,7 @@ class ShipmentStore(context: Context) {
             require(raw.toByteArray(Charsets.UTF_8).size <= MAX_BACKUP_BYTES) { "Sicherungsdatei ist zu groß oder beschädigt." }
             val root = JSONObject(raw)
             require(root.optString("format") == BACKUP_FORMAT) { "Datei ist keine TRAKUNA-Sicherung." }
-            require(root.optInt("schemaVersion", -1) == BACKUP_SCHEMA_VERSION) { "Sicherungsversion wird nicht unterstützt." }
+            require(root.optInt("schemaVersion", -1) in 1..BACKUP_SCHEMA_VERSION) { "Sicherungsversion wird nicht unterstützt." }
             require(root.optLong("exportedAt", -1L) > 0L) { "Sicherungszeitpunkt fehlt oder ist ungültig." }
             val array = root.optJSONArray("records") ?: error("Sicherungsdatei enthält keine Vorgangsliste.")
             require(root.optInt("recordCount", -1) == array.length()) { "Anzahl der Einträge stimmt nicht mit dem Sicherungskopf überein." }
@@ -510,7 +512,7 @@ class ShipmentStore(context: Context) {
 
     companion object {
         private const val BACKUP_FORMAT = "TRAKUNA_BACKUP"
-        private const val BACKUP_SCHEMA_VERSION = 1
+        private const val BACKUP_SCHEMA_VERSION = 2
         private const val PREFS = "trakuna_shipments"
         // Legacy plaintext key used only for one-time migration.
         private const val KEY_RECORDS = "records_v1"
@@ -772,7 +774,7 @@ object ShipmentRules {
         records.firstOrNull {
             it.archivedAt == null &&
                 it.trackingNumber.equals(trackingNumber, ignoreCase = true) &&
-                it.status !in setOf(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentStatus.HANDED_TO_CARRIER)
+                !isTerminalStatus(it.status)
         }
 
     /**
@@ -782,10 +784,13 @@ object ShipmentRules {
      */
     fun hasNoDuplicateActiveShipments(records: List<ShipmentRecord>): Boolean {
         val activeKeys = records
-            .filter { it.archivedAt == null && it.status !in setOf(ShipmentStatus.HANDED_TO_CUSTOMER, ShipmentStatus.HANDED_TO_CARRIER) }
+            .filter { it.archivedAt == null && !isTerminalStatus(it.status) }
             .map { it.trackingNumber.uppercase() to it.flow }
         return activeKeys.distinct().size == activeKeys.size
     }
+
+    fun isTerminalStatus(status: ShipmentStatus): Boolean =
+        status == ShipmentStatus.HANDED_TO_CUSTOMER || status == ShipmentStatus.HANDED_TO_CARRIER
 
     fun isStatusValidForFlow(flow: ShipmentFlow, status: ShipmentStatus): Boolean = when (flow) {
         ShipmentFlow.INCOMING_FOR_CUSTOMER -> status in setOf(
