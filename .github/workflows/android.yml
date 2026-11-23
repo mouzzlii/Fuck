@@ -76,6 +76,23 @@ jobs:
       - name: APK bauen
         run: gradle --no-daemon assembleDebug
 
+      - name: Herkunft zusätzlicher Manifest-Berechtigungen diagnostizieren
+        if: always()
+        shell: bash
+        run: |
+          report="app/build/outputs/logs/manifest-merger-debug-report.txt"
+          if [ -f "$report" ]; then
+            echo "=== Herkunft der INTERNET-Berechtigung im Manifest-Merger-Bericht ==="
+            grep -n -B 8 -A 8 "android.permission.INTERNET" "$report" || true
+          else
+            echo "Kein Manifest-Merger-Bericht gefunden."
+          fi
+          packaged="app/build/intermediates/packaged_manifests/debug/processDebugManifestForPackage/AndroidManifest.xml"
+          if [ -f "$packaged" ]; then
+            echo "=== Tatsächliche Berechtigungen im Paket-Manifest ==="
+            grep -oE '<uses-permission[^>]+' "$packaged" || true
+          fi
+
       - name: Zusammengeführtes Android-Manifest prüfen
         shell: bash
         run: |
