@@ -63,6 +63,8 @@ class MainActivity : ComponentActivity() {
             var showScanner by remember { mutableStateOf(false) }
             var status by remember { mutableStateOf("Sendungsnummer scannen oder manuell eingeben.") }
             var showPartnerPicker by remember { mutableStateOf(false) }
+            var partnerPickerCarrier by remember { mutableStateOf("DPD") }
+            var showPartnerCarrierMenu by remember { mutableStateOf(false) }
             var showAllApps by remember { mutableStateOf(false) }
             var installedApps by remember { mutableStateOf<List<PartnerCandidate>>(emptyList()) }
             var showShipmentLedger by remember { mutableStateOf(false) }
@@ -277,19 +279,35 @@ class MainActivity : ComponentActivity() {
                         ) { Text("Paketshop-Sendungen verwalten") }
                         OutlinedButton(
                             onClick = {
+                                partnerPickerCarrier = PartnerAppConfig.priorityCarriers.firstOrNull {
+                                    it == ShipmentRules.normalizeCarrierLabel(carrierOverride)
+                                } ?: "DPD"
                                 installedApps = findLaunchableApps(context)
                                 showAllApps = false
                                 showPartnerPicker = true
                             },
                             modifier = Modifier.fillMaxWidth()
-                        ) { Text("Betriebssoftware auf diesem Gerät finden") }
-                        Text(
-                            context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-                                .getString("partner_label", null)?.let { "Ausgewählte Betriebssoftware: $it" }
-                                ?: "Noch keine Betriebssoftware ausgewählt",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Forest
-                        )
+                        ) { Text("Betriebssoftware pro Paketdienst zuordnen") }
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            val partnerPrefs = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
+                            PartnerAppConfig.priorityCarriers.forEach { carrier ->
+                                val label = partnerPrefs.getString("partner_label_$carrier", null)
+                                Text(
+                                    "$carrier: ${label ?: "noch nicht zugeordnet"}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Forest
+                                )
+                            }
+                            if (PartnerAppConfig.priorityCarriers.none { partnerPrefs.contains("partner_package_$it") }) {
+                                partnerPrefs.getString("partner_label", null)?.let {
+                                    Text(
+                                        "Alte gemeinsame Zuordnung vorhanden: $it. Sie gilt vorübergehend für alle vier Paketdienste, bis Einzelzuordnungen gespeichert werden.",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
                         Text(status, style = MaterialTheme.typography.bodyMedium, color = Forest)
                         if (showShipmentLedger) {
                             AlertDialog(
@@ -600,40 +618,66 @@ class MainActivity : ComponentActivity() {
                         }
                         if (showPartnerPicker) {
                             val candidates = if (showAllApps) installedApps else installedApps.filter { it.looksLikeCarrierApp }
+                            val partnerPrefs = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
+                            val currentPackageKey = "partner_package_$partnerPickerCarrier"
+                            val currentLabelKey = "partner_label_$partnerPickerCarrier"
                             AlertDialog(
                                 onDismissRequest = { showPartnerPicker = false },
-                                title = { Text("Betriebssoftware auswählen") },
+                                title = { Text("Betriebssoftware für $partnerPickerCarrier zuordnen") },
                                 text = {
                                     Column(modifier = Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                        Text(if (candidates.isEmpty()) "Keine eindeutig erkennbare Paketdienst-App gefunden. Du kannst alle installierten Apps anzeigen." else "Wähle die Paketshop-/Betriebssoftware aus.")
+                                        Box {
+                                            OutlinedButton(
+                                                onClick = { showPartnerCarrierMenu = true },
+                                                modifier = Modifier.fillMaxWidth()
+                                            ) { Text("Paketdienst: $partnerPickerCarrier") }
+                                            DropdownMenu(
+                                                expanded = showPartnerCarrierMenu,
+                                                onDismissRequest = { showPartnerCarrierMenu = false }
+                                            ) {
+                                                PartnerAppConfig.priorityCarriers.forEach { carrier ->
+                                                    DropdownMenuItem(
+                                                        text = { Text(carrier) },
+                                                        onClick = {
+                                                            partnerPickerCarrier = carrier
+                                                            showPartnerCarrierMenu = false
+                                                            showAllApps = false
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        Text("Wähle die installierte App, die zu diesem Paketdienst gehört. Die Zuordnung wird nur auf diesem Gerät gespeichert.")
+                                        Text(if (candidates.isEmpty()) "Keine passende Paketdienst-App gefunden. Du kannst alle installierten Apps anzeigen." else "Installierte Apps:")
                                         candidates.take(30).forEach { app ->
                                             TextButton(onClick = {
-                                                val saved = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).edit()
-                                                    .putString("partner_package", app.packageName)
-                                                    .putString("partner_label", app.label)
+                                                val saved = partnerPrefs.edit()
+                                                    .putString(currentPackageKey, app.packageName)
+                                                    .putString(currentLabelKey, app.label)
+                                                    .remove("partner_package")
+                                                    .remove("partner_label")
                                                     .commit()
                                                 if (saved) {
-                                                    status = "Betriebssoftware ${app.label} wurde dauerhaft gespeichert. Die Sendungsnummer wird beim nächsten Übergabeversuch mitgegeben."
+                                                    status = "$partnerPickerCarrier wurde der App ${app.label} zugeordnet. Eine automatische Übernahme oder Buchung ist dadurch nicht bestätigt."
                                                     showPartnerPicker = false
                                                 } else {
-                                                    status = "Auswahl konnte nicht dauerhaft gespeichert werden. Bitte Gerätespeicher prüfen und erneut versuchen."
+                                                    status = "Zuordnung konnte nicht dauerhaft gespeichert werden. Bitte Gerätespeicher prüfen und erneut versuchen."
                                                 }
                                             }, modifier = Modifier.fillMaxWidth()) {
                                                 Text("${app.label}  ·  ${app.packageName}")
                                             }
                                         }
                                         if (!showAllApps) TextButton(onClick = { showAllApps = true }) { Text("Alle installierten Apps anzeigen") }
-                                        if (context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).getString("partner_package", null) != null) {
+                                        if (partnerPrefs.getString(currentPackageKey, null) != null) {
                                             TextButton(onClick = {
-                                                val cleared = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE).edit()
-                                                    .remove("partner_package")
-                                                    .remove("partner_label")
+                                                val cleared = partnerPrefs.edit()
+                                                    .remove(currentPackageKey)
+                                                    .remove(currentLabelKey)
                                                     .commit()
-                                                status = if (cleared) "Ausgewählte Betriebssoftware wurde entfernt."
-                                                else "Auswahl konnte nicht entfernt werden. Bitte erneut versuchen."
-                                                if (cleared) showPartnerPicker = false
+                                                status = if (cleared) "Zuordnung für $partnerPickerCarrier wurde entfernt."
+                                                else "Zuordnung konnte nicht entfernt werden. Bitte erneut versuchen."
                                             }, modifier = Modifier.fillMaxWidth()) {
-                                                Text("Gespeicherte Auswahl entfernen")
+                                                Text("Zuordnung für $partnerPickerCarrier entfernen")
                                             }
                                         }
                                     }
@@ -745,11 +789,21 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
     }.isSuccess
     val clipboardMessage = if (copied) "Sendungsnummer zusätzlich kopiert." else "Zwischenablage nicht verfügbar; Nummer bleibt im TRAKUNA-Cache."
 
-    val packageName = PartnerAppConfig.resolvePackage(carrier, preferences.getString("partner_package", null))
+    val carrierSuffix = PartnerAppConfig.preferenceSuffixForCarrier(carrier)
+    val hasCarrierSpecificMappings = PartnerAppConfig.priorityCarriers.any {
+        preferences.contains("partner_package_$it")
+    }
+    val carrierSpecificPackage = carrierSuffix?.let { preferences.getString("partner_package_$it", null) }
+    val packageName = carrierSpecificPackage ?: if (!hasCarrierSpecificMappings) {
+        preferences.getString("partner_package", null)
+    } else {
+        null
+    }
     if (packageName.isNullOrBlank()) {
+        val carrierLabel = carrier?.takeIf { it.isNotBlank() } ?: "den Paketdienst"
         return HandoffResult(
             "Nummer $number ist im TRAKUNA-Cache gesichert. $clipboardMessage " +
-                "Wähle zuerst die Betriebssoftware über die Schaltfläche oben aus."
+                "Ordne zuerst eine eigene Betriebssoftware für $carrierLabel zu."
         )
     }
 
