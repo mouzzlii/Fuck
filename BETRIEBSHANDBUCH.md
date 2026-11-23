@@ -9,7 +9,8 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 1. Den [erfolgreichen Android-Build 45291370834 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45291370834).
 2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
-4. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
+4. Die Prüfsumme im entpackten Ordner mit `sha256sum -c SHA256SUMS.txt` prüfen; erwartet wird `app-debug.apk: OK`. Unter Windows kann alternativ `Get-FileHash .\\app-debug.apk -Algorithm SHA256` mit dem oben genannten APK-Hash verglichen werden.
+5. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
 6. TRAKUNA starten und zuerst mit erfundenen Testdaten prüfen.
 
 **Prüfsummen des bereitgestellten Testpakets**
