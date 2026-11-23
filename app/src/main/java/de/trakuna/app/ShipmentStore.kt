@@ -311,7 +311,7 @@ class ShipmentStore(context: Context) {
         val index = records.indexOfFirst { it.id == id }
         // Enforce archive-only deletion in the storage layer as well as in the UI.
         // This protects active parcel records if a future screen or caller invokes remove().
-        if (index < 0 || records[index].archivedAt == null) return false
+        if (index < 0 || !ShipmentRules.canPermanentlyDelete(records[index])) return false
         records.removeAt(index)
         return persist(records)
     }
@@ -799,6 +799,9 @@ object ShipmentRules {
             .map { it.trackingNumber.uppercase() to it.flow }
         return activeKeys.distinct().size == activeKeys.size
     }
+
+    /** Permanent deletion is allowed only after explicit archival. */
+    fun canPermanentlyDelete(record: ShipmentRecord): Boolean = record.archivedAt != null
 
     fun isTerminalStatus(status: ShipmentStatus): Boolean =
         status == ShipmentStatus.HANDED_TO_CUSTOMER || status == ShipmentStatus.HANDED_TO_CARRIER
