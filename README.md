@@ -130,7 +130,7 @@ TRAKUNA 1.43 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Zebra DataWedge-Intent-Eingang für integrierte Zebra-Hardware-Scanner (nach einmaliger Profilkonfiguration; siehe PARTNER_INTEGRATION.md).
 - Kamera-Scan für gängige 1D-Barcodes und QR-/2D-Codes (Google ML Kit).
 - Manuelle Eingabe von Sendungsnummern als Alternative zum Kamerascan.
-- Automatische Format-Hinweise sind derzeit nur für einige eindeutige UPS-, Österreichische-Post- und DHL-Muster hinterlegt. DPD und GLS können manuell eingetragen werden; die Erkennung ist generell unverbindlich und muss mit echten Labels geprüft werden.
+- Automatische Format-Hinweise sind derzeit nur für einige eindeutige UPS-, Österreichische-Post- und DHL-Muster hinterlegt. DPD, GLS und Hermes können manuell eingetragen werden; eine automatische Hermes-Erkennung ist noch nicht umgesetzt. Alle Erkennungshinweise sind unverbindlich und müssen mit echten Labels geprüft werden.
 - Zwischenspeicherung der letzten Sendungsnummer und Kopie in die Zwischenablage.
 - Auswahl einer installierten Betriebssoftware (dauerhaft gespeichert, mit Möglichkeit zum Entfernen/Wechseln) und Übergabeversuch per Android-Intent; die lokale Zwischenspeicherung wird vor dem App-Wechsel bestätigt, ein nicht verfügbarer Clipboard-Dienst blockiert den Ablauf nicht und die Zwischenablage wird auf Android 13+ als sensibel markiert.
 - Lokale Paketshop-Liste mit Eingang für Kunden, Annahme von Kundensendungen und Retouren.
