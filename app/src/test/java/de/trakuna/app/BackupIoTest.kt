@@ -14,6 +14,22 @@ class BackupIoTest {
     }
 
     @Test
+    fun acceptsInputExactlyAtByteLimitIncludingMultibyteCharacters() {
+        val value = "Ö"
+        val bytes = value.toByteArray(Charsets.UTF_8)
+        assertEquals(2, bytes.size)
+        assertEquals(value, readBoundedUtf8(ByteArrayInputStream(bytes), bytes.size))
+    }
+
+    @Test
+    fun acceptsEmptyInputOnlyWhenZeroByteLimitAllowsIt() {
+        assertEquals("", readBoundedUtf8(ByteArrayInputStream(byteArrayOf()), 0))
+        assertThrows(IllegalArgumentException::class.java) {
+            readBoundedUtf8(ByteArrayInputStream(byteArrayOf(0x41)), 0)
+        }
+    }
+
+    @Test
     fun rejectsInputLargerThanLimit() {
         val input = ByteArrayInputStream("12345".toByteArray(Charsets.UTF_8))
         assertThrows(IllegalArgumentException::class.java) { readBoundedUtf8(input, 4) }
