@@ -9,7 +9,8 @@ Quelle: Vor-Ort-Angaben des Paketshop-Mitarbeiters und Fotos/Ablesungen am Herme
 |---|---|---|---|---|
 | GLS | Zebra TC26 (aus Geräteansicht/Gehäusemerkmalen und 4G-Anzeige abgeleitet; Typenschild/Modellnummer noch nicht gegengeprüft) | Zebra CD421 (Bezeichnung vom Etikettendrucker laut Betreiber) | Bluetooth zwischen Handgerät und Drucker | V.7.0.1632 (genaue Zuordnung innerhalb des GLS-Systems noch offen) |
 | DPD | Zebra TC26 (aus Geräteansicht/Gehäusemerkmalen und 4G-Anzeige abgeleitet; Typenschild/Modellnummer noch nicht gegengeprüft) | Zebra CD420 (Bezeichnung vom Etikettendrucker laut Betreiber) | Bluetooth zwischen Handgerät und Drucker | V.1.16.11 (genaue Zuordnung innerhalb des DPD-Systems noch offen) |
-| Hermes | Symbol/Zebra MC3090BT, eigenständiges Handterminal | Eigener Hermes-Drucker; Modell noch offen | Eigenständiger Hermes-Geräteablauf; Druckeranschluss noch nicht verifiziert | V.2.1.1.0 (Hermes-Anwendung laut Vor-Ort-Angabe) |
+| Hermes | Symbol/Zebra MC3090BT| UPS | Handgerät/Arbeitsplatz noch nicht erhoben | Drucker noch nicht erhoben | Verbindung noch nicht erhoben | Anwendungsversion noch nicht erhoben |
+, eigenständiges Handterminal | Eigener Hermes-Drucker; Modell noch offen | Eigenständiger Hermes-Geräteablauf; Druckeranschluss noch nicht verifiziert | V.2.1.1.0 (Hermes-Anwendung laut Vor-Ort-Angabe) |
 
 ### Hermes-Handgerät – sichtbare/abgelesene Informationen
 
