@@ -127,3 +127,31 @@ DataWedge sendet damit Intent-Daten nur an das festgelegte Paket und prüft zus�
 TRAKUNA liest den Scan nur ein, solange die App im Vordergrund aktiv ist, und zeigt ihn zur Prüfung im Sendungsnummernfeld an. Broadcasts während die App im Hintergrund ist, werden ignoriert. Auch ein Kamera-Scan löst keine automatische Buchung oder Partnerübergabe aus. Der Bediener muss die Nummer prüfen und die Übergabe bewusst starten. So wird vermieden, dass ein zufälliger Scan sofort einen betrieblichen Vorgang auslöst.
 
 **Sicherheitsgrenze:** Die DataWedge-Allowlist und Signaturprüfung müssen im Zebra-Profil tatsächlich aktiviert sein. TRAKUNA kann nicht erkennen oder erzwingen, ob ein Administrator diese Geräteeinstellung vorgenommen hat. Ohne korrekt eingerichtete Component Information bleibt der dynamische Android-Empfänger grundsätzlich durch andere Apps auf demselben Gerät nachahmbar. Eingehende Werte sind daher weiterhin nicht vertrauenswürdige Eingaben und müssen vor jeder Buchung geprüft werden.
+
+
+## Hermes – Voraussetzungen für die konkrete Paketshop-Integration
+
+Hermes ist für den vorgesehenen Pilot-Paketshop eine Pflichtanforderung. In der aktuellen App kann Hermes als Paketdienst manuell eingetragen werden; eine automatische Hermes-Format-Erkennung, Hermes-Buchung oder direkte Hermes-Schnittstelle ist **noch nicht umgesetzt**.
+
+Vor einer technischen Implementierung müssen Betreiber bzw. Hermes-Ansprechpartner folgende Informationen bereitstellen oder bestätigen:
+
+1. Welche Hermes-Paketshop-Leistungen führt dieser Standort aus (Paketannahme, Kundenausgabe, Retouren, Versandlabel/Frankierung, Übergabe an Fahrer)?
+2. Wie heißt die aktuell verwendete Hermes-Paketshop-Software und welche Version läuft darauf?
+3. Wer ist Hersteller bzw. technischer Support dieser Software?
+4. Gibt es eine offiziell freigegebene Android-Integration, Intent-Schnittstelle, API oder ein SDK? Bitte technische Dokumentation und Freigabebedingungen nennen.
+5. Gibt es Testzugänge, Testsendungen und eine Sandbox?
+6. Welche Barcode-Symbologien und konkreten Hermes-Label-Beispiele müssen unterstützt werden? Beispiele bitte ohne echte Kundendaten bereitstellen.
+7. Welche Rückmeldungen sind nach einer Annahme, Ausgabe oder Retoure erforderlich (Vorgangs-ID, Status, Quittung)?
+8. Welche Geräte-/Scanner-Modelle und Zebra-DataWedge-Konfiguration sind im Standort im Einsatz?
+9. Welche vertraglichen, Datenschutz- und Sicherheitsvorgaben gelten für eine zusätzliche Software?
+
+**Keine Schnittstelle erraten:** Ohne offizielle Dokumentation und Freigabe darf TRAKUNA keine Hermes-Buchung, Sendungsannahme oder Statusmeldung behaupten. Der erste Test erfolgt mit fiktiven Sendungsnummern und parallel zum bestehenden Hermes-System, sofern der Betreiber dies genehmigt.
+
+### Abnahmekriterien für Hermes
+
+- Hermes kann als Paketdienst eindeutig manuell ausgewählt werden.
+- Unterstützte Hermes-Barcodes werden mit realen, freigegebenen Testetiketten am konkreten Zebra-Gerät eingelesen.
+- Die Sendungsnummer wird korrekt angezeigt und kann vor dem Speichern geprüft werden.
+- Die vier für den Standort benötigten Abläufe werden einzeln getestet.
+- Wiederholte Scans erzeugen keine unbeabsichtigten Doppelvorgänge.
+- Eine offizielle Buchung gilt erst dann als erfolgreich, wenn das freigegebene Hermes-System sie ausdrücklich bestätigt.
