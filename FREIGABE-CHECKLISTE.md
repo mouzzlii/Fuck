@@ -9,7 +9,7 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [x] CI-Lauf 45273220299 für Version 1.50 (versionCode 51) erfolgreich – Archivierung abgeschlossener Vorgänge, Wiederherstellung, Backup-Schema 2
 - [x] Unit-Tests und Android-Lint für Version 1.50 erfolgreich
 - [x] Debug-APK und SHA-256-Prüfsumme für Version 1.50 als Artefakt bereitgestellt
-- [x] Archivierungs- und Wiederherstellungslogik für abgeschlossene Vorgänge durch Unit-Tests abgedeckt
+- [x] Archivierungsregeln, Archivstatus-Validierung und Historienereignisse durch Unit-Tests abgedeckt
 - [ ] Archivieren/Wiederherstellen und Backup-Restore auf einem echten Android-Gerät praktisch geprüft
 - [ ] Release-Version und Versionsnummer fachlich geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
