@@ -39,6 +39,9 @@ class EncryptedStorageInstrumentedTest {
         )
         assertTrue(result is ShipmentUpdate.Saved)
         val saved = (result as ShipmentUpdate.Saved).record
+        val backup = store.exportBackupJson()
+        assertTrue(backup.toByteArray(Charsets.UTF_8).size <= ShipmentStore.MAX_BACKUP_BYTES)
+        assertTrue(store.validateBackup(backup) is BackupValidation.Valid)
 
         val preferences = context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE)
         val persistedText = preferences.all.values.filterIsInstance<String>().joinToString("|")
