@@ -162,7 +162,7 @@ class ShipmentStore(context: Context) {
         val encrypted = payload.copyOfRange(GCM_IV_BYTES, payload.size)
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.DECRYPT_MODE, encryptionKey(), javax.crypto.spec.GCMParameterSpec(128, iv))
-        return String(cipher.doFinal(encrypted), Charsets.UTF_8)
+        return decodeStrictUtf8(cipher.doFinal(encrypted))
     }
 
     @Synchronized
