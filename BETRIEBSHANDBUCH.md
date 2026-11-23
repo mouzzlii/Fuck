@@ -17,9 +17,9 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 - APK-SHA-256: `c6d787d3cea6a5e0359bab8cc2f1a9b6759429cbea42dc1e2baf79b916e94965`
 - ZIP-SHA-256: `9bfd1ce4fe02c947abfcba6df8836844a2d810b5ac5c3aeba0e51ece808179cb`
 - Erstellt: 23.11.2026, 23:43 UTC
-- Artefakt verfügbar bis: 07.12.2026, 22:40 UTC
+- Artefakt verfügbar bis: 07.12.2026, 23:43 UTC
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die bisherigen Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstests wurden noch nicht auf einem Emulator oder echten Gerät ausgeführt. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
+Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstestfälle wurden im aktuellen CI-Lauf nur kompiliert, nicht auf einem Emulator oder echten Gerät ausgeführt. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
