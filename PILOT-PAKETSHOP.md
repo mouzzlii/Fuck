@@ -14,7 +14,7 @@ Dieses Dokument bündelt die Voraussetzungen für einen kontrollierten Pilotbetr
 Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TRAKUNA-Oberfläche bietet dafür eine direkte manuelle Auswahl in dieser Reihenfolge. Die Auswahl dient ausschließlich der Zuordnung des lokalen Vorgangs. Sie ersetzt keine Carrier-Authentifizierung, Buchung, Annahmebestätigung oder Label-Erstellung.
 
 - DPD/GLS: TC26-/DataWedge-Scan und bestehende Bluetooth-Druckabläufe getrennt und ohne Eingriff in die Carrier-Systeme testen.
-- Hermes: MC3090BT-Ablauf erhalten; das Gerät ist laut Zebra-Dokumentation ein Windows-CE-/Windows-Mobile-Gerät und nicht mit der Android-App kompatibel. Für TRAKUNA ist ein separates, freigegebenes Android-Gerät erforderlich. Offizielle Hermes-Anbindung vor Produktivpilot klären.
+- Hermes: Das bisherige MC3090BT ist laut Betreiber zu alt und wird nächste Woche durch ein neues Gerät ersetzt. Das bestehende Hermes-System bis zur regulären Umstellung unverändert lassen. Nach Ankunft des Nachfolgers zuerst Modell, Betriebssystem, Hermes-App, Scanner und Drucker erfassen; anschließend nur mit Freigabe einen Integrationsweg prüfen.
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
@@ -103,7 +103,9 @@ Für jede Paketshop-Software bzw. jeden Carrier sind folgende Informationen erfo
 Produktivbetrieb bleibt gesperrt, bis alle zutreffenden Punkte nachgewiesen sind:
 
 - [ ] Betreiber und konkrete Paketshop-Software identifiziert
-- [ ] Für Hermes ein separates kompatibles Android-Gerät und ein sicherer Parallelbetrieb zum MC3090BT festgelegt
+- [ ] Neues Hermes-Handgerät nach Ankunft vollständig inventarisiert (Modell, Betriebssystem, Hermes-App, Scanner, Drucker und Verbindung)
+- [ ] Betreiber-/Hermes-Freigabe für einen TRAKUNA-Test auf dem neuen Hermes-Gerät eingeholt
+- [ ] Sicherer Parallelbetrieb bzw. freigegebener Umstellungsplan ohne Unterbrechung des bestehenden Hermes-Ablaufs festgelegt
 - [ ] Hermes-Schnittstelle offiziell freigegeben und abgenommen
 - [ ] Weitere benötigte Carrier-Schnittstellen einzeln geprüft
 - [ ] GLS-/DPD-Zebra-TC26-Teilenummern und Android-/MX-/DataWedge-Versionen erfasst
