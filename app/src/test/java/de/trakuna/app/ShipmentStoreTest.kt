@@ -182,7 +182,7 @@ class ShipmentStoreTest {
 
     @Test
     fun manualCarrierChoiceOverridesHintAndAmbiguousNumbersStayUnassigned() {
-        assertEquals("DHL", ShipmentRules.resolveCarrierLabel(" DHL ", "12345678901234"))
+        assertEquals("DHL Paket", ShipmentRules.resolveCarrierLabel(" DHL ", "12345678901234"))
         assertEquals("", ShipmentRules.resolveCarrierLabel("", "12345678901234"))
         assertEquals("GLS", ShipmentRules.resolveCarrierLabel("GLS", "1Z999AA10123456784"))
         assertEquals("", ShipmentRules.resolveCarrierLabel(" ", "ABC1234567"))
