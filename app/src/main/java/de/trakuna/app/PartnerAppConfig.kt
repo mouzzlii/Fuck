@@ -31,6 +31,18 @@ object PartnerAppConfig {
             else -> null
         }
 
+    /** Resolve a carrier-specific app without falling back to another carrier's app. */
+    fun resolveSelectedPackage(
+        carrier: String?,
+        carrierSpecificPackage: String?,
+        hasCarrierSpecificMappings: Boolean,
+        legacySharedPackage: String?
+    ): String? {
+        carrierSpecificPackage?.trim()?.takeIf { it.isNotEmpty() }?.let { return it }
+        if (hasCarrierSpecificMappings) return null
+        return legacySharedPackage?.trim()?.takeIf { it.isNotEmpty() } ?: packageFor(carrier)
+    }
+
     /** An explicit operator choice takes precedence over carrier defaults. */
     fun resolvePackage(carrier: String?, selectedPackage: String?): String? =
         selectedPackage?.trim()?.takeIf { it.isNotEmpty() } ?: packageFor(carrier)

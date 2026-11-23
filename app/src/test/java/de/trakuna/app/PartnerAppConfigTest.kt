@@ -21,6 +21,26 @@ class PartnerAppConfigTest {
     }
 
     @Test
+    fun carrierSpecificAppNeverFallsBackToAnotherCarriersOrLegacyApp() {
+        assertEquals(
+            "dpd.parcelshop.app",
+            PartnerAppConfig.resolveSelectedPackage("DPD", " dpd.parcelshop.app ", true, "legacy.shared.app")
+        )
+        assertNull(
+            PartnerAppConfig.resolveSelectedPackage("GLS", null, true, "legacy.shared.app")
+        )
+    }
+
+    @Test
+    fun legacySharedAppRemainsAvailableUntilFirstPerCarrierAssignment() {
+        assertEquals(
+            "legacy.shared.app",
+            PartnerAppConfig.resolveSelectedPackage("UPS", null, false, " legacy.shared.app ")
+        )
+        assertNull(PartnerAppConfig.resolveSelectedPackage("UPS", null, false, "  "))
+    }
+
+    @Test
     fun priorityCarriersHaveDistinctStablePreferenceSuffixes() {
         assertEquals(listOf("DPD", "GLS", "Hermes", "UPS"), PartnerAppConfig.priorityCarriers)
         assertEquals("DPD", PartnerAppConfig.preferenceSuffixForCarrier(" dpd "))

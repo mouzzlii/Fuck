@@ -279,8 +279,9 @@ class MainActivity : ComponentActivity() {
                         ) { Text("Paketshop-Sendungen verwalten") }
                         OutlinedButton(
                             onClick = {
+                                val suggestedCarrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
                                 partnerPickerCarrier = PartnerAppConfig.priorityCarriers.firstOrNull {
-                                    it == ShipmentRules.normalizeCarrierLabel(carrierOverride)
+                                    it == suggestedCarrier
                                 } ?: "DPD"
                                 installedApps = findLaunchableApps(context)
                                 showAllApps = false
@@ -622,7 +623,10 @@ class MainActivity : ComponentActivity() {
                             val currentPackageKey = "partner_package_$partnerPickerCarrier"
                             val currentLabelKey = "partner_label_$partnerPickerCarrier"
                             AlertDialog(
-                                onDismissRequest = { showPartnerPicker = false },
+                                onDismissRequest = {
+                                    showPartnerPicker = false
+                                    showPartnerCarrierMenu = false
+                                },
                                 title = { Text("Betriebssoftware für $partnerPickerCarrier zuordnen") },
                                 text = {
                                     Column(modifier = Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -682,7 +686,12 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                 },
-                                confirmButton = { TextButton(onClick = { showPartnerPicker = false }) { Text("Schließen") } }
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        showPartnerPicker = false
+                                        showPartnerCarrierMenu = false
+                                    }) { Text("Schließen") }
+                                }
                             )
                         }
                         Spacer(Modifier.height(16.dp))
@@ -794,11 +803,12 @@ private fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: St
         preferences.contains("partner_package_$it")
     }
     val carrierSpecificPackage = carrierSuffix?.let { preferences.getString("partner_package_$it", null) }
-    val packageName = carrierSpecificPackage ?: if (!hasCarrierSpecificMappings) {
+    val packageName = PartnerAppConfig.resolveSelectedPackage(
+        carrier,
+        carrierSpecificPackage,
+        hasCarrierSpecificMappings,
         preferences.getString("partner_package", null)
-    } else {
-        null
-    }
+    )
     if (packageName.isNullOrBlank()) {
         val carrierLabel = carrier?.takeIf { it.isNotBlank() } ?: "den Paketdienst"
         return HandoffResult(
