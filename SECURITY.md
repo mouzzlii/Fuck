@@ -20,6 +20,10 @@
 - TRAKUNA fordert im final zusammengeführten App-Manifest keine `INTERNET`-Berechtigung an. Die Barcode-Abhängigkeiten bringen eine Google-Transport-Komponente mit, deren Manifest diese Berechtigung anfordert; TRAKUNA entfernt sie ausdrücklich per Manifest-Merger-Regel (`tools:node="remove"`). Die CI kontrolliert sowohl diese Quellregel als auch das tatsächlich paketierte Manifest. WLAN/4G aktiviert keine Cloud-Synchronisierung. Es gibt keine automatische Übertragung an einen Server.
 - Unverschlüsselter Netzwerkverkehr ist standardmäßig deaktiviert.
 - Lokale Datensätze werden vor Anzeige und Wiederherstellung auf Struktur, Status, IDs und Duplikate geprüft.
+- Abgeschlossene Sendungen können lokal archiviert und wiederhergestellt werden; offene Sendungen werden durch die Geschäftsregel nicht archiviert. Archivstatus und Archivereignisse werden mit dem Datensatz verschlüsselt gespeichert.
+- Archivierte Datensätze bleiben im 500-Einträge-Limit. Endgültiges Löschen ist in der Oberfläche nur aus dem Archiv möglich und entfernt Datensatz und lokale Historie dauerhaft.
+- JSON-Backup-Schema 2 speichert den Archivzeitpunkt; Schema-1-Backups ohne Archivfeld bleiben für die Wiederherstellung lesbar. CSV enthält den Archivzeitpunkt zusätzlich zur lokalen Historie.
+- Archivierung und lokale Historie sind keine manipulationssicheren oder zentralen Audit-Nachweise.
 - Backup-Import ist auf 2 MiB begrenzt und erfordert eine Bestätigung, da der vorhandene lokale Bestand ersetzt wird.
 - Eine Wiederherstellung aus einer gültigen Sicherung ist auch bei beschädigtem lokalem verschlüsseltem Bestand möglich; der Erfolg wird erst nach bestätigtem verschlüsseltem Commit gemeldet.
 - JSON-Backups enthalten Sendungsnummern, Empfänger und Notizen und sind derzeit nicht verschlüsselt; die App weist vor dem Export darauf hin.
