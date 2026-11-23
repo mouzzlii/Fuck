@@ -143,6 +143,23 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun csvHistoryExportPreservesChronologicalEventsAndStatusTransitions() {
+        val history = listOf(
+            ShipmentEvent(0L, ShipmentEventType.CREATED, toStatus = ShipmentStatus.RECEIVED_BY_SHOP),
+            ShipmentEvent(1_000L, ShipmentEventType.STATUS_CHANGED, ShipmentStatus.RECEIVED_BY_SHOP, ShipmentStatus.READY_FOR_PICKUP),
+            ShipmentEvent(2_000L, ShipmentEventType.DETAILS_UPDATED)
+        )
+
+        assertEquals(
+            "1970-01-01T00:00:00Z CREATED (RECEIVED_BY_SHOP) | " +
+                "1970-01-01T00:00:01Z STATUS_CHANGED (RECEIVED_BY_SHOP -> READY_FOR_PICKUP) | " +
+                "1970-01-01T00:00:02Z DETAILS_UPDATED",
+            ShipmentRules.formatHistoryForExport(history)
+        )
+        assertEquals("", ShipmentRules.formatHistoryForExport(emptyList()))
+    }
+
+    @Test
     fun csvExportEscapesSpreadsheetFormulasAndQuotes() {
         assertEquals("\"'=1+1\"", ShipmentRules.csvSafeCell("=1+1"))
         assertEquals("\"'  @SUM(A1:A2)\"", ShipmentRules.csvSafeCell("  @SUM(A1:A2)"))
