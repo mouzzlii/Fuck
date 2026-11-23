@@ -53,10 +53,15 @@ jobs:
         run: |
           manifest="app/src/main/AndroidManifest.xml"
           test -f "$manifest"
-          if grep -Fq 'android.permission.INTERNET' "$manifest"; then
-            echo "FEHLER: Netzwerkberechtigung ist ohne freigegebene Backend-Architektur nicht erlaubt."
+          if grep -Fq 'android.permission.INTERNET' "$manifest" &&
+             ! grep -Eq '<uses-permission[^>]*android:name="android.permission.INTERNET"[^>]*tools:node="remove"' "$manifest"; then
+            echo "FEHLER: INTERNET darf nur als ausdrückliche Manifest-Entfernung vorkommen."
             exit 1
           fi
+          grep -Eq '<uses-permission[^>]*android:name="android.permission.INTERNET"[^>]*tools:node="remove"' "$manifest" || {
+            echo "FEHLER: INTERNET-Entfernung für die ML-Kit-Transport-Abhängigkeit fehlt."
+            exit 1
+          }
           grep -Eq 'android:allowBackup="false"' "$manifest" || {
             echo "FEHLER: Android-Backup muss bis zur geprüften Backup-Strategie deaktiviert bleiben."
             exit 1
