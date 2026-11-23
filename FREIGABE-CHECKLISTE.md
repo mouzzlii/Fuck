@@ -1,17 +1,21 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.44
+Stand: App-Version 1.44 · letzter CI-Nachweis: Build 266
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] GitHub-Actions-Build für Commit `88763b38328292319c70ce1e31a9d12ece3d2eca` erfolgreich (Build 258)
+- [x] GitHub-Actions-Build 266 für Commit `d3c1765909e2d618620dc85f582f67b770158eae` erfolgreich
 - [x] Unit-Tests und Android-Lint erfolgreich
 - [x] Debug-APK und SHA-256-Prüfsumme als Artefakt `TRAKUNA-Android` bereitgestellt
-- [ ] Release-Version und Versionsnummer geprüft
-- [ ] Produktionssignatur mit dauerhaft gesichertem Schlüssel erstellt
+- [ ] Release-Version und Versionsnummer fachlich geprüft
+- [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Update von der vorherigen freigegebenen Version getestet
+
+Build 266: https://github.com/mouzzlii/Fuck/actions/runs/45166820754  
+SHA-256: `b2af51c5c910a4378c548071dbae9d80058310fc5821c50f106a2941037d6387`
+
 ## B. Geräte- und Scannerabnahme
 
 - [ ] Jedes tatsächlich eingesetzte Android-/Zebra-Modell dokumentiert
@@ -36,6 +40,7 @@ Für **jeden** Paketdienst und jede Betriebssoftware ist ein eigener Nachweis er
 - [ ] Fehler- und Abbruchantworten der Partner-App geprüft
 - [ ] Rückmeldung/Bestätigung einer Buchung technisch nachgewiesen – nicht nur das Öffnen der App
 - [ ] Alle vier Abläufe abgenommen: Paket für Kunden annehmen, Kundenabgabe annehmen, Retoure annehmen, an Carrier übergeben
+- [ ] Hermes-Integration vom Anbieter freigegeben und mit Testsendungen abgenommen
 
 **Wichtig:** Die aktuelle TRAKUNA-Übergabe öffnet eine ausgewählte Android-App und übergibt standardisierte Extras. Sie bestätigt keine Buchung. Solange der Anbieter die Schnittstelle nicht implementiert und abnimmt, bleibt dieser Teil eine manuelle Unterstützung.
 
@@ -65,12 +70,10 @@ Für **jeden** Paketdienst und jede Betriebssoftware ist ein eigener Nachweis er
 - [ ] Mitarbeiter geschult und Betriebshandbuch übergeben
 - [ ] Fallback-Verfahren bei App-, Netzwerk-, Scanner- oder Carrier-Ausfall festgelegt
 - [ ] Betreiber hat den konkreten Funktionsumfang schriftlich akzeptiert
-- [ ] Freigabedatum und freigegebener Softwarestand dokumentiert
+- [ ] Freigabedatum
 
-## Freigabeentscheidung
+## G. Nächster zwingender Integrationsinput
 
-**Status:** NICHT FREIGEGEBEN, solange ein für den konkreten Einsatz erforderlicher Punkt offen ist.
+- [ ] Hersteller, Produktname und Version der Paketshop-/Versandsoftware des ersten Pilotshops erfasst
 
-**Begründung des aktuellen Stands:** TRAKUNA 1.44 ist eine lokale Android-Testversion. Sie besitzt keine zentrale Benutzerverwaltung oder Gerätesynchronisierung und keine nachgewiesene Carrier-Buchungsintegration. Reale Zebra-/Etikettentests, unabhängige Sicherheitsprüfung und Produktionssignatur sind nicht belegt.
-
-Diese Checkliste kann keine Anbieterfreigabe, rechtliche Prüfung, Hardwareprüfung oder Sicherheitsprüfung ersetzen.
+Keine Passwörter, API-Schlüssel oder Kundendaten in GitHub-Issues oder Chat-Nachrichten eintragen. Siehe [Pilotpaket für den ersten Paketshop](PILOT-PAKETSHOP.md).
