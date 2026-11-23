@@ -53,17 +53,20 @@ Zusätzlicher technischer Gesprächseinstieg für Geschäftskunden-Versand (nich
 
 ## 4. UPS
 
-**Österreichischer Paketshop-Ablauf – offiziell beschrieben:** UPS Österreich erklärt, dass Access-Point-Standorte eine Scanning-App für PC, Android oder Apple-Geräte erhalten. Die Aufgaben umfassen die Annahme und das Scannen von Kundenpaketen zur Übergabe an UPS-Fahrer sowie die Annahme und das Scannen von UPS-Fahrersendungen zur Aufbewahrung bis zur Kundenabholung. UPS nennt Einweisung, Support und technische Unterstützung. Damit ist UPS für den ersten Pilot konkreter beschrieben als eine reine Versand-API.
+**Österreichischer Paketshop-Ablauf – offiziell beschrieben:** UPS Österreich erklärt, dass Access-Point-Standorte eine Scanning-App für PC, Android oder Apple-Geräte erhalten. Die Aufgaben umfassen die Annahme und das Scannen von Kundenpaketen zur Übergabe an UPS-Fahrer sowie die Annahme und das Scannen von UPS-Fahrersendungen zur Aufbewahrung bis zur Kundenabholung. UPS nennt Einweisung, Support und technische Unterstützung.
+
+**Konkreter Android-App-Kandidat:** Im Google Play Store ist die offizielle App **UPS Access Point** von UPS gelistet (Paketname `com.ups.accesspoint`). Die Store-Beschreibung nennt vier Funktionen: Fahrerlieferung, Selbstabholung, Kundenabgabe und Bestandsverwaltung. Als Mindestanforderung wird Android 9.0 genannt; die Store-Seite zeigt ein Update vom 08.09.2026. Das ist ein konkreter Prüfhinweis, aber noch kein Beleg, dass genau diese App am Pilotstandort installiert oder für den Standort freigeschaltet ist. Vor Ort müssen App-Name, Version, Berechtigung und Gerät bestätigt werden.
 
 Offizielle Einstiege:
 - [UPS Österreich – Access Point Standort werden](https://www.ups.com/at/de/business-solutions/grow-your-business)
 - [UPS Österreich – Access Point Überblick](https://www.ups.com/at/de/business-solutions/expand-your-online-business/ups-access-point)
+- [UPS Access Point – offizielle Android-App im Google Play Store](https://play.google.com/store/apps/details?id=com.ups.accesspoint&hl=de_AT)
 - [UPS Developer Portal – Start](https://developer.ups.com/get-started?loc=de_AT)
 - [UPS API-Katalog](https://developer.ups.com/catalog?loc=de_AT)
 
 **Was noch nicht belegt ist:** Welche UPS-Scanning-App, welches Gerät und welche Version der konkrete Standort verwendet; ob eine Partner-API oder ein freigegebener Datenaustausch für die bestehende App zur Verfügung steht. Das Developer-Portal betrifft allgemeine UPS APIs und ersetzt nicht die Access-Point-App oder eine Partnerfreigabe.
 
-**Nächster technischer Schritt:** Vorhandene UPS-Scanning-App und das dafür verwendete Gerät samt Version aufnehmen. UPS Access Point Partnerbetreuung nach dem autorisierten Betriebsablauf, einer unterstützten Datenübergabe bzw. Partner-API und Testzugang fragen. Die offizielle UPS-App bleibt bis dahin das führende System; TRAKUNA darf keine UPS-Annahme oder Fahrerübergabe als bestätigt markieren, solange keine echte Rückmeldung vorliegt.
+**Nächster technischer Schritt:** Am Standort prüfen, ob die App `UPS Access Point` (Paketname `com.ups.accesspoint`) bereits installiert ist; App-Version und Android-Gerät dokumentieren. Falls nicht, nicht eigenmächtig installieren, sondern UPS nach dem vorgesehenen offiziellen Download- und Freischaltweg fragen. Danach UPS Access Point Partnerbetreuung nach dem autorisierten Betriebsablauf, einer unterstützten Datenübergabe bzw. Partner-API und Testzugang fragen. Die offizielle UPS-App bleibt bis dahin das führende System; TRAKUNA darf keine UPS-Annahme oder Fahrerübergabe als bestätigt markieren, solange keine echte Rückmeldung vorliegt.
 
 ## 5. Gemeinsame Integrationsarchitektur für TRAKUNA
 
@@ -96,6 +99,6 @@ Für jeden Carrier wird dieselbe Adapter-Grenze vorgesehen, aber die technischen
 | DPD | DPD Österreich beschreibt PaketShop-Technik, Einrichtung und individuelles Training; allgemeine DPD-Webservices/SOAP-API sind separat dokumentiert | Nein | Bestehende TC26-App, erlaubter Datenaustausch und PaketShop-Freigabe durch DPD Österreich |
 | GLS | GLS Österreich beschreibt YourGLS/ShipIT und Versand-Anbindungen | Nein | Bestehende TC26-App, PaketShop-Freigabe und Geräte-/Vorgangsschnittstelle |
 | Hermes | Hermes Österreich beschreibt Annahme privater Pakete, Retouren und Kundenausgabe; deutsche HSI-REST-API ist ein separater Geschäftskunden-Versandweg | Nein | MC3090BT-Support, österreichische Shopsoftware und freigegebene Schnittstelle |
-| UPS | UPS Österreich beschreibt eine bereitgestellte Scanning-App für PC/Android/Apple sowie Annahme und Fahrerscans; allgemeine UPS APIs nutzen OAuth/CIE | Nein | Vorhandene App und Hardware am Standort erheben; autorisierte Übergabe/API klären |
+| UPS | UPS Österreich beschreibt eine Scanning-App; offizielle Android-App UPS Access Point (com.ups.accesspoint) nennt Fahrerlieferung, Selbstabholung, Kundenabgabe und Bestandsverwaltung, Android 9+ | Nein | Installierte App/Version und Hardware am Standort bestätigen; autorisierte Übergabe/API klären |
 
 **Freigaberegel:** Kein Carrier wird als integriert oder produktionsbereit markiert, bevor die konkrete Schnittstelle für diesen Standort schriftlich freigegeben, technisch implementiert und mit echten autorisierten Testfällen erfolgreich abgenommen wurde.
