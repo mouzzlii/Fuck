@@ -337,7 +337,7 @@ class ShipmentStoreTest {
         assertFalse(ShipmentRules.isValidRecord(archived.copy(archivedAt = 250L)))
         assertFalse(ShipmentRules.isValidRecord(archived.copy(archivedAt = 0L)))
         assertFalse(ShipmentRules.isValidRecord(archived.copy(status = ShipmentStatus.READY_FOR_PICKUP)))
-        assertTrue(ShipmentRules.isValidRecord(archived.copy(archivedAt = null, updatedAt = 300L)))
+        assertFalse(ShipmentRules.isValidRecord(archived.copy(archivedAt = null, updatedAt = 300L)))
     }
 
     @Test
