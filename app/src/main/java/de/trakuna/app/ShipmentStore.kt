@@ -556,6 +556,11 @@ object ShipmentRules {
         }
 
         val compact = plausible(cleaned)
+        // If a known-format identifier is embedded inside a longer token, reject the
+        // whole token rather than silently saving the surrounding prefix/suffix as a new ID.
+        val embeddedKnown = Regex("(?i)(1Z[A-Z0-9]{16}|[A-Z]{2}[0-9]{9}AT|(?:JVGL|JJD)[A-Z0-9]{8,26})")
+            .findAll(cleaned).map { it.value }.toList()
+        if (compact != null && embeddedKnown.any { !it.equals(compact, ignoreCase = true) }) return null
         // A complete, compact scan can be retained as an unknown tracking number.
         // Whitespace-bearing text is only compacted when the result has a known structure.
         if (compact != null && (!cleaned.any(Char::isWhitespace) || identifyCarrier(compact) != null)) {
