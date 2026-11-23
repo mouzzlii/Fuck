@@ -4,7 +4,7 @@ Stand: 23. November 2026
 
 ## Ziel
 
-Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: Gerät mit dem freigegebenen Shop-WLAN verbinden, TRAKUNA starten und einen kontrollierten Funktionstest durchführen.
+Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: TRAKUNA starten und einen kontrollierten Funktionstest durchführen. Eine WLAN-Verbindung ist für die aktuelle lokale Testversion optional und nicht erforderlich.
 
 **Wichtig:** WLAN allein stellt noch keine Verbindung zu DPD, GLS, Hermes oder UPS her. Eine solche Carrier-Integration benötigt eine offiziell freigegebene Schnittstelle und Zugangsdaten/Testzugänge des jeweiligen Anbieters. Bestehende Carrier-Programme und Druckerkopplungen bleiben unverändert.
 
@@ -24,8 +24,8 @@ Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: G
 
 Diese Schritte erst mit Zustimmung des Paketshop-Betreibers ausführen.
 
-1. Auf dem für TRAKUNA vorgesehenen Android-Gerät das freigegebene Shop-WLAN auswählen.
-2. Prüfen, ob das Gerät tatsächlich Internetzugang hat. Ein WLAN-Symbol allein beweist keinen Internetzugang.
+1. Für den rein lokalen Funktionstest WLAN überspringen; TRAKUNA benötigt derzeit keine Netzwerkverbindung.
+2. Nur wenn der Betreiber das Gerät ausdrücklich für den Shop-Internetzugang freigibt, das freigegebene WLAN auswählen. Ein WLAN-Symbol allein beweist keinen Internetzugang.
 3. TRAKUNA installieren bzw. öffnen. Für Updates möglichst dieselbe App-Signatur verwenden; Debug-Testpakete können anders signiert sein als ein späteres Release.
 4. Kamera-Berechtigung nur dann erlauben, wenn der Kamera-Scanner verwendet werden soll.
 5. In Zebra DataWedge ein eigenes TRAKUNA-Profil einrichten:
