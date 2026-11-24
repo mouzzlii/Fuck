@@ -11,6 +11,15 @@ on:
       - "app/build.gradle.kts"
       - "scripts/run-android-instrumentation.sh"
       - ".github/workflows/android-instrumentation.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "app/src/androidTest/**"
+      - "app/src/main/java/de/trakuna/app/**"
+      - "app/build.gradle.kts"
+      - "scripts/run-android-instrumentation.sh"
+      - ".github/workflows/android-instrumentation.yml"
 
 concurrency:
   group: trakuna-instrumentation-${{ github.ref }}
