@@ -78,4 +78,7 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.6.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test:core:1.6.1")
+    // Android Gradle Plugin's UTP device provider resolves this during connected tests;
+    // declare it here so the regular CI dependency cache warms it before emulator execution.
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
