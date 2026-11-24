@@ -22,7 +22,7 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 
 Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstestfälle wurden im Haupt-Build kompiliert. Der separate Android-15-Emulatorlauf 45308245723 auf Main-Commit `fe3314e4f5b94fdc8c89a51d9f8588bcb4d3d318` ist erfolgreich abgeschlossen; die Instrumentierung meldet 5/5 Tests bestanden. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
 
-### Entwicklungsversion 1.54 – noch nicht als APK verfügbar
+### Entwicklungsversion 1.54 – Debug-Testpaket verfügbar, noch nicht freigegeben
 
 Im Arbeitszweig `fix/backup-crypto-background-2026-11-24` wird eine passwortgeschützte Sicherung mit der Dateiendung `.trakuna` vorbereitet. Das Passwort muss 12 bis 128 Zeichen lang sein und getrennt von der Datei aufbewahrt werden. Die Sicherung verwendet AES-256-GCM und PBKDF2-HMAC-SHA256 mit 600.000 Iterationen. Alte Klartext-JSON-Sicherungen sollen weiterhin importiert werden; beim Import muss eine deutliche Warnung erscheinen. CSV-Exporte bleiben weiterhin Klartext.
 
