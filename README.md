@@ -1,14 +1,14 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.53 (versionCode 54)
+## Aktueller Entwicklungsstand – Version 1.54 (versionCode 55)
 
 - Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar. Neue Sicherungsdateien werden mit einem selbst gewählten Passwort AES-256-GCM-verschlüsselt; ältere unverschlüsselte JSON-Backups bleiben importierbar und werden vor dem Ersetzen ausdrücklich gekennzeichnet.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- JSON-Backups werden kompakt exportiert; der Import akzeptiert bis zu 4 MiB, während der verschlüsselte lokale Bestand auf 2 MiB begrenzt bleibt. Damit bleibt zusätzlicher Platz für Backup-Kopf und portable Exportstruktur.
+- Entschlüsselte Backup-Daten werden vor der Wiederherstellung auf 4 MiB begrenzt; verschlüsselte .trakuna-Dateien dürfen bis zu 6 MiB groß sein. Der lokale verschlüsselte Bestand bleibt auf 2 MiB begrenzt.
 - Version 1.53 ergänzt Android-Instrumentierungstests für Keystore-Verschlüsselung, Wiederöffnung des lokalen Speichers, Fail-closed-Verhalten bei beschädigtem Sendungs- und Übergabe-Cache sowie Wiederherstellung aus einem gültigen Backup nach Beschädigung des lokalen Speichers. CI-Lauf 45293985061 für versionCode 54 war erfolgreich: Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. **Die Emulator-Instrumentierungstests laufen separat**; Workflow 45294465005 für den aktuellen Code-Commit ist gestartet, aber noch nicht abgeschlossen. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
 - Debug-APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
 - ZIP-Artefakt-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`.
