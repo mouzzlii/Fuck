@@ -85,6 +85,33 @@ class BackupCryptoTest {
     }
 
     @Test
+    fun previousV1BackupsUsing210000IterationsRemainReadable() {
+        val password = "Sicheres Passwort 2026!".toCharArray()
+        val salt = ByteArray(16) { it.toByte() }
+        val nonce = ByteArray(12) { (it + 16).toByte() }
+        val prefix = "TRAKUNA-ENCRYPTED-BACKUP-V1\\n"
+        val header = java.nio.ByteBuffer.allocate(33)
+            .put(1.toByte())
+            .putInt(210_000)
+            .put(salt)
+            .put(nonce)
+            .array()
+        val key = BackupCrypto.deriveKey(password, salt, 210_000)
+        val cipher = javax.crypto.Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(
+            javax.crypto.Cipher.ENCRYPT_MODE,
+            javax.crypto.spec.SecretKeySpec(key, "AES"),
+            javax.crypto.spec.GCMParameterSpec(128, nonce)
+        )
+        cipher.updateAAD(prefix.toByteArray(Charsets.US_ASCII))
+        cipher.updateAAD(header)
+        val payload = header + cipher.doFinal(backup.toByteArray(Charsets.UTF_8))
+        val oldBackup = prefix + Base64.getEncoder().encodeToString(payload)
+        assertEquals(backup, BackupCrypto.decrypt(oldBackup, "Sicheres Passwort 2026!".toCharArray()))
+        java.util.Arrays.fill(key, 0)
+    }
+
+    @Test
     fun legacyJsonIsNotMistakenForAnEncryptedBackup() {
         assertFalse(BackupCrypto.isEncryptedBackup(backup))
         assertThrows(IllegalArgumentException::class.java) {
