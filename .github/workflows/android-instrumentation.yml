@@ -66,6 +66,16 @@ jobs:
           heap-size: 512M
           emulator-boot-timeout: 900
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
-          disable-linux-hw-accel: true
           disable-animations: true
           script: bash scripts/run-android-instrumentation.sh
+
+      - name: Emulator- und Instrumentierungsdiagnose bereitstellen
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: TRAKUNA-Instrumentation-Diagnose
+          path: |
+            app/build/reports/trakuna-instrumentation/
+            app/build/reports/androidTests/connected/debug/
+          if-no-files-found: warn
+          retention-days: 14
