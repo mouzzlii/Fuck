@@ -12,7 +12,7 @@ on:
       - ".github/workflows/android-instrumentation.yml"
 
 concurrency:
-  group: trakuna-instrumentation-${{ github.sha }}
+  group: trakuna-instrumentation-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -55,9 +55,6 @@ jobs:
 
       - name: Android-Keystore- und Speicher-Instrumentierungstests auf Emulator
         uses: reactivecircus/android-emulator-runner@v2
-        env:
-          # No KVM is available on hosted Linux; allow the emulator's QEMU TCG mode.
-          ANDROID_I_WANT_MY_TCG: 'yes'
         with:
           api-level: 35
           target: default
@@ -70,4 +67,4 @@ jobs:
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
           disable-linux-hw-accel: auto
           disable-animations: true
-          script: gradle --no-daemon connectedDebugAndroidTest
+          script: bash scripts/run-android-instrumentation.sh
