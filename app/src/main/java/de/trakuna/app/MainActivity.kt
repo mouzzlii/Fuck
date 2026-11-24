@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -51,6 +52,9 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.ConcurrentHashMap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private val Forest = Color(0xFF174B3A)
 private const val CACHE_PREFS = "trakuna_handoff"
@@ -138,20 +142,37 @@ class MainActivity : ComponentActivity() {
             var confirmCsvExport by remember { mutableStateOf(false) }
             var pendingBackupImport by remember { mutableStateOf<String?>(null) }
             var pendingBackupCount by remember { mutableStateOf(0) }
+            var pendingBackupLegacy by remember { mutableStateOf(false) }
+            var pendingEncryptedBackup by remember { mutableStateOf<String?>(null) }
+            var backupExportPassword by remember { mutableStateOf("") }
+            var backupExportPasswordConfirm by remember { mutableStateOf("") }
+            var backupImportPassword by remember { mutableStateOf("") }
+            var backupBusy by remember { mutableStateOf(false) }
+            val backupScope = rememberCoroutineScope()
             val backupDocumentLauncher = rememberLauncherForActivityResult(
-                ActivityResultContracts.CreateDocument("application/json")
+                ActivityResultContracts.CreateDocument("application/octet-stream")
             ) { uri ->
                 val json = pendingBackupJson
                 pendingBackupJson = null
                 if (uri == null || json == null) {
                     status = "Datensicherung abgebrochen."
                 } else {
-                    val saved = runCatching {
-                        context.contentResolver.openOutputStream(uri)?.bufferedWriter(Charsets.UTF_8)?.use { it.write(json) }
-                            ?: error("Datei konnte nicht geöffnet werden.")
+                    backupBusy = true
+                    status = "Datensicherung wird gespeichert…"
+                    backupScope.launch {
+                        try {
+                            val saved = withContext(Dispatchers.IO) {
+                                runCatching {
+                                    context.contentResolver.openOutputStream(uri)?.bufferedWriter(Charsets.UTF_8)?.use { it.write(json) }
+                                        ?: error("Datei konnte nicht geöffnet werden.")
+                                }
+                            }
+                            status = if (saved.isSuccess) "TRAKUNA-Datensicherung wurde gespeichert."
+                            else "Datensicherung konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
+                        } finally {
+                            backupBusy = false
+                        }
                     }
-                    status = if (saved.isSuccess) "TRAKUNA-Datensicherung wurde gespeichert."
-                    else "Datensicherung konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
                 }
             }
             val restoreDocumentLauncher = rememberLauncherForActivityResult(
@@ -160,21 +181,40 @@ class MainActivity : ComponentActivity() {
                 if (uri == null) {
                     status = "Wiederherstellung abgebrochen."
                 } else {
-                    val loaded = runCatching {
-                        context.contentResolver.openInputStream(uri)?.use { input ->
-                            readBoundedUtf8(input, ShipmentStore.MAX_BACKUP_BYTES)
-                        } ?: error("Datei konnte nicht gelesen werden.")
-                    }
-                    if (loaded.isFailure) {
-                        status = "Datei konnte nicht gelesen werden: ${loaded.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
-                    } else {
-                        val json = loaded.getOrThrow()
-                        when (val validation = shipmentStore.validateBackup(json)) {
-                            is BackupValidation.Valid -> {
-                                pendingBackupImport = json
-                                pendingBackupCount = validation.recordCount
+                    backupBusy = true
+                    status = "Sicherungsdatei wird geprüft…"
+                    backupScope.launch {
+                        try {
+                            val loaded = withContext(Dispatchers.IO) {
+                                runCatching {
+                                    context.contentResolver.openInputStream(uri)?.use { input ->
+                                        readBoundedUtf8(input, BackupCrypto.MAX_ENCRYPTED_BACKUP_BYTES)
+                                    } ?: error("Datei konnte nicht gelesen werden.")
+                                }
                             }
-                            is BackupValidation.Invalid -> status = "Sicherung abgelehnt: ${validation.reason}"
+                            if (loaded.isFailure) {
+                                status = "Datei konnte nicht gelesen werden: ${loaded.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
+                            } else {
+                                val json = loaded.getOrThrow()
+                                if (BackupCrypto.isEncryptedBackup(json)) {
+                                    pendingEncryptedBackup = json
+                                    backupImportPassword = ""
+                                } else {
+                                    val validation = withContext(Dispatchers.Default) {
+                                        shipmentStore.validateBackup(json)
+                                    }
+                                    when (validation) {
+                                        is BackupValidation.Valid -> {
+                                            pendingBackupImport = json
+                                            pendingBackupCount = validation.recordCount
+                                            pendingBackupLegacy = true
+                                        }
+                                        is BackupValidation.Invalid -> status = "Sicherung abgelehnt: ${validation.reason}"
+                                    }
+                                }
+                            }
+                        } finally {
+                            backupBusy = false
                         }
                     }
                 }
@@ -429,12 +469,12 @@ class MainActivity : ComponentActivity() {
                                         Text(if (showArchivedShipments) "Archiv – Vorgänge bleiben erhalten und können wiederhergestellt werden." else "Aktive Vorgänge – abgeschlossene Vorgänge können archiviert werden.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it.take(120); visibleRecordLimit = 100 }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedButton(onClick = { confirmCsvExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
-                                        OutlinedButton(onClick = { confirmBackupExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) {
+                                        OutlinedButton(onClick = { confirmBackupExport = true }, enabled = shipmentStorageIssue == null && !backupBusy, modifier = Modifier.fillMaxWidth()) {
                                             Text("Vollständige Datensicherung erstellen")
                                         }
                                         OutlinedButton(onClick = {
                                             restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
-                                        }, enabled = true, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
+                                        }, enabled = !backupBusy, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
                                         if (shipmentStorageIssue != null) {
                                             Text("Die gespeicherten Vorgänge werden nicht als leer angezeigt, weil der Speicher fehlerhaft gelesen wurde.", color = MaterialTheme.colorScheme.error)
                                         } else if (shipmentRecords.isEmpty()) {
@@ -526,47 +566,189 @@ class MainActivity : ComponentActivity() {
                         }
                         if (confirmBackupExport) {
                             AlertDialog(
-                                onDismissRequest = { confirmBackupExport = false },
-                                title = { Text("Datensicherung erstellen?") },
+                                onDismissRequest = {
+                                    confirmBackupExport = false
+                                    backupExportPassword = ""
+                                    backupExportPasswordConfirm = ""
+                                },
+                                title = { Text("Verschlüsselte Datensicherung") },
                                 text = {
-                                    Text("Die Sicherungsdatei enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird unverschlüsselt gespeichert. Wähle einen vertrauenswürdigen Speicherort und gib die Datei nicht weiter.")
+                                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                        Text("Die Sicherung enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird mit AES-256-GCM verschlüsselt. Verwende mindestens 12 Zeichen und bewahre das Passwort getrennt auf. Ohne dieses Passwort ist die Sicherung nicht wiederherstellbar.")
+                                        OutlinedTextField(
+                                            value = backupExportPassword,
+                                            onValueChange = { backupExportPassword = it.take(128) },
+                                            label = { Text("Sicherungspasswort") },
+                                            singleLine = true,
+                                            visualTransformation = PasswordVisualTransformation(),
+                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                        OutlinedTextField(
+                                            value = backupExportPasswordConfirm,
+                                            onValueChange = { backupExportPasswordConfirm = it.take(128) },
+                                            label = { Text("Passwort wiederholen") },
+                                            singleLine = true,
+                                            visualTransformation = PasswordVisualTransformation(),
+                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                    }
                                 },
                                 confirmButton = {
-                                    TextButton(onClick = {
-                                        confirmBackupExport = false
-                                        val exported = runCatching { shipmentStore.exportBackupJson() }
-                                        if (exported.isSuccess) {
-                                            pendingBackupJson = exported.getOrThrow()
-                                            backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
-                                        } else {
-                                            status = exported.exceptionOrNull()?.message ?: "Datensicherung fehlgeschlagen."
+                                    TextButton(
+                                        enabled = backupExportPassword.length >= 12 && backupExportPassword == backupExportPasswordConfirm && !backupBusy,
+                                        onClick = {
+                                            val passwordChars = backupExportPassword.toCharArray()
+                                            confirmBackupExport = false
+                                            backupExportPassword = ""
+                                            backupExportPasswordConfirm = ""
+                                            backupBusy = true
+                                            status = "Sicherung wird verschlüsselt…"
+                                            backupScope.launch {
+                                                try {
+                                                    val exported = withContext(Dispatchers.Default) {
+                                                        runCatching {
+                                                            BackupCrypto.encrypt(shipmentStore.exportBackupJson(), passwordChars)
+                                                        }
+                                                    }
+                                                    if (exported.isSuccess) {
+                                                        pendingBackupJson = exported.getOrThrow()
+                                                        backupDocumentLauncher.launch("TRAKUNA-Sicherung.trakuna")
+                                                    } else {
+                                                        status = exported.exceptionOrNull()?.message ?: "Verschlüsselte Datensicherung fehlgeschlagen."
+                                                    }
+                                                } finally {
+                                                    passwordChars.fill('\u0000')
+                                                    backupBusy = false
+                                                }
+                                            }
                                         }
-                                    }) { Text("Sicherung erstellen") }
+                                    ) { Text("Verschlüsselt sichern") }
                                 },
                                 dismissButton = {
-                                    TextButton(onClick = { confirmBackupExport = false }) { Text("Abbrechen") }
+                                    TextButton(onClick = {
+                                        confirmBackupExport = false
+                                        backupExportPassword = ""
+                                        backupExportPasswordConfirm = ""
+                                    }) { Text("Abbrechen") }
+                                }
+                            )
+                        }
+                        pendingEncryptedBackup?.let { encryptedBackup ->
+                            AlertDialog(
+                                onDismissRequest = {
+                                    pendingEncryptedBackup = null
+                                    backupImportPassword = ""
+                                },
+                                title = { Text("Sicherung entschlüsseln") },
+                                text = {
+                                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                        Text("Diese Sicherung ist verschlüsselt. Gib das beim Erstellen verwendete Passwort ein. Ohne das richtige Passwort kann sie nicht geöffnet werden.")
+                                        OutlinedTextField(
+                                            value = backupImportPassword,
+                                            onValueChange = { backupImportPassword = it.take(128) },
+                                            label = { Text("Sicherungspasswort") },
+                                            singleLine = true,
+                                            visualTransformation = PasswordVisualTransformation(),
+                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                    }
+                                },
+                                confirmButton = {
+                                    TextButton(
+                                        enabled = backupImportPassword.isNotEmpty() && !backupBusy,
+                                        onClick = {
+                                            val passwordChars = backupImportPassword.toCharArray()
+                                            backupImportPassword = ""
+                                            backupBusy = true
+                                            status = "Sicherung wird entschlüsselt und geprüft…"
+                                            backupScope.launch {
+                                                try {
+                                                    val decrypted = withContext(Dispatchers.Default) {
+                                                        runCatching { BackupCrypto.decrypt(encryptedBackup, passwordChars) }
+                                                    }
+                                                    if (decrypted.isFailure) {
+                                                        status = "Sicherung konnte nicht entschlüsselt werden. Passwort und Datei prüfen."
+                                                    } else {
+                                                        val plain = decrypted.getOrThrow()
+                                                        val validation = withContext(Dispatchers.Default) {
+                                                            shipmentStore.validateBackup(plain)
+                                                        }
+                                                        when (validation) {
+                                                            is BackupValidation.Valid -> {
+                                                                pendingBackupImport = plain
+                                                                pendingBackupCount = validation.recordCount
+                                                                pendingBackupLegacy = false
+                                                                pendingEncryptedBackup = null
+                                                            }
+                                                            is BackupValidation.Invalid -> {
+                                                                pendingEncryptedBackup = null
+                                                                status = "Sicherung abgelehnt: ${validation.reason}"
+                                                            }
+                                                        }
+                                                    }
+                                                } finally {
+                                                    passwordChars.fill('\u0000')
+                                                    backupBusy = false
+                                                }
+                                            }
+                                        }
+                                    ) { Text("Entschlüsseln") }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = {
+                                        pendingEncryptedBackup = null
+                                        backupImportPassword = ""
+                                    }) { Text("Abbrechen") }
                                 }
                             )
                         }
                         pendingBackupImport?.let { backupJson ->
                             AlertDialog(
-                                onDismissRequest = { pendingBackupImport = null },
+                                onDismissRequest = {
+                                    pendingBackupImport = null
+                                    pendingBackupLegacy = false
+                                },
                                 title = { Text("Datensicherung wiederherstellen?") },
                                 text = {
-                                    Text("Die Sicherung enthält $pendingBackupCount Vorgänge. Die aktuell auf diesem Gerät gespeicherten Vorgänge werden vollständig ersetzt. Erstelle bei Bedarf zuerst eine Sicherung des aktuellen Standes.")
+                                    Text(
+                                        (if (pendingBackupLegacy) "Achtung: Diese ältere Sicherung ist unverschlüsselt. " else "Die verschlüsselte Sicherung wurde erfolgreich geprüft. ") +
+                                            "Sie enthält $pendingBackupCount Vorgänge. Die aktuell auf diesem Gerät gespeicherten Vorgänge werden vollständig ersetzt. Erstelle bei Bedarf zuerst eine eigene Sicherung des aktuellen Standes."
+                                    )
                                 },
                                 confirmButton = {
-                                    TextButton(onClick = {
-                                        val result = shipmentStore.restoreBackup(backupJson)
-                                        status = when (result) {
-                                            is BackupRestoreResult.Restored -> "${result.recordCount} Vorgänge wurden wiederhergestellt."
-                                            is BackupRestoreResult.Rejected -> "Wiederherstellung fehlgeschlagen: ${result.reason}"
+                                    TextButton(
+                                        enabled = !backupBusy,
+                                        onClick = {
+                                            backupBusy = true
+                                            status = "Wiederherstellung läuft…"
+                                            backupScope.launch {
+                                                try {
+                                                    val result = withContext(Dispatchers.IO) {
+                                                        shipmentStore.restoreBackup(backupJson)
+                                                    }
+                                                    status = when (result) {
+                                                        is BackupRestoreResult.Restored -> "${result.recordCount} Vorgänge wurden wiederhergestellt."
+                                                        is BackupRestoreResult.Rejected -> "Wiederherstellung fehlgeschlagen: ${result.reason}"
+                                                    }
+                                                    shipmentRevision++
+                                                    pendingBackupImport = null
+                                                    pendingBackupLegacy = false
+                                                } finally {
+                                                    backupBusy = false
+                                                }
+                                            }
                                         }
-                                        shipmentRevision++
-                                        pendingBackupImport = null
-                                    }) { Text("Ersetzen und wiederherstellen") }
+                                    ) { Text("Ersetzen und wiederherstellen") }
                                 },
-                                dismissButton = { TextButton(onClick = { pendingBackupImport = null }) { Text("Abbrechen") } }
+                                dismissButton = {
+                                    TextButton(onClick = {
+                                        pendingBackupImport = null
+                                        pendingBackupLegacy = false
+                                    }) { Text("Abbrechen") }
+                                }
                             )
                         }
                         historyRecord?.let { record ->

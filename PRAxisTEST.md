@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Version 1.53 · versionCode 54)
 
-Aktueller Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der erfolgreiche CI-Lauf 45293985061 auf Commit `45a02f7ec8de966100c406bbfdd8e3e572052b05` bestätigt Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK-Build und Artefakt-Upload. Die Android-Instrumentierungstests werden separat ausgeführt; Emulator-Workflow 45295645386 für den aktuellen Code-Commit ist noch in Bearbeitung. Ein erfolgreicher Lauf ist noch nicht bestätigt. [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061). APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
+Aktueller Main-Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der Main-Emulatorlauf 45308245723 meldet 5/5 Tests bestanden. Für die Entwicklungsversion 1.54 ist der aktuelle Feature-Branch-Commit `d5bef8b397cb993495bbd10ced4b15a4d972b973` im Android-15-Emulator-Workflow 45463760415 erfolgreich durch JVM-Tests, Android-Lint, Debug-APK-Build und `connectedDebugAndroidTest` gelaufen. Die Debug-Test-APK liegt als Artefakt `14953069069` bereit. [Workflow öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45463760415). Die 1.54 bleibt ein Debug-Testpaket, kein signiertes Produktionsrelease; die manuellen Gerätetests B1–B9 sind noch offen.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -257,7 +257,7 @@ Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/202
 
 ## 10. Ergänzende Android-Instrumentierungstests (Version 1.53)
 
-Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Testbestand im Repository. Sie wurden in CI erfolgreich kompiliert; ein Emulator- oder Gerätelauf ist noch offen:
+Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Testbestand im Repository. Für Version 1.53 auf Main sind sie im Emulatorlauf 45308245723 erfolgreich ausgeführt worden (5/5). Die zusätzlichen Verschlüsselungs- und Backup-Recovery-Tests der Version 1.54 wurden auf dem Feature-Branch ebenfalls im Emulator ausgeführt: Run 45408648110, getesteter Commit `1aefb10254ae381c8425e03a5a9e1db8d58317ec` (7 Instrumentierungstests erfolgreich; JVM-Unit-Tests, Android-Lint, Debug-APK-Build und `connectedDebugAndroidTest` erfolgreich). Die nachfolgenden Änderungen nach diesem Commit betreffen ausschließlich die CI-Diagnose-/Concurrency-Konfiguration, nicht den App-Code. Die jeweils neueste Branch-CI bleibt vor dem Merge separat zu prüfen.
 
 - [ ] **Keystore-Verschlüsselung:** Testsendung speichern, SharedPreferences kontrollieren und bestätigen, dass Sendungsnummer, Empfänger und Notiz nicht im Klartext vorkommen.
 - [ ] **Speicher-Wiederöffnung:** Neue `ShipmentStore`-Instanz erstellen und kontrollieren, dass der verschlüsselte Bestand vollständig wieder lesbar ist.
@@ -265,4 +265,22 @@ Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Tes
 - [ ] **Übergabe-Cache-Verschlüsselung:** Sendungsnummer und Paketdienst speichern; Klartext darf nicht in SharedPreferences stehen und muss nach Neuinitialisierung lesbar sein.
 - [ ] **Beschädigter Übergabe-Cache:** Verschlüsselten Cachewert beschädigen; die App muss einen Fehler melden und darf keinen leeren Cache vortäuschen.
 - [ ] **Backup-Recovery:** Gültige Sicherung erstellen, lokalen verschlüsselten Bestand beschädigen und anschließend die gültige Sicherung wiederherstellen. Die wiederhergestellten Daten müssen nach erneuter Leseprüfung vorhanden sein.
+
+## 11. Zusätzliche Prüfungen für die passwortgeschützte Datensicherung (Entwicklungsversion 1.54)
+
+Diese Tests gehören zum Zweig `fix/backup-crypto-background-2026-11-24`. Die automatisierten Kryptografie- und Emulatorprüfungen sind auf dem oben genannten Commit erfolgreich; B1–B9 bleiben manuelle Abnahmetests und dürfen erst nach tatsächlicher Durchführung auf dem Zielgerät abgehakt werden.
+
+| Nr. | Test | Erwartetes Ergebnis |
+|---|---|---|
+| B1 | Sicherung mit Passwort zwischen 12 und 128 Zeichen erstellen | Datei endet auf `.trakuna`; Passwort wird zur Bestätigung zweimal eingegeben und nicht gespeichert. |
+| B2 | Datei mit Texteditor öffnen | Sendungsnummern, Empfängernamen und Notizen sind nicht im Klartext sichtbar. |
+| B3 | Datei mit richtigem Passwort importieren | Entschlüsselung und vollständige Validierung gelingen; der Bestand wird erst nach ausdrücklicher Bestätigung ersetzt. |
+| B4 | Falsches Passwort eingeben | Import wird abgelehnt; aktueller Bestand bleibt unverändert. |
+| B5 | Header, Salt, Nonce oder Ciphertext verändern | Authentifizierungsprüfung schlägt fehl; keine Daten werden wiederhergestellt. |
+| B6 | Unicode-Passwort mit Umlauten, Eurozeichen und Emoji verwenden | Verschlüsselte Sicherung lässt sich auf demselben Android-Kryptoanbieter korrekt wiederherstellen; PBKDF2-Testvektoren bestätigen UTF-8-Kodierung. |
+| B7 | Alte JSON-Sicherung importieren | Import bleibt möglich, zeigt aber vor dem Ersetzen eine deutliche Klartext-Warnung. |
+| B8 | Sehr große Sicherung importieren | Dateigrößenbegrenzung greift vor unbeschränkter Speicherbelegung; der aktuelle Datenbestand bleibt erhalten. |
+| B9 | Während KDF/Datei-I/O die Oberfläche beobachten | App bleibt bedienbar; Kryptografie sowie Dateioperationen blockieren nicht den Main-/UI-Thread. |
+
+**Hinweis:** CSV-Exporte enthalten weiterhin vertrauliche Daten im Klartext und sind keine verschlüsselte Sicherung. Ein erfolgreicher Emulator-Test ersetzt nicht die Wiederherstellungsprüfung auf einem realen Android-Zielgerät.
 
