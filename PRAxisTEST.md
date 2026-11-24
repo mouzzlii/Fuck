@@ -257,7 +257,7 @@ Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/202
 
 ## 10. Ergänzende Android-Instrumentierungstests (Version 1.53)
 
-Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Testbestand im Repository. Für Version 1.53 auf Main sind sie im Emulatorlauf 45308245723 erfolgreich ausgeführt worden (5/5). Die neuen Verschlüsselungstests für Version 1.54 werden erst mit dem nachfolgenden CI-Lauf auf dem Feature-Branch bewertet:
+Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Testbestand im Repository. Für Version 1.53 auf Main sind sie im Emulatorlauf 45308245723 erfolgreich ausgeführt worden (5/5). Die zusätzlichen Verschlüsselungs- und Backup-Recovery-Tests der Version 1.54 wurden auf dem Feature-Branch ebenfalls im Emulator ausgeführt: Run 45408648110, getesteter Commit `1aefb10254ae381c8425e03a5a9e1db8d58317ec` (7 Instrumentierungstests erfolgreich; JVM-Unit-Tests, Android-Lint, Debug-APK-Build und `connectedDebugAndroidTest` erfolgreich). Die nachfolgenden Änderungen nach diesem Commit betreffen ausschließlich die CI-Diagnose-/Concurrency-Konfiguration, nicht den App-Code. Die jeweils neueste Branch-CI bleibt vor dem Merge separat zu prüfen.
 
 - [ ] **Keystore-Verschlüsselung:** Testsendung speichern, SharedPreferences kontrollieren und bestätigen, dass Sendungsnummer, Empfänger und Notiz nicht im Klartext vorkommen.
 - [ ] **Speicher-Wiederöffnung:** Neue `ShipmentStore`-Instanz erstellen und kontrollieren, dass der verschlüsselte Bestand vollständig wieder lesbar ist.
@@ -268,7 +268,7 @@ Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Tes
 
 ## 11. Zusätzliche Prüfungen für die passwortgeschützte Datensicherung (Entwicklungsversion 1.54)
 
-Diese Tests gehören zum Zweig `fix/backup-crypto-background-2026-11-24`. Sie sind noch nicht als bestanden zu markieren, bis der PR-CI-Lauf einschließlich Android-Emulator erfolgreich ist.
+Diese Tests gehören zum Zweig `fix/backup-crypto-background-2026-11-24`. Die automatisierten Kryptografie- und Emulatorprüfungen sind auf dem oben genannten Commit erfolgreich; B1–B9 bleiben manuelle Abnahmetests und dürfen erst nach tatsächlicher Durchführung auf dem Zielgerät abgehakt werden.
 
 | Nr. | Test | Erwartetes Ergebnis |
 |---|---|---|
