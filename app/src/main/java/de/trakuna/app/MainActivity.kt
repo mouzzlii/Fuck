@@ -635,7 +635,10 @@ class MainActivity : ComponentActivity() {
                                                         pendingBackupLegacy = false
                                                         pendingEncryptedBackup = null
                                                     }
-                                                    is BackupValidation.Invalid -> status = "Sicherung abgelehnt: ${validation.reason}"
+                                                    is BackupValidation.Invalid -> {
+                                                        pendingEncryptedBackup = null
+                                                        status = "Sicherung abgelehnt: ${validation.reason}"
+                                                    }
                                                 }
                                             }
                                         }
