@@ -55,9 +55,6 @@ jobs:
 
       - name: Android-Keystore- und Speicher-Instrumentierungstests auf Emulator
         uses: reactivecircus/android-emulator-runner@v2
-        env:
-          # The hosted Linux runner has no KVM. Explicitly allow QEMU TCG software emulation.
-          ANDROID_I_WANT_MY_TCG: 'yes'
         with:
           api-level: 35
           target: default
@@ -68,5 +65,21 @@ jobs:
           heap-size: 512M
           emulator-boot-timeout: 900
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
+          disable-linux-hw-accel: auto
           disable-animations: true
-          script: gradle --no-daemon connectedDebugAndroidTest
+          script: |
+            for attempt in 1 2 3; do
+              gradle --no-daemon connectedDebugAndroidTest > /tmp/trakuna-instrumentation.log 2>&1
+              result=$?
+              cat /tmp/trakuna-instrumentation.log
+              if [ "$result" -eq 0 ]; then
+                exit 0
+              fi
+              if grep -Eq "Received status code 429|Too Many Requests" /tmp/trakuna-instrumentation.log && [ "$attempt" -lt 3 ]; then
+                echo "Maven Central throttled dependency resolution (HTTP 429); retrying in 30 seconds (attempt $attempt/3)."
+                sleep 30
+                continue
+              fi
+              exit "$result"
+            done
+            exit 1
