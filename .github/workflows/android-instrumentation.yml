@@ -12,7 +12,7 @@ on:
       - ".github/workflows/android-instrumentation.yml"
 
 concurrency:
-  group: trakuna-instrumentation-${{ github.ref }}
+  group: trakuna-instrumentation-${{ github.sha }}
   cancel-in-progress: true
 
 permissions:
