@@ -26,7 +26,7 @@ Letzter erfolgreicher Build 1.53: https://github.com/mouzzlii/Fuck/actions/runs/
 APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`
 ZIP-Artefakt-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`
 
-ZIP-Artefakt erstellt am 23.11.2026, 00:05 UTC; Ablauf am 07.12.2026, 00:05 UTC. Produktionssignierung bleibt offen; der separate Emulator-Instrumentierungstest läuft noch.
+ZIP-Artefakt erstellt am 24.11.2026, 00:05 UTC; Ablauf am 08.12.2026, 00:05 UTC. Produktionssignierung bleibt offen; der separate Emulator-Instrumentierungstest läuft noch.
 
 ## B. Geräte- und Scannerabnahme
 
