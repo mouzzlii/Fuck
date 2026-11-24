@@ -9,7 +9,9 @@ import java.util.Base64
 import javax.crypto.AEADBadTagException
 import javax.crypto.Cipher
 import javax.crypto.Mac
+import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
 /**
@@ -24,7 +26,8 @@ object BackupCrypto {
     private const val PREFIX = "TRAKUNA-ENCRYPTED-BACKUP-V1\n"
     private const val VERSION = 1
     private const val ITERATIONS = 600_000
-    private val SUPPORTED_ITERATIONS = setOf(210_000, ITERATIONS)
+    private const val LEGACY_ITERATIONS = 210_000
+    private val SUPPORTED_ITERATIONS = setOf(LEGACY_ITERATIONS, ITERATIONS)
     private const val KEY_BITS = 256
     private const val SALT_BYTES = 16
     private const val NONCE_BYTES = 12
@@ -138,6 +141,18 @@ object BackupCrypto {
     internal fun deriveKey(passphrase: CharArray, salt: ByteArray, iterations: Int): ByteArray {
         try {
             require(iterations in 1..1_000_000) { "Ungültige Schlüsselableitungsparameter." }
+            if (iterations == LEGACY_ITERATIONS) {
+                // The original v1 format used Android/JCA PBEKeySpec. Keep the
+                // exact provider conversion for old backups instead of silently
+                // reinterpreting their password bytes as the new UTF-8 scheme.
+                val legacySpec = PBEKeySpec(passphrase, salt, iterations, KEY_BITS)
+                return try {
+                    SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
+                        .generateSecret(legacySpec).encoded
+                } finally {
+                    legacySpec.clearPassword()
+                }
+            }
             val encoder = Charsets.UTF_8.newEncoder()
                 .onMalformedInput(CodingErrorAction.REPORT)
                 .onUnmappableCharacter(CodingErrorAction.REPORT)
