@@ -37,6 +37,22 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      - name: Instrumentierungs-Abhängigkeiten vor dem Emulator auflösen
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            echo "Auflösen der Android-Testlaufzeit-Abhängigkeiten (Versuch $attempt/3)."
+            if gradle --no-daemon :app:dependencies --configuration _internal-unified-test-platform-android-device-provider-ddmlib; then
+              exit 0
+            fi
+            if [[ "$attempt" -lt 3 ]]; then
+              echo "Abhängigkeitsauflösung fehlgeschlagen; mögliche Maven-Central-Drosselung. Erneuter Versuch in 30 Sekunden."
+              sleep 30
+            fi
+          done
+          echo "Android-Testlaufzeit-Abhängigkeiten konnten nach drei Versuchen nicht aufgelöst werden."
+          exit 1
+
       - name: Android-Keystore- und Speicher-Instrumentierungstests auf Emulator
         uses: reactivecircus/android-emulator-runner@v2
         env:
