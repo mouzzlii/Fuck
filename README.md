@@ -1,21 +1,21 @@
 # TRAKUNA – Android Scan-Zentrale
 
-TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.53 (versionCode 54)
+## Aktueller Entwicklungsstand – Version 1.54 (versionCode 55)
 
 - Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
-- Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
+- Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar. Neue Sicherungsdateien werden mit einem selbst gewählten Passwort AES-256-GCM-verschlüsselt; ältere unverschlüsselte JSON-Backups bleiben importierbar und werden vor dem Ersetzen ausdrücklich gekennzeichnet.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- JSON-Backups werden kompakt exportiert; der Import akzeptiert bis zu 4 MiB, während der verschlüsselte lokale Bestand auf 2 MiB begrenzt bleibt. Damit bleibt zusätzlicher Platz für Backup-Kopf und portable Exportstruktur.
-- Version 1.53 ergänzt Android-Instrumentierungstests für Keystore-Verschlüsselung, Wiederöffnung des lokalen Speichers, Fail-closed-Verhalten bei beschädigtem Sendungs- und Übergabe-Cache sowie Wiederherstellung aus einem gültigen Backup nach Beschädigung des lokalen Speichers. CI-Lauf 45293985061 für versionCode 54 war erfolgreich: Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. **Die Emulator-Instrumentierungstests laufen separat**; Workflow 45294465005 für den aktuellen Code-Commit ist gestartet, aber noch nicht abgeschlossen. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
-- Debug-APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
-- ZIP-Artefakt-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`.
-- Das ZIP-Artefakt wurde am 24.11.2026, 00:05 UTC erstellt und läuft am 08.12.2026, 00:05 UTC ab.
+- Entschlüsselte Backup-Daten werden vor der Wiederherstellung auf 4 MiB begrenzt; verschlüsselte .trakuna-Dateien dürfen bis zu 6 MiB groß sein. Der lokale verschlüsselte Bestand bleibt auf 2 MiB begrenzt.
+- Version 1.54 ergänzt passwortverschlüsselte, portable Backups (AES-256-GCM mit PBKDF2-HMAC-SHA256, zufälligem Salt/Nonce, 12–128 Zeichen Passwort) und behält den Import älterer unverschlüsselter JSON-Sicherungen mit deutlicher Warnung bei. Die JVM-Tests decken Roundtrip, falsches Passwort, Manipulation, frische Salts/Nonces und Passwortspeicher-Löschung ab; ein Android-Instrumentierungstest prüft den Krypto-Provider auf dem Gerät. **Die 1.54-Änderung ist noch in PR #9; dafür existiert noch kein freigegebenes APK-Artefakt.** Letzter installierbarer Stand bleibt Version 1.53 / versionCode 54 (CI 45293985061).
+- Letztes verfügbares 1.53-Debug-APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
+- Letztes verfügbares 1.53-ZIP-Artefakt-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`.
+- Das 1.53-ZIP-Artefakt wurde am 24.11.2026, 00:05 UTC erstellt und läuft am 08.12.2026, 00:05 UTC ab.
 - CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45293985061
 
-**Wichtig:** Version 1.53 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Das derzeit verfügbare APK auf Main ist Version 1.53 und nur ein Debug-Testpaket, kein produktiv signiertes Release. Version 1.54 befindet sich in PR #9 und hat noch kein geprüftes APK-Artefakt. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst eine passwortverschlüsselte .trakuna-Sicherung erstellen und deren Wiederherstellbarkeit prüfen. Das Sicherungspasswort getrennt aufbewahren; ältere JSON-Backups sind unverschlüsselt. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
