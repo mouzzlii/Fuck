@@ -1,6 +1,6 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45293985061 (Debug-Testpaket)
+Entwicklungsstand: Version 1.54 (versionCode 55) in PR #9; derzeit installierbares Debug-Testpaket bleibt Version 1.53 (versionCode 54), CI-Lauf 45293985061
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
@@ -20,14 +20,14 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 - Erstellt: 24.11.2026, 00:05 UTC
 - Artefakt verfügbar bis: 08.12.2026, 00:05 UTC
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstestfälle wurden im Haupt-Build kompiliert. Der separate Emulator-Workflow 45294465005 für den aktuellen Code-Commit ist noch in Bearbeitung und hat noch kein bestätigtes Ergebnis. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
+Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 ist das letzte verfügbare APK. Version 1.54 mit passwortverschlüsselten Backups liegt in PR #8; dafür ist noch kein CI-Build/Artefakt bestätigt. Die neuen Unit- und Android-Instrumentierungstests müssen auf dem exakten PR-Commit grün sein. Die Release-Signierung bleibt mangels Betreiber-Schlüsseln offen.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
 **TRAKUNA vor einem Update nicht deinstallieren.** Lokale Sendungsdaten und der zugehörige Android-Keystore-Schlüssel können bei einer Deinstallation verloren gehen.
 
-1. In TRAKUNA eine vollständige JSON-Datensicherung erstellen.
-2. Die Datei an einem geschützten Ort ablegen. Sie enthält Sendungsnummern, Empfängernamen und Notizen im Klartext.
+1. In der 1.54-Version eine passwortverschlüsselte .trakuna-Datensicherung erstellen (mindestens 12 Zeichen Passwort).
+2. Die .trakuna-Datei an einem geschützten Ort ablegen und das Passwort getrennt davon aufbewahren. Ohne Passwort ist die Sicherung nicht wiederherstellbar.
 3. Prüfen, ob die Sicherungsdatei tatsächlich vorhanden ist.
 4. Erst dann das neue APK installieren und – wenn Android es anbietet – die bestehende App aktualisieren, nicht deinstallieren.
 5. Nach dem Update einige vorhandene Testvorgänge kontrollieren.
@@ -103,7 +103,9 @@ Die UPS-App nicht eigenmächtig installieren oder konfigurieren. Vorhandene App-
 - Lokale Daten liegen nur auf diesem Gerät; es gibt keine zentrale Synchronisierung und keine Cloud-Verbindung.
 - Es gibt keine Mitarbeiterkonten oder Rollen.
 - Maximal 500 Vorgänge werden lokal gespeichert; archivierte Vorgänge belegen weiterhin einen Platz.
-- JSON-Backups und CSV-Exporte enthalten vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
+- Neue .trakuna-Backups werden mit AES-256-GCM und einem vom Benutzer gesetzten Passwort verschlüsselt. Das Passwort muss mindestens 12 Zeichen haben und getrennt von der Datei aufbewahrt werden; bei Verlust ist die Sicherung nicht wiederherstellbar.
+- Alte JSON-Backups bleiben aus Kompatibilitätsgründen importierbar, sind aber unverschlüsselt und werden vor der Wiederherstellung ausdrücklich gewarnt.
+- CSV-Exporte enthalten weiterhin vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
 - Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge mit Zeitstempel und Ereignistyp. Diese Historie ist weiterhin nur lokal und nicht manipulationssicher oder zentral bestätigt.
 - Keine echten Kundendaten in öffentliche Screenshots, GitHub-Issues oder Chat-Nachrichten aufnehmen.
 - Vor dem produktiven Einsatz sind Datenschutzprüfung, Mehrgeräte-/Mitarbeitermodell, Backup-Wiederherstellung und signiertes Produktionsrelease erforderlich.
