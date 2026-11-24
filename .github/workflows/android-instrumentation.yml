@@ -22,8 +22,10 @@ permissions:
 
 jobs:
   instrumentation:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    # The emulator runner has shown intermittent ADB/5554 boot failures on 24.04.
+    # Keep the CI host fixed while collecting host/KVM diagnostics on failure.
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
     steps:
       - name: Repository laden
         uses: actions/checkout@v7
@@ -38,6 +40,28 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
         with:
           gradle-version: '8.9'
+
+      - name: Runner-, KVM- und Speicherdiagnose vorbereiten
+        shell: bash
+        run: |
+          mkdir -p app/build/reports/trakuna-instrumentation
+          {
+            echo "=== Runner ==="
+            uname -a
+            echo "=== Disk ==="
+            df -h
+            echo "=== Memory ==="
+            free -h
+            echo "=== KVM ==="
+            ls -l /dev/kvm || true
+            "$ANDROID_HOME/emulator/emulator" -accel-check || true
+            echo "=== Emulator package ==="
+            "$ANDROID_HOME/emulator/emulator" -version || true
+            echo "=== ADB reset ==="
+            adb kill-server || true
+            adb start-server || true
+            adb devices -l || true
+          } 2>&1 | tee app/build/reports/trakuna-instrumentation/runner-preflight.txt
 
       - name: Instrumentierungs-Abhängigkeiten vor dem Emulator auflösen
         shell: bash
@@ -66,9 +90,28 @@ jobs:
           ram-size: 2048M
           heap-size: 512M
           emulator-boot-timeout: 900
-          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect
+          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect -verbose
           disable-animations: true
           script: bash scripts/run-android-instrumentation.sh
+
+      - name: Emulator- und Instrumentierungsdiagnose bei Fehler sichern
+        if: failure()
+        shell: bash
+        run: |
+          mkdir -p app/build/reports/trakuna-instrumentation
+          {
+            echo "=== ADB devices ==="
+            adb devices -l || true
+            echo "=== Emulator processes ==="
+            pgrep -af 'emulator|qemu' || true
+            echo "=== Emulator ports ==="
+            ss -ltnp || true
+            echo "=== AVD files ==="
+            find "$HOME/.android/avd" -maxdepth 3 -type f -printf '%p %s bytes\\n' 2>/dev/null | head -100 || true
+            echo "=== Remaining disk and memory ==="
+            df -h
+            free -h
+          } 2>&1 | tee app/build/reports/trakuna-instrumentation/failure-diagnostics.txt
 
       - name: Emulator- und Instrumentierungsdiagnose bereitstellen
         if: always()
