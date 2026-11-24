@@ -41,6 +41,7 @@ object BackupCrypto {
     fun encrypt(plainText: String, passphrase: CharArray): String = try {
         validatePassphrase(passphrase)
         val plain = plainText.toByteArray(Charsets.UTF_8)
+        try {
         require(plain.size <= MAX_PLAINTEXT_BYTES) { "Sicherungsdaten überschreiten die zulässige Größe." }
 
         val salt = ByteArray(SALT_BYTES).also(random::nextBytes)
@@ -65,6 +66,9 @@ object BackupCrypto {
             encoded
         } finally {
             Arrays.fill(keyBytes, 0)
+        }
+        } finally {
+            Arrays.fill(plain, 0)
         }
     } finally {
         Arrays.fill(passphrase, '\u0000')
@@ -105,7 +109,11 @@ object BackupCrypto {
                 throw IllegalArgumentException("Passwort falsch oder Sicherungsdatei beschädigt.")
             }
             require(plain.size <= MAX_PLAINTEXT_BYTES) { "Entschlüsselte Sicherung überschreitet die zulässige Größe." }
-            String(plain, Charsets.UTF_8)
+            try {
+                String(plain, Charsets.UTF_8)
+            } finally {
+                Arrays.fill(plain, 0)
+            }
         } finally {
             Arrays.fill(keyBytes, 0)
         }
