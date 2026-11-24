@@ -20,7 +20,7 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 - Erstellt: 24.11.2026, 00:05 UTC
 - Artefakt verfügbar bis: 08.12.2026, 00:05 UTC
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstestfälle wurden im Haupt-Build kompiliert. Der separate Emulator-Workflow 45294465005 für den aktuellen Code-Commit ist noch in Bearbeitung und hat noch kein bestätigtes Ergebnis. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
+Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstestfälle wurden im Haupt-Build kompiliert. Der separate Emulator-Workflow 45295645386 für den aktuellen Code-Commit ist noch in Bearbeitung und hat noch kein bestätigtes Ergebnis. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
