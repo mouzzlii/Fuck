@@ -21,7 +21,7 @@ TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 Der Arbeitszweig `fix/backup-crypto-background-2026-11-24` ergänzt eine portable, passwortgeschützte `.trakuna`-Sicherung. Vorgesehen sind AES-256-GCM und PBKDF2-HMAC-SHA256 mit 600.000 Iterationen, einem zufälligen 128-Bit-Salt und einem zufälligen 96-Bit-Nonce. Die Passwortableitung, Ver- und Entschlüsselung sowie das Lesen und Schreiben der Sicherungsdatei laufen außerhalb des Android-UI-Threads. Die Passwortbytes werden ausdrücklich als UTF-8 gebildet, damit das Dateiformat nicht von der Zeichensatzkonvertierung des jeweiligen Android-Kryptoanbieters abhängt.
 
-**Wichtig:** Diese Entwicklung ist noch nicht in `main` übernommen. Es gibt dafür noch kein erfolgreiches CI-Ergebnis und kein installierbares 1.54-APK. Der aktuelle Main-/Teststand bleibt 1.53. CSV-Exporte bleiben unverschlüsselt. Alte unverschlüsselte JSON-Sicherungen sollen weiterhin importierbar sein, aber mit einer Warnung.
+**Wichtig:** Diese Entwicklung ist noch nicht in `main` übernommen. Für den aktuellen Feature-Branch-Commit `d5bef8b397cb993495bbd10ced4b15a4d972b973` ist der Android-15-Emulator-Workflow 45463760415 erfolgreich abgeschlossen; JVM-Tests, Android-Lint, Debug-APK-Build und `connectedDebugAndroidTest` waren erfolgreich. Eine Debug-Test-APK wurde als Artefakt `14953069069` bereitgestellt (14 Tage Aufbewahrung, bis 08.12.2026). Das ist noch kein signiertes Produktionsrelease. Der Main-Stand bleibt 1.53. CSV-Exporte bleiben unverschlüsselt. Alte unverschlüsselte JSON-Sicherungen bleiben importierbar und werden vor dem Ersetzen ausdrücklich gekennzeichnet.
 
 ## Aktuelle Betriebsgrenzen
 
