@@ -1,6 +1,8 @@
 # TRAKUNA – Praxis-Testplan (Version 1.54 · versionCode 55)
 
-Aktueller Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der erfolgreiche CI-Lauf 45293985061 auf Commit `45a02f7ec8de966100c406bbfdd8e3e572052b05` bestätigt Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK-Build und Artefakt-Upload. Die Android-Instrumentierungstests werden separat ausgeführt; Emulator-Workflow 45294465005 für den aktuellen Code-Commit ist noch in Bearbeitung. Ein erfolgreicher Lauf ist noch nicht bestätigt. [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061). APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
+Aktueller installierbarer Teststand ist Version 1.53 / versionCode 54: CI-Lauf 45293985061 auf Commit `45a02f7ec8de966100c406bbfdd8e3e572052b05` bestätigt Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, Manifestprüfung, Debug-APK-Build und Artefakt-Upload. [1.53-Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061). APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
+
+Version 1.54 (versionCode 55) ergänzt passwortverschlüsselte Backups. Die Änderung liegt in PR #8; ein 1.54-Build und die neuen Emulator-/Android-Tests sind noch nicht bestätigt.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -268,7 +270,7 @@ Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Tes
 
 
 
-## 3. Verschlüsselte Datensicherung (Version 1.54)
+## 11. Verschlüsselte Datensicherung (Version 1.54)
 
 | Nr. | Test | Erwartetes Ergebnis |
 |---|---|---|
