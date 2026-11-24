@@ -31,10 +31,12 @@ permissions:
 
 jobs:
   instrumentation:
-    # The emulator runner has shown intermittent ADB/5554 boot failures on 24.04.
-    # Keep the CI host fixed while collecting host/KVM diagnostics on failure.
+    # This GitHub-hosted VM exposes a KVM device node but the Android emulator
+    # reports that hardware acceleration is unavailable. Explicitly enable QEMU TCG.
     runs-on: ubuntu-22.04
-    timeout-minutes: 35
+    timeout-minutes: 50
+    env:
+      ANDROID_I_WANT_MY_TCG: "yes"
     steps:
       - name: Repository laden
         uses: actions/checkout@v7
@@ -57,19 +59,24 @@ jobs:
           {
             echo "=== Runner ==="
             uname -a
+            echo "=== User and groups ==="
+            id
+            groups
+            echo "=== CPU virtualization flags ==="
+            grep -m1 -Eo 'vmx|svm' /proc/cpuinfo || true
+            echo "=== KVM device ==="
+            ls -l /dev/kvm || true
+            if [[ -r /dev/kvm && -w /dev/kvm ]]; then
+              echo "KVM device is readable and writable by the runner."
+            else
+              echo "KVM device is not available to the runner; QEMU TCG is explicitly enabled."
+            fi
+            echo "=== TCG override ==="
+            printf 'ANDROID_I_WANT_MY_TCG=%s\n' "$ANDROID_I_WANT_MY_TCG"
             echo "=== Disk ==="
             df -h
             echo "=== Memory ==="
             free -h
-            echo "=== KVM ==="
-            ls -l /dev/kvm || true
-            "$ANDROID_HOME/emulator/emulator" -accel-check || true
-            echo "=== Emulator package ==="
-            "$ANDROID_HOME/emulator/emulator" -version || true
-            echo "=== ADB reset ==="
-            adb kill-server || true
-            adb start-server || true
-            adb devices -l || true
           } 2>&1 | tee app/build/reports/trakuna-instrumentation/runner-preflight.txt
 
       - name: Instrumentierungs-Abhängigkeiten vor dem Emulator auflösen
@@ -95,10 +102,10 @@ jobs:
           target: aosp_atd
           profile: pixel_2
           arch: x86_64
-          cores: 4
+          cores: 2
           ram-size: 2048M
           heap-size: 512M
-          emulator-boot-timeout: 900
+          emulator-boot-timeout: 1200
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect -verbose
           disable-animations: true
           script: bash scripts/run-android-instrumentation.sh
@@ -116,7 +123,7 @@ jobs:
             echo "=== Emulator ports ==="
             ss -ltnp || true
             echo "=== AVD files ==="
-            find "$HOME/.android/avd" -maxdepth 3 -type f -printf '%p %s bytes\\n' 2>/dev/null | head -100 || true
+            find "$HOME/.android/avd" -maxdepth 3 -type f -printf '%p %s bytes\n' 2>/dev/null | head -100 || true
             echo "=== Remaining disk and memory ==="
             df -h
             free -h
