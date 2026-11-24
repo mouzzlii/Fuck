@@ -24,7 +24,7 @@ on:
 concurrency:
   group: trakuna-instrumentation-${{ github.ref }}
   # Emulator boots and instrumentation tests can take a long time. Keep the active run.
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
