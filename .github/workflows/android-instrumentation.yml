@@ -31,12 +31,9 @@ permissions:
 
 jobs:
   instrumentation:
-    # This GitHub-hosted VM exposes a KVM device node but the Android emulator
-    # reports that hardware acceleration is unavailable. Explicitly enable QEMU TCG.
+    # Enable KVM permissions when available; fall back to emulator 37.3+ TCG only when needed.
     runs-on: ubuntu-22.04
     timeout-minutes: 50
-    env:
-      ANDROID_I_WANT_MY_TCG: "yes"
     steps:
       - name: Repository laden
         uses: actions/checkout@v7
@@ -78,6 +75,24 @@ jobs:
             echo "=== Memory ==="
             free -h
           } 2>&1 | tee app/build/reports/trakuna-instrumentation/runner-preflight.txt
+
+      - name: KVM-Zugriff aktivieren oder sicheren TCG-Fallback vorbereiten
+        shell: bash
+        run: |
+          if [[ -e /dev/kvm ]]; then
+            echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+            sudo udevadm control --reload-rules
+            sudo udevadm trigger --name-match=kvm
+          fi
+
+          if [[ -r /dev/kvm && -w /dev/kvm ]]; then
+            echo "Hardware virtualization enabled: /dev/kvm is readable and writable."
+            "$ANDROID_HOME/emulator/emulator" -accel-check || true
+          else
+            echo "::warning::KVM is not available to this runner; using the supported QEMU TCG fallback."
+            echo "ANDROID_I_WANT_MY_TCG=yes" >> "$GITHUB_ENV"
+          fi
+          ls -l /dev/kvm || true
 
       - name: Instrumentierungs-Abhängigkeiten vor dem Emulator auflösen
         shell: bash
