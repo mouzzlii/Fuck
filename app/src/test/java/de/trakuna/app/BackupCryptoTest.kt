@@ -89,7 +89,7 @@ class BackupCryptoTest {
         val password = "Sicheres Passwort 2026!".toCharArray()
         val salt = ByteArray(16) { it.toByte() }
         val nonce = ByteArray(12) { (it + 16).toByte() }
-        val prefix = "TRAKUNA-ENCRYPTED-BACKUP-V1\\n"
+        val prefix = "TRAKUNA-ENCRYPTED-BACKUP-V1\n"
         val header = java.nio.ByteBuffer.allocate(33)
             .put(1.toByte())
             .putInt(210_000)
