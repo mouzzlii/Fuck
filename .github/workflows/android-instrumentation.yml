@@ -62,6 +62,9 @@ jobs:
           exit 1
 
       - name: Android-Keystore- und Speicher-Instrumentierungstests auf Emulator
+        env:
+          # GitHub Linux runners do not expose KVM; explicitly permit the emulator's TCG fallback.
+          ANDROID_I_WANT_MY_TCG: "yes"
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
