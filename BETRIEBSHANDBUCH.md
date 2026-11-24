@@ -1,6 +1,6 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45293985061 (Debug-Testpaket)
+Stand: App-Version 1.54 (versionCode 55) · CI erfolgreich: Lauf 45293985061 (Debug-Testpaket)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
