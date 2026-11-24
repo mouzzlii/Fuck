@@ -164,6 +164,45 @@ class EncryptedStorageInstrumentedTest {
         }.isFailure)
     }
 
+
+    @Test
+    fun legacy210000IterationBackupUsesTheOriginalAndroidPbkdf2Provider() {
+        val plain = """{"format":"TRAKUNA_BACKUP","schemaVersion":2,"recordCount":0}"""
+        val password = "Android Legacy Backup Password 2026!"
+        val passwordChars = password.toCharArray()
+        val salt = ByteArray(16) { it.toByte() }
+        val nonce = ByteArray(12) { (it + 16).toByte() }
+        val prefix = "TRAKUNA-ENCRYPTED-BACKUP-V1\n"
+        val header = java.nio.ByteBuffer.allocate(33)
+            .put(1.toByte())
+            .putInt(210_000)
+            .put(salt)
+            .put(nonce)
+            .array()
+        val spec = javax.crypto.spec.PBEKeySpec(passwordChars, salt, 210_000, 256)
+        val key = try {
+            javax.crypto.SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
+                .generateSecret(spec).encoded
+        } finally {
+            spec.clearPassword()
+            passwordChars.fill('\\u0000')
+        }
+        val cipher = javax.crypto.Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(
+            javax.crypto.Cipher.ENCRYPT_MODE,
+            javax.crypto.spec.SecretKeySpec(key, "AES"),
+            javax.crypto.spec.GCMParameterSpec(128, nonce)
+        )
+        cipher.updateAAD(prefix.toByteArray(Charsets.US_ASCII))
+        cipher.updateAAD(header)
+        val encrypted = prefix + java.util.Base64.getEncoder().encodeToString(
+            header + cipher.doFinal(plain.toByteArray(Charsets.UTF_8))
+        )
+        java.util.Arrays.fill(key, 0)
+
+        assertEquals(plain, BackupCrypto.decrypt(encrypted, password.toCharArray()))
+    }
+
     private fun clearStorePreferences() {
         context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE).edit().clear().commit()
         context.getSharedPreferences("trakuna_handoff", Context.MODE_PRIVATE).edit().clear().commit()
