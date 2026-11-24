@@ -67,13 +67,13 @@ class BackupCryptoTest {
         val ascii = BackupCrypto.deriveKey("password".toCharArray(), "salt".toByteArray(), 1)
         assertEquals(
             "120fb6cffcf8b32c43e7225256c4f837a86548c92ccc35480805987cb70be17b",
-            ascii.joinToString("") { "%02x".format(it) }
+            ascii.joinToString("") { "%02x".format(it.toInt() and 0xff) }
         )
 
         val unicode = BackupCrypto.deriveKey("pässwörd".toCharArray(), "trakuna-test-salt".toByteArray(), 2)
         assertEquals(
             "ea3edbe2b3d46cc1cc1b06ded1a2f8503eb4e40cac966029128f172eb7c0ba04",
-            unicode.joinToString("") { "%02x".format(it) }
+            unicode.joinToString("") { "%02x".format(it.toInt() and 0xff) }
         )
     }
 
