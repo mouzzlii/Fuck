@@ -129,6 +129,25 @@ jobs:
             echo "${ANDROID_I_WANT_MY_TCG:-not-enabled}"
           script: bash scripts/run-android-instrumentation.sh
 
+      - name: Emulator- und Instrumentierungsdiagnose bei Fehler sichern
+        if: failure()
+        shell: bash
+        run: |
+          mkdir -p app/build/reports/trakuna-instrumentation
+          {
+            echo "=== ADB devices ==="
+            adb devices -l || true
+            echo "=== Emulator processes ==="
+            pgrep -af 'emulator|qemu' || true
+            echo "=== Emulator ports ==="
+            ss -ltnp || true
+            echo "=== AVD files ==="
+            find "$HOME/.android/avd" -maxdepth 3 -type f -printf '%p %s bytes\n' 2>/dev/null | head -100 || true
+            echo "=== Remaining disk and memory ==="
+            df -h
+            free -h
+          } 2>&1 | tee app/build/reports/trakuna-instrumentation/failure-diagnostics.txt
+
       - name: Debug-APK prüfen und SHA-256 erstellen
         if: success()
         shell: bash
