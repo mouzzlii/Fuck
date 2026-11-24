@@ -122,7 +122,8 @@ class EncryptedStorageInstrumentedTest {
             note = "Wiederherstellungstest"
         )
         assertTrue(saved is ShipmentUpdate.Saved)
-        val backup = original.exportBackupJson()
+        val password = "Android Backup Password 2026!"
+        val backup = BackupCrypto.encrypt(original.exportBackupJson(), password.toCharArray())
 
         context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE)
             .edit()
@@ -131,10 +132,36 @@ class EncryptedStorageInstrumentedTest {
 
         val damaged = ShipmentStore(context)
         assertNotNull(damaged.storageError())
-        val restored = damaged.restoreBackup(backup)
+        val decryptedBackup = BackupCrypto.decrypt(backup, password.toCharArray())
+        val restored = damaged.restoreBackup(decryptedBackup)
         assertEquals(BackupRestoreResult.Restored(1), restored)
         assertEquals(listOf((saved as ShipmentUpdate.Saved).record), damaged.all())
         assertEquals(null, damaged.storageError())
+    }
+
+
+    @Test
+    fun passwordEncryptedBackupUsesAndroidCryptoProviderAndRejectsWrongPassword() {
+        val store = ShipmentStore(context)
+        val saved = store.add(
+            rawTrackingNumber = "ANDROIDTEST123",
+            carrier = "DPD",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
+            recipient = "Android Test",
+            note = "Backup Crypto Instrumentierung"
+        )
+        assertTrue(saved is ShipmentUpdate.Saved)
+        val plain = store.exportBackupJson()
+        val password = "Android Backup Password 2026!"
+        val encrypted = BackupCrypto.encrypt(plain, password.toCharArray())
+        assertTrue(BackupCrypto.isEncryptedBackup(encrypted))
+        assertFalse(encrypted.contains("ANDROIDTEST123"))
+        val decrypted = BackupCrypto.decrypt(encrypted, password.toCharArray())
+        assertEquals(plain, decrypted)
+        assertTrue(store.validateBackup(decrypted) is BackupValidation.Valid)
+        assertTrue(runCatching {
+            BackupCrypto.decrypt(encrypted, "Wrong Password 2026!".toCharArray())
+        }.isFailure)
     }
 
     private fun clearStorePreferences() {
