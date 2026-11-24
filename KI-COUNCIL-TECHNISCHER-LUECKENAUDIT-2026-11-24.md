@@ -1,6 +1,6 @@
 # KI-Council – Technischer Lücken- und Freigabeaudit
 
-Stand: 24.11.2026, 00:31 CET  
+Stand: 24.11.2026, 01:06 CET  
 Prüfart: Abgleich der vier aktuellen README-Dateien über die verbundene GitHub-Integration. Kein vollständiger Quellcode-, Geräte- oder Penetrationstest.
 
 ## Ergebnis in einem Satz
@@ -10,7 +10,7 @@ Die Repositories dokumentieren nützliche Entwicklungsstände und teils erfolgre
 ## 1. TRAKUNA – Paketshop-App
 
 ### Belegt
-- README beschreibt Version 1.53 / versionCode 54 und CI-Lauf 45293985061 (Unit-Tests, Instrumentierungstest-Kompilierung, Lint, Manifestprüfung, Debug-APK und Artefakt-Upload erfolgreich; separater Emulator-Workflow 45295645386 für aktuellen Code-Commit noch in Bearbeitung).
+- README beschreibt Version 1.53 / versionCode 54 und CI-Lauf 45293985061 (Unit-Tests, Instrumentierungstest-Kompilierung, Lint, Manifestprüfung, Debug-APK und Artefakt-Upload erfolgreich). Der frühere Emulatorlauf 45295645386 scheiterte nach App-/Test-APK-Installation und vor Testausführung mit Prozessabsturz (0 Tests). Neuer Emulatorlauf 45301653970 verwendet Hardwarebeschleunigung und erzeugt bei Fehlern ADB-/Logcat-Diagnose; dieser ist zum Prüfzeitpunkt noch in Arbeit.
 - Lokale verschlüsselte Speicherung, Archivpflicht für abgeschlossene Vorgänge und Backup-Schema 2 sind dokumentiert.
 - Manuelle Erfassung und Kamera-/DataWedge-Unterstützung sind dokumentiert.
 
@@ -29,8 +29,8 @@ Die Repositories dokumentieren nützliche Entwicklungsstände und teils erfolgre
 ## 2. SCAN-PROFIT – Reseller-Cockpit
 
 ### Belegt
-- README beschreibt Version 2.0.65, local-first Browser-Speicherung, manuelle Eingabe, optionale Barcode-Kamera, Kalkulation, Inventar, Backup/Import und CSV.
-- README dokumentiert 154 Tests, statischen Build/Smoke-Test und 7.000 lokale HTTP-Anfragen.
+- README beschreibt Version 2.0.66, 155 automatisierte Tests, lokalen Browser-Speicher, manuelle Eingabe, optionale Barcode-Kamera, Kalkulation, Inventar, Backup/Import und CSV.
+- Der aktuelle GitHub-README dokumentiert 155 Tests, statischen Build und Smoke-Test. Ein 7.000-Anfragen-Lasttest ist in der aktuellen README-Version nicht mehr als aktuelle Aussage enthalten.
 - README nennt ein Vercel-Deployment READY mit Alias `https://scan-profit-app.vercel.app`, basierend auf Commit `bf6af8d`; der neuere Stand sei nicht deployt und externe Erreichbarkeit nicht unabhängig bestätigt.
 
 ### Kritische Unklarheit
@@ -82,6 +82,15 @@ Die README sagt einerseits, das App-Dokument samt PWA-Shell liege im Repository,
 4. Karma-Ledger auf Idempotenz, Parallelität, negative Salden, Rundung, Missbrauch und Auditierbarkeit testen.
 5. Moderationsrechte, Mehr-Augen-Prinzip, Einspruch, Sperre und Protokollierung testen.
 6. Begriffe wie „Treuhand“ nur so verwenden, dass klar bleibt: kein regulierter Geldverwahrungsdienst und keine Nutzer-zu-Nutzer-Geldzahlung.
+
+## 4a. KREISLAUF – zusätzlicher Draft-Stand
+- Draft-PR #31 (Head `7d0227475b0922c4e4c85a6841c478ec3a326a3d`) ergänzt direkten und kombinierten Tausch sowie inseratgebundene Chats.
+- GitHub-CI-Lauf 45302298184 ist erfolgreich: 200 bestehende Tests + 72 Feature-/PGlite-Tests, TypeScript, Lint und Build.
+- Die Migrationen wurden nur auf isolierten PGlite-Datenbanken ausgeführt. Der PR ist nicht gemergt; Streitfall-Moderation, Push-/E-Mail-Benachrichtigung und Live-Datenbankabnahme bleiben offen.
+
+## 4b. CHRONOS – separates Face-Hardening-Artefakt
+- Ein separates Paket 0.2 wurde aus entpacktem ZIP mit 22 Tests, Python-Kompilierung und Testkopie-/Idempotenzprüfung geprüft.
+- Das Paket ist nicht Teil von CHRONOS main. Es ist ohne reale Biometrie-/Datenschutzabnahme, Embedding-Verschlüsselung und Token-Verwaltungsoberfläche nicht produktionsfähig.
 
 ## 5. Gemeinsame Council- und Release-Regeln
 
