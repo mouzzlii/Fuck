@@ -12,6 +12,16 @@ on:
       - "gradle.properties"
       - "gradle/**"
       - ".github/workflows/android.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "app/**"
+      - "build.gradle.kts"
+      - "settings.gradle.kts"
+      - "gradle.properties"
+      - "gradle/**"
+      - ".github/workflows/android.yml"
 
 concurrency:
   group: trakuna-android-${{ github.ref }}
