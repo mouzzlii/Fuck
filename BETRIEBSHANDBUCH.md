@@ -26,7 +26,7 @@ Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 ent
 
 Im Arbeitszweig `fix/backup-crypto-background-2026-11-24` wird eine passwortgeschützte Sicherung mit der Dateiendung `.trakuna` vorbereitet. Das Passwort muss 12 bis 128 Zeichen lang sein und getrennt von der Datei aufbewahrt werden. Die Sicherung verwendet AES-256-GCM und PBKDF2-HMAC-SHA256 mit 600.000 Iterationen. Alte Klartext-JSON-Sicherungen sollen weiterhin importiert werden; beim Import muss eine deutliche Warnung erscheinen. CSV-Exporte bleiben weiterhin Klartext.
 
-Diese Version ist noch nicht in `main` übernommen und es gibt noch kein geprüftes 1.54-Installationspaket. Bis dahin gelten die oben beschriebenen Schritte für Version 1.53: JSON-Sicherungen enthalten personenbezogene Daten im Klartext.
+Diese Version ist noch nicht in `main` übernommen. Der aktuelle Feature-Branch-Commit `d5bef8b397cb993495bbd10ced4b15a4d972b973` wurde im Android-15-Emulator-Workflow 45463760415 erfolgreich gebaut und getestet; JVM-Tests, Android-Lint, Debug-APK-Build und `connectedDebugAndroidTest` waren erfolgreich. Die Debug-Test-APK liegt als GitHub-Artefakt `14953069069` bis 08.12.2026 bereit: [Workflow öffnen und APK herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45463760415). Es ist kein signiertes Produktionsrelease. Vor der Übernahme in `main` und dem Einsatz im Paketshop stehen noch die manuellen Tests B1–B9 auf einem realen Android-Gerät aus. Bis dahin gilt für installierte Version 1.53: JSON-Sicherungen enthalten personenbezogene Daten im Klartext.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
