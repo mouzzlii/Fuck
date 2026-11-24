@@ -12,7 +12,7 @@ Das Council koordiniert die vier eigenständigen Softwareprojekte TRAKUNA, SCAN-
 
 | Projekt | GitHub-Repository | bekannte Ausgangslage |
 |---|---|---|
-| TRAKUNA | mouzzlii/Fuck | Version 1.53 / versionCode 54; CI-Lauf 45293985061 erfolgreich, Debug-APK und Prüfsumme unabhängig verifiziert. Unit-Tests, Lint, Manifestprüfungen und Instrumentierungstest-Kompilierung erfolgreich; separater Emulator-Workflow 5 für den aktuellen Code-Commit noch in Bearbeitung. Keine bestätigte Carrier-Buchung; Hermes-Nachfolgegerät, DataWedge und Shopgeräte-Abnahme offen. |
+| TRAKUNA | mouzzlii/Fuck | Version 1.53 / versionCode 54; CI-Lauf 45293985061 erfolgreich, Debug-APK und Prüfsumme unabhängig verifiziert. Unit-Tests, Lint, Manifestprüfungen und Instrumentierungstest-Kompilierung erfolgreich; separater Emulator-Workflow 45294465005 für den aktuellen Code-Commit noch in Bearbeitung. Keine bestätigte Carrier-Buchung; Hermes-Nachfolgegerät, DataWedge und Shopgeräte-Abnahme offen. |
 | SCAN-PROFIT | mouzzlii/SCAN-PROFIT | README dokumentiert Version 2.0.65, 154 Tests und einen Vercel-READY-Deployment-Alias. Deployment basiert auf älterem Commit; neuerer GitHub-Stand und Android-Praxistest offen. |
 | CHRONOS | mouzzlii/CHRONOS | Milestone 0.5 mit Desktop- und Android-Prototyp, lokaler API, Backup/Restore und CI. Authentifizierung, Android-Gerätetests, Verschlüsselung und Großlasttests offen. |
 | KREISLAUF | mouzzlii/Kreislauf | Demo mit Marktplatz, Karma-Ledger, Profilen, Übergabe-/Treuhandmodell und PGlite. Keine öffentliche Freigabe; echte Konten, Ende-zu-Ende-Abnahme und produktive Datenhaltung offen. |
