@@ -96,7 +96,14 @@ class BackupCryptoTest {
             .put(salt)
             .put(nonce)
             .array()
-        val key = BackupCrypto.deriveKey(password, salt, 210_000)
+        val legacySpec = javax.crypto.spec.PBEKeySpec(password, salt, 210_000, 256)
+        val key = try {
+            javax.crypto.SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
+                .generateSecret(legacySpec).encoded
+        } finally {
+            legacySpec.clearPassword()
+            java.util.Arrays.fill(password, '\u0000')
+        }
         val cipher = javax.crypto.Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(
             javax.crypto.Cipher.ENCRYPT_MODE,
