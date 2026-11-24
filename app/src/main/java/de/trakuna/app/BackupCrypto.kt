@@ -137,7 +137,6 @@ object BackupCrypto {
     internal fun deriveKey(passphrase: CharArray, salt: ByteArray, iterations: Int): ByteArray {
         try {
             require(iterations in 1..1_000_000) { "Ungültige Schlüsselableitungsparameter." }
-            require(salt.size >= SALT_BYTES) { "Sicherungssalz ist ungültig." }
             val encoder = Charsets.UTF_8.newEncoder()
                 .onMalformedInput(CodingErrorAction.REPORT)
                 .onUnmappableCharacter(CodingErrorAction.REPORT)
