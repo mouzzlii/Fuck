@@ -87,7 +87,6 @@ jobs:
 
           if [[ -r /dev/kvm && -w /dev/kvm ]]; then
             echo "Hardware virtualization enabled: /dev/kvm is readable and writable."
-            "$ANDROID_HOME/emulator/emulator" -accel-check || true
           else
             echo "::warning::KVM is not available to this runner; using the supported QEMU TCG fallback."
             echo "ANDROID_I_WANT_MY_TCG=yes" >> "$GITHUB_ENV"
@@ -123,6 +122,11 @@ jobs:
           emulator-boot-timeout: 1200
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect -verbose
           disable-animations: true
+          pre-emulator-launch-script: |
+            echo "=== Android emulator acceleration check ==="
+            "$ANDROID_HOME/emulator/emulator" -accel-check || true
+            echo "=== TCG fallback flag ==="
+            echo "${ANDROID_I_WANT_MY_TCG:-not-enabled}"
           script: bash scripts/run-android-instrumentation.sh
 
       - name: Emulator- und Instrumentierungsdiagnose bei Fehler sichern
