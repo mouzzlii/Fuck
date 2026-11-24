@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 24. November 2026 · Testversion 1.53 (versionCode 54) · CI-Lauf 45292752377 erfolgreich (Debug-Testpaket)
+Stand: 24. November 2026 · Testversion 1.53 (versionCode 54) · CI-Lauf 45293451483 erfolgreich (Debug-Testpaket)
 
 ## 1. Zweck und Freigabestatus
 
@@ -18,26 +18,26 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
-Version 1.53 wurde erfolgreich durch CI gebaut. Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die neuen Android-Instrumentierungstestfälle sind vorhanden und erfolgreich kompiliert. Ihre Laufzeitprüfung erfolgt separat im Emulator-Workflow 4, der für den aktuellen Code-Commit noch läuft. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.53 wurde erfolgreich durch CI gebaut. Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die neuen Android-Instrumentierungstestfälle sind vorhanden und erfolgreich kompiliert. Ihre Laufzeitprüfung erfolgt separat im Emulator-Workflow 5, der für den aktuellen Code-Commit noch läuft. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
 
 **Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.53 (versionCode 54) enthält Archivierung/Wiederherstellung, Backup-Schema 2, Archivzeitpunkt im CSV-Export und den zusätzlichen Löschschutz für ungültige Archivdatensätze. [Erfolgreichen CI-Lauf 45292752377 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45292752377).
+Version 1.53 (versionCode 54) enthält Archivierung/Wiederherstellung, Backup-Schema 2, Archivzeitpunkt im CSV-Export und den zusätzlichen Löschschutz für ungültige Archivdatensätze. [Erfolgreichen CI-Lauf 45293451483 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45293451483).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `33abd4bc0132f6660f8cfd89100b506df2e2ae5108f2a172ac121e8777e74f2b`
-- ZIP-SHA-256: `35b8000f6c4581eb7afe1a9028b45ebe36e3668974c1aa634cb4c63104f5b395`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 23:56 UTC; Ablauf 07.12.2026, 23:56 UTC
+- APK-SHA-256: `e97d66017f974a1602c3acbb6e3f8ad19245eeb3e22c34ac3c32494fd600eb73`
+- ZIP-SHA-256: `1393386b37732d8c5958b7bd69589f79b9a24710da7d6ab72f54f6fea1f81afb`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 00:02 UTC; Ablauf 07.12.2026, 00:02 UTC
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45292752377)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45293451483)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
-Das Artefakt im Actions-Lauf 45292752377 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update ein JSON-Backup erstellen und die Wiederherstellung prüfen. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
+Das Artefakt im Actions-Lauf 45293451483 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update ein JSON-Backup erstellen und die Wiederherstellung prüfen. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
 
 ### Sicherheitsverbesserung in Version 1.52
 
