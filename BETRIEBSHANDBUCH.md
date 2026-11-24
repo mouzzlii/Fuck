@@ -103,7 +103,9 @@ Die UPS-App nicht eigenmächtig installieren oder konfigurieren. Vorhandene App-
 - Lokale Daten liegen nur auf diesem Gerät; es gibt keine zentrale Synchronisierung und keine Cloud-Verbindung.
 - Es gibt keine Mitarbeiterkonten oder Rollen.
 - Maximal 500 Vorgänge werden lokal gespeichert; archivierte Vorgänge belegen weiterhin einen Platz.
-- JSON-Backups und CSV-Exporte enthalten vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
+- Neue .trakuna-Backups werden mit AES-256-GCM und einem vom Benutzer gesetzten Passwort verschlüsselt. Das Passwort muss mindestens 12 Zeichen haben und getrennt von der Datei aufbewahrt werden; bei Verlust ist die Sicherung nicht wiederherstellbar.
+- Alte JSON-Backups bleiben aus Kompatibilitätsgründen importierbar, sind aber unverschlüsselt und werden vor der Wiederherstellung ausdrücklich gewarnt.
+- CSV-Exporte enthalten weiterhin vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
 - Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge mit Zeitstempel und Ereignistyp. Diese Historie ist weiterhin nur lokal und nicht manipulationssicher oder zentral bestätigt.
 - Keine echten Kundendaten in öffentliche Screenshots, GitHub-Issues oder Chat-Nachrichten aufnehmen.
 - Vor dem produktiven Einsatz sind Datenschutzprüfung, Mehrgeräte-/Mitarbeitermodell, Backup-Wiederherstellung und signiertes Produktionsrelease erforderlich.
