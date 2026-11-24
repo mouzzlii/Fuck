@@ -21,7 +21,7 @@ class BackupCryptoTest {
         assertFalse(encrypted.contains("Test Empfaenger"))
         val restorePassword = "Sicheres Passwort 2026!".toCharArray()
         assertEquals(backup, BackupCrypto.decrypt(encrypted, restorePassword))
-        assertTrue(restorePassword.all { it == '\u0000' }))
+        assertTrue(restorePassword.all { it == '\u0000' })
     }
 
     @Test
