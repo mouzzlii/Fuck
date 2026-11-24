@@ -1,6 +1,6 @@
 # TRAKUNA – Betriebshandbuch
 
-Entwicklungsstand: Version 1.54 (versionCode 55) in PR #8; derzeit installierbares Debug-Testpaket bleibt Version 1.53 (versionCode 54), CI-Lauf 45293985061
+Entwicklungsstand: Version 1.54 (versionCode 55) in PR #9; derzeit installierbares Debug-Testpaket bleibt Version 1.53 (versionCode 54), CI-Lauf 45293985061
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
@@ -26,7 +26,7 @@ Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 ist
 
 **TRAKUNA vor einem Update nicht deinstallieren.** Lokale Sendungsdaten und der zugehörige Android-Keystore-Schlüssel können bei einer Deinstallation verloren gehen.
 
-1. In TRAKUNA eine passwortverschlüsselte .trakuna-Datensicherung erstellen (mindestens 12 Zeichen Passwort).
+1. In der 1.54-Version eine passwortverschlüsselte .trakuna-Datensicherung erstellen (mindestens 12 Zeichen Passwort).
 2. Die .trakuna-Datei an einem geschützten Ort ablegen und das Passwort getrennt davon aufbewahren. Ohne Passwort ist die Sicherung nicht wiederherstellbar.
 3. Prüfen, ob die Sicherungsdatei tatsächlich vorhanden ist.
 4. Erst dann das neue APK installieren und – wenn Android es anbietet – die bestehende App aktualisieren, nicht deinstallieren.
