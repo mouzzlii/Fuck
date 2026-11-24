@@ -67,7 +67,7 @@ object BackupCrypto {
             Arrays.fill(keyBytes, 0)
         }
     } finally {
-        Arrays.fill(passphrase, '\\u0000')
+        Arrays.fill(passphrase, '\u0000')
     }
 
     fun decrypt(encryptedText: String, passphrase: CharArray): String = try {
@@ -110,7 +110,7 @@ object BackupCrypto {
             Arrays.fill(keyBytes, 0)
         }
     } finally {
-        Arrays.fill(passphrase, '\\u0000')
+        Arrays.fill(passphrase, '\u0000')
     }
 
     private fun validatePassphrase(passphrase: CharArray) {
