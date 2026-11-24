@@ -264,5 +264,5 @@ Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Tes
 - [ ] **Fail-closed beim beschädigten Bestand:** Verschlüsselten Datensatz beschädigen; die App muss einen Speicherfehler anzeigen und weitere Schreibvorgänge ablehnen.
 - [ ] **Übergabe-Cache-Verschlüsselung:** Sendungsnummer und Paketdienst speichern; Klartext darf nicht in SharedPreferences stehen und muss nach Neuinitialisierung lesbar sein.
 - [ ] **Beschädigter Übergabe-Cache:** Verschlüsselten Cachewert beschädigen; die App muss einen Fehler melden und darf keinen leeren Cache vortäuschen.
-- [ ] **Backup-Recovery:** Gültige Sicherung erstellen, lokalen verschlüsselten Bestand beschädigen und anschließend die gültige Sicherung wiederherstellen. Die wiederhergestellten Daten müssen nach erneuter Leseprüfung vorhanden sein.
+- [ ] **Backup-Recovery:** Gültige Sicherung erstellen, lokalen verschlüsselten Bestand beschädigen und anschließend die gültige verschlüsselte Sicherung wiederherstellen. Die wiederhergestellten Daten müssen nach erneuter Leseprüfung vorhanden sein.
 
