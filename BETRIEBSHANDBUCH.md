@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45293451483 (Debug-Testpaket)
+Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45293985061 (Debug-Testpaket)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45293451483 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45293451483).
+1. Den [erfolgreichen Android-Build 45293985061 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061).
 2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die Prüfsumme im entpackten Ordner mit `sha256sum -c SHA256SUMS.txt` prüfen; erwartet wird `app-debug.apk: OK`. Unter Windows kann alternativ `Get-FileHash .\app-debug.apk -Algorithm SHA256` mit dem oben genannten APK-Hash verglichen werden.
@@ -15,10 +15,10 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 
 **Prüfsummen des bereitgestellten Testpakets**
 
-- APK-SHA-256: `e97d66017f974a1602c3acbb6e3f8ad19245eeb3e22c34ac3c32494fd600eb73`
-- ZIP-SHA-256: `1393386b37732d8c5958b7bd69589f79b9a24710da7d6ab72f54f6fea1f81afb`
-- Erstellt: 23.11.2026, 00:02 UTC
-- Artefakt verfügbar bis: 07.12.2026, 00:02 UTC
+- APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`
+- ZIP-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`
+- Erstellt: 23.11.2026, 00:05 UTC
+- Artefakt verfügbar bis: 07.12.2026, 00:05 UTC
 
 Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstestfälle wurden im Haupt-Build kompiliert. Der separate Emulator-Workflow 5 für den aktuellen Code-Commit ist noch in Bearbeitung und hat noch kein bestätigtes Ergebnis. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
 
