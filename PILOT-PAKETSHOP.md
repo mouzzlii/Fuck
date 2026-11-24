@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 24. November 2026 · Testversion 1.53 (versionCode 54) · CI-Lauf 45293451483 erfolgreich (Debug-Testpaket)
+Stand: 24. November 2026 · Testversion 1.53 (versionCode 54) · CI-Lauf 45293985061 erfolgreich (Debug-Testpaket)
 
 ## 1. Zweck und Freigabestatus
 
@@ -24,20 +24,20 @@ Version 1.53 wurde erfolgreich durch CI gebaut. Unit-Tests, Kompilierung der And
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.53 (versionCode 54) enthält Archivierung/Wiederherstellung, Backup-Schema 2, Archivzeitpunkt im CSV-Export und den zusätzlichen Löschschutz für ungültige Archivdatensätze. [Erfolgreichen CI-Lauf 45293451483 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45293451483).
+Version 1.53 (versionCode 54) enthält Archivierung/Wiederherstellung, Backup-Schema 2, Archivzeitpunkt im CSV-Export und den zusätzlichen Löschschutz für ungültige Archivdatensätze. [Erfolgreichen CI-Lauf 45293985061 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061).
 
 - Unit-Tests: erfolgreich
 - Android-Lint: erfolgreich
 - Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `e97d66017f974a1602c3acbb6e3f8ad19245eeb3e22c34ac3c32494fd600eb73`
-- ZIP-SHA-256: `1393386b37732d8c5958b7bd69589f79b9a24710da7d6ab72f54f6fea1f81afb`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 00:02 UTC; Ablauf 07.12.2026, 00:02 UTC
+- APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`
+- ZIP-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`
+- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 23.11.2026, 00:05 UTC; Ablauf 07.12.2026, 00:05 UTC
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45293451483)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45293985061)
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
-Das Artefakt im Actions-Lauf 45293451483 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update ein JSON-Backup erstellen und die Wiederherstellung prüfen. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
+Das Artefakt im Actions-Lauf 45293985061 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update ein JSON-Backup erstellen und die Wiederherstellung prüfen. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
 
 ### Sicherheitsverbesserung in Version 1.52
 
