@@ -619,7 +619,7 @@ class MainActivity : ComponentActivity() {
                                                         status = exported.exceptionOrNull()?.message ?: "Verschlüsselte Datensicherung fehlgeschlagen."
                                                     }
                                                 } finally {
-                                                    passwordChars.fill('\\u0000')
+                                                    passwordChars.fill('\u0000')
                                                     backupBusy = false
                                                 }
                                             }
@@ -690,7 +690,7 @@ class MainActivity : ComponentActivity() {
                                                         }
                                                     }
                                                 } finally {
-                                                    passwordChars.fill('\\u0000')
+                                                    passwordChars.fill('\u0000')
                                                     backupBusy = false
                                                 }
                                             }
