@@ -168,7 +168,7 @@ class EncryptedStorageInstrumentedTest {
     @Test
     fun legacy210000IterationBackupUsesTheOriginalAndroidPbkdf2Provider() {
         val plain = """{"format":"TRAKUNA_BACKUP","schemaVersion":2,"recordCount":0}"""
-        val password = "Android Legacy Backup Password 2026!"
+        val password = "Grüße aus Österreich € 2026!"
         val passwordChars = password.toCharArray()
         val salt = ByteArray(16) { it.toByte() }
         val nonce = ByteArray(12) { (it + 16).toByte() }
@@ -185,7 +185,7 @@ class EncryptedStorageInstrumentedTest {
                 .generateSecret(spec).encoded
         } finally {
             spec.clearPassword()
-            passwordChars.fill('\\u0000')
+            passwordChars.fill('\u0000')
         }
         val cipher = javax.crypto.Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(
