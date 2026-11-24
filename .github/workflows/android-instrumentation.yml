@@ -55,6 +55,9 @@ jobs:
 
       - name: Android-Keystore- und Speicher-Instrumentierungstests auf Emulator
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          # No KVM is available on hosted Linux; allow the emulator's QEMU TCG mode.
+          ANDROID_I_WANT_MY_TCG: 'yes'
         with:
           api-level: 35
           target: default
