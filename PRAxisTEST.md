@@ -204,17 +204,6 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 52. **Cache-Schreibfehler:** Auf einem isolierten Testgerät einen Speicherausfall simulieren. Die Partner-App darf nicht gestartet werden, wenn das vorherige sichere Speichern nicht bestätigt wurde; die Fehlermeldung muss den Fehler verständlich benennen.
 
 
-## 10. Ergänzende Android-Instrumentierungstests (Version 1.53)
-
-Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Testbestand im Repository. Sie wurden in CI erfolgreich kompiliert; ein Emulator- oder Gerätelauf ist noch offen:
-
-- [ ] **Keystore-Verschlüsselung:** Testsendung speichern, SharedPreferences kontrollieren und bestätigen, dass Sendungsnummer, Empfänger und Notiz nicht im Klartext vorkommen.
-- [ ] **Speicher-Wiederöffnung:** Neue `ShipmentStore`-Instanz erstellen und kontrollieren, dass der verschlüsselte Bestand vollständig wieder lesbar ist.
-- [ ] **Fail-closed beim beschädigten Bestand:** Verschlüsselten Datensatz beschädigen; die App muss einen Speicherfehler anzeigen und weitere Schreibvorgänge ablehnen.
-- [ ] **Übergabe-Cache-Verschlüsselung:** Sendungsnummer und Paketdienst speichern; Klartext darf nicht in SharedPreferences stehen und muss nach Neuinitialisierung lesbar sein.
-- [ ] **Beschädigter Übergabe-Cache:** Verschlüsselten Cachewert beschädigen; die App muss einen Fehler melden und darf keinen leeren Cache vortäuschen.
-- [ ] **Backup-Recovery:** Gültige Sicherung erstellen, lokalen verschlüsselten Bestand beschädigen und anschließend die gültige Sicherung wiederherstellen. Die wiederhergestellten Daten müssen nach erneuter Leseprüfung vorhanden sein.
-
 ## 8. Zusätzliche Parser- und QR-Code-Prüfungen
 
 Diese Prüfungen ergänzen die Kamera- und DataWedge-Tests. Sie können mit gedruckten Testetiketten oder vorbereiteten QR-Testcodes durchgeführt werden:
@@ -265,3 +254,15 @@ Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/202
 - [ ] Einen ausgehenden Vorgang bis zur Paketdienst-Übergabe fortschreiben.
 - [ ] Dialogtext kontrollieren: TRAKUNA erklärt, dass keine Carrier-Bestätigung empfangen wird und nur nach abgeschlossener Quittierung im Originalsystem lokal dokumentiert werden soll.
 - [ ] Nach Bestätigung kontrollieren: Status lautet ausdrücklich „Lokal als an Paketdienst übergeben dokumentiert“ und nicht „Carrier-Buchung bestätigt“.
+
+## 10. Ergänzende Android-Instrumentierungstests (Version 1.53)
+
+Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Testbestand im Repository. Sie wurden in CI erfolgreich kompiliert; ein Emulator- oder Gerätelauf ist noch offen:
+
+- [ ] **Keystore-Verschlüsselung:** Testsendung speichern, SharedPreferences kontrollieren und bestätigen, dass Sendungsnummer, Empfänger und Notiz nicht im Klartext vorkommen.
+- [ ] **Speicher-Wiederöffnung:** Neue `ShipmentStore`-Instanz erstellen und kontrollieren, dass der verschlüsselte Bestand vollständig wieder lesbar ist.
+- [ ] **Fail-closed beim beschädigten Bestand:** Verschlüsselten Datensatz beschädigen; die App muss einen Speicherfehler anzeigen und weitere Schreibvorgänge ablehnen.
+- [ ] **Übergabe-Cache-Verschlüsselung:** Sendungsnummer und Paketdienst speichern; Klartext darf nicht in SharedPreferences stehen und muss nach Neuinitialisierung lesbar sein.
+- [ ] **Beschädigter Übergabe-Cache:** Verschlüsselten Cachewert beschädigen; die App muss einen Fehler melden und darf keinen leeren Cache vortäuschen.
+- [ ] **Backup-Recovery:** Gültige Sicherung erstellen, lokalen verschlüsselten Bestand beschädigen und anschließend die gültige Sicherung wiederherstellen. Die wiederhergestellten Daten müssen nach erneuter Leseprüfung vorhanden sein.
+
