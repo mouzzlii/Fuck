@@ -38,7 +38,7 @@ object BackupCrypto {
 
     fun isEncryptedBackup(raw: String): Boolean = raw.startsWith(PREFIX)
 
-    fun encrypt(plainText: String, passphrase: CharArray): String {
+    fun encrypt(plainText: String, passphrase: CharArray): String = try {
         validatePassphrase(passphrase)
         val plain = plainText.toByteArray(Charsets.UTF_8)
         require(plain.size <= MAX_PLAINTEXT_BYTES) { "Sicherungsdaten überschreiten die zulässige Größe." }
@@ -62,13 +62,15 @@ object BackupCrypto {
             require(encoded.toByteArray(Charsets.UTF_8).size <= MAX_ENCRYPTED_BACKUP_BYTES) {
                 "Verschlüsselte Sicherung überschreitet die zulässige Dateigröße."
             }
-            return encoded
+            encoded
         } finally {
             Arrays.fill(keyBytes, 0)
         }
+    } finally {
+        Arrays.fill(passphrase, '\\u0000')
     }
 
-    fun decrypt(encryptedText: String, passphrase: CharArray): String {
+    fun decrypt(encryptedText: String, passphrase: CharArray): String = try {
         require(encryptedText.toByteArray(Charsets.UTF_8).size <= MAX_ENCRYPTED_BACKUP_BYTES) {
             "Sicherungsdatei überschreitet die zulässige Größe."
         }
@@ -86,8 +88,10 @@ object BackupCrypto {
         require(version == VERSION && iterations == ITERATIONS) {
             "Sicherungsversion oder Verschlüsselungsparameter werden nicht unterstützt."
         }
-        val salt = ByteArray(SALT_BYTES).also(buffer::get)
-        val nonce = ByteArray(NONCE_BYTES).also(buffer::get)
+        val salt = ByteArray(SALT_BYTES)
+        buffer.get(salt)
+        val nonce = ByteArray(NONCE_BYTES)
+        buffer.get(nonce)
         val ciphertext = payload.copyOfRange(HEADER_BYTES, payload.size)
         val keyBytes = deriveKey(passphrase, salt, iterations)
         try {
@@ -101,10 +105,12 @@ object BackupCrypto {
                 throw IllegalArgumentException("Passwort falsch oder Sicherungsdatei beschädigt.")
             }
             require(plain.size <= MAX_PLAINTEXT_BYTES) { "Entschlüsselte Sicherung überschreitet die zulässige Größe." }
-            return String(plain, Charsets.UTF_8)
+            String(plain, Charsets.UTF_8)
         } finally {
             Arrays.fill(keyBytes, 0)
         }
+    } finally {
+        Arrays.fill(passphrase, '\\u0000')
     }
 
     private fun validatePassphrase(passphrase: CharArray) {
