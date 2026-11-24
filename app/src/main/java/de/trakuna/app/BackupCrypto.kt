@@ -24,6 +24,7 @@ object BackupCrypto {
     private const val PREFIX = "TRAKUNA-ENCRYPTED-BACKUP-V1\n"
     private const val VERSION = 1
     private const val ITERATIONS = 600_000
+    private val SUPPORTED_ITERATIONS = setOf(210_000, ITERATIONS)
     private const val KEY_BITS = 256
     private const val SALT_BYTES = 16
     private const val NONCE_BYTES = 12
@@ -90,7 +91,7 @@ object BackupCrypto {
         val buffer = ByteBuffer.wrap(header)
         val version = buffer.get().toInt() and 0xff
         val iterations = buffer.int
-        require(version == VERSION && iterations == ITERATIONS) {
+        require(version == VERSION && iterations in SUPPORTED_ITERATIONS) {
             "Sicherungsversion oder Verschlüsselungsparameter werden nicht unterstützt."
         }
         val salt = ByteArray(SALT_BYTES)
