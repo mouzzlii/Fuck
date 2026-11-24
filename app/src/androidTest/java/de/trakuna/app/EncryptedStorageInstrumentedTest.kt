@@ -137,6 +137,20 @@ class EncryptedStorageInstrumentedTest {
         assertEquals(null, damaged.storageError())
     }
 
+
+    @Test
+    fun passwordEncryptedBackupUsesAndroidCryptoProviderAndRejectsWrongPassword() {
+        val plain = """{"format":"TRAKUNA_BACKUP","trackingNumber":"ANDROIDTEST123"}"""
+        val password = "Android Backup Password 2026!"
+        val encrypted = BackupCrypto.encrypt(plain, password.toCharArray())
+        assertTrue(BackupCrypto.isEncryptedBackup(encrypted))
+        assertFalse(encrypted.contains("ANDROIDTEST123"))
+        assertEquals(plain, BackupCrypto.decrypt(encrypted, password.toCharArray()))
+        assertTrue(runCatching {
+            BackupCrypto.decrypt(encrypted, "Wrong Password 2026!".toCharArray())
+        }.isFailure)
+    }
+
     private fun clearStorePreferences() {
         context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE).edit().clear().commit()
         context.getSharedPreferences("trakuna_handoff", Context.MODE_PRIVATE).edit().clear().commit()
