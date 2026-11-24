@@ -49,6 +49,8 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 
 Der Android-Workflow startet nur bei App-/Build-Änderungen und prüft vor dem Build, dass die aktuelle Offline-Version keine INTERNET-Berechtigung anfordert, Android-Backups deaktiviert und Klartextverkehr deaktiviert bleibt. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden.
 
+Für die Android-Instrumentierungstests gibt es zusätzlich den getrennten Workflow [`.github/workflows/android-instrumentation.yml`](.github/workflows/android-instrumentation.yml). Er startet einen API-35-Emulator und führt Keystore-, Speicher- und Backup-Recovery-Tests aus. Dieser langsamere Emulatorlauf ist bewusst vom normalen APK-Build getrennt, damit ein nicht startender Emulator die Bereitstellung der lokalen Debug-Testversion nicht blockiert.
+
 ## Neu in Version 1.52
 
 - Die UTF-8-Dekodierung verschlüsselter lokaler Speicherdaten ist strikt: ungültige Bytefolgen werden als Speicherfehler behandelt und nicht stillschweigend durch Ersatzzeichen verändert.
