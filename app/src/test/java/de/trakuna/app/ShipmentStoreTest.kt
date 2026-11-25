@@ -521,8 +521,10 @@ class ShipmentStoreTest {
     @Test
     fun glsLabelParserAcceptsExactParcelNumberTokensInTwoDimensionalPayloads() {
         assertEquals("31220879741", ShipmentRules.extractTrackingNumber("GLS|PARCEL|31220879741|CUSTREF|0400932541|ZIP|4202"))
-        assertEquals(null, ShipmentRules.extractTrackingNumber("8721335813708"))
-        assertEquals(null, ShipmentRules.extractTrackingNumber("6725350723808"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("8721335813708", rejectEan13 = true))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("6725350723808", rejectEan13 = true))
+        // Numeric identifiers from other carriers are not globally rejected.
+        assertEquals("8721335813708", ShipmentRules.extractTrackingNumber("8721335813708"))
     }
 
     @Test
