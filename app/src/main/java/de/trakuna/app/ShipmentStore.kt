@@ -236,13 +236,18 @@ class ShipmentStore(context: Context) {
     }
 
     @Synchronized
-    fun advance(id: String): ShipmentUpdate {
+    fun advance(id: String, expectedStatus: ShipmentStatus): ShipmentUpdate {
         val records = readRecords().getOrElse {
             return ShipmentUpdate.Rejected("Lokaler Datenspeicher kann nicht sicher gelesen werden. Es wurden keine Daten geändert.")
         }.toMutableList()
         val index = records.indexOfFirst { it.id == id }
         if (index < 0) return ShipmentUpdate.Rejected("Sendung wurde nicht gefunden.")
         val current = records[index]
+        // Optimistic concurrency guard: a repeated tap or stale confirmation must
+        // never advance a shipment that has already changed since the dialog opened.
+        if (current.status != expectedStatus) {
+            return ShipmentUpdate.Rejected("Status wurde inzwischen geändert. Bitte Liste aktualisieren und erneut prüfen.")
+        }
         if (current.archivedAt != null) return ShipmentUpdate.Rejected("Archivierte Vorgänge können nicht fortgeschrieben werden. Bitte zuerst wiederherstellen.")
         val next = ShipmentRules.nextStatus(current.flow, current.status)
             ?: return ShipmentUpdate.Rejected("Dieser Vorgang ist bereits abgeschlossen.")
