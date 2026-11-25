@@ -1,12 +1,12 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: Integrationsversion 1.54 (versionCode 55) · Build 45721047978 und API-35-Emulator 45721047851 erfolgreich · 8/8 Instrumentierungstests (Debug-Testpaket, noch nicht in main)
+Stand: Integrationsversion 1.54 (versionCode 55) · Build 45722303637 und API-35-Emulator 45722303671 erfolgreich · 8/8 Instrumentierungstests (Debug-Testpaket, noch nicht in main)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45721047978 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45721047978).
+1. Den [erfolgreichen Android-Build 45722303637 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45722303637).
 2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen (Artifact-ID `15072192619`).
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die Prüfsumme im entpackten Ordner mit `sha256sum -c SHA256SUMS.txt` prüfen; erwartet wird `app-debug.apk: OK`. Unter Windows kann alternativ `Get-FileHash .\\app-debug.apk -Algorithm SHA256` mit dem Wert in `SHA256SUMS.txt` verglichen werden.
@@ -16,9 +16,9 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 **Stand des Testpakets**
 
 - App-Version: 1.54 (versionCode 55)
-- Geprüfter Commit: `86c8a7f1f185dda76658373538cde762e4cfac28`
-- Android-Build: [45721047978 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45721047978)
-- Emulator-Instrumentierung: [45721047851 – erfolgreich, 8/8 Tests](https://github.com/mouzzlii/Fuck/actions/runs/45721047851)
+- Geprüfter Commit: `25558994d553a509ea7733fd478b5153a539ff94`
+- Android-Build: [45722303637 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45722303637)
+- Emulator-Instrumentierung: [45722303671 – erfolgreich, 8/8 Tests](https://github.com/mouzzlii/Fuck/actions/runs/45722303671)
 - Artefakt: `TRAKUNA-Android`, Artifact-ID `15072192619`
 - Verfügbar bis: 09.12.2026, 23:26 UTC
 

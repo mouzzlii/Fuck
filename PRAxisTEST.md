@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Integrationsversion 1.54 · versionCode 55)
 
-Aktueller App-Code-Stand: Commit `86c8a7f1f185dda76658373538cde762e4cfac28`. Android-Build [45721047978](https://github.com/mouzzlii/Fuck/actions/runs/45721047978) und API-35-Emulatorlauf [45721047851](https://github.com/mouzzlii/Fuck/actions/runs/45721047851) sind erfolgreich; 8/8 Instrumentierungstests bestanden. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und die Android-Keystore-/Backup-Instrumentierung. Die manuellen Kamera-/Zebra-Tests und die Backup-Abnahme B1–B9 auf einem realen Android-Gerät bleiben offen. Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
+Aktueller App-Code-Stand: Commit `25558994d553a509ea7733fd478b5153a539ff94`. Android-Build [45722303637](https://github.com/mouzzlii/Fuck/actions/runs/45722303637) und API-35-Emulatorlauf [45722303671](https://github.com/mouzzlii/Fuck/actions/runs/45722303671) sind erfolgreich; 8/8 Instrumentierungstests bestanden. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und die Android-Keystore-/Backup-Instrumentierung. Die manuellen Kamera-/Zebra-Tests und die Backup-Abnahme B1–B9 auf einem realen Android-Gerät bleiben offen. Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -290,7 +290,7 @@ Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/202
 
 ## 10. Ergänzende Android-Instrumentierungstests (Integrationsversion 1.54)
 
-Der Android-Build 45721047978 ist erfolgreich. Der separate API-35-Emulatorlauf 45721047851 hat **8/8 Instrumentierungstests** erfolgreich ausgeführt. Dazu gehören die verschlüsselte Backup-Wiederherstellung, falsche Passwortablehnung, Legacy-PBKDF2-Kompatibilität, verschlüsselte lokale Speicherung und der Schutz vor doppelter Statusfortschreibung. Die Tests bestätigen keinen Kamera- oder Zebra-Hardwarebetrieb.
+Der Android-Build [45722303637](https://github.com/mouzzlii/Fuck/actions/runs/45722303637) ist erfolgreich. Der separate API-35-Emulatorlauf [45722303671](https://github.com/mouzzlii/Fuck/actions/runs/45722303671) hat **8/8 Instrumentierungstests** erfolgreich ausgeführt. Dazu gehören die verschlüsselte Backup-Wiederherstellung, falsche Passwortablehnung, Legacy-PBKDF2-Kompatibilität, verschlüsselte lokale Speicherung und der Schutz vor doppelter Statusfortschreibung. Die Tests bestätigen keinen Kamera- oder Zebra-Hardwarebetrieb.
 
 - [ ] **Keystore-Verschlüsselung:** Testsendung speichern, SharedPreferences kontrollieren und bestätigen, dass Sendungsnummer, Empfänger und Notiz nicht im Klartext vorkommen.
 - [ ] **Speicher-Wiederöffnung:** Neue `ShipmentStore`-Instanz erstellen und kontrollieren, dass der verschlüsselte Bestand vollständig wieder lesbar ist.
