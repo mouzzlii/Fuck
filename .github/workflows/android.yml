@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+      - feature/scan-diagnostics
+      - fix/handoff-cache-resume
     paths:
       - "app/**"
       - "build.gradle.kts"
@@ -17,6 +19,7 @@ on:
   pull_request:
     branches:
       - main
+      - feature/scan-diagnostics
     paths:
       - "app/**"
       - "build.gradle.kts"
