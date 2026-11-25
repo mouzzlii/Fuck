@@ -26,7 +26,7 @@ internal fun ScanDiagnosticsPanel(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Scan-Diagnose", style = MaterialTheme.typography.titleMedium, color = Forest)
+                Text("Scan-Diagnose", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     TextButton(onClick = { onExpandedChange(!expanded) }) {
                         Text(if (expanded) "Ausblenden" else "Anzeigen")
