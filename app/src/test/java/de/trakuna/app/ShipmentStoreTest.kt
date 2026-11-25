@@ -458,6 +458,32 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun glsQrPrefersShipmentNumberOverAuxiliaryTrackIdRegardlessOfParameterOrder() {
+        val expected = "31220879741"
+        val trackId = "Z4EIOR5P"
+        assertEquals(
+            expected,
+            ShipmentRules.extractTrackingNumber(
+                "https://gls.example/track?trackingnumber=$expected&trackid=$trackId"
+            )
+        )
+        assertEquals(
+            expected,
+            ShipmentRules.extractTrackingNumber(
+                "https://gls.example/track?trackid=$trackId&trackingnumber=$expected"
+            )
+        )
+    }
+
+    @Test
+    fun trackIdRemainsUsableWhenNoExplicitShipmentNumberIsPresent() {
+        assertEquals(
+            "Z4EIOR5P",
+            ShipmentRules.extractTrackingNumber("https://gls.example/track?trackid=Z4EIOR5P")
+        )
+    }
+
+    @Test
     fun scanParserUsesRecognizableQrPathAndRejectsUntrustedOrOversizedInput() {
         assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber("https://example.test/parcel/AB123456789AT"))
         assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/parcel/not-a-number"))
