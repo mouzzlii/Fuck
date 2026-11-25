@@ -586,7 +586,7 @@ object ShipmentRules {
         return exactTrackId.takeIf { Regex("(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{8}").matches(it) }
     }
 
-    fun extractTrackingNumber(raw: String, maxInputChars: Int = 4096): String? {
+    fun extractTrackingNumber(raw: String, maxInputChars: Int = 4096, rejectEan13: Boolean = false): String? {
         if (raw.isEmpty() || raw.length > maxInputChars) return null
 
         // Zebra/DataWedge and GS1 scanners may prepend an AIM symbology identifier.
@@ -595,6 +595,9 @@ object ShipmentRules {
             .replace(Regex("^(?:\\]C[0-9]|\\]d[0-9]|\\]Q[0-9])"), "")
             .trim()
         if (cleaned.isBlank()) return null
+        // ML Kit reports EAN-13 symbology separately. Exclude these product
+        // barcodes at the camera boundary without banning 13-digit IDs globally.
+        if (rejectEan13 && Regex("^[0-9]{13}$").matches(cleaned)) return null
 
         fun plausible(value: String?): String? =
             value?.let(::normalizeTrackingNumber)?.takeIf(::isValidTrackingNumber)
@@ -656,10 +659,6 @@ object ShipmentRules {
 
         val glsIdentifier = extractGlsLabelIdentifier(cleaned)
         if (glsIdentifier != null) return glsIdentifier
-
-        // EAN-13 is a product/label barcode, not a GLS parcel number.
-        // Do not let the generic fallback accept it as an arbitrary numeric ID.
-        if (Regex("^[0-9]{13}$").matches(cleaned)) return null
 
         val compact = plausible(cleaned)
         // If a known-format identifier is embedded inside a longer token, reject the
