@@ -10,7 +10,7 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 
 ## Offen — priorisiert
 
-- [ ] **T-02 — Scanner-Integrations-PR #18 vollständig prüfen.** Diff und Branch-Basis gegen `feature/scan-diagnostics` prüfen; Wiederherstellung des verschlüsselten Übergabe-Caches, ML-Kit-Format-Allowlist, DataWedge-Formatprüfung und Fokusverhalten auf Regressionen untersuchen. CI für den exakten Head `4d499964e9d807fc3c029088bd3248800e1f2b72` nachweisen. PR #18 ist Draft und noch nicht gebaut/auf Hardware getestet laut PR-Beschreibung. Keine Integration ohne bestandene Prüfungen.
+- [x] **T-02 — Scanner-Integrations-PR #18 technisch prüfen.** Diff und gestapelte Branch-Basis gegen `feature/scan-diagnostics` geprüft; verschlüsselte Cache-Wiederherstellung, ML-Kit-Format-Allowlist, DataWedge-Labeltype-Allowlist, API-34-Absenderprüfung, Fokusverhalten und doppelte Statusbestätigung geprüft. Für den exakten Head `e5991fe713ff68a4cb5c9ebb87a27dfcc3ad173a` sind Android-Build und Emulator-Instrumentierung erfolgreich: [Build](https://github.com/mouzzlii/Fuck/actions/runs/45686066011), [Emulator](https://github.com/mouzzlii/Fuck/actions/runs/45686065956). Debug-Artefakt erstellt; Release-Signierung übersprungen. Echte Zebra-/Kamera-Hardwareabnahme bleibt T-03/T-08 vorbehalten. PR #18 bleibt Draft und wird nicht gemergt.
 
 - [ ] **T-03 — Scanner-End-to-End-Abnahme vorbereiten und durchführen.** Testfälle für Kamera-Berechtigung verweigert, fehlende Kamera, leere/ungültige/mehrdeutige Codes, doppelte Scans, Activity-/Prozessneustart, ML Kit und DataWedge dokumentieren. Anschließend auf realen Android- und Zebra-Geräten testen; Emulatorergebnisse nicht als Hardwareabnahme ausgeben.
 
@@ -29,7 +29,7 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 | PR | Zweck | Status / wichtige Einschränkung |
 |---|---|---|
 | [#19](https://github.com/mouzzlii/Fuck/pull/19) | Projektregeln und Aufgabensteuerung | Offen; reine Dokumentation; Review/Merge ausstehend |
-| [#18](https://github.com/mouzzlii/Fuck/pull/18) | Übergabe-Cache-Wiederherstellung und Scanner-Härtung | Draft; Basis `feature/scan-diagnostics`; CI/Hardwaretest für exakten Head offen |
+| [#18](https://github.com/mouzzlii/Fuck/pull/18) | Übergabe-Cache-Wiederherstellung und Scanner-Härtung | Draft; Basis `feature/scan-diagnostics`; CI für Head `e5991fe` erfolgreich; echte Hardwareabnahme offen |
 | [#17](https://github.com/mouzzlii/Fuck/pull/17) | Fokus, Codefilter und Standby-Wiederherstellung | Draft; laut aktuellem PR-Stand nicht mergebar; nicht separat vor #18 integrieren |
 | [#16](https://github.com/mouzzlii/Fuck/pull/16) | Scan-Diagnose und GLS-Parserkorrektur | Offen; dokumentierter APK-/CI-Nachweis vorhanden; reale Hardwareabnahme offen |
 | [#14](https://github.com/mouzzlii/Fuck/pull/14) | Verschlüsselte Backups | Draft; automatisierte Prüfungen dokumentiert; reale Geräteabnahme und Betreiber-Signierung offen |
