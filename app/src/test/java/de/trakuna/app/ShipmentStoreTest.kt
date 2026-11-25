@@ -502,6 +502,39 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun glsLabelParserPrefersParcelNumberAndIgnoresTrackIdCustomerReferenceAndPostcodes() {
+        val label = """
+            Your GLS Track ID: Z4EIOR5P
+            Cust-Ref 0400932541
+            PLZ 4030
+            Paketnummer 31220879741
+        """.trimIndent()
+        assertEquals("31220879741", ShipmentRules.extractTrackingNumber(label))
+    }
+
+    @Test
+    fun glsLabelParserAcceptsTrackIdOnlyWhenParcelNumberIsAbsent() {
+        assertEquals("Z4EIOR5P", ShipmentRules.extractTrackingNumber("Your GLS Track ID: Z4EIOR5P"))
+        assertEquals("Z4EIOR5P", ShipmentRules.extractTrackingNumber("Z4EIOR5P"))
+    }
+
+    @Test
+    fun glsLabelParserAcceptsExactParcelNumberTokensInTwoDimensionalPayloads() {
+        assertEquals("31220879741", ShipmentRules.extractTrackingNumber("GLS|PARCEL|31220879741|CUSTREF|0400932541|ZIP|4202"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("8721335813708", rejectEan13 = true))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("6725350723808", rejectEan13 = true))
+        // Numeric identifiers from other carriers are not globally rejected.
+        assertEquals("8721335813708", ShipmentRules.extractTrackingNumber("8721335813708"))
+    }
+
+    @Test
+    fun glsLabelParserRejectsConflictingParcelNumbersAndDoesNotPromoteCustomerReference() {
+        assertEquals(null, ShipmentRules.extractTrackingNumber("Parcel Number 31220879741 Parcel Number 87220879741"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("Cust-Ref 0400932541"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("PLZ 4030"))
+    }
+
+    @Test
     fun scanParserUsesRecognizableQrPathAndRejectsUntrustedOrOversizedInput() {
         assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber("https://example.test/parcel/AB123456789AT"))
         assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/parcel/not-a-number"))

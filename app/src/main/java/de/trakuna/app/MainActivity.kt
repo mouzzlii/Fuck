@@ -254,6 +254,13 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Text(if (showScanner) "Scanner schließen" else "Barcode / QR-Code scannen")
                         }
+
+                        OutlinedButton(
+                            onClick = { showScanDiagnostics = !showScanDiagnostics },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(if (showScanDiagnostics) "Scan-Diagnose schließen" else "Scan-Diagnose öffnen")
+                        }
                         if (showScanner) {
                             ScannerPanel(
                                 onDetected = { diagnostic ->
@@ -271,14 +278,18 @@ class MainActivity : ComponentActivity() {
                                 onClose = { showScanner = false }
                             )
                         }
-                        scanDiagnostic?.let { diagnostic ->
+                        if (showScanDiagnostics) {
                             ScanDiagnosticsPanel(
-                                diagnostic = diagnostic,
+                                diagnostic = scanDiagnostic,
                                 expanded = showScanDiagnostics,
                                 onExpandedChange = { showScanDiagnostics = it },
                                 onClear = {
                                     scanDiagnostic = null
                                     showScanDiagnostics = false
+                                },
+                                onCopyResult = { copied ->
+                                    status = if (copied) "Scan-Diagnose wurde in die Zwischenablage kopiert."
+                                    else "Kopieren fehlgeschlagen. Bitte Zwischenablage bzw. Geräteeinstellungen prüfen."
                                 }
                             )
                         }
