@@ -67,6 +67,10 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 21 | „Ohne Auswahl“ wählen und einen bekannten UPS-1Z-Testcode eingeben | Die manuelle Auswahl wird geleert; der bekannte UPS-Format-Hinweis darf als Hinweis erscheinen. Der Format-Hinweis bestätigt keine Existenz oder Buchung. |
 | 22 | Nur DPD einer App zuordnen, danach einen GLS-Übergabeversuch starten | Die DPD-App darf nicht als Ersatz für GLS geöffnet werden. TRAKUNA meldet die fehlende GLS-Zuordnung; die lokale Cache-Sicherung bleibt erhalten. |
 | 23 | Eine Carrier-Zuordnung entfernen und denselben Übergabeversuch wiederholen | Es wird keine fremde Carrier-App als Fallback geöffnet. Die Nummer bleibt lokal gesichert; die Meldung erklärt die fehlende Zuordnung. |
+| 24 | Gerät ohne verfügbare Kamera bzw. Kamera-Hardware nicht verfügbar | Scanner meldet den fehlenden Kamerazugriff verständlich; manuelle Eingabe bleibt bedienbar und TRAKUNA stürzt nicht ab. |
+| 25 | Leeres Etikett, unlesbarer Barcode und ungültiger/zu kurzer Code | Es wird kein Sendungsnummern-Kandidat übernommen oder übergeben; Diagnose zeigt den fehlenden bzw. ungültigen Kandidaten. |
+| 26 | Dieselbe Sendung zweimal schnell hintereinander mit Kamera und – falls unterstützt – DataWedge scannen | Es wird keine Sendung automatisch angelegt oder an eine Partner-App übergeben. Ein lokaler Vorgang entsteht ausschließlich nach bewusster Bestätigung; doppelte Scan-Ereignisse dürfen keinen doppelten Vorgang erzeugen. |
+| 27 | Activity-Neuerstellung und Prozessneustart nach Übergabe testen | Verschlüsselter letzter Übergabewert wird nur in ein leeres Eingabefeld wiederhergestellt; eine zwischenzeitlich neu eingegebene Nummer bleibt erhalten. Temporäre Scan-Rohdaten werden nicht wiederhergestellt. |
 
 
 ### 2a. Zusätzlicher Erfassungstest nach der Rückmeldung „Speichern reagiert nicht“
