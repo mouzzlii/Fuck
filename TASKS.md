@@ -1,7 +1,7 @@
 # TRAKUNA — TASKS
 
 Stand: 2026-11-25  
-Quelle: Repository-Scan von `main` (Commit `8c826e5d2588c74521e7bcf7e7aa61ab132e0758`) und offene PRs #16–#18.  
+Quelle: Repository-Stand `main` (Commit `8c826e5d2588c74521e7bcf7e7aa61ab132e0758`) sowie aktuelle offene PRs #14, #16, #18 und #19 (25.11.2026).  
 Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollständig umgesetzt und mit den für das Ticket erforderlichen Prüfungen nachgewiesen.
 
 ## Erledigt
@@ -10,15 +10,15 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 
 ## Offen — priorisiert
 
-- [x] **T-02 — Scanner-Integrations-PR #18 technisch prüfen.** Diff und gestapelte Branch-Basis gegen `feature/scan-diagnostics` geprüft; verschlüsselte Cache-Wiederherstellung, ML-Kit-Format-Allowlist, DataWedge-Labeltype-Allowlist, API-34-Absenderprüfung, Fokusverhalten und doppelte Statusbestätigung geprüft. Für den exakten Head `e5991fe713ff68a4cb5c9ebb87a27dfcc3ad173a` sind Android-Build und Emulator-Instrumentierung erfolgreich: [Build](https://github.com/mouzzlii/Fuck/actions/runs/45686066011), [Emulator](https://github.com/mouzzlii/Fuck/actions/runs/45686065956). Debug-Artefakt erstellt; Release-Signierung übersprungen. Echte Zebra-/Kamera-Hardwareabnahme bleibt T-03/T-08 vorbehalten. PR #18 bleibt Draft und wird nicht gemergt.
+- [x] **T-02 — Scanner-Integrations-PR #18 technisch prüfen.** Verschlüsselte Cache-Wiederherstellung, ML-Kit-Format-Allowlist, DataWedge-Labeltype-Allowlist, API-34-Absenderprüfung, Fokusverhalten, doppelte Statusbestätigung und Sicherheitsgrenzen geprüft. Für den Code-Stand `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` sind Android-Build und Emulator-Instrumentierung erfolgreich: [Build](https://github.com/mouzzlii/Fuck/actions/runs/45691683747), [Emulator](https://github.com/mouzzlii/Fuck/actions/runs/45691683698). Debug-Artefakt erstellt; Release-Signierung übersprungen. Die nachfolgenden Dokumentationsaktualisierungen auf PR #18 haben neue CI-Läufe ausgelöst; deren Ergebnisse sind T-05 zugeordnet. Echte Zebra-/Kamera-Hardwareabnahme bleibt T-03/T-08 vorbehalten. PR #18 bleibt Draft und wird nicht gemergt.
 
 - [ ] **T-03 — Scanner-End-to-End-Abnahme vorbereiten und durchführen.** Testplan in `PRAxisTEST.md` deckt Kamera-Berechtigung/fehlende Kamera, leere und ungültige Codes, Mehrdeutigkeit, schnelle Doppelscans, Activity-/Prozessneustart, ML-Kit-Allowlist und DataWedge-API-34-Absenderprüfung ab. Vorbereitung abgeschlossen; echte Android-/Zebra-Geräte und Betreiberfreigabe fehlen weiterhin. Hardwareabnahme ist offen und darf nicht durch Emulatorergebnisse ersetzt werden.
 
-- [ ] **T-04 — MainActivity schrittweise entflechten.** Laufende Refaktorierung auf `integrate/handoff-cache-resume` (aktueller Head `ecfc336`): `MainActivity.kt` von 1.223 auf 627 Zeilen reduziert. Kamera/ML-Kit, Scanmodelle/-Parsing, Partner-Handoff, Versandlabels, Sendungskarten/-liste, Diagnosepanel, Shipment-/Backup-Dialoge, Partner-App-Auswahl und Erfassungsformular in eigene Dateien ausgelagert. Statische Referenz-/Importkontrolle bestanden; CI für den neuen Head `3df79fa` wurde durch die GitHub-Verbindung nicht ausgelöst und ist noch offen. T-04 erst nach erfolgreichem Build, Instrumentierung und weiterer UI-/Navigationsprüfung abschließen.
+- [ ] **T-04 — MainActivity schrittweise entflechten.** Auf `integrate/handoff-cache-resume` wurden Kamera/ML-Kit, Scanmodelle/-Parsing, Partner-Handoff, Versandlabels, Sendungskarten/-liste, Diagnosepanel, Shipment-/Backup-Dialoge, Partner-App-Auswahl und Erfassungsformular ausgelagert. `MainActivity.kt` umfasst am aktuellen geprüften Stand noch 639 Zeilen (Ausgangsstand ca. 1.223). Build und Emulator-Instrumentierung für Code-Head `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` sind erfolgreich. T-04 bleibt offen, bis die verbleibende Activity-Verantwortung und UI-/Navigationsstruktur geprüft und eine weitere Zerlegung fachlich sinnvoll abgeschlossen ist.
 
-- [ ] **T-05 — Versions- und Release-Dokumentation synchronisieren.** `main` dokumentiert in README/Gradle noch Version 1.53 / versionCode 54; PR #16 dokumentiert 1.54 / 55. Erst nach geklärter Integrationsreihenfolge Gradle, README, Release- und Testdokumentation konsistent aktualisieren. Debug- und signiertes Release-Artefakt klar unterscheiden.
+- [ ] **T-05 — Versions- und Release-Dokumentation synchronisieren.** Auf PR #18 sind Gradle, README und Praxis-Testplan bereits auf Version 1.54 / versionCode 55. Betriebshandbuch, Pilotpaket und Freigabe-Checkliste wurden ebenfalls aktualisiert und verweisen auf den erfolgreichen Build-/Emulator-Stand `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb`. CI für den neuesten reinen Dokumentations-Head `8cf48c35c7e6c48a097c31702e3f0bc26b6d6f6e` ist noch ausstehend. `main` bleibt bis zur kontrollierten PR-Integration auf dem älteren Versionsstand. Debug- und signiertes Release-Artefakt klar unterscheiden.
 
-- [ ] **T-06 — Offline-/Sicherheitsregressionen dauerhaft absichern.** CI-Skript `scripts/check-android-security-boundaries.sh` ergänzt: Quellmanifest-Allowlist (CAMERA/ACCESS_NETWORK_STATE), explizite INTERNET-Entfernung, optionale Kamera, Backup-/Klartextschutz, direkte Netzwerk-Client-Abhängigkeiten und bekannte Netzwerk-APIs; nach dem Build wird das paketierte Manifest geprüft. Workflow-Pfadfilter und SECURITY/README-Dokumentation angepasst. Statische Kontrolle bestanden; CI für aktuellen Head `ecfc336` wurde noch nicht ausgeführt. T-06 bleibt bis zu einem erfolgreichen Build offen.
+- [x] **T-06 — Offline-/Sicherheitsregressionen dauerhaft absichern.** CI-Skript `scripts/check-android-security-boundaries.sh` prüft Quellmanifest-Allowlist (CAMERA/ACCESS_NETWORK_STATE), explizite INTERNET-Entfernung, optionale Kamera, Backup-/Klartextschutz, direkte Netzwerk-Client-Abhängigkeiten und bekannte Netzwerk-APIs; nach dem Build wird das paketierte Manifest geprüft. Für Code-Head `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` liefen Build, Sicherheitsprüfungen, Lint und Emulator-Instrumentierung erfolgreich. Die erneute CI für den aktuellen Dokumentations-Head bleibt T-05 zugeordnet.
 
 - [ ] **T-07 — Backup-Wiederherstellung real abnehmen.** Für PR #14 die dokumentierten Emulator-/CI-Ergebnisse von realer Geräteprüfung trennen; Export, Import, falsches Passwort, beschädigte Datei und Gerätewechsel mit Betreiberfreigabe testen. Release-Signaturschlüssel bleiben außerhalb des Repositories.
 
@@ -29,8 +29,8 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 | PR | Zweck | Status / wichtige Einschränkung |
 |---|---|---|
 | [#19](https://github.com/mouzzlii/Fuck/pull/19) | Projektregeln und Aufgabensteuerung | Offen; reine Dokumentation; Review/Merge ausstehend |
-| [#18](https://github.com/mouzzlii/Fuck/pull/18) | Übergabe-Cache-Wiederherstellung, Scanner-Härtung und Refaktorierung | Draft; Basis `feature/scan-diagnostics`; CI für Vor-Refactor-Head `e5991fe` erfolgreich; aktueller Head `ecfc336` ohne CI-Nachweis; Hardwareabnahme offen |
-| [#17](https://github.com/mouzzlii/Fuck/pull/17) | Fokus, Codefilter und Standby-Wiederherstellung | Draft; laut aktuellem PR-Stand nicht mergebar; nicht separat vor #18 integrieren |
+| [#18](https://github.com/mouzzlii/Fuck/pull/18) | Übergabe-Cache-Wiederherstellung, Scanner-Härtung, Sicherheits-CI und Refaktorierung | Draft; Basis `feature/scan-diagnostics`; Code-Head `bb29cdab` mit erfolgreichem Android-Build und Emulatorlauf; aktuelle Dokumentations-Commits auf Head `8cf48c3` haben neue CI ausgelöst; Hardwareabnahme offen |
+| #17 | Fokus, Codefilter und Standby-Wiederherstellung | Geschlossen, nicht gemergt; Änderungen nach Prüfung in PR #18 integriert bzw. ersetzt |
 | [#16](https://github.com/mouzzlii/Fuck/pull/16) | Scan-Diagnose und GLS-Parserkorrektur | Offen; dokumentierter APK-/CI-Nachweis vorhanden; reale Hardwareabnahme offen |
 | [#14](https://github.com/mouzzlii/Fuck/pull/14) | Verschlüsselte Backups | Draft; automatisierte Prüfungen dokumentiert; reale Geräteabnahme und Betreiber-Signierung offen |
 
@@ -47,3 +47,4 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 ## Änderungsprotokoll
 
 - 2026-11-25: T-01 auf `chore/repo-governance` umgesetzt und verifiziert; PR #19 eröffnet. `main` unverändert. Dokumentations-PR benötigt keinen Android-Build; GitHub-Review/Merge stehen aus.
+- 2026-11-25: T-02/T-06 mit erfolgreichen Build- und Emulatorläufen für Code-Head `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` aktualisiert. T-05: Release-/Betriebsdokumente für Version 1.54 / 55 auf PR #18 synchronisiert; CI des neuen Dokumentations-Heads `8cf48c35c7e6c48a097c31702e3f0bc26b6d6f6e` steht noch aus. Keine Änderungen an `main`.
