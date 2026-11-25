@@ -1207,15 +1207,21 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                             true
                         }
                     }
-                    val centerPoint = previewView.meteringPointFactory.createPoint(
-                        previewView.width / 2f,
-                        previewView.height / 2f
-                    )
-                    val initialFocus = FocusMeteringAction.Builder(
-                        centerPoint,
-                        FocusMeteringAction.FLAG_AF or FocusMeteringAction.FLAG_AE
-                    ).setAutoCancelDuration(3, java.util.concurrent.TimeUnit.SECONDS).build()
-                    runCatching { camera.cameraControl.startFocusAndMetering(initialFocus) }
+                    // Wait until PreviewView has real layout dimensions. Binding can
+                    // complete before the first layout pass; a 0x0 metering point is invalid.
+                    previewView.post {
+                        if (!disposed.get() && previewView.width > 0 && previewView.height > 0) {
+                            val centerPoint = previewView.meteringPointFactory.createPoint(
+                                previewView.width / 2f,
+                                previewView.height / 2f
+                            )
+                            val initialFocus = FocusMeteringAction.Builder(
+                                centerPoint,
+                                FocusMeteringAction.FLAG_AF or FocusMeteringAction.FLAG_AE
+                            ).setAutoCancelDuration(3, java.util.concurrent.TimeUnit.SECONDS).build()
+                            runCatching { camera.cameraControl.startFocusAndMetering(initialFocus) }
+                        }
+                    }
                 }
             } catch (error: Exception) {
                 if (!disposed.get()) {
