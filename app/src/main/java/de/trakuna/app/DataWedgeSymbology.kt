@@ -19,6 +19,14 @@ internal const val DATAWEDGE_PACKAGE_NAME = "com.symbol.datawedge"
 internal fun isDataWedgeSenderAccepted(apiLevel: Int, senderPackage: String?): Boolean =
     apiLevel >= 34 && senderPackage == DATAWEDGE_PACKAGE_NAME
 
+/** User-facing explanation for a rejected DataWedge broadcast. */
+internal fun dataWedgeRejectionMessage(apiLevel: Int): String =
+    if (apiLevel < 34) {
+        "Zebra-Scans über DataWedge sind auf dieser Android-Version aus Sicherheitsgründen deaktiviert. Bitte Kamera oder manuelle Eingabe verwenden."
+    } else {
+        "Zebra-Scan abgelehnt: Der Absender konnte nicht als DataWedge verifiziert werden."
+    }
+
 internal fun isAllowedDataWedgeLabelType(labelType: String?): Boolean {
     val normalized = labelType?.trim()?.uppercase(java.util.Locale.ROOT) ?: return false
     return normalized in setOf(
