@@ -272,44 +272,15 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         scanDiagnostic?.let { diagnostic ->
-                            Card(Modifier.fillMaxWidth()) {
-                                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text("Scan-Diagnose", style = MaterialTheme.typography.titleMedium, color = Forest)
-                                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                            TextButton(onClick = { showScanDiagnostics = !showScanDiagnostics }) {
-                                                Text(if (showScanDiagnostics) "Ausblenden" else "Anzeigen")
-                                            }
-                                            TextButton(onClick = {
-                                                scanDiagnostic = null
-                                                showScanDiagnostics = false
-                                            }) {
-                                                Text("Löschen")
-                                            }
-                                        }
-                                    }
-                                    Text(
-                                        "Nur temporär im Arbeitsspeicher. Rohdaten können Sendungs- oder persönliche Informationen enthalten; sie werden nicht gespeichert oder protokolliert.",
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                    if (showScanDiagnostics) {
-                                        Text("Übernommener Wert: ${diagnostic.selectedValue ?: "Kein eindeutiger Wert"}", style = MaterialTheme.typography.bodyMedium)
-                                        diagnostic.observations.forEachIndexed { index, observation ->
-                                            HorizontalDivider()
-                                            Text("Code ${index + 1} · ${observation.source} · ${observation.format}", style = MaterialTheme.typography.labelLarge)
-                                            Text("Auswertung: ${observation.extractedValue ?: "Kein Sendungsnummern-Kandidat"}", style = MaterialTheme.typography.bodyMedium)
-                                            Text("Rohinhalt:", style = MaterialTheme.typography.labelMedium)
-                                            Text(observation.rawValue.take(MAX_SCAN_INPUT_CHARS), style = MaterialTheme.typography.bodySmall)
-                                            observation.displayValue?.takeIf { it != observation.rawValue }?.let {
-                                                Text("Anzeigeinhalt: $it", style = MaterialTheme.typography.bodySmall)
-                                            }
-                                        }
-                                    }
+                            ScanDiagnosticsPanel(
+                                diagnostic = diagnostic,
+                                expanded = showScanDiagnostics,
+                                onExpandedChange = { showScanDiagnostics = it },
+                                onClear = {
+                                    scanDiagnostic = null
+                                    showScanDiagnostics = false
                                 }
-                            }
+                            )
                         }
                         OutlinedTextField(
                             value = number,
