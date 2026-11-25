@@ -1,6 +1,7 @@
 package de.trakuna.app
 
 import android.Manifest
+import android.hardware.camera2.CaptureRequest
 import android.content.ClipData
 import android.content.ClipDescription
 import android.content.ClipboardManager
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.camera.camera2.interop.Camera2Interop
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
@@ -1111,7 +1113,14 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                 val cameraProvider = future.get()
                 if (disposed.get()) return@addListener
                 provider = cameraProvider
-                val preview = Preview.Builder().build().also { it.surfaceProvider = previewView.surfaceProvider }
+                val previewBuilder = Preview.Builder()
+                // Request continuous picture autofocus explicitly; devices without an
+                // autofocus lens may ignore this request and remain fixed-focus.
+                Camera2Interop.Extender(previewBuilder).setCaptureRequestOption(
+                    CaptureRequest.CONTROL_AF_MODE,
+                    CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
+                )
+                val preview = previewBuilder.build().also { it.surfaceProvider = previewView.surfaceProvider }
                 val analysis = ImageAnalysis.Builder()
                     .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
