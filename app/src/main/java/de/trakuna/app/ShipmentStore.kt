@@ -544,6 +544,48 @@ object ShipmentRules {
      * Parse a barcode or supported carrier QR URL without guessing arbitrary digits.
      * Kept in the pure rules layer so scanner formats can be covered by JVM tests.
      */
+    /**
+     * GLS label parser. GLS parcel numbers are normally 11/12 digits; Track IDs
+     * are 8-character alphanumeric identifiers. Customer references and postcodes
+     * are not parcel identifiers and must never be promoted to tracking numbers.
+     */
+    private fun extractGlsLabelIdentifier(value: String): String? {
+        val parcelLabel = Regex(
+            "(?i)(?:parcel\\s*(?:number|no\\.?)|paketnummer|sendungsnummer|shipment\\s*(?:number|no\\.?))\\s*[:=#]?\\s*([0-9]{11,12})"
+        )
+        val trackLabel = Regex(
+            "(?i)(?:your\\s*gls\\s*)?track\\s*id\\s*[:=#]?\\s*([A-Z0-9]{8})"
+        )
+        val customerReference = Regex(
+            "(?i)(?:cust(?:omer)?[- ]?ref(?:erence)?|kundenreferenz)\\s*[:=#]?\\s*([A-Z0-9-]+)"
+        )
+        val postcodeLabel = Regex(
+            "(?i)(?:plz|post(?:al)?\\s*code|zip(?:\\s*code)?)\\s*[:=#]?\\s*([0-9]{4,10})"
+        )
+        val excluded = (customerReference.findAll(value).map { it.groupValues[1] } +
+            postcodeLabel.findAll(value).map { it.groupValues[1] }).toSet()
+
+        fun unique(values: List<String>): String? =
+            values.filterNot { it in excluded }.distinct().singleOrNull()
+
+        val labelledParcels = parcelLabel.findAll(value).map { it.groupValues[1] }.toList()
+        if (labelledParcels.isNotEmpty()) return unique(labelledParcels)
+
+        // Structured 2D payloads may contain additional references. Only exact
+        // 11/12-digit tokens qualify; 13-digit EAN-13 values are deliberately excluded.
+        val numericTokens = Regex("(?<![A-Z0-9])[0-9]{11,12}(?![A-Z0-9])")
+            .findAll(value).map { it.value }.toList()
+        if (numericTokens.isNotEmpty()) return unique(numericTokens)
+
+        val labelledTrackIds = trackLabel.findAll(value).map { it.groupValues[1].uppercase() }.toList()
+        if (labelledTrackIds.isNotEmpty()) return unique(labelledTrackIds)
+
+        // An unlabelled Track ID is accepted only when the entire scan is exactly
+        // one 8-character alphanumeric token, not when embedded in arbitrary text.
+        val exactTrackId = value.trim().uppercase()
+        return exactTrackId.takeIf { Regex("(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{8}").matches(it) }
+    }
+
     fun extractTrackingNumber(raw: String, maxInputChars: Int = 4096): String? {
         if (raw.isEmpty() || raw.length > maxInputChars) return null
 
@@ -611,6 +653,13 @@ object ShipmentRules {
                 .filter { identifyCarrier(it) != null }
             return unique(pathCandidates)
         }
+
+        val glsIdentifier = extractGlsLabelIdentifier(cleaned)
+        if (glsIdentifier != null) return glsIdentifier
+
+        // EAN-13 is a product/label barcode, not a GLS parcel number.
+        // Do not let the generic fallback accept it as an arbitrary numeric ID.
+        if (Regex("^[0-9]{13}$").matches(cleaned)) return null
 
         val compact = plausible(cleaned)
         // If a known-format identifier is embedded inside a longer token, reject the
