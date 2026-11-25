@@ -292,3 +292,7 @@ Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Tes
 - [ ] **Beschädigter Übergabe-Cache:** Verschlüsselten Cachewert beschädigen; die App muss einen Fehler melden und darf keinen leeren Cache vortäuschen.
 - [ ] **Backup-Recovery:** Gültige Sicherung erstellen, lokalen verschlüsselten Bestand beschädigen und anschließend die gültige Sicherung wiederherstellen. Die wiederhergestellten Daten müssen nach erneuter Leseprüfung vorhanden sein.
 
+
+
+## CI-Hinweis für Integrationsprüfung
+Der Android-Workflow prüft Pull Requests gegen `feature/scan-diagnostics` jetzt ausdrücklich. Der Integrationsstand muss nach dem nächsten Branch-Update vollständig durch Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint und Debug-APK-Build laufen. Ein CI-Erfolg ersetzt weiterhin keinen Test auf dem tatsächlichen Zebra-/Android-Gerät.
