@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Integrationsversion 1.54 · versionCode 55)
 
-Basisstand Version 1.53: Der frühere CI-Lauf 45293985061 bestätigte Unit-Tests, Android-Lint, Manifestprüfungen und Debug-APK-Build. Version 1.54 ergänzt temporäre Scan-Diagnose, QR/1D-Filter, Fokusverbesserungen, DataWedge-Allowlist und verschlüsselte Cache-Wiederherstellung. Für jeden neuen Commit ist ein erfolgreicher CI-Lauf erforderlich; Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
+Aktueller App-Code-Stand: Commit `86c8a7f1f185dda76658373538cde762e4cfac28`. Android-Build [45721047978](https://github.com/mouzzlii/Fuck/actions/runs/45721047978) und API-35-Emulatorlauf [45721047851](https://github.com/mouzzlii/Fuck/actions/runs/45721047851) sind erfolgreich; 8/8 Instrumentierungstests bestanden. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und die Android-Keystore-/Backup-Instrumentierung. Die manuellen Kamera-/Zebra-Tests und die Backup-Abnahme B1–B9 auf einem realen Android-Gerät bleiben offen. Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
