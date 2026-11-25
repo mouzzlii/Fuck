@@ -484,6 +484,16 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun glsQrDoesNotGuessWhenMultiplePrimaryShipmentFieldsConflict() {
+        assertEquals(
+            null,
+            ShipmentRules.extractTrackingNumber(
+                "https://gls.example/track?trackingnumber=31220879741&parcelnumber=8721335813708"
+            )
+        )
+    }
+
+    @Test
     fun trackIdRemainsUsableWhenNoExplicitShipmentNumberIsPresent() {
         assertEquals(
             "Z4EIOR5P",
