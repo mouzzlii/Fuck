@@ -3,7 +3,7 @@
 **WLAN- und Startanleitung:** [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) – Vorbereitung für den ersten Start und den DataWedge-Test.
 
 
-Stand: 24. November 2026 · Testversion 1.53 (versionCode 54) · CI-Lauf 45293985061 erfolgreich (Debug-Testpaket)
+Stand: 25. November 2026 · Testversion 1.54 (versionCode 55) · CI-Build und Emulator-Instrumentierung erfolgreich (Debug-Testpaket)
 
 ## 1. Zweck und Freigabestatus
 
@@ -18,22 +18,21 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
-Version 1.53 wurde erfolgreich durch CI gebaut. Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload waren erfolgreich. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die neuen Android-Instrumentierungstestfälle sind vorhanden und erfolgreich kompiliert. Ihre Laufzeitprüfung erfolgt separat im Emulator-Workflow 45295645386, der für den aktuellen Code-Commit noch läuft. Die Übergabe an einen Paketdienst wird in TRAKUNA ausdrücklich nur als lokale Dokumentation geführt, nicht als vom Carrier bestätigter Vorgang. Das ist kein Nachweis für einen produktiven Paketshop-Betrieb.
+Version 1.54 (versionCode 55) wurde auf dem Code-Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` erfolgreich geprüft. Der [Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45691683747) bestand Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, Manifest-/Offline-Sicherheitsprüfungen, APK-Build, Prüfsummenerstellung und Artefakt-Upload. Der separate [Emulator-Instrumentierungslauf](https://github.com/mouzzlii/Fuck/actions/runs/45691683698) war ebenfalls erfolgreich. Das Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15058952938`) ist bis 09.12.2026, 20:08 UTC verfügbar. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Diese CI-Ergebnisse sind kein Nachweis für einen produktiven Paketshop-Betrieb oder eine reale Kamera-/Zebra-Abnahme. Die Übergabe an einen Paketdienst bleibt lokale Dokumentation, keine Carrier-Buchungsbestätigung.
 
-**Aktueller Status:** technischer Praxistest auf einem einzelnen Android-Gerät mit ausdrücklich erfundenen Testsendungen. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
+**Aktueller Status:** CI-Build und Emulator-Instrumentierung für Version 1.54 erfolgreich; reale Geräte- und Betreiberabnahme weiterhin offen. Bis zur Freigabe nur auf Testgeräten mit ausdrücklich erfundenen Testsendungen arbeiten. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.53 (versionCode 54) enthält Archivierung/Wiederherstellung, Backup-Schema 2, Archivzeitpunkt im CSV-Export und den zusätzlichen Löschschutz für ungültige Archivdatensätze. [Erfolgreichen CI-Lauf 45293985061 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061).
+Version 1.54 (versionCode 55) ergänzt die temporäre Scan-Diagnose und die Scanner-Härtungen; die vollständigen Änderungen stehen im [Praxis-Testplan](PRAxisTEST.md). Der erfolgreiche [Android-Build 45691683747](https://github.com/mouzzlii/Fuck/actions/runs/45691683747) und der erfolgreiche [Emulator-Instrumentierungslauf 45691683698](https://github.com/mouzzlii/Fuck/actions/runs/45691683698) beziehen sich beide auf Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb`.
 
-- Unit-Tests: erfolgreich
-- Android-Lint: erfolgreich
-- Debug-APK-Erstellung: erfolgreich
-- APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`
-- ZIP-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`
-- ZIP-Artefakt: `TRAKUNA-Android`, erstellt 24.11.2026, 00:05 UTC; Ablauf 08.12.2026, 00:05 UTC
+- Unit-Tests, Android-Lint, Offline-/Manifestprüfungen und APK-Build: erfolgreich
+- Android-Keystore-/Speicher-Instrumentierung auf Emulator: erfolgreich
+- Debug-Artefakt: `TRAKUNA-Android`, Artifact-ID `15058952938`, 20.801.113 Bytes
+- Verfügbar bis: 09.12.2026, 20:08 UTC
+- Release-Signierung: übersprungen, da kein Betreiber-Signaturschlüssel konfiguriert ist
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45293985061)
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45691683747) – im Abschnitt **Artifacts** das Paket `TRAKUNA-Android` laden. Die enthaltene `SHA256SUMS.txt` dient zur Prüfung der APK; hier wird bewusst kein Hash eines anderen Builds wiederverwendet.
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
