@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.content.Intent
+import android.hardware.camera2.CaptureRequest
+import android.view.MotionEvent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -23,7 +25,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -32,7 +33,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.camera.camera2.interop.Camera2Interop
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.core.ExperimentalGetImage
@@ -57,6 +60,7 @@ private val Forest = Color(0xFF174B3A)
 private const val CACHE_PREFS = "trakuna_handoff"
 private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
 private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
+private const val DATAWEDGE_LABEL_TYPE_EXTRA = "com.symbol.datawedge.label_type"
 private const val MAX_SCAN_INPUT_CHARS = 4096
 
 /**
@@ -97,13 +101,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Preserve the active input across Android process recreation after standby.
-            // Raw scan diagnostics intentionally remain plain remember state and are not saved.
-            var number by rememberSaveable { mutableStateOf("") }
+            val context = LocalContext.current
+            val handoffCache = remember(context) { SecureHandoffCache(context) }
+            val initialHandoffRead = remember(handoffCache) { runCatching { handoffCache.trackingNumber() } }
+            val initialHandoffNumber = initialHandoffRead.getOrDefault("")
+            var number by remember(handoffCache) { mutableStateOf(initialHandoffNumber) }
             var showScanner by remember { mutableStateOf(false) }
             var scanDiagnostic by remember { mutableStateOf<ScanDiagnosticResult?>(null) }
             var showScanDiagnostics by remember { mutableStateOf(false) }
-            var status by remember { mutableStateOf("Sendungsnummer scannen oder manuell eingeben.") }
+            var status by remember(handoffCache) {
+                mutableStateOf(
+                    if (initialHandoffNumber.isNotBlank()) "Gespeicherte Sendungsnummer wiederhergestellt."
+                    else if (initialHandoffRead.isFailure) "Gespeicherte Sendungsnummer konnte nicht gelesen werden. Bitte erneut scannen oder manuell eingeben."
+                    else "Sendungsnummer scannen oder manuell eingeben."
+                )
+            }
             var showPartnerPicker by remember { mutableStateOf(false) }
             var partnerPickerCarrier by remember { mutableStateOf("DPD") }
             var showPartnerCarrierMenu by remember { mutableStateOf(false) }
@@ -124,12 +136,19 @@ class MainActivity : ComponentActivity() {
             var historyRecord by remember { mutableStateOf<ShipmentRecord?>(null) }
             var editRecipient by remember { mutableStateOf("") }
             var editNote by remember { mutableStateOf("") }
-            val context = LocalContext.current
             var wifiConnected by remember { mutableStateOf(isWifiConnected(context)) }
             DisposableEffect(context) {
                 val observer = LifecycleEventObserver { _, event ->
                     if (event == Lifecycle.Event.ON_RESUME) {
                         wifiConnected = isWifiConnected(context)
+                        val cachedNumberRead = runCatching { handoffCache.trackingNumber() }
+                        val cachedNumber = cachedNumberRead.getOrDefault("")
+                        if (number.isBlank() && cachedNumber.isNotBlank()) {
+                            number = cachedNumber
+                            status = "Gespeicherte Sendungsnummer nach Rückkehr wiederhergestellt."
+                        } else if (number.isBlank() && cachedNumberRead.isFailure) {
+                            status = "Gespeicherte Sendungsnummer konnte nicht gelesen werden. Bitte erneut scannen oder manuell eingeben."
+                        }
                     }
                 }
                 this@MainActivity.lifecycle.addObserver(observer)
@@ -151,12 +170,14 @@ class MainActivity : ComponentActivity() {
                             status = "Scaninhalt ist zu lang und wurde aus Sicherheitsgründen abgelehnt. Bitte Sendungsnummer manuell prüfen."
                             return
                         }
-                        val scanned = extractTrackingNumber(raw)
+                        val labelType = runCatching { intent.getStringExtra(DATAWEDGE_LABEL_TYPE_EXTRA) }.getOrNull()
+                        val supportedFormat = isAllowedDataWedgeLabelType(labelType)
+                        val scanned = if (supportedFormat) extractTrackingNumber(raw) else null
                         scanDiagnostic = ScanDiagnosticResult(
                             observations = listOf(
                                 ScanObservation(
                                     source = "Zebra DataWedge",
-                                    format = "Vom Scanner nicht mitgeliefert",
+                                    format = labelType ?: "Format nicht mitgeliefert",
                                     rawValue = raw,
                                     displayValue = raw,
                                     extractedValue = scanned
@@ -165,6 +186,10 @@ class MainActivity : ComponentActivity() {
                             selectedValue = scanned
                         )
                         showScanDiagnostics = true
+                        if (!supportedFormat) {
+                            status = "Zebra-Barcodeformat fehlt oder wird nicht unterstützt. Scan wurde aus Sicherheitsgründen nicht übernommen. Bitte DataWedge-Profil prüfen."
+                            return
+                        }
                         if (scanned.isNullOrBlank()) {
                             status = "Zebra-Scan empfangen, aber keine unterstützte Sendungsnummer erkannt. Rohdaten stehen in der Scan-Diagnose zur Prüfung."
                             return
@@ -1049,7 +1074,7 @@ private fun ScannerPanel(onDetected: (ScanDiagnosticResult) -> Unit, onClose: ()
     }
 }
 
-@androidx.annotation.OptIn(markerClass = [ExperimentalGetImage::class])
+@androidx.annotation.OptIn(markerClass = [ExperimentalGetImage::class, androidx.camera.camera2.interop.ExperimentalCamera2Interop::class])
 @Composable
 private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
     val context = LocalContext.current
@@ -1072,11 +1097,10 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
         val executor = Executors.newSingleThreadExecutor()
         val mainExecutor = ContextCompat.getMainExecutor(context)
         val options = BarcodeScannerOptions.Builder().setBarcodeFormats(
+            Barcode.FORMAT_QR_CODE,
             Barcode.FORMAT_CODE_128, Barcode.FORMAT_CODE_39, Barcode.FORMAT_CODE_93,
             Barcode.FORMAT_CODABAR, Barcode.FORMAT_EAN_13, Barcode.FORMAT_EAN_8,
-            Barcode.FORMAT_ITF, Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E,
-            Barcode.FORMAT_QR_CODE, Barcode.FORMAT_DATA_MATRIX, Barcode.FORMAT_PDF417,
-            Barcode.FORMAT_AZTEC
+            Barcode.FORMAT_ITF, Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E
         ).build()
         val scanner: BarcodeScanner = BarcodeScanning.getClient(options)
         val delivered = AtomicBoolean(false)
@@ -1093,7 +1117,11 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                 val cameraProvider = future.get()
                 if (disposed.get()) return@addListener
                 provider = cameraProvider
-                val preview = Preview.Builder().build().also { it.surfaceProvider = previewView.surfaceProvider }
+                val previewBuilder = Preview.Builder()
+                Camera2Interop.Extender(previewBuilder).setCaptureRequestOption(
+                    CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
+                )
+                val preview = previewBuilder.build().also { it.surfaceProvider = previewView.surfaceProvider }
                 val analysis = ImageAnalysis.Builder()
                     .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
@@ -1147,7 +1175,26 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                 }
                 if (!disposed.get()) {
                     cameraProvider.unbindAll()
-                    cameraProvider.bindToLifecycle(activity as LifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
+                    val camera = cameraProvider.bindToLifecycle(activity as LifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
+                    previewView.setOnClickListener { }
+                    previewView.setOnTouchListener { view, event ->
+                        if (event.action == MotionEvent.ACTION_UP) {
+                            val point = previewView.meteringPointFactory.createPoint(event.x, event.y)
+                            val action = FocusMeteringAction.Builder(point, FocusMeteringAction.FLAG_AF or FocusMeteringAction.FLAG_AE)
+                                .setAutoCancelDuration(3, java.util.concurrent.TimeUnit.SECONDS).build()
+                            runCatching { camera.cameraControl.startFocusAndMetering(action) }
+                            view.performClick()
+                            true
+                        } else true
+                    }
+                    previewView.post {
+                        if (!disposed.get() && previewView.width > 0 && previewView.height > 0) {
+                            val centerPoint = previewView.meteringPointFactory.createPoint(previewView.width / 2f, previewView.height / 2f)
+                            val initialFocus = FocusMeteringAction.Builder(centerPoint, FocusMeteringAction.FLAG_AF or FocusMeteringAction.FLAG_AE)
+                                .setAutoCancelDuration(3, java.util.concurrent.TimeUnit.SECONDS).build()
+                            runCatching { camera.cameraControl.startFocusAndMetering(initialFocus) }
+                        }
+                    }
                 }
             } catch (error: Exception) {
                 if (!disposed.get()) {

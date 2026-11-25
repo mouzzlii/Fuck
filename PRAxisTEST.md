@@ -11,6 +11,17 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 - Kameraberechtigung für den Scan-Test.
 - Für die Partnerübergabe eine installierte Betriebssoftware. Eine automatische Übernahme ist nur möglich, wenn die Ziel-App die TRAKUNA-Intent-Extras oder eine dokumentierte API unterstützt.
 
+## 2.0 Kamera-Fokus und erlaubte Codeformate
+
+- Der Kamera-Scanner ist auf QR-Code sowie lineare Strichcodes (Code 128/39/93, Codabar, EAN-13/8, ITF, UPC-A/E) begrenzt.
+- Data Matrix, PDF417, Aztec und andere Formate dürfen von der Kamera nicht als Treffer geliefert werden.
+- Kamera nach Öffnen prüfen: Fokus stellt sich auf den mittleren Bildbereich ein; bei unterstützten Kameras läuft kontinuierlicher Autofokus.
+- Auf einen QR-Code bzw. Strichcode tippen: Autofokus-/Belichtungsmessung muss auf diesen Bereich neu auslösen.
+- Test mit QR-Code und mindestens einem Strichcode durchführen; beide müssen erkannt werden.
+- Test mit Data Matrix, PDF417 und Aztec durchführen; diese dürfen keinen Scan auslösen.
+- Fokus bei nahen und weiter entfernten Etiketten, bei schwachem Licht und nach Rückkehr aus dem Hintergrund prüfen.
+- Der Autofokus hängt von der Kamera-Hardware und deren CameraX-Unterstützung ab; ein Gerät ohne Autofokus kann Software nicht nachträglich fokussierbar machen.
+
 ## 2.1 Scan-Diagnose (Version 1.54)
 
 1. In TRAKUNA einen QR-Code bzw. Barcode mit der Kamera scannen.
@@ -19,6 +30,8 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 4. Den GLS-Testfall prüfen: erwartete Sendungsnummer laut Betreiber `31220879741`, bisher fälschlich erkannter Wert `8721335813708`, zusätzlich genannte GLS Track-ID `Z4EIOR5P`. Entscheidend ist zunächst, welcher Wert tatsächlich im QR-Rohinhalt steht; die Diagnose darf diese Kennungen nicht eigenmächtig gleichsetzen.
 5. Den Hermes-Test erneut durchführen und sicherstellen, dass die bekannte korrekte Hermes-Erkennung unverändert bleibt.
 6. Wenn ein Zebra/DataWedge-Scan verwendet wird, prüfen, ob Rohinhalt und extrahierter Kandidat ebenfalls angezeigt werden.
+- Beim Zebra/DataWedge-Scan muss das Format-Extra `com.symbol.datawedge.label_type` mitgeliefert werden. Zugelassen sind QR/GS1-QR sowie Code 128/EAN-128, Code 39/93, Codabar, EAN-13/8, Interleaved 2 of 5 und UPC-A/E0/E1. Fehlendes oder unbekanntes Format sowie Data Matrix, GS1 Data Matrix, PDF417, Aztec, Micro QR und andere nicht freigegebene Typen müssen abgewiesen werden.
+- Im DataWedge-Profil die Decoder möglichst zusätzlich auf die tatsächlich benötigten Formate begrenzen. Die App-Allowlist ist eine zweite Schutzschicht und ersetzt die Geräteprofil-Konfiguration nicht.
 7. Diagnosekarte schließen bzw. einen neuen Scan ausführen. Die Rohdaten dürfen nach App-Neustart nicht als dauerhaft gespeicherte Historie erscheinen.
 8. Eine Sendungsnummer erfassen, TRAKUNA in den Hintergrund legen und das Gerät längere Zeit in Standby lassen. Falls Android den TRAKUNA-Prozess beendet, App wieder öffnen und prüfen, ob das aktive Eingabefeld wiederhergestellt wurde. Die Diagnose-Rohdaten sollen dabei bewusst nicht wiederhergestellt werden.
 
@@ -47,6 +60,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 16 | App schließen und neu öffnen | Lokal gespeicherte Vorgänge sind weiterhin vorhanden. |
 | 17 | Zebra-Scanner mit DataWedge-Profil scannen | Sendungsnummer erscheint im Eingabefeld; es erfolgt keine automatische Buchung. Ungültige Inhalte werden abgelehnt. |
 | 18 | Partner-App auswählen und übergeben | Cache wird vor dem Wechsel dauerhaft gespeichert; Clipboard-Ausfall darf keinen Absturz verursachen, Android 13+ markiert den Clipboard-Inhalt als sensibel; Ziel-App wird nur bei installierter App geöffnet. |
+| 18a | Nach einer erfolgreichen Übergabe das Sendungsnummernfeld leeren, TRAKUNA in den Hintergrund legen, das Gerät in den Standby schicken und TRAKUNA erneut öffnen | Die verschlüsselt gespeicherte letzte Sendungsnummer wird beim Start bzw. bei der Rückkehr in ein leeres Eingabefeld wiederhergestellt. Eine bereits eingegebene neue Nummer darf dabei nicht überschrieben werden. |
 | 19 | DPD, GLS, Hermes und UPS jeweils über „Betriebssoftware pro Paketdienst zuordnen“ einer installierten App zuweisen | Jede Zuordnung wird getrennt auf diesem Gerät gespeichert und in der Übersicht beim richtigen Carrier angezeigt. |
 | 20 | Carrier-Schnellauswahl öffnen und DPD, GLS, Hermes, UPS nacheinander auswählen | Der Auswahlknopf zeigt jeweils den gewählten Paketdienst; die Reihenfolge lautet DPD, GLS, Hermes, UPS. Die manuelle Auswahl wird bei allen drei lokalen Vorgangsarten gespeichert und an den Partner-App-Übergabeversuch weitergegeben. Es wird keine externe Buchung behauptet. |
 | 21 | „Ohne Auswahl“ wählen und einen bekannten UPS-1Z-Testcode eingeben | Die manuelle Auswahl wird geleert; der bekannte UPS-Format-Hinweis darf als Hinweis erscheinen. Der Format-Hinweis bestätigt keine Existenz oder Buchung. |
