@@ -780,7 +780,7 @@ status = "Zebra-Scan empfangen. $senderStatus Sendungsnummer bitte prüfen und d
                                 },
                                 confirmButton = {
                                     TextButton(onClick = {
-                                        val result = shipmentStore.advance(record.id)
+                                        val result = shipmentStore.advance(record.id, expectedStatus = record.status)
                                         status = shipmentResultText(result)
                                         shipmentRevision++
                                         pendingAdvance = null
