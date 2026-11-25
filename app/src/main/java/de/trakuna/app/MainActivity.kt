@@ -1,6 +1,7 @@
 package de.trakuna.app
 
 import android.content.Context
+import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.net.ConnectivityManager
