@@ -8,7 +8,10 @@ on:
     paths:
       - "app/src/androidTest/**"
       - "app/src/main/java/de/trakuna/app/**"
+      - "app/src/main/AndroidManifest.xml"
+      - "app/src/main/res/**"
       - "app/build.gradle.kts"
+      - "scripts/check-android-security-boundaries.sh"
       - "scripts/run-android-instrumentation.sh"
       - ".github/workflows/android-instrumentation.yml"
   pull_request:
@@ -18,7 +21,10 @@ on:
     paths:
       - "app/src/androidTest/**"
       - "app/src/main/java/de/trakuna/app/**"
+      - "app/src/main/AndroidManifest.xml"
+      - "app/src/main/res/**"
       - "app/build.gradle.kts"
+      - "scripts/check-android-security-boundaries.sh"
       - "scripts/run-android-instrumentation.sh"
       - ".github/workflows/android-instrumentation.yml"
 
