@@ -27,6 +27,7 @@ on:
       - "settings.gradle.kts"
       - "gradle.properties"
       - "gradle/**"
+      - "scripts/check-android-security-boundaries.sh"
       - ".github/workflows/android.yml"
 
 concurrency:
