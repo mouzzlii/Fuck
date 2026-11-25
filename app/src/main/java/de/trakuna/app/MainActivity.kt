@@ -343,6 +343,40 @@ class MainActivity : ComponentActivity() {
                                     )
                                     if (showScanDiagnostics) {
                                         Text("Übernommener Wert: ${diagnostic.selectedValue ?: "Kein eindeutiger Wert"}", style = MaterialTheme.typography.bodyMedium)
+                                        Button(
+                                            onClick = {
+                                                val report = buildString {
+                                                    appendLine("TRAKUNA – Scan-Diagnose")
+                                                    appendLine("Übernommener Wert: ${diagnostic.selectedValue ?: "Kein eindeutiger Wert"}")
+                                                    diagnostic.observations.take(30).forEachIndexed { index, observation ->
+                                                        appendLine()
+                                                        appendLine("Code ${index + 1}")
+                                                        appendLine("Quelle: ${observation.source}")
+                                                        appendLine("Format: ${observation.format}")
+                                                        appendLine("Auswertung: ${observation.extractedValue ?: "Kein Sendungsnummern-Kandidat"}")
+                                                        appendLine("Rohinhalt:")
+                                                        appendLine(observation.rawValue.take(MAX_SCAN_INPUT_CHARS))
+                                                        observation.displayValue?.takeIf { it != observation.rawValue }?.let {
+                                                            appendLine("Anzeigeinhalt: $it")
+                                                        }
+                                                    }
+                                                    if (diagnostic.observations.size > 30) {
+                                                        appendLine()
+                                                        appendLine("Hinweis: Weitere Codes wurden aus Platzgründen ausgelassen.")
+                                                    }
+                                                }.take(100_000)
+                                                val copied = runCatching {
+                                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                                                        ?: error("Zwischenablage ist nicht verfügbar.")
+                                                    clipboard.setPrimaryClip(ClipData.newPlainText("TRAKUNA Scan-Diagnose", report))
+                                                }.isSuccess
+                                                status = if (copied) "Scan-Diagnose wurde in die Zwischenablage kopiert."
+                                                else "Kopieren fehlgeschlagen. Bitte Zwischenablage-Berechtigung bzw. Geräteeinstellungen prüfen."
+                                            },
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Text("Fehlerdiagnose kopieren")
+                                        }
                                         diagnostic.observations.forEachIndexed { index, observation ->
                                             HorizontalDivider()
                                             Text("Code ${index + 1} · ${observation.source} · ${observation.format}", style = MaterialTheme.typography.labelLarge)
