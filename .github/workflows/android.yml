@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - main
-      - feature/scan-diagnostics
     paths:
       - "app/**"
       - "build.gradle.kts"
@@ -27,7 +26,7 @@ on:
       - ".github/workflows/android.yml"
 
 concurrency:
-  group: trakuna-android-${{ github.ref }}
+  group: trakuna-android-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 # The build needs repository read access only. No deployment credentials are used.
