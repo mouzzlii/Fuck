@@ -49,7 +49,7 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 
 ## CI-Schutzprüfungen
 
-Der Android-Workflow startet nur bei App-/Build-Änderungen und prüft vor dem Build, dass die aktuelle Offline-Version keine INTERNET-Berechtigung anfordert, Android-Backups deaktiviert und Klartextverkehr deaktiviert bleibt. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden.
+Der Android-Workflow startet bei App-/Build-Änderungen sowie bei Änderungen am Sicherheitsprüfskript. `scripts/check-android-security-boundaries.sh` kontrolliert vor dem Build die Quellberechtigungen (nur CAMERA und ACCESS_NETWORK_STATE), die ausdrückliche Entfernung von INTERNET, optionale Kamera-Hardware, deaktiviertes Android-Backup, deaktivierten Klartextverkehr und das Fehlen direkter HTTP-/Socket-Client-Abhängigkeiten bzw. bekannter Netzwerk-APIs. Nach dem APK-Bau wird zusätzlich das tatsächlich paketierte Manifest geprüft. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden; sie ersetzt keinen vollständigen Audit transitiver Bibliotheken.
 
 Für die Android-Instrumentierungstests gibt es zusätzlich den getrennten Workflow [`.github/workflows/android-instrumentation.yml`](.github/workflows/android-instrumentation.yml). Er startet einen API-35-Emulator und führt Keystore-, Speicher- und Backup-Recovery-Tests aus. Dieser langsamere Emulatorlauf ist bewusst vom normalen APK-Build getrennt, damit ein nicht startender Emulator die Bereitstellung der lokalen Debug-Testversion nicht blockiert.
 
