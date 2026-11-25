@@ -28,6 +28,7 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 
 | PR | Zweck | Status / wichtige Einschränkung |
 |---|---|---|
+| [#19](https://github.com/mouzzlii/Fuck/pull/19) | Projektregeln und Aufgabensteuerung | Offen; reine Dokumentation; Review/Merge ausstehend |
 | [#18](https://github.com/mouzzlii/Fuck/pull/18) | Übergabe-Cache-Wiederherstellung und Scanner-Härtung | Draft; Basis `feature/scan-diagnostics`; CI/Hardwaretest für exakten Head offen |
 | [#17](https://github.com/mouzzlii/Fuck/pull/17) | Fokus, Codefilter und Standby-Wiederherstellung | Draft; laut aktuellem PR-Stand nicht mergebar; nicht separat vor #18 integrieren |
 | [#16](https://github.com/mouzzlii/Fuck/pull/16) | Scan-Diagnose und GLS-Parserkorrektur | Offen; dokumentierter APK-/CI-Nachweis vorhanden; reale Hardwareabnahme offen |
@@ -45,4 +46,4 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 
 ## Änderungsprotokoll
 
-- 2026-11-25: T-01 auf `chore/repo-governance` angelegt. `main` unverändert. PR-Erstellung und CI-Prüfung dieses Dokumentationsbranches stehen noch aus.
+- 2026-11-25: T-01 auf `chore/repo-governance` umgesetzt und verifiziert; PR #19 eröffnet. `main` unverändert. Dokumentations-PR benötigt keinen Android-Build; GitHub-Review/Merge stehen aus.
