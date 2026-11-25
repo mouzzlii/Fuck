@@ -98,9 +98,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val handoffCache = remember(context) { SecureHandoffCache(context) }
-            val initialHandoffNumber = remember(handoffCache) {
-                runCatching { handoffCache.trackingNumber() }.getOrDefault("")
+            val initialHandoffRead = remember(handoffCache) {
+                runCatching { handoffCache.trackingNumber() }
             }
+            val initialHandoffNumber = initialHandoffRead.getOrDefault("")
             var number by remember(handoffCache) { mutableStateOf(initialHandoffNumber) }
             var showScanner by remember { mutableStateOf(false) }
             var scanDiagnostic by remember { mutableStateOf<ScanDiagnosticResult?>(null) }
@@ -109,6 +110,8 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(
                     if (initialHandoffNumber.isNotBlank()) {
                         "Gespeicherte Sendungsnummer wiederhergestellt."
+                    } else if (initialHandoffRead.isFailure) {
+                        "Gespeicherte Sendungsnummer konnte nicht gelesen werden. Bitte erneut scannen oder manuell eingeben."
                     } else {
                         "Sendungsnummer scannen oder manuell eingeben."
                     }
@@ -142,10 +145,13 @@ class MainActivity : ComponentActivity() {
                         // The Android process or Compose state may have been recreated while
                         // the device was in deep standby. Restore only into an empty field so
                         // an intentional manual edit is never overwritten.
-                        val cachedNumber = runCatching { handoffCache.trackingNumber() }.getOrNull().orEmpty()
+                        val cachedNumberRead = runCatching { handoffCache.trackingNumber() }
+                        val cachedNumber = cachedNumberRead.getOrDefault("")
                         if (number.isBlank() && cachedNumber.isNotBlank()) {
                             number = cachedNumber
                             status = "Gespeicherte Sendungsnummer nach Rückkehr wiederhergestellt."
+                        } else if (number.isBlank() && cachedNumberRead.isFailure) {
+                            status = "Gespeicherte Sendungsnummer konnte nicht gelesen werden. Bitte erneut scannen oder manuell eingeben."
                         }
                     }
                 }
