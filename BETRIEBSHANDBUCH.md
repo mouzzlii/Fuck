@@ -78,11 +78,15 @@ Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. E
 
 ## 6. Zebra TC26 und DataWedge (DPD/GLS)
 
-Die DPD- und GLS-Handgeräte wurden anhand der bisherigen Angaben als Zebra TC26 vermutet; das genaue Modell muss am Typenschild bestätigt werden.
+Die DPD- und GLS-Handgeräte wurden anhand der bisherigen Angaben als Zebra TC26 vermutet; das genaue Modell und die Android-Version müssen am Gerät bzw. Typenschild bestätigt werden.
 
-Für einen TRAKUNA-Scan auf einem Android-Zebra-Gerät ist ein eigenes DataWedge-Profil erforderlich. Die bestehende DPD-/GLS-Konfiguration nicht überschreiben. Das Profil muss TRAKUNA zugeordnet sein und den Intent-Eingang mit der Action `de.trakuna.app.DATAWEDGE_SCAN` sowie dem Extra `com.symbol.datawedge.data_string` verwenden. Die vollständige Anleitung und die Sicherheitshinweise stehen in [PARTNER_INTEGRATION.md](PARTNER_INTEGRATION.md).
+**Wichtige Android-Voraussetzung:** TRAKUNA verarbeitet DataWedge-Broadcasts nur ab Android 14 (API 34), wenn Android den Absender eindeutig als `com.symbol.datawedge` bestätigt. Auf Android 13 (API 33) und älteren Versionen ist der DataWedge-Eingang in TRAKUNA aus Sicherheitsgründen deaktiviert. Dort bitte den Kamera-Scanner oder die manuelle Eingabe verwenden.
 
-Ein Scan wird nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Die DataWedge-Konfiguration und der echte Scan-Empfang sind auf den Shopgeräten noch nicht vor Ort abgenommen.
+Für Android 14 oder höher ist ein eigenes DataWedge-Profil erforderlich. Die bestehende DPD-/GLS-Konfiguration nicht überschreiben. Das Profil muss TRAKUNA zugeordnet sein und den Intent-Eingang mit der Action `de.trakuna.app.DATAWEDGE_SCAN` sowie dem Extra `com.symbol.datawedge.data_string` verwenden. Die Absenderprüfung in TRAKUNA bleibt maßgeblich; DataWedge Component Information bzw. Signaturprüfung können als zusätzliche Zustellkontrolle eingerichtet werden, ersetzen diese Prüfung aber nicht.
+
+Die vollständige Anleitung und die Sicherheitshinweise stehen in [PARTNER_INTEGRATION.md](PARTNER_INTEGRATION.md) und [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md).
+
+Ein Scan wird nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Die DataWedge-Konfiguration und der echte Scan-Empfang sind auf den Shopgeräten noch nicht vor Ort abgenommen. Vor produktivem Einsatz müssen Gerätemodell, Android-Version, DataWedge-Profil und ein echter Scan mit Betreiberzustimmung geprüft werden.
 
 ## 7. Hermes – neues Handgerät angekündigt
 
