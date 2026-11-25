@@ -58,12 +58,48 @@ private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
 private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
 private const val MAX_SCAN_INPUT_CHARS = 4096
 
+/**
+ * Scan diagnostics are deliberately kept only in Compose memory.
+ * Raw labels can contain personal or shipment data and must not be persisted or logged.
+ */
+private data class ScanObservation(
+    val source: String,
+    val format: String,
+    val rawValue: String,
+    val displayValue: String?,
+    val extractedValue: String?
+)
+
+private data class ScanDiagnosticResult(
+    val observations: List<ScanObservation>,
+    val selectedValue: String?
+)
+
+private fun barcodeFormatLabel(format: Int): String = when (format) {
+    Barcode.FORMAT_QR_CODE -> "QR-Code"
+    Barcode.FORMAT_CODE_128 -> "Code 128"
+    Barcode.FORMAT_CODE_39 -> "Code 39"
+    Barcode.FORMAT_CODE_93 -> "Code 93"
+    Barcode.FORMAT_CODABAR -> "Codabar"
+    Barcode.FORMAT_EAN_13 -> "EAN-13"
+    Barcode.FORMAT_EAN_8 -> "EAN-8"
+    Barcode.FORMAT_ITF -> "ITF"
+    Barcode.FORMAT_UPC_A -> "UPC-A"
+    Barcode.FORMAT_UPC_E -> "UPC-E"
+    Barcode.FORMAT_DATA_MATRIX -> "Data Matrix"
+    Barcode.FORMAT_PDF417 -> "PDF417"
+    Barcode.FORMAT_AZTEC -> "Aztec"
+    else -> "Unbekannt ($format)"
+}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             var number by remember { mutableStateOf("") }
             var showScanner by remember { mutableStateOf(false) }
+            var scanDiagnostic by remember { mutableStateOf<ScanDiagnosticResult?>(null) }
+            var showScanDiagnostics by remember { mutableStateOf(false) }
             var status by remember { mutableStateOf("Sendungsnummer scannen oder manuell eingeben.") }
             var showPartnerPicker by remember { mutableStateOf(false) }
             var partnerPickerCarrier by remember { mutableStateOf("DPD") }
@@ -113,8 +149,21 @@ class MainActivity : ComponentActivity() {
                             return
                         }
                         val scanned = extractTrackingNumber(raw)
+                        scanDiagnostic = ScanDiagnosticResult(
+                            observations = listOf(
+                                ScanObservation(
+                                    source = "Zebra DataWedge",
+                                    format = "Vom Scanner nicht mitgeliefert",
+                                    rawValue = raw,
+                                    displayValue = raw,
+                                    extractedValue = scanned
+                                )
+                            ),
+                            selectedValue = scanned
+                        )
+                        showScanDiagnostics = true
                         if (scanned.isNullOrBlank()) {
-                            status = "Zebra-Scan empfangen, aber keine unterstützte Sendungsnummer erkannt. Bitte manuell prüfen."
+                            status = "Zebra-Scan empfangen, aber keine unterstützte Sendungsnummer erkannt. Rohdaten stehen in der Scan-Diagnose zur Prüfung."
                             return
                         }
                         number = scanned
@@ -233,10 +282,13 @@ class MainActivity : ComponentActivity() {
                         }
                         if (showScanner) {
                             ScannerPanel(
-                                onDetected = { scanned ->
+                                onDetected = { diagnostic ->
                                     showScanner = false
+                                    scanDiagnostic = diagnostic
+                                    showScanDiagnostics = true
+                                    val scanned = diagnostic.selectedValue
                                     if (scanned == null) {
-                                        status = "Mehrere unterschiedliche Codes erkannt. Bitte nur ein Paketlabel gleichzeitig scannen oder die Sendungsnummer manuell eingeben."
+                                        status = "Scan erfasst, aber kein eindeutiger Sendungsnummern-Kandidat. Bitte Scan-Diagnose prüfen und Nummer manuell bestätigen."
                                     } else {
                                         number = scanned
                                         status = "Scan erkannt: $scanned. Bitte Sendungsnummer und Paketdienst prüfen. Es wurde noch nichts an eine andere App übergeben."
@@ -244,6 +296,38 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onClose = { showScanner = false }
                             )
+                        }
+                        scanDiagnostic?.let { diagnostic ->
+                            Card(Modifier.fillMaxWidth()) {
+                                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("Scan-Diagnose", style = MaterialTheme.typography.titleMedium, color = Forest)
+                                        TextButton(onClick = { showScanDiagnostics = !showScanDiagnostics }) {
+                                            Text(if (showScanDiagnostics) "Ausblenden" else "Anzeigen")
+                                        }
+                                    }
+                                    Text(
+                                        "Nur temporär im Arbeitsspeicher. Rohdaten können Sendungs- oder persönliche Informationen enthalten; sie werden nicht gespeichert oder protokolliert.",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    if (showScanDiagnostics) {
+                                        Text("Übernommener Wert: ${diagnostic.selectedValue ?: "Kein eindeutiger Wert"}", style = MaterialTheme.typography.bodyMedium)
+                                        diagnostic.observations.forEachIndexed { index, observation ->
+                                            HorizontalDivider()
+                                            Text("Code ${index + 1} · ${observation.source} · ${observation.format}", style = MaterialTheme.typography.labelLarge)
+                                            Text("Auswertung: ${observation.extractedValue ?: "Kein Sendungsnummern-Kandidat"}", style = MaterialTheme.typography.bodyMedium)
+                                            Text("Rohinhalt:", style = MaterialTheme.typography.labelMedium)
+                                            Text(observation.rawValue.take(MAX_SCAN_INPUT_CHARS), style = MaterialTheme.typography.bodySmall)
+                                            observation.displayValue?.takeIf { it != observation.rawValue }?.let {
+                                                Text("Anzeigeinhalt: $it", style = MaterialTheme.typography.bodySmall)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         OutlinedTextField(
                             value = number,
@@ -931,7 +1015,7 @@ private fun Context.findActivity(): ComponentActivity? = when (this) {
 }
 
 @Composable
-private fun ScannerPanel(onDetected: (String?) -> Unit, onClose: () -> Unit) {
+private fun ScannerPanel(onDetected: (ScanDiagnosticResult) -> Unit, onClose: () -> Unit) {
     val context = LocalContext.current
     var hasPermission by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
@@ -956,7 +1040,7 @@ private fun ScannerPanel(onDetected: (String?) -> Unit, onClose: () -> Unit) {
 
 @androidx.annotation.OptIn(markerClass = [ExperimentalGetImage::class])
 @Composable
-private fun CameraPreview(onDetected: (String?) -> Unit) {
+private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
     val context = LocalContext.current
     val activity = context.findActivity()
     if (activity == null) {
@@ -988,7 +1072,7 @@ private fun CameraPreview(onDetected: (String?) -> Unit) {
         val disposed = AtomicBoolean(false)
         // Camera frames can reveal different barcodes on the same label at slightly
         // different times. Collect candidates across several frames before choosing.
-        val observedTrackingNumbers = ConcurrentHashMap.newKeySet<String>()
+        val observedObservations = ConcurrentHashMap.newKeySet<ScanObservation>()
         val framesAfterFirstCandidate = AtomicInteger(0)
         val requiredConfirmationFrames = 12
         var provider: ProcessCameraProvider? = null
@@ -1011,18 +1095,36 @@ private fun CameraPreview(onDetected: (String?) -> Unit) {
                             scanner.process(InputImage.fromMediaImage(mediaImage, proxy.imageInfo.rotationDegrees))
                                 .addOnSuccessListener(mainExecutor) { barcodes ->
                                     if (!disposed.get()) {
-                                        val values = barcodes.mapNotNull { barcode ->
-                                            (barcode.rawValue?.takeIf { it.isNotBlank() } ?: barcode.displayValue)
-                                                ?.let { extractTrackingNumber(it) }
-                                        }.distinct()
-                                        observedTrackingNumbers.addAll(values)
-                                        if (observedTrackingNumbers.isNotEmpty() &&
+                                        val observations = barcodes.mapNotNull { barcode ->
+                                            val raw = barcode.rawValue?.takeIf { it.isNotBlank() }
+                                                ?: barcode.displayValue?.takeIf { it.isNotBlank() }
+                                                ?: return@mapNotNull null
+                                            if (raw.length > MAX_SCAN_INPUT_CHARS) return@mapNotNull null
+                                            ScanObservation(
+                                                source = "Kamera / ML Kit",
+                                                format = barcodeFormatLabel(barcode.format),
+                                                rawValue = raw,
+                                                displayValue = barcode.displayValue,
+                                                extractedValue = extractTrackingNumber(raw)
+                                            )
+                                        }
+                                        observedObservations.addAll(observations)
+                                        if (observedObservations.isNotEmpty() &&
                                             framesAfterFirstCandidate.incrementAndGet() >= requiredConfirmationFrames &&
                                             !disposed.get() && delivered.compareAndSet(false, true)
                                         ) {
-                                            // Never guess when more than one distinct tracking ID
-                                            // appeared during the confirmation window.
-                                            onDetected(observedTrackingNumbers.singleOrNull())
+                                            // Preserve every distinct raw code for diagnosis. Select a
+                                            // tracking number only when exactly one distinct candidate exists.
+                                            val snapshot = observedObservations.toList().sortedWith(
+                                                compareBy<ScanObservation> { it.format }.thenBy { it.rawValue }
+                                            )
+                                            val candidates = snapshot.mapNotNull { it.extractedValue }.distinct()
+                                            onDetected(
+                                                ScanDiagnosticResult(
+                                                    observations = snapshot,
+                                                    selectedValue = candidates.singleOrNull()
+                                                )
+                                            )
                                         }
                                     }
                                 }
