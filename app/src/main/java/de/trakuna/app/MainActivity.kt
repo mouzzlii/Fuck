@@ -283,6 +283,23 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Text(if (showScanner) "Scanner schließen" else "Barcode / QR-Code scannen")
                         }
+                        OutlinedButton(
+                            onClick = { showScanDiagnostics = !showScanDiagnostics },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(if (showScanDiagnostics) "Scan-Diagnose schließen" else "Scan-Diagnose öffnen")
+                        }
+                        if (showScanDiagnostics && scanDiagnostic == null) {
+                            Card(Modifier.fillMaxWidth()) {
+                                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text("Scan-Diagnose", style = MaterialTheme.typography.titleMedium, color = Forest)
+                                    Text(
+                                        "Noch kein Kamerascan zur Diagnose empfangen. Starte den Scanner und halte den GLS-QR-Code ruhig vor die Kamera. Sobald ML Kit einen Barcode erkennt, werden Rohinhalt und Auswertung hier angezeigt.",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            }
+                        }
                         if (showScanner) {
                             ScannerPanel(
                                 onDetected = { diagnostic ->
