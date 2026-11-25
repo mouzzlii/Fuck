@@ -1,18 +1,17 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.53 (versionCode 54) · CI-Build 45293985061 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
+Stand: App-Version 1.54 (versionCode 55) · CI-Build 45691683747 und Emulator-Instrumentierung 45691683698 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45293985061 für Version 1.53 erfolgreich – Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
+- [x] CI-Lauf 45691683747 für Version 1.54 / versionCode 55 auf Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` erfolgreich – Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, Manifest-/Offline-Sicherheitsprüfungen, APK-Build und Artefakt-Upload
 - [x] Vorhandene Unit-Tests erfolgreich
 - [x] Android-Lint erfolgreich
 - [x] Zusammengeführtes Manifest ohne INTERNET-Berechtigung, aktiviertes Android-Backup oder Klartextverkehr geprüft
-- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.53 als Artefakt bereitgestellt
-- [x] Android-Instrumentierungstestfälle für Keystore-Verschlüsselung, Speicher-Wiederöffnung, beschädigten Übergabe-Cache und Backup-Wiederherstellung nach Speicherschaden hinzugefügt und erfolgreich kompiliert
-- [ ] Android-Instrumentierungstestfälle auf Emulator oder echtem Android-Gerät tatsächlich ausgeführt
+- [x] Debug-APK und zugehörige `SHA256SUMS.txt` für Version 1.54 als Artefakt `15058952938` bereitgestellt
+- [x] Android-Instrumentierungstestfälle für Keystore-Verschlüsselung und lokale Speicherfunktionen auf Emulator ausgeführt: [Run 45691683698 erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45691683698)
 - [ ] Archivieren/Wiederherstellen und Backup-Restore auf einem echten Android-Gerät praktisch geprüft
 - [ ] Release-Version und Versionsnummer fachlich geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
@@ -21,12 +20,8 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
 
-Letzter erfolgreicher Build 1.53: https://github.com/mouzzlii/Fuck/actions/runs/45293985061 (Commit `45a02f7ec8de966100c406bbfdd8e3e572052b05`). Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build, Prüfsumme und Artefakt-Upload waren erfolgreich. Die Emulator-Instrumentierungstests laufen inzwischen in einem getrennten Workflow mit verlängertem TCG-Startfenster, damit sie den normalen APK-Build nicht blockieren. Die Instrumentierungstestfälle sind im Repository vorhanden und wurden erfolgreich kompiliert, aber im Haupt-Build **nicht ausgeführt**; der separate Emulator-Workflow 45295645386 für denselben aktuellen Code-Commit ist noch in Bearbeitung. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
+Letzter erfolgreicher Build für Version 1.54: [Android-Build 45691683747](https://github.com/mouzzlii/Fuck/actions/runs/45691683747), Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb`. Der separate [Emulator-Instrumentierungslauf 45691683698](https://github.com/mouzzlii/Fuck/actions/runs/45691683698) war für denselben Commit erfolgreich. Das Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15058952938`) ist bis 09.12.2026, 20:08 UTC verfügbar. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK; es wird hier kein Hash eines älteren Builds wiederverwendet. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die automatisierten Prüfungen sind kein Ersatz für reale Geräte-, Carrier- und Betreiberabnahme.
 
-APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`
-ZIP-Artefakt-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`
-
-ZIP-Artefakt erstellt am 24.11.2026, 00:05 UTC; Ablauf am 08.12.2026, 00:05 UTC. Produktionssignierung bleibt offen; der separate Emulator-Instrumentierungstest läuft noch.
 
 ## B. Geräte- und Scannerabnahme
 
