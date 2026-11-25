@@ -34,6 +34,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
+/** CameraX/ML Kit scanner UI and lifecycle, isolated from the activity's parcel workflow. */
 private fun barcodeFormatLabel(format: Int): String = when (format) {
     Barcode.FORMAT_QR_CODE -> "QR-Code"
     Barcode.FORMAT_CODE_128 -> "Code 128"
