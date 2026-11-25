@@ -20,6 +20,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 5. Den Hermes-Test erneut durchführen und sicherstellen, dass die bekannte korrekte Hermes-Erkennung unverändert bleibt.
 6. Wenn ein Zebra/DataWedge-Scan verwendet wird, prüfen, ob Rohinhalt und extrahierter Kandidat ebenfalls angezeigt werden.
 7. Diagnosekarte schließen bzw. einen neuen Scan ausführen. Die Rohdaten dürfen nach App-Neustart nicht als dauerhaft gespeicherte Historie erscheinen.
+8. Eine Sendungsnummer erfassen, TRAKUNA in den Hintergrund legen und das Gerät längere Zeit in Standby lassen. Falls Android den TRAKUNA-Prozess beendet, App wieder öffnen und prüfen, ob das aktive Eingabefeld wiederhergestellt wurde. Die Diagnose-Rohdaten sollen dabei bewusst nicht wiederhergestellt werden.
 
 **Datenschutz:** Die Rohdatenanzeige bleibt nur temporär im Arbeitsspeicher. Sie darf nicht in Logcat, Dateien, Backups oder die dauerhafte Sendungsdatenbank geschrieben werden. Screenshots von Diagnoseinhalten vor Weitergabe auf Namen, Adressen und andere persönliche Daten prüfen.
 
