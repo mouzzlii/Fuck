@@ -60,4 +60,17 @@ class DataWedgeSymbologyTest {
         assertFalse(isDataWedgeSenderAccepted(26, null))
         assertFalse(isDataWedgeSenderAccepted(33, "com.symbol.datawedge"))
     }
+
+    @Test
+    fun explainsDisabledDataWedgeOnAndroidVersionsBelowApi34() {
+        val message = dataWedgeRejectionMessage(33)
+        org.junit.Assert.assertTrue(message.contains("deaktiviert"))
+        org.junit.Assert.assertTrue(message.contains("Kamera oder manuelle Eingabe"))
+    }
+
+    @Test
+    fun explainsUnverifiedSenderOnAndroid14AndNewer() {
+        val message = dataWedgeRejectionMessage(34)
+        org.junit.Assert.assertTrue(message.contains("nicht als DataWedge verifiziert"))
+    }
 }
