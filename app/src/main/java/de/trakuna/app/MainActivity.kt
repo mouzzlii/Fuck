@@ -308,8 +308,16 @@ class MainActivity : ComponentActivity() {
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
                                         Text("Scan-Diagnose", style = MaterialTheme.typography.titleMedium, color = Forest)
-                                        TextButton(onClick = { showScanDiagnostics = !showScanDiagnostics }) {
-                                            Text(if (showScanDiagnostics) "Ausblenden" else "Anzeigen")
+                                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            TextButton(onClick = { showScanDiagnostics = !showScanDiagnostics }) {
+                                                Text(if (showScanDiagnostics) "Ausblenden" else "Anzeigen")
+                                            }
+                                            TextButton(onClick = {
+                                                scanDiagnostic = null
+                                                showScanDiagnostics = false
+                                            }) {
+                                                Text("Löschen")
+                                            }
                                         }
                                     }
                                     Text(
