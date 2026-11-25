@@ -638,76 +638,44 @@ class MainActivity : ComponentActivity() {
                             val candidates = if (showAllApps) installedApps else installedApps.filter { it.looksLikeCarrierApp }
                             val partnerPrefs = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
                             val currentPackageKey = "partner_package_$partnerPickerCarrier"
-                            val currentLabelKey = "partner_label_$partnerPickerCarrier"
-                            AlertDialog(
-                                onDismissRequest = {
-                                    showPartnerPicker = false
+                            PartnerAppPickerDialog(
+                                carrier = partnerPickerCarrier,
+                                candidates = candidates,
+                                showCarrierMenu = showPartnerCarrierMenu,
+                                showAllApps = showAllApps,
+                                hasCurrentMapping = partnerPrefs.getString(currentPackageKey, null) != null,
+                                onCarrierMenuChange = { showPartnerCarrierMenu = it },
+                                onCarrierSelected = {
+                                    partnerPickerCarrier = it
                                     showPartnerCarrierMenu = false
+                                    showAllApps = false
                                 },
-                                title = { Text("Betriebssoftware für $partnerPickerCarrier zuordnen") },
-                                text = {
-                                    Column(modifier = Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                        Box {
-                                            OutlinedButton(
-                                                onClick = { showPartnerCarrierMenu = true },
-                                                modifier = Modifier.fillMaxWidth()
-                                            ) { Text("Paketdienst: $partnerPickerCarrier") }
-                                            DropdownMenu(
-                                                expanded = showPartnerCarrierMenu,
-                                                onDismissRequest = { showPartnerCarrierMenu = false }
-                                            ) {
-                                                PartnerAppConfig.priorityCarriers.forEach { carrier ->
-                                                    DropdownMenuItem(
-                                                        text = { Text(carrier) },
-                                                        onClick = {
-                                                            partnerPickerCarrier = carrier
-                                                            showPartnerCarrierMenu = false
-                                                            showAllApps = false
-                                                        }
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        Text("Wähle die installierte App, die zu diesem Paketdienst gehört. Die Zuordnung wird nur auf diesem Gerät gespeichert.")
-                                        Text(if (candidates.isEmpty()) "Keine passende Paketdienst-App gefunden. Du kannst alle installierten Apps anzeigen." else "Installierte Apps:")
-                                        candidates.take(30).forEach { app ->
-                                            TextButton(onClick = {
-                                                val saved = partnerPrefs.edit()
-                                                    .putString(currentPackageKey, app.packageName)
-                                                    .putString(currentLabelKey, app.label)
-                                                    .remove("partner_package")
-                                                    .remove("partner_label")
-                                                    .commit()
-                                                if (saved) {
-                                                    status = "$partnerPickerCarrier wurde der App ${app.label} zugeordnet. Eine automatische Übernahme oder Buchung ist dadurch nicht bestätigt."
-                                                    showPartnerPicker = false
-                                                } else {
-                                                    status = "Zuordnung konnte nicht dauerhaft gespeichert werden. Bitte Gerätespeicher prüfen und erneut versuchen."
-                                                }
-                                            }, modifier = Modifier.fillMaxWidth()) {
-                                                Text("${app.label}  ·  ${app.packageName}")
-                                            }
-                                        }
-                                        if (!showAllApps) TextButton(onClick = { showAllApps = true }) { Text("Alle installierten Apps anzeigen") }
-                                        if (partnerPrefs.getString(currentPackageKey, null) != null) {
-                                            TextButton(onClick = {
-                                                val cleared = partnerPrefs.edit()
-                                                    .remove(currentPackageKey)
-                                                    .remove(currentLabelKey)
-                                                    .commit()
-                                                status = if (cleared) "Zuordnung für $partnerPickerCarrier wurde entfernt."
-                                                else "Zuordnung konnte nicht entfernt werden. Bitte erneut versuchen."
-                                            }, modifier = Modifier.fillMaxWidth()) {
-                                                Text("Zuordnung für $partnerPickerCarrier entfernen")
-                                            }
-                                        }
+                                onAppSelected = { app ->
+                                    val saved = partnerPrefs.edit()
+                                        .putString(currentPackageKey, app.packageName)
+                                        .putString("partner_label_$partnerPickerCarrier", app.label)
+                                        .remove("partner_package")
+                                        .remove("partner_label")
+                                        .commit()
+                                    if (saved) {
+                                        status = "$partnerPickerCarrier wurde der App ${app.label} zugeordnet. Eine automatische Übernahme oder Buchung ist dadurch nicht bestätigt."
+                                        showPartnerPicker = false
+                                    } else {
+                                        status = "Zuordnung konnte nicht dauerhaft gespeichert werden. Bitte Gerätespeicher prüfen und erneut versuchen."
                                     }
                                 },
-                                confirmButton = {
-                                    TextButton(onClick = {
-                                        showPartnerPicker = false
-                                        showPartnerCarrierMenu = false
-                                    }) { Text("Schließen") }
+                                onShowAllApps = { showAllApps = true },
+                                onRemoveMapping = {
+                                    val cleared = partnerPrefs.edit()
+                                        .remove(currentPackageKey)
+                                        .remove("partner_label_$partnerPickerCarrier")
+                                        .commit()
+                                    status = if (cleared) "Zuordnung für $partnerPickerCarrier wurde entfernt."
+                                    else "Zuordnung konnte nicht entfernt werden. Bitte erneut versuchen."
+                                },
+                                onDismiss = {
+                                    showPartnerPicker = false
+                                    showPartnerCarrierMenu = false
                                 }
                             )
                         }
