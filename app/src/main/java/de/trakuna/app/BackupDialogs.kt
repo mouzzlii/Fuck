@@ -1,9 +1,17 @@
 package de.trakuna.app
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.foundation.text.KeyboardOptions
 
 @Composable
 internal fun CsvExportConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
@@ -19,14 +27,80 @@ internal fun CsvExportConfirmationDialog(onConfirm: () -> Unit, onDismiss: () ->
 }
 
 @Composable
-internal fun BackupExportConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+internal fun BackupExportConfirmationDialog(
+    password: String,
+    passwordConfirm: String,
+    onPasswordChange: (String) -> Unit,
+    onPasswordConfirmChange: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Datensicherung erstellen?") },
+        title = { Text("Verschlüsselte Datensicherung") },
         text = {
-            Text("Die Sicherungsdatei enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird unverschlüsselt gespeichert. Wähle einen vertrauenswürdigen Speicherort und gib die Datei nicht weiter.")
+            Column(verticalArrangement = Arrangement.spacedBy(androidx.compose.ui.unit.dp(10))) {
+                Text("Die Sicherung enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird mit AES-256-GCM verschlüsselt. Verwende mindestens 12 Zeichen und bewahre das Passwort getrennt auf. Ohne dieses Passwort ist die Sicherung nicht wiederherstellbar.")
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { onPasswordChange(it.take(128)) },
+                    label = { Text("Sicherungspasswort") },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = passwordConfirm,
+                    onValueChange = { onPasswordConfirmChange(it.take(128)) },
+                    label = { Text("Passwort wiederholen") },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         },
-        confirmButton = { TextButton(onClick = onConfirm) { Text("Sicherung erstellen") } },
+        confirmButton = {
+            TextButton(
+                enabled = password.length >= 12 && password == passwordConfirm,
+                onClick = onConfirm
+            ) { Text("Verschlüsselt sichern") }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Abbrechen") } }
+    )
+}
+
+@Composable
+internal fun EncryptedBackupImportPasswordDialog(
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+    busy: Boolean
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Sicherung entschlüsseln") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(androidx.compose.ui.unit.dp(10))) {
+                Text("Diese Sicherung ist verschlüsselt. Gib das beim Erstellen verwendete Passwort ein.")
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { onPasswordChange(it.take(128)) },
+                    label = { Text("Sicherungspasswort") },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(enabled = password.isNotEmpty() && !busy, onClick = onConfirm) {
+                Text("Entschlüsseln")
+            }
+        },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Abbrechen") } }
     )
 }
@@ -34,6 +108,7 @@ internal fun BackupExportConfirmationDialog(onConfirm: () -> Unit, onDismiss: ()
 @Composable
 internal fun BackupImportConfirmationDialog(
     recordCount: Int,
+    isLegacy: Boolean,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -41,7 +116,7 @@ internal fun BackupImportConfirmationDialog(
         onDismissRequest = onDismiss,
         title = { Text("Datensicherung wiederherstellen?") },
         text = {
-            Text("Die Sicherung enthält $recordCount Vorgänge. Die aktuell auf diesem Gerät gespeicherten Vorgänge werden vollständig ersetzt. Erstelle bei Bedarf zuerst eine Sicherung des aktuellen Standes.")
+            Text((if (isLegacy) "Achtung: Diese ältere Sicherung ist unverschlüsselt. " else "Die verschlüsselte Sicherung wurde erfolgreich geprüft. ") + "Sie enthält $recordCount Vorgänge. Die aktuell auf diesem Gerät gespeicherten Vorgänge werden vollständig ersetzt. Erstelle bei Bedarf zuerst eine eigene Sicherung des aktuellen Standes.")
         },
         confirmButton = { TextButton(onClick = onConfirm) { Text("Ersetzen und wiederherstellen") } },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Abbrechen") } }

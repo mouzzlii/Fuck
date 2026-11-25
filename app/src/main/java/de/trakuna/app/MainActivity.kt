@@ -20,6 +20,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.compose.foundation.Image
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -165,20 +168,37 @@ class MainActivity : ComponentActivity() {
             var confirmCsvExport by remember { mutableStateOf(false) }
             var pendingBackupImport by remember { mutableStateOf<String?>(null) }
             var pendingBackupCount by remember { mutableStateOf(0) }
+            var pendingBackupLegacy by remember { mutableStateOf(false) }
+            var pendingEncryptedBackup by remember { mutableStateOf<String?>(null) }
+            var backupExportPassword by remember { mutableStateOf("") }
+            var backupExportPasswordConfirm by remember { mutableStateOf("") }
+            var backupImportPassword by remember { mutableStateOf("") }
+            var backupBusy by remember { mutableStateOf(false) }
+            val backupScope = rememberCoroutineScope()
             val backupDocumentLauncher = rememberLauncherForActivityResult(
-                ActivityResultContracts.CreateDocument("application/json")
+                ActivityResultContracts.CreateDocument("application/octet-stream")
             ) { uri ->
-                val json = pendingBackupJson
+                val encrypted = pendingBackupJson
                 pendingBackupJson = null
-                if (uri == null || json == null) {
+                if (uri == null || encrypted == null) {
                     status = "Datensicherung abgebrochen."
                 } else {
-                    val saved = runCatching {
-                        context.contentResolver.openOutputStream(uri)?.bufferedWriter(Charsets.UTF_8)?.use { it.write(json) }
-                            ?: error("Datei konnte nicht geöffnet werden.")
+                    backupBusy = true
+                    status = "Datensicherung wird gespeichert…"
+                    backupScope.launch {
+                        try {
+                            val saved = withContext(Dispatchers.IO) {
+                                runCatching {
+                                    context.contentResolver.openOutputStream(uri)?.bufferedWriter(Charsets.UTF_8)?.use { it.write(encrypted) }
+                                        ?: error("Datei konnte nicht geöffnet werden.")
+                                }
+                            }
+                            status = if (saved.isSuccess) "TRAKUNA-Datensicherung wurde gespeichert."
+                            else "Datensicherung konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
+                        } finally {
+                            backupBusy = false
+                        }
                     }
-                    status = if (saved.isSuccess) "TRAKUNA-Datensicherung wurde gespeichert."
-                    else "Datensicherung konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
                 }
             }
             val restoreDocumentLauncher = rememberLauncherForActivityResult(
@@ -187,21 +207,38 @@ class MainActivity : ComponentActivity() {
                 if (uri == null) {
                     status = "Wiederherstellung abgebrochen."
                 } else {
-                    val loaded = runCatching {
-                        context.contentResolver.openInputStream(uri)?.use { input ->
-                            readBoundedUtf8(input, ShipmentStore.MAX_BACKUP_BYTES)
-                        } ?: error("Datei konnte nicht gelesen werden.")
-                    }
-                    if (loaded.isFailure) {
-                        status = "Datei konnte nicht gelesen werden: ${loaded.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
-                    } else {
-                        val json = loaded.getOrThrow()
-                        when (val validation = shipmentStore.validateBackup(json)) {
-                            is BackupValidation.Valid -> {
-                                pendingBackupImport = json
-                                pendingBackupCount = validation.recordCount
+                    backupBusy = true
+                    status = "Sicherungsdatei wird geprüft…"
+                    backupScope.launch {
+                        try {
+                            val loaded = withContext(Dispatchers.IO) {
+                                runCatching {
+                                    context.contentResolver.openInputStream(uri)?.use { input ->
+                                        readBoundedUtf8(input, BackupCrypto.MAX_ENCRYPTED_BACKUP_BYTES)
+                                    } ?: error("Datei konnte nicht gelesen werden.")
+                                }
                             }
-                            is BackupValidation.Invalid -> status = "Sicherung abgelehnt: ${validation.reason}"
+                            if (loaded.isFailure) {
+                                status = "Datei konnte nicht gelesen werden: ${loaded.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
+                            } else {
+                                val raw = loaded.getOrThrow()
+                                if (BackupCrypto.isEncryptedBackup(raw)) {
+                                    pendingEncryptedBackup = raw
+                                    backupImportPassword = ""
+                                } else {
+                                    val validation = withContext(Dispatchers.Default) { shipmentStore.validateBackup(raw) }
+                                    when (validation) {
+                                        is BackupValidation.Valid -> {
+                                            pendingBackupImport = raw
+                                            pendingBackupCount = validation.recordCount
+                                            pendingBackupLegacy = true
+                                        }
+                                        is BackupValidation.Invalid -> status = "Sicherung abgelehnt: ${validation.reason}"
+                                    }
+                                }
+                            }
+                        } finally {
+                            backupBusy = false
                         }
                     }
                 }
@@ -445,9 +482,9 @@ class MainActivity : ComponentActivity() {
                                                 },
                                                 onVisibleLimitChange = { visibleRecordLimit = it },
                                                 onCsvExport = { confirmCsvExport = true },
-                                                onBackupExport = { confirmBackupExport = true },
+                                                onBackupExport = { if (!backupBusy) confirmBackupExport = true },
                                                 onBackupImport = {
-                                                    restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
+                                                    if (!backupBusy) restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
                                                 },
                                                 onAdvance = { pendingAdvance = it },
                                                 onHistory = { historyRecord = it },
@@ -493,32 +530,114 @@ class MainActivity : ComponentActivity() {
                         }
                         if (confirmBackupExport) {
                             BackupExportConfirmationDialog(
+                                password = backupExportPassword,
+                                passwordConfirm = backupExportPasswordConfirm,
+                                onPasswordChange = { backupExportPassword = it },
+                                onPasswordConfirmChange = { backupExportPasswordConfirm = it },
                                 onConfirm = {
+                                    val passwordChars = backupExportPassword.toCharArray()
                                     confirmBackupExport = false
-                                    val exported = runCatching { shipmentStore.exportBackupJson() }
-                                    if (exported.isSuccess) {
-                                        pendingBackupJson = exported.getOrThrow()
-                                        backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
-                                    } else {
-                                        status = exported.exceptionOrNull()?.message ?: "Datensicherung fehlgeschlagen."
+                                    backupExportPassword = ""
+                                    backupExportPasswordConfirm = ""
+                                    backupBusy = true
+                                    status = "Sicherung wird verschlüsselt…"
+                                    backupScope.launch {
+                                        try {
+                                            val exported = withContext(Dispatchers.Default) {
+                                                runCatching { BackupCrypto.encrypt(shipmentStore.exportBackupJson(), passwordChars) }
+                                            }
+                                            if (exported.isSuccess) {
+                                                pendingBackupJson = exported.getOrThrow()
+                                                backupDocumentLauncher.launch("TRAKUNA-Sicherung.trakuna")
+                                            } else {
+                                                status = exported.exceptionOrNull()?.message ?: "Verschlüsselte Datensicherung fehlgeschlagen."
+                                            }
+                                        } finally {
+                                            passwordChars.fill('\\u0000')
+                                            backupBusy = false
+                                        }
                                     }
                                 },
-                                onDismiss = { confirmBackupExport = false }
+                                onDismiss = {
+                                    confirmBackupExport = false
+                                    backupExportPassword = ""
+                                    backupExportPasswordConfirm = ""
+                                }
+                            )
+                        }
+                        pendingEncryptedBackup?.let { encryptedBackup ->
+                            EncryptedBackupImportPasswordDialog(
+                                password = backupImportPassword,
+                                onPasswordChange = { backupImportPassword = it },
+                                busy = backupBusy,
+                                onConfirm = {
+                                    val passwordChars = backupImportPassword.toCharArray()
+                                    backupImportPassword = ""
+                                    backupBusy = true
+                                    status = "Sicherung wird entschlüsselt und geprüft…"
+                                    backupScope.launch {
+                                        try {
+                                            val decrypted = withContext(Dispatchers.Default) {
+                                                runCatching { BackupCrypto.decrypt(encryptedBackup, passwordChars) }
+                                            }
+                                            if (decrypted.isFailure) {
+                                                status = "Sicherung konnte nicht entschlüsselt werden. Passwort und Datei prüfen."
+                                            } else {
+                                                val plain = decrypted.getOrThrow()
+                                                val validation = withContext(Dispatchers.Default) { shipmentStore.validateBackup(plain) }
+                                                when (validation) {
+                                                    is BackupValidation.Valid -> {
+                                                        pendingBackupImport = plain
+                                                        pendingBackupCount = validation.recordCount
+                                                        pendingBackupLegacy = false
+                                                        pendingEncryptedBackup = null
+                                                    }
+                                                    is BackupValidation.Invalid -> {
+                                                        pendingEncryptedBackup = null
+                                                        status = "Sicherung abgelehnt: ${validation.reason}"
+                                                    }
+                                                }
+                                            }
+                                        } finally {
+                                            passwordChars.fill('\\u0000')
+                                            backupBusy = false
+                                        }
+                                    }
+                                },
+                                onDismiss = {
+                                    pendingEncryptedBackup = null
+                                    backupImportPassword = ""
+                                }
                             )
                         }
                         pendingBackupImport?.let { backupJson ->
                             BackupImportConfirmationDialog(
                                 recordCount = pendingBackupCount,
+                                isLegacy = pendingBackupLegacy,
                                 onConfirm = {
-                                    val result = shipmentStore.restoreBackup(backupJson)
-                                    status = when (result) {
-                                        is BackupRestoreResult.Restored -> "${result.recordCount} Vorgänge wurden wiederhergestellt."
-                                        is BackupRestoreResult.Rejected -> "Wiederherstellung fehlgeschlagen: ${result.reason}"
+                                    if (!backupBusy) {
+                                        backupBusy = true
+                                        status = "Wiederherstellung läuft…"
+                                        backupScope.launch {
+                                            try {
+                                                val result = withContext(Dispatchers.IO) { shipmentStore.restoreBackup(backupJson) }
+                                                status = when (result) {
+                                                    is BackupRestoreResult.Restored -> "${result.recordCount} Vorgänge wurden wiederhergestellt."
+                                                    is BackupRestoreResult.Rejected -> "Wiederherstellung fehlgeschlagen: ${result.reason}"
+                                                }
+                                                shipmentRevision++
+                                                pendingBackupImport = null
+                                                pendingBackupLegacy = false
+                                            } finally {
+                                                backupBusy = false
+                                            }
+                                        }
                                     }
-                                    shipmentRevision++
-                                    pendingBackupImport = null
                                 },
-                                onDismiss = { pendingBackupImport = null }
+                                onDismiss = {
+                                    pendingBackupImport = null
+                                    pendingBackupLegacy = false
+                                }
                             )
                         }
                         historyRecord?.let { record ->
