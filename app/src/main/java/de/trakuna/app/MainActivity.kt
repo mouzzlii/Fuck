@@ -386,25 +386,22 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier.heightIn(max = 520.dp).verticalScroll(rememberScrollState()),
                                         verticalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
-                                        Text("Neuen Vorgang mit der oben eingegebenen Sendungsnummer erfassen:")
-                                        OutlinedTextField(value = recipient, onValueChange = { recipient = it.take(100) }, label = { Text("Empfänger / Kundenname (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it.take(500) }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
-                                        if (shipmentStorageIssue != null) {
-                                            Text(
-                                                "Erfassung derzeit gesperrt: $shipmentStorageIssue",
-                                                color = MaterialTheme.colorScheme.error,
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        } else if (normalizeTrackingNumber(number).isBlank()) {
-                                            Text(
-                                                "Bitte zuerst oben eine Sendungsnummer eingeben. Danach wird die passende Erfassungs-Schaltfläche aktiv.",
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        }
-                                        Button(
-                                            onClick = {
-                                                val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
+                                        ShipmentIntakeForm(
+                                            number = number,
+                                            recipient = recipient,
+                                            note = shipmentNote,
+                                            status = status,
+                                            storageIssue = shipmentStorageIssue,
+                                            onRecipientChange = { recipient = it },
+                                            onNoteChange = { shipmentNote = it },
+                                            onCreate = { flow ->
+                                                val result = shipmentStore.add(
+                                                    number,
+                                                    ShipmentRules.resolveCarrierLabel(carrierOverride, number),
+                                                    flow,
+                                                    recipient,
+                                                    shipmentNote
+                                                )
                                                 status = shipmentResultText(result)
                                                 if (result is ShipmentUpdate.Saved) {
                                                     recipient = ""
@@ -413,46 +410,8 @@ class MainActivity : ComponentActivity() {
                                                     showShipmentLedger = false
                                                 }
                                                 shipmentRevision++
-                                            },
-                                            enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) { Text("Paket für Kunden annehmen") }
-                                        Button(
-                                            onClick = {
-                                                val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
-                                                status = shipmentResultText(result)
-                                                if (result is ShipmentUpdate.Saved) {
-                                                    recipient = ""
-                                                    carrierOverride = ""
-                                                    shipmentNote = ""
-                                                    showShipmentLedger = false
-                                                }
-                                                shipmentRevision++
-                                            },
-                                            enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) { Text("Sendung vom Kunden annehmen") }
-                                        Button(
-                                            onClick = {
-                                                val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
-                                                status = shipmentResultText(result)
-                                                if (result is ShipmentUpdate.Saved) {
-                                                    recipient = ""
-                                                    carrierOverride = ""
-                                                    shipmentNote = ""
-                                                    showShipmentLedger = false
-                                                }
-                                                shipmentRevision++
-                                            },
-                                            enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) { Text("Retoure annehmen") }
-                                        Text(
-                                            status,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            style = MaterialTheme.typography.bodySmall
+                                            }
                                         )
-                                        HorizontalDivider()
                                         Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
                                         if (shipmentStorageIssue == null) {
                                             Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} möglichen Einträgen belegt · ${shipmentRecords.count { it.archivedAt == null }} aktiv · ${shipmentRecords.count { it.archivedAt != null }} archiviert", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
