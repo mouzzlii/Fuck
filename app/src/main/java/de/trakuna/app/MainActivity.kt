@@ -1064,8 +1064,8 @@ private fun normalizeTrackingNumber(raw: String): String =
     ShipmentRules.normalizeTrackingNumber(raw)
 
 
-private fun extractTrackingNumber(raw: String): String? =
-    ShipmentRules.extractTrackingNumber(raw, MAX_SCAN_INPUT_CHARS)
+private fun extractTrackingNumber(raw: String, rejectEan13: Boolean = false): String? =
+    ShipmentRules.extractTrackingNumber(raw, MAX_SCAN_INPUT_CHARS, rejectEan13)
 
 private fun identifyCarrier(raw: String): String? =
     ShipmentRules.identifyCarrier(normalizeTrackingNumber(raw))
