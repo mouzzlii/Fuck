@@ -41,24 +41,6 @@ private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
 private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
 private const val DATAWEDGE_LABEL_TYPE_EXTRA = "com.symbol.datawedge.label_type"
 
-/**
- * Scan diagnostics are deliberately kept tring = when (format) {
-    Barcode.FORMAT_QR_CODE -> "QR-Code"
-    Barcode.FORMAT_CODE_128 -> "Code 128"
-    Barcode.FORMAT_CODE_39 -> "Code 39"
-    Barcode.FORMAT_CODE_93 -> "Code 93"
-    Barcode.FORMAT_CODABAR -> "Codabar"
-    Barcode.FORMAT_EAN_13 -> "EAN-13"
-    Barcode.FORMAT_EAN_8 -> "EAN-8"
-    Barcode.FORMAT_ITF -> "ITF"
-    Barcode.FORMAT_UPC_A -> "UPC-A"
-    Barcode.FORMAT_UPC_E -> "UPC-E"
-    Barcode.FORMAT_DATA_MATRIX -> "Data Matrix"
-    Barcode.FORMAT_PDF417 -> "PDF417"
-    Barcode.FORMAT_AZTEC -> "Aztec"
-    else -> "Unbekannt ($format)"
-}
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1015,4 +997,3 @@ internal fun extractTrackingNumber(raw: String): String? =
 private fun identifyCarrier(raw: String): String? =
     ShipmentRules.identifyCarrier(normalizeTrackingNumber(raw))
 
-private fun Context.findActivity(): Component
