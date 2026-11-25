@@ -186,6 +186,8 @@ class ShipmentStoreTest {
         assertFalse(ShipmentRules.isValidTrackingNumber("ÄBC123456"))
         assertFalse(ShipmentRules.isValidTrackingNumber("ＡBC123456"))
         assertTrue(ShipmentRules.isValidTrackingNumber("ABC123456"))
+        // Austrian Post pickup codes may be alphanumeric; do not require a fixed numeric-only shape.
+        assertTrue(ShipmentRules.isValidTrackingNumber("AB12CD34"))
         assertFalse(ShipmentRules.isValidTrackingNumber("12345678901234567890123456789012345678901"))
     }
 
