@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Version 1.54 · versionCode 55)
 
-Basisstand Version 1.53: Der frühere CI-Lauf 45293985061 bestätigte Unit-Tests, Android-Lint, Manifestprüfungen und Debug-APK-Build. Version 1.54 ergänzt die temporäre Scan-Diagnose; für diesen Feature-Branch liegt noch kein erfolgreicher Buildnachweis vor. Vor einem Praxistest muss der Android-Workflow für den Branch ausgeführt und erfolgreich abgeschlossen werden.
+Basisstand Version 1.53: Der frühere CI-Lauf 45293985061 bestätigte Unit-Tests, Android-Lint, Manifestprüfungen und Debug-APK-Build. Für Version 1.54 auf `feature/scan-diagnostics` sind inzwischen sowohl der Android-Build einschließlich Unit-Tests, Lint, Manifestprüfungen und Debug-APK-Build (Run 45684807215) als auch die Emulator-Instrumentierung (Run 45684808431) erfolgreich abgeschlossen. Diese automatisierten Prüfungen ersetzen nicht den nachfolgend beschriebenen Praxistest auf realer Kamera-/Barcode-Hardware.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
