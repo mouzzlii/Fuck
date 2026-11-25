@@ -171,7 +171,7 @@ class MainActivity : ComponentActivity() {
                             runCatching { getSentFromPackage() }.getOrNull()
                         } else null
                         if (!isDataWedgeSenderAccepted(Build.VERSION.SDK_INT, senderPackage)) {
-                            status = "Zebra-Scan abgelehnt: Der Broadcast stammt nicht von DataWedge."
+                            status = dataWedgeRejectionMessage(Build.VERSION.SDK_INT)
                             return
                         }
                         // Broadcasts are externally supplied; ignore a missing or wrongly typed
