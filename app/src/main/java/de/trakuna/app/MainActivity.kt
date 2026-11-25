@@ -412,71 +412,50 @@ class MainActivity : ComponentActivity() {
                                                 shipmentRevision++
                                             }
                                         )
-                                        Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
-                                        if (shipmentStorageIssue == null) {
-                                            Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} möglichen Einträgen belegt · ${shipmentRecords.count { it.archivedAt == null }} aktiv · ${shipmentRecords.count { it.archivedAt != null }} archiviert", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                        } else {
-                                            Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $shipmentStorageIssue. Neue Vorgänge und Exporte sind gesperrt. Du kannst eine vertrauenswürdige Sicherung wiederherstellen oder dich an den Support wenden.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-                                        }
-                                        OutlinedButton(
-                                            onClick = { showArchivedShipments = !showArchivedShipments; visibleRecordLimit = 100 },
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) { Text(if (showArchivedShipments) "Aktive Vorgänge anzeigen" else "Archivierte Vorgänge anzeigen") }
-                                        Text(if (showArchivedShipments) "Archiv – Vorgänge bleiben erhalten und können wiederhergestellt werden." else "Aktive Vorgänge – abgeschlossene Vorgänge können archiviert werden.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                        OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it.take(120); visibleRecordLimit = 100 }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedButton(onClick = { confirmCsvExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
-                                        OutlinedButton(onClick = { confirmBackupExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) {
-                                            Text("Vollständige Datensicherung erstellen")
-                                        }
-                                        OutlinedButton(onClick = {
-                                            restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
-                                        }, enabled = true, modifier = Modifier.fillMaxWidth()) { Text("Datensicherung wiederherstellen") }
-                                        if (shipmentStorageIssue != null) {
-                                            Text("Die gespeicherten Vorgänge werden nicht als leer angezeigt, weil der Speicher fehlerhaft gelesen wurde.", color = MaterialTheme.colorScheme.error)
-                                        } else if (shipmentRecords.isEmpty()) {
-                                            Text("Noch keine Paketshop-Vorgänge erfasst.")
-                                        } else {
-                                            val filteredRecords = shipmentRecords.filter { record ->
-                                                (record.archivedAt != null) == showArchivedShipments &&
-                                                    (shipmentSearch.isBlank() || listOf(record.trackingNumber, record.recipient, record.carrier, shipmentStatusLabel(record.status)).any { it.contains(shipmentSearch, ignoreCase = true) })
-                                            }
-                                            if (filteredRecords.isEmpty()) {
-                                                Text("Keine passenden Sendungen gefunden.")
-                                            }
-                                            val visibleRecords = filteredRecords.take(visibleRecordLimit)
-                                            visibleRecords.forEach { record ->
-                                                ShipmentRecordCard(
-                                                    record = record,
-                                                    onAdvance = { pendingAdvance = record },
-                                                    onHistory = { historyRecord = record },
-                                                    onArchive = {
-                                                        val archived = shipmentStore.archive(record.id)
-                                                        status = if (archived) "Vorgang archiviert. Die Sendungsdaten und Historie bleiben erhalten." else "Nur abgeschlossene Vorgänge können archiviert werden."
-                                                        shipmentRevision++
-                                                    },
-                                                    onEdit = {
-                                                        editRecipient = record.recipient
-                                                        editNote = record.note
-                                                        editingRecord = record
-                                                    },
-                                                    onRestore = {
-                                                        val restored = shipmentStore.restoreArchived(record.id)
-                                                        status = if (restored) "Vorgang wurde aus dem Archiv wiederhergestellt." else "Vorgang konnte nicht wiederhergestellt werden."
-                                                        shipmentRevision++
-                                                    },
-                                                    onDelete = { pendingDelete = record }
-                                                )
-                                            }
-                                            if (filteredRecords.size > visibleRecords.size) {
-                                                TextButton(
-                                                    onClick = { visibleRecordLimit = (visibleRecordLimit + 100).coerceAtMost(filteredRecords.size) },
-                                                    modifier = Modifier.fillMaxWidth()
-                                                ) { Text("Weitere ${filteredRecords.size - visibleRecords.size} Treffer anzeigen") }
-                                            }
-                                        }
-                                    }
-                                },
-                                confirmButton = {
+                                        ShipmentLedgerList(
+                                            records = shipmentRecords,
+                                            storageIssue = shipmentStorageIssue,
+                                            archived = showArchivedShipments,
+                                            search = shipmentSearch,
+                                            visibleRecordLimit = visibleRecordLimit,
+                                            actions = ShipmentLedgerActions(
+                                                onToggleArchived = {
+                                                    showArchivedShipments = !showArchivedShipments
+                                                    visibleRecordLimit = 100
+                                                },
+                                                onSearchChange = {
+                                                    shipmentSearch = it.take(120)
+                                                    visibleRecordLimit = 100
+                                                },
+                                                onVisibleLimitChange = { visibleRecordLimit = it },
+                                                onCsvExport = { confirmCsvExport = true },
+                                                onBackupExport = { confirmBackupExport = true },
+                                                onBackupImport = {
+                                                    restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
+                                                },
+                                                onAdvance = { pendingAdvance = it },
+                                                onHistory = { historyRecord = it },
+                                                onArchive = { record ->
+                                                    val archived = shipmentStore.archive(record.id)
+                                                    status = if (archived) "Vorgang archiviert. Die Sendungsdaten und Historie bleiben erhalten." else "Nur abgeschlossene Vorgänge können archiviert werden."
+                                                    shipmentRevision++
+                                                },
+                                                onEdit = { record ->
+                                                    editRecipient = record.recipient
+                                                    editNote = record.note
+                                                    editingRecord = record
+                                                },
+                                                onRestore = { record ->
+                                                    val restored = shipmentStore.restoreArchived(record.id)
+                                                    status = if (restored) "Vorgang wurde aus dem Archiv wiederhergestellt." else "Vorgang konnte nicht wiederhergestellt werden."
+                                                    shipmentRevision++
+                                                },
+                                                onDelete = { pendingDelete = it }
+                                            )
+                                        )
+                                     }
+                                 },
+                                 confirmButton = {
                                     TextButton(onClick = { showShipmentLedger = false }) { Text("Schließen") }
                                 }
                             )
