@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Version 1.54 · versionCode 55)
+# TRAKUNA – Praxis-Testplan (Integrationsversion 1.54 · versionCode 55)
 
 Basisstand Version 1.53: Der frühere CI-Lauf 45293985061 bestätigte Unit-Tests, Android-Lint, Manifestprüfungen und Debug-APK-Build. Version 1.54 ergänzt temporäre Scan-Diagnose, QR/1D-Filter, Fokusverbesserungen, DataWedge-Allowlist und verschlüsselte Cache-Wiederherstellung. Für jeden neuen Commit ist ein erfolgreicher CI-Lauf erforderlich; Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
 
@@ -177,16 +177,17 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 
 ## Datensicherung und Wiederherstellung
 
-1. In „Paketshop-Sendungen verwalten“ eine vollständige JSON-Datensicherung erstellen und in einem sicheren Speicherort ablegen.
-2. Prüfen, dass die Datei `TRAKUNA-Sicherung.json` vorhanden und nicht leer ist.
-3. Für eine Wiederherstellung die Sicherungsdatei auswählen. TRAKUNA liest höchstens 4 MiB ein und prüft UTF-8-Kodierung, Format, Version, Einträge und Höchstmenge. Beschädigte Textkodierung wird abgelehnt.
-4. Vor dem Ersetzen des lokalen Bestands erscheint eine Bestätigungsabfrage. Ohne Bestätigung bleiben die aktuellen Daten unverändert.
-5. Nach Wiederherstellung die angezeigte Anzahl mit dem erwarteten Datenbestand vergleichen.
+1. In „Paketshop-Sendungen verwalten“ eine vollständige passwortgeschützte Datensicherung erstellen.
+2. Ein Passwort mit 12–128 Zeichen eingeben und bestätigen. Es wird nicht in TRAKUNA gespeichert; für eine spätere Wiederherstellung ist es zwingend erforderlich.
+3. Prüfen, dass die Datei `TRAKUNA-Sicherung.trakuna` vorhanden ist. Die Datei enthält ein AES-256-GCM-verschlüsseltes Backup; der Klartext darf nicht in der Datei sichtbar sein.
+4. Für eine Wiederherstellung die Datei auswählen. TRAKUNA liest höchstens 6 MiB ein, erkennt das verschlüsselte Format, fragt das Passwort ab, entschlüsselt und validiert Format, Version, Einträge und Höchstmenge.
+5. Vor dem Ersetzen des lokalen Bestands erscheint eine Bestätigungsabfrage mit der Anzahl der Vorgänge. Ohne ausdrückliche Bestätigung bleiben die aktuellen Daten unverändert.
+6. Falsches Passwort, beschädigter Header, Salt, Nonce oder Ciphertext müssen abgelehnt werden; der aktuelle Bestand bleibt unverändert.
+7. Alte unverschlüsselte JSON-Sicherungen bleiben importierbar, müssen aber vor dem Ersetzen ausdrücklich als Klartext gekennzeichnet werden.
+8. Nach Wiederherstellung die angezeigte Anzahl und einige Testvorgänge mit dem erwarteten Datenbestand vergleichen.
+9. Beschädigten lokalen Datenspeicher ausschließlich in einer Testinstallation simulieren. Eine gültige Sicherung muss den beschädigten Bestand wiederherstellen können; bei ungültiger Sicherung dürfen vorhandene Daten nicht überschrieben werden.
 
-**Wichtig:** Die Sicherungsdatei enthält personenbezogene Daten im Klartext. Nur auf einem geschützten Speicherort ablegen und nicht unverschlüsselt weitergeben.
-
-6. Eine Sicherungsdatei mit verändertem Zähler, doppelter Vorgangs-ID oder doppelter aktiver Sendung testen. TRAKUNA muss sie ablehnen und den bisherigen Bestand unverändert lassen.
-7. Beschädigten lokalen Datenspeicher simulieren (nur in einer Testinstallation). TRAKUNA muss einen Warnhinweis anzeigen und Änderungen sowie CSV-/JSON-Exporte blockieren; vorhandene Rohdaten dürfen nicht automatisch überschrieben werden.
+**Wichtig:** Das Sicherungspasswort getrennt von der `.trakuna`-Datei aufbewahren. CSV-Exporte bleiben unverschlüsselt und enthalten vertrauliche Daten im Klartext.
 
 
 ## Zusätzliche Tests für Version 1.19 – lokale Verschlüsselung
@@ -287,9 +288,9 @@ Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/202
 - [ ] Dialogtext kontrollieren: TRAKUNA erklärt, dass keine Carrier-Bestätigung empfangen wird und nur nach abgeschlossener Quittierung im Originalsystem lokal dokumentiert werden soll.
 - [ ] Nach Bestätigung kontrollieren: Status lautet ausdrücklich „Lokal als an Paketdienst übergeben dokumentiert“ und nicht „Carrier-Buchung bestätigt“.
 
-## 10. Ergänzende Android-Instrumentierungstests (Version 1.53)
+## 10. Ergänzende Android-Instrumentierungstests (Integrationsversion 1.54)
 
-Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Testbestand im Repository. Sie wurden in CI erfolgreich kompiliert; ein Emulator- oder Gerätelauf ist noch offen:
+Der Android-Build 45721047978 ist erfolgreich. Der separate API-35-Emulatorlauf 45721047851 hat **8/8 Instrumentierungstests** erfolgreich ausgeführt. Dazu gehören die verschlüsselte Backup-Wiederherstellung, falsche Passwortablehnung, Legacy-PBKDF2-Kompatibilität, verschlüsselte lokale Speicherung und der Schutz vor doppelter Statusfortschreibung. Die Tests bestätigen keinen Kamera- oder Zebra-Hardwarebetrieb.
 
 - [ ] **Keystore-Verschlüsselung:** Testsendung speichern, SharedPreferences kontrollieren und bestätigen, dass Sendungsnummer, Empfänger und Notiz nicht im Klartext vorkommen.
 - [ ] **Speicher-Wiederöffnung:** Neue `ShipmentStore`-Instanz erstellen und kontrollieren, dass der verschlüsselte Bestand vollständig wieder lesbar ist.
@@ -298,3 +299,21 @@ Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Tes
 - [ ] **Beschädigter Übergabe-Cache:** Verschlüsselten Cachewert beschädigen; die App muss einen Fehler melden und darf keinen leeren Cache vortäuschen.
 - [ ] **Backup-Recovery:** Gültige Sicherung erstellen, lokalen verschlüsselten Bestand beschädigen und anschließend die gültige Sicherung wiederherstellen. Die wiederhergestellten Daten müssen nach erneuter Leseprüfung vorhanden sein.
 
+
+## 11. Zusätzliche manuelle Abnahme für die passwortgeschützte Datensicherung
+
+Diese Prüfungen sind trotz erfolgreicher automatisierter JVM- und Emulatorläufe noch auf einem realen Android-Zielgerät durchzuführen. Sie werden hier bewusst nicht als erledigt markiert.
+
+| Nr. | Test | Erwartetes Ergebnis |
+|---|---|---|
+| B1 | Sicherung mit einem Passwort von 12–128 Zeichen erstellen | Datei endet auf `.trakuna`; Passwort wird zweimal bestätigt und nicht gespeichert. |
+| B2 | Sicherungsdatei mit einem Texteditor öffnen | Sendungsnummern, Empfängernamen und Notizen sind nicht im Klartext sichtbar. |
+| B3 | Datei mit richtigem Passwort importieren | Entschlüsselung und vollständige Validierung gelingen; der Bestand wird erst nach ausdrücklicher Bestätigung ersetzt. |
+| B4 | Falsches Passwort eingeben | Import wird abgelehnt; der aktuelle Bestand bleibt unverändert. |
+| B5 | Header, Salt, Nonce oder Ciphertext verändern | Authentifizierungsprüfung schlägt fehl; keine Daten werden wiederhergestellt. |
+| B6 | Passwort mit Umlauten und Sonderzeichen verwenden | Export und Wiederherstellung funktionieren auf dem Zielgerät. |
+| B7 | Alte JSON-Sicherung importieren | Import bleibt möglich, zeigt aber vor dem Ersetzen eine deutliche Klartext-Warnung. |
+| B8 | Datei oberhalb der Größenbegrenzung importieren | Import wird begrenzt abgewiesen; der aktuelle Datenbestand bleibt erhalten. |
+| B9 | Oberfläche während KDF und Datei-I/O beobachten | App bleibt bedienbar; Kryptografie und Dateioperationen blockieren nicht den UI-Thread. |
+
+**Abnahmesperre:** Erst nach dokumentierter Durchführung von B1–B9 auf einem realen Android-Gerät kann die manuelle Backup-Funktion als abgenommen gelten. Ein Emulatorlauf ersetzt diese Prüfung nicht.

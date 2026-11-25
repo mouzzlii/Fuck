@@ -1,13 +1,13 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.54 (versionCode 55) · CI-Build 45691683747 und Emulator-Instrumentierung 45691683698 erfolgreich (Debug-Testpaket)
+Stand: Integrationsversion 1.54 (versionCode 55) · Build 45721047978 und API-35-Emulator 45721047851 erfolgreich · 8/8 Instrumentierungstests (Debug-Testpaket, noch nicht in main)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45691683747 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45691683747).
-2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen (Artifact-ID `15058952938`).
+1. Den [erfolgreichen Android-Build 45721047978 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45721047978).
+2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen (Artifact-ID `15072192619`).
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die Prüfsumme im entpackten Ordner mit `sha256sum -c SHA256SUMS.txt` prüfen; erwartet wird `app-debug.apk: OK`. Unter Windows kann alternativ `Get-FileHash .\\app-debug.apk -Algorithm SHA256` mit dem Wert in `SHA256SUMS.txt` verglichen werden.
 5. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
@@ -16,11 +16,11 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 **Stand des Testpakets**
 
 - App-Version: 1.54 (versionCode 55)
-- Geprüfter Commit: `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb`
-- Android-Build: [45691683747 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45691683747)
-- Emulator-Instrumentierung: [45691683698 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45691683698)
-- Artefakt: `TRAKUNA-Android`, Artifact-ID `15058952938`, 20.801.113 Bytes
-- Verfügbar bis: 09.12.2026, 20:08 UTC
+- Geprüfter Commit: `86c8a7f1f185dda76658373538cde762e4cfac28`
+- Android-Build: [45721047978 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45721047978)
+- Emulator-Instrumentierung: [45721047851 – erfolgreich, 8/8 Tests](https://github.com/mouzzlii/Fuck/actions/runs/45721047851)
+- Artefakt: `TRAKUNA-Android`, Artifact-ID `15072192619`
+- Verfügbar bis: 09.12.2026, 23:26 UTC
 
 Das Artefakt enthält `SHA256SUMS.txt`; ausschließlich den dort angegebenen Hash für genau diese APK verwenden. Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die CI-Prüfung ersetzt keine reale Kamera-, Zebra- oder Betreiberabnahme.
 
@@ -28,11 +28,12 @@ Das Artefakt enthält `SHA256SUMS.txt`; ausschließlich den dort angegebenen Has
 
 **TRAKUNA vor einem Update nicht deinstallieren.** Lokale Sendungsdaten und der zugehörige Android-Keystore-Schlüssel können bei einer Deinstallation verloren gehen.
 
-1. In TRAKUNA eine vollständige JSON-Datensicherung erstellen.
-2. Die Datei an einem geschützten Ort ablegen. Sie enthält Sendungsnummern, Empfängernamen und Notizen im Klartext.
-3. Prüfen, ob die Sicherungsdatei tatsächlich vorhanden ist.
-4. Erst dann das neue APK installieren und – wenn Android es anbietet – die bestehende App aktualisieren, nicht deinstallieren.
-5. Nach dem Update einige vorhandene Testvorgänge kontrollieren.
+1. In TRAKUNA eine vollständige passwortgeschützte Datensicherung erstellen.
+2. Ein Sicherungspasswort mit 12 bis 128 Zeichen eingeben und bestätigen. Das Passwort wird nicht in TRAKUNA gespeichert.
+3. Die `.trakuna`-Datei an einem geschützten Ort ablegen; das Passwort getrennt von der Datei aufbewahren. Ohne das Passwort ist die Sicherung nicht wiederherstellbar.
+4. Prüfen, ob die Datei tatsächlich vorhanden ist und eine plausible Dateigröße hat. Die Wiederherstellung ersetzt den gesamten aktuellen Bestand und darf nicht unbedacht auf dem produktiven Gerät getestet werden.
+5. Erst dann das neue APK installieren und – wenn Android es anbietet – die bestehende App aktualisieren, nicht deinstallieren.
+6. Nach dem Update einige vorhandene Testvorgänge kontrollieren.
 
 Wenn Android eine abweichende Signatur meldet, Installation abbrechen. Die bestehende App nicht löschen und keine App-Daten entfernen. Debug-Builds können unterschiedliche Signaturen besitzen.
 
@@ -109,7 +110,9 @@ Die UPS-App nicht eigenmächtig installieren oder konfigurieren. Vorhandene App-
 - Lokale Daten liegen nur auf diesem Gerät; es gibt keine zentrale Synchronisierung und keine Cloud-Verbindung.
 - Es gibt keine Mitarbeiterkonten oder Rollen.
 - Maximal 500 Vorgänge werden lokal gespeichert; archivierte Vorgänge belegen weiterhin einen Platz.
-- JSON-Backups und CSV-Exporte enthalten vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
+- Neue `.trakuna`-Datensicherungen sind mit AES-256-GCM und PBKDF2-HMAC-SHA256 (600.000 Iterationen) passwortgeschützt. Das Passwort muss 12–128 Zeichen lang sein und getrennt von der Datei aufbewahrt werden.
+- Alte JSON-Sicherungen bleiben importierbar, sind aber unverschlüsselt. TRAKUNA kennzeichnet sie vor dem Ersetzen des aktuellen Bestands ausdrücklich als Klartext.
+- CSV-Exporte enthalten weiterhin vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
 - Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge mit Zeitstempel und Ereignistyp. Diese Historie ist weiterhin nur lokal und nicht manipulationssicher oder zentral bestätigt.
 - Keine echten Kundendaten in öffentliche Screenshots, GitHub-Issues oder Chat-Nachrichten aufnehmen.
 - Vor dem produktiven Einsatz sind Datenschutzprüfung, Mehrgeräte-/Mitarbeitermodell, Backup-Wiederherstellung und signiertes Produktionsrelease erforderlich.
