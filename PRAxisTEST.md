@@ -11,6 +11,17 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 - Kameraberechtigung für den Scan-Test.
 - Für die Partnerübergabe eine installierte Betriebssoftware. Eine automatische Übernahme ist nur möglich, wenn die Ziel-App die TRAKUNA-Intent-Extras oder eine dokumentierte API unterstützt.
 
+## 2.0 Kamera-Fokus und erlaubte Codeformate
+
+- Der Kamera-Scanner ist auf QR-Code sowie lineare Strichcodes (Code 128/39/93, Codabar, EAN-13/8, ITF, UPC-A/E) begrenzt.
+- Data Matrix, PDF417, Aztec und andere Formate dürfen von der Kamera nicht als Treffer geliefert werden.
+- Kamera nach Öffnen prüfen: Fokus stellt sich auf den mittleren Bildbereich ein; bei unterstützten Kameras läuft kontinuierlicher Autofokus.
+- Auf einen QR-Code bzw. Strichcode tippen: Autofokus-/Belichtungsmessung muss auf diesen Bereich neu auslösen.
+- Test mit QR-Code und mindestens einem Strichcode durchführen; beide müssen erkannt werden.
+- Test mit Data Matrix, PDF417 und Aztec durchführen; diese dürfen keinen Scan auslösen.
+- Fokus bei nahen und weiter entfernten Etiketten, bei schwachem Licht und nach Rückkehr aus dem Hintergrund prüfen.
+- Der Autofokus hängt von der Kamera-Hardware und deren CameraX-Unterstützung ab; ein Gerät ohne Autofokus kann Software nicht nachträglich fokussierbar machen.
+
 ## 2.1 Scan-Diagnose (Version 1.54)
 
 1. In TRAKUNA einen QR-Code bzw. Barcode mit der Kamera scannen.
