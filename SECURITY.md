@@ -35,13 +35,14 @@
 
 ## Automatische CI-Sicherheitsprüfungen
 
-Der Android-CI-Workflow prüft vor Unit-Tests die Quellmanifest-Grenzen und nach dem APK-Bau zusätzlich die von Gradle zusammengeführten Manifeste. Damit werden auch Berechtigungen geprüft, die eine Android-Abhängigkeit über die Manifest-Zusammenführung einbringen könnte. Die aktuell beabsichtigten Grenzen sind:
+Der Android-CI-Workflow führt `scripts/check-android-security-boundaries.sh` vor den Unit-Tests und nach dem APK-Bau aus. Die Quellprüfung erlaubt ausschließlich CAMERA und ACCESS_NETWORK_STATE; INTERNET darf nur als explizite Manifest-Entfernung für die ML-Kit-Transport-Abhängigkeit vorkommen. Zusätzlich werden optionale Kamera-Hardware, `allowBackup=false`, `usesCleartextTraffic=false`, direkte Netzwerk-Client-Abhängigkeiten und bekannte HTTP-/Socket-APIs im App-Quellcode geprüft. Nach dem Build wird das tatsächlich paketierte Manifest kontrolliert.
 
 - Keine Android-`INTERNET`-Berechtigung, solange keine freigegebene Backend-Architektur umgesetzt ist.
-- `android:allowBackup="false"` muss gesetzt bleiben.
-- `android:usesCleartextTraffic="false"` muss gesetzt bleiben.
+- `ACCESS_NETWORK_STATE` dient ausschließlich der lokalen WLAN-Statusanzeige und gewährt keinen Netzwerkzugriff.
+- `android:allowBackup="false"` und `android:usesCleartextTraffic="false"` müssen im Quell- und Paketmanifest gesetzt bleiben.
+- Direkte HTTP-/Socket-Client-Abhängigkeiten und bekannte Netzwerk-APIs sind nicht freigegeben.
 
-Ein Verstoß lässt den Build fehlschlagen. Diese Prüfung ist eine gezielte Schutzschranke für den jetzigen Offline-Stand; sie ist kein vollständiger Sicherheitstest und ersetzt weder Codeanalyse noch Penetrationstest.
+Ein Verstoß lässt den Build fehlschlagen. Diese Schutzschranke prüft Quellmanifest, deklarierte direkte Abhängigkeiten, bekannte Netzwerk-API-Aufrufe und das finale Paketmanifest. Sie ist kein vollständiger Audit aller transitiven Bibliotheksimplementierungen und ersetzt weder Codeanalyse noch Penetrationstest.
 
 Der CI-Lauf 45293985061 hat zusätzlich die JVM-Unit-Tests ausgeführt und fünf Android-Instrumentierungstestfälle erfolgreich kompiliert: verschlüsselte Sendungsdaten, Fail-closed bei beschädigtem Sendungsspeicher, verschlüsselter Übergabe-Cache, Fail-closed bei beschädigtem Übergabe-Cache und Backup-Wiederherstellung nach beschädigtem Sendungsspeicher. Diese Instrumentierungstestfälle wurden im Haupt-Build nicht ausgeführt. Ein separater Emulator-Workflow mit TCG-Softwareemulation ist für den aktuellen Code-Commit gestartet, aber noch nicht abgeschlossen. Die Laufzeitprüfung bleibt bis zum grünen Abschluss offen. Die erfolgreiche Kompilierung belegt daher nur die technische Übersetzbarkeit der Testfälle, nicht das Laufzeitverhalten auf einem echten Gerät. Wenn eine echte Synchronisierung später beschlossen wird, muss diese Schutzschranke gemeinsam mit TLS, Authentifizierung, Berechtigungen, Datenschutzkonzept und Backend-Abnahme bewusst angepasst werden.
 

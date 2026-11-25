@@ -15,6 +15,7 @@ on:
       - "settings.gradle.kts"
       - "gradle.properties"
       - "gradle/**"
+      - "scripts/check-android-security-boundaries.sh"
       - ".github/workflows/android.yml"
   pull_request:
     branches:
@@ -58,29 +59,8 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Sicherheitsgrenzen des Android-Manifests prüfen
-        shell: bash
-        run: |
-          manifest="app/src/main/AndroidManifest.xml"
-          test -f "$manifest"
-          if grep -Fq 'android.permission.INTERNET' "$manifest" &&
-             ! grep -Eq '<uses-permission[^>]*android:name="android.permission.INTERNET"[^>]*tools:node="remove"' "$manifest"; then
-            echo "FEHLER: INTERNET darf nur als ausdrückliche Manifest-Entfernung vorkommen."
-            exit 1
-          fi
-          grep -Eq '<uses-permission[^>]*android:name="android.permission.INTERNET"[^>]*tools:node="remove"' "$manifest" || {
-            echo "FEHLER: INTERNET-Entfernung für die ML-Kit-Transport-Abhängigkeit fehlt."
-            exit 1
-          }
-          grep -Eq 'android:allowBackup="false"' "$manifest" || {
-            echo "FEHLER: Android-Backup muss bis zur geprüften Backup-Strategie deaktiviert bleiben."
-            exit 1
-          }
-          grep -Eq 'android:usesCleartextTraffic="false"' "$manifest" || {
-            echo "FEHLER: Unverschlüsselter Netzwerkverkehr muss deaktiviert bleiben."
-            exit 1
-          }
-          echo "OK: Keine INTERNET-Berechtigung, Android-Backup deaktiviert, Klartextverkehr deaktiviert."
+      - name: Offline-, Manifest- und Abhängigkeitsgrenzen prüfen
+        run: bash scripts/check-android-security-boundaries.sh source
 
       - name: Unit-Tests ausführen
         run: gradle --no-daemon testDebugUnitTest
@@ -112,29 +92,8 @@ jobs:
             grep -oE '<uses-permission[^>]+' "$packaged" || true
           fi
 
-      - name: Zusammengeführtes Android-Manifest prüfen
-        shell: bash
-        run: |
-          mapfile -d '' manifests < <(find app/build/intermediates -type f -name AndroidManifest.xml -print0)
-          if [ ${#manifests[@]} -eq 0 ]; then
-            echo "FEHLER: Kein von Gradle erzeugtes Manifest für die Prüfung gefunden."
-            exit 1
-          fi
-          for merged in "${manifests[@]}"; do
-            if grep -Fq 'android.permission.INTERNET' "$merged"; then
-              echo "FEHLER: Eine Abhängigkeit oder Manifest-Zusammenführung fügt INTERNET hinzu: $merged"
-              exit 1
-            fi
-            if grep -Eq 'android:allowBackup="true"' "$merged"; then
-              echo "FEHLER: Android-Backup ist im zusammengeführten Manifest aktiviert: $merged"
-              exit 1
-            fi
-            if grep -Eq 'android:usesCleartextTraffic="true"' "$merged"; then
-              echo "FEHLER: Klartextverkehr ist im zusammengeführten Manifest aktiviert: $merged"
-              exit 1
-            fi
-          done
-          echo "OK: Zusammengeführte Manifeste enthalten keine INTERNET-Berechtigung, kein aktiviertes Backup und keinen Klartextverkehr."
+      - name: Tatsächliches Paketmanifest und Offline-Grenzen prüfen
+        run: bash scripts/check-android-security-boundaries.sh merged
 
       - name: Prüfen, ob Betreiber-Release-Signierung konfiguriert ist
         id: signing
