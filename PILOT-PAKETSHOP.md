@@ -36,7 +36,7 @@ Version 1.54 (versionCode 55) ergänzt die temporäre Scan-Diagnose und die Scan
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
-Das Artefakt im Actions-Lauf 45293985061 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update ein JSON-Backup erstellen und die Wiederherstellung prüfen. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
+Das aktuelle Artefakt im Actions-Lauf 45691683747 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update ein JSON-Backup erstellen und die Wiederherstellung prüfen. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
 
 ### Sicherheitsverbesserung in Version 1.52
 
