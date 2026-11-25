@@ -34,6 +34,7 @@ private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
 private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
 private const val DATAWEDGE_LABEL_TYPE_EXTRA = "com.symbol.datawedge.label_type"
 
+/** Activity-level state and navigation; focused scanner, shipment and partner UI lives in dedicated composables. */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
