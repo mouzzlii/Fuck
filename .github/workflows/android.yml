@@ -1,5 +1,7 @@
 name: TRAKUNA Android Build
 
+# CI validation for the isolated scanner-diagnostics feature branch.
+
 on:
   workflow_dispatch:
   push:
