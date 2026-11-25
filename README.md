@@ -1,5 +1,14 @@
 # TRAKUNA – Android Scan-Zentrale
 
+<div align="center">
+  <img src="https://raw.githubusercontent.com/mouzzlii/logo-M-glichkeiten-/main/1795643953832.jpg" alt="W-Signatur – Blau, Original" width="180" />
+  <br />
+  <sub>W — Master Emblem · Blau · Technologie</sub>
+  <br />
+  <sub>Originaldatei unverändert · nur proportionale Skalierung · <a href="https://github.com/mouzzlii/logo-M-glichkeiten-">verbindliche Logo-Regeln</a></sub>
+</div>
+
+
 TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
 ## Aktueller Entwicklungsstand – Version 1.53 (versionCode 54)
