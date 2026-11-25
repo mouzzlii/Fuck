@@ -458,6 +458,14 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun alphanumericAustrianPostPickupCodeIsAcceptedWithoutNumericOnlyAssumptions() {
+        val pickupCode = "AB12CD34"
+        assertEquals(pickupCode, ShipmentRules.extractTrackingNumber(pickupCode))
+        assertEquals(pickupCode, ShipmentRules.extractTrackingNumber("  $pickupCode  "))
+        assertEquals(true, ShipmentRules.isValidTrackingNumber(pickupCode))
+    }
+
+    @Test
     fun glsQrPrefersShipmentNumberOverAuxiliaryTrackIdRegardlessOfParameterOrder() {
         val expected = "31220879741"
         val trackId = "Z4EIOR5P"
