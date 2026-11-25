@@ -36,7 +36,7 @@ Version 1.54 (versionCode 55) ergänzt die temporäre Scan-Diagnose und die Scan
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
-Das aktuelle Artefakt im Actions-Lauf 45691683747 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update ein JSON-Backup erstellen und die Wiederherstellung prüfen. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
+Das aktuelle Artefakt im Actions-Lauf 45691683747 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update eine passwortgeschützte `.trakuna`-Sicherung erstellen und die Wiederherstellung prüfen. Das Passwort getrennt von der Datei aufbewahren; ältere JSON-Sicherungen sind unverschlüsselt und werden beim Import ausdrücklich gekennzeichnet. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
 
 ### Sicherheitsverbesserung in Version 1.52
 
@@ -76,7 +76,7 @@ Die Partner-App-Übergabe ist derzeit ein Android-Intent-Versuch. Das Öffnen ei
 - Abgeschlossene Vorgänge können archiviert und wiederhergestellt werden. Offene Sendungen bleiben aktiv; endgültiges Löschen ist nur aus dem Archiv möglich.
 - Archivierte Vorgänge bleiben im lokalen 500er-Limit enthalten. JSON-Backup-Schema 2 speichert den Archivstatus; ältere Schema-1-Sicherungen bleiben lesbar.
 - Der CSV-Export enthält einen zusätzlichen Archivierungszeitpunkt.
-- JSON-Backup und CSV-Export enthalten vertrauliche Daten im Klartext. Sie müssen geschützt gespeichert und übertragen werden.
+- Neue `.trakuna`-Sicherungen sind mit AES-256-GCM passwortgeschützt verschlüsselt; das Passwort muss getrennt aufbewahrt werden. Ältere JSON-Sicherungen und CSV-Exporte enthalten vertrauliche Daten im Klartext und müssen besonders geschützt gespeichert und übertragen werden.
 - Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge. Diese können als lokale Arbeitsdokumentation dienen, sind aber kein manipulationssicherer oder zentral bestätigter Nachweis.
 - Es gibt keine zentrale Synchronisierung, keine Mitarbeiterkonten und keine rollenbasierte Zugriffskontrolle.
 - Ein Geräteverlust kann ohne vorhandene, geprüfte Sicherung zum Datenverlust führen.

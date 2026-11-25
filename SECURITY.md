@@ -25,9 +25,9 @@
 - Archivierte Datensätze bleiben im 500-Einträge-Limit. Endgültiges Löschen ist in der Oberfläche nur aus dem Archiv möglich; zusätzlich verweigert auch die Speicherschicht das Löschen nicht archivierter Vorgänge. Das endgültige Löschen eines archivierten Datensatzes entfernt Datensatz und lokale Historie dauerhaft.
 - JSON-Backup-Schema 2 speichert den Archivzeitpunkt; Schema-1-Backups ohne Archivfeld bleiben für die Wiederherstellung lesbar. CSV enthält den Archivzeitpunkt zusätzlich zur lokalen Historie.
 - Archivierung und lokale Historie sind keine manipulationssicheren oder zentralen Audit-Nachweise.
-- Backup-Import ist auf 4 MiB begrenzt und erfordert eine Bestätigung, da der vorhandene lokale Bestand ersetzt wird.
+- Die Klartext-Nutzdaten einer Sicherung sind auf 4 MiB begrenzt; die passwortgeschützte `.trakuna`-Datei auf 6 MiB. Der Import erfordert eine Bestätigung, da der vorhandene lokale Bestand ersetzt wird.
 - Eine Wiederherstellung aus einer gültigen Sicherung ist auch bei beschädigtem lokalem verschlüsseltem Bestand möglich; der Erfolg wird erst nach bestätigtem verschlüsseltem Commit gemeldet.
-- JSON-Backups enthalten Sendungsnummern, Empfänger und Notizen und sind derzeit nicht verschlüsselt; die App weist vor dem Export darauf hin.
+- Neue `.trakuna`-Sicherungen enthalten Sendungsnummern, Empfänger und Notizen ausschließlich AES-256-GCM-verschlüsselt; der Schlüssel wird aus einem 12–128 Zeichen langen Passwort mit PBKDF2-HMAC-SHA256 (600.000 Iterationen) abgeleitet. Salt, Nonce und Parameter werden authentifiziert. Ältere unverschlüsselte JSON-Sicherungen bleiben nur für den Import verfügbar und werden vor dem Ersetzen ausdrücklich als Klartext gekennzeichnet. CSV-Exporte bleiben unverschlüsselt.
 - CSV-Export entschärft Tabellenkalkulations-Formelanfänge auch dann, wenn unsichtbare Unicode-Leerzeichen, Zero-Width-Zeichen oder eine BOM vorangestellt sind.
 - Die Partnerübergabe verwendet dieselbe Sendungsnummern-Normalisierung wie das Speichern. Steuerzeichen werden nicht stillschweigend entfernt, sondern durch die Validierung abgelehnt.
 - Partnerübergabe speichert die Sendungsnummer synchron im lokalen Cache, bevor TRAKUNA die andere App startet.

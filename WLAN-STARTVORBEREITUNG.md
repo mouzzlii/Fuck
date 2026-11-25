@@ -80,7 +80,9 @@ Offizielle Android-Dokumentation:
 - [ ] Freigegebener Testbarcode erscheint über den tatsächlich genutzten Eingabeweg im richtigen Eingabefeld.
 - [ ] Unbekannte oder mehrdeutige Scans werden nicht automatisch gebucht.
 - [ ] Bestehender GLS-/DPD-/Hermes-Betrieb blieb unverändert.
-- [ ] Datensicherung und Wiederherstellung wurden mit Testdaten geprüft.
+- [ ] Passwortgeschützte `.trakuna`-Datensicherung und Wiederherstellung wurden mit Testdaten geprüft.
+- [ ] Falsches Passwort und manipulierte Sicherungsdatei wurden abgewiesen; ältere JSON-Sicherung wurde nur mit Klartext-Warnung importiert.
+- [ ] CSV-Export wurde als unverschlüsselte Datei erkannt und geschützt abgelegt.
 - [ ] Offline-Verhalten wurde geprüft.
 - [ ] Betreiber hat den Test und die weitere Nutzung freigegeben.
 

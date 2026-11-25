@@ -19,6 +19,12 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Update von der vorherigen freigegebenen Version getestet
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
+- [ ] Neue `.trakuna`-Sicherung mit Passwort 12–128 Zeichen erstellt und auf Klartextfreiheit geprüft
+- [ ] Wiederherstellung mit richtigem Passwort erfolgreich; falsches Passwort und manipulierte Datei abgewiesen, Bestand unverändert
+- [ ] Unicode-Passwort (Umlaute, Eurozeichen, Emoji) erfolgreich exportiert und wiederhergestellt
+- [ ] Ältere unverschlüsselte JSON-Sicherung mit deutlicher Warnung importiert
+- [ ] Wiederherstellung auf einem zweiten realen Android-Gerät geprüft
+- [ ] Passwort getrennt von der Sicherungsdatei aufbewahrt; CSV-Klartextexport separat geschützt
 
 Letzter erfolgreicher Build für Version 1.54: [Android-Build 45691683747](https://github.com/mouzzlii/Fuck/actions/runs/45691683747), Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb`. Der separate [Emulator-Instrumentierungslauf 45691683698](https://github.com/mouzzlii/Fuck/actions/runs/45691683698) war für denselben Commit erfolgreich. Das Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15058952938`) ist bis 09.12.2026, 20:08 UTC verfügbar. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK; es wird hier kein Hash eines älteren Builds wiederverwendet. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die automatisierten Prüfungen sind kein Ersatz für reale Geräte-, Carrier- und Betreiberabnahme.
 
