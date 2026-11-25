@@ -515,42 +515,27 @@ class MainActivity : ComponentActivity() {
                                             }
                                             val visibleRecords = filteredRecords.take(visibleRecordLimit)
                                             visibleRecords.forEach { record ->
-                                                Card(Modifier.fillMaxWidth()) {
-                                                    Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                        Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
-                                                        Text("${shipmentFlowLabel(record.flow)} · ${shipmentStatusLabel(record.status)}")
-                                                        if (record.archivedAt != null) Text("Archiviert: ${ShipmentRules.formatTimestamp(record.archivedAt)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                                        Text("Erfasst: ${ShipmentRules.formatTimestamp(record.createdAt)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                                        Text("Zuletzt geändert: ${ShipmentRules.formatTimestamp(record.updatedAt)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                                        if (record.carrier.isNotBlank()) Text(record.carrier, style = MaterialTheme.typography.bodySmall)
-                                                        if (record.recipient.isNotBlank()) Text("Empfänger: ${record.recipient}", style = MaterialTheme.typography.bodySmall)
-                                                        if (record.note.isNotBlank()) Text("Notiz: ${record.note}", style = MaterialTheme.typography.bodySmall)
-                                                        val canAdvance = record.archivedAt == null && !ShipmentRules.isTerminalStatus(record.status)
-                                                        if (canAdvance) {
-                                                            TextButton(onClick = { pendingAdvance = record }) {
-                                                                Text(shipmentNextAction(record.flow, record.status))
-                                                            }
-                                                        }
-                                                        TextButton(onClick = { historyRecord = record }) { Text("Vorgangshistorie anzeigen (${record.history.size})") }
-                                                        if (record.archivedAt == null) {
-                                                            if (ShipmentRules.isTerminalStatus(record.status)) {
-                                                                TextButton(onClick = {
-                                                                    val archived = shipmentStore.archive(record.id)
-                                                                    status = if (archived) "Vorgang archiviert. Die Sendungsdaten und Historie bleiben erhalten." else "Nur abgeschlossene Vorgänge können archiviert werden."
-                                                                    shipmentRevision++
-                                                                }) { Text("Vorgang archivieren") }
-                                                            }
-                                                            TextButton(onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
-                                                        } else {
-                                                            TextButton(onClick = {
-                                                                val restored = shipmentStore.restoreArchived(record.id)
-                                                                status = if (restored) "Vorgang wurde aus dem Archiv wiederhergestellt." else "Vorgang konnte nicht wiederhergestellt werden."
-                                                                shipmentRevision++
-                                                            }) { Text("Wiederherstellen") }
-                                                            TextButton(onClick = { pendingDelete = record }) { Text("Endgültig löschen …", color = MaterialTheme.colorScheme.error) }
-                                                        }
-                                                    }
-                                                }
+                                                ShipmentRecordCard(
+                                                    record = record,
+                                                    onAdvance = { pendingAdvance = record },
+                                                    onHistory = { historyRecord = record },
+                                                    onArchive = {
+                                                        val archived = shipmentStore.archive(record.id)
+                                                        status = if (archived) "Vorgang archiviert. Die Sendungsdaten und Historie bleiben erhalten." else "Nur abgeschlossene Vorgänge können archiviert werden."
+                                                        shipmentRevision++
+                                                    },
+                                                    onEdit = {
+                                                        editRecipient = record.recipient
+                                                        editNote = record.note
+                                                        editingRecord = record
+                                                    },
+                                                    onRestore = {
+                                                        val restored = shipmentStore.restoreArchived(record.id)
+                                                        status = if (restored) "Vorgang wurde aus dem Archiv wiederhergestellt." else "Vorgang konnte nicht wiederhergestellt werden."
+                                                        shipmentRevision++
+                                                    },
+                                                    onDelete = { pendingDelete = record }
+                                                )
                                             }
                                             if (filteredRecords.size > visibleRecords.size) {
                                                 TextButton(
