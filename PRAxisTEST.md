@@ -1,6 +1,6 @@
-# TRAKUNA – Praxis-Testplan (Version 1.53 · versionCode 54)
+# TRAKUNA – Praxis-Testplan (Version 1.54 · versionCode 55)
 
-Aktueller Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der erfolgreiche CI-Lauf 45293985061 auf Commit `45a02f7ec8de966100c406bbfdd8e3e572052b05` bestätigt Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK-Build und Artefakt-Upload. Die Android-Instrumentierungstests werden separat ausgeführt; Emulator-Workflow 45295645386 für den aktuellen Code-Commit ist noch in Bearbeitung. Ein erfolgreicher Lauf ist noch nicht bestätigt. [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061). APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
+Basisstand Version 1.53: Der frühere CI-Lauf 45293985061 bestätigte Unit-Tests, Android-Lint, Manifestprüfungen und Debug-APK-Build. Version 1.54 ergänzt temporäre Scan-Diagnose, QR/1D-Filter, Fokusverbesserungen, DataWedge-Allowlist und verschlüsselte Cache-Wiederherstellung. Für jeden neuen Commit ist ein erfolgreicher CI-Lauf erforderlich; Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -10,6 +10,33 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 - TRAKUNA-APK aus dem zugehörigen erfolgreichen GitHub-Actions-Lauf.
 - Kameraberechtigung für den Scan-Test.
 - Für die Partnerübergabe eine installierte Betriebssoftware. Eine automatische Übernahme ist nur möglich, wenn die Ziel-App die TRAKUNA-Intent-Extras oder eine dokumentierte API unterstützt.
+
+## 2.0 Kamera-Fokus und erlaubte Codeformate
+
+- Der Kamera-Scanner ist auf QR-Code sowie lineare Strichcodes (Code 128/39/93, Codabar, EAN-13/8, ITF, UPC-A/E) begrenzt.
+- Data Matrix, PDF417, Aztec und andere Formate dürfen von der Kamera nicht als Treffer geliefert werden.
+- Kamera nach Öffnen prüfen: Fokus stellt sich auf den mittleren Bildbereich ein; bei unterstützten Kameras läuft kontinuierlicher Autofokus.
+- Auf einen QR-Code bzw. Strichcode tippen: Autofokus-/Belichtungsmessung muss auf diesen Bereich neu auslösen.
+- Test mit QR-Code und mindestens einem Strichcode durchführen; beide müssen erkannt werden.
+- Test mit Data Matrix, PDF417 und Aztec durchführen; diese dürfen keinen Scan auslösen.
+- Fokus bei nahen und weiter entfernten Etiketten, bei schwachem Licht und nach Rückkehr aus dem Hintergrund prüfen.
+- Der Autofokus hängt von der Kamera-Hardware und deren CameraX-Unterstützung ab; ein Gerät ohne Autofokus kann Software nicht nachträglich fokussierbar machen.
+
+## 2.1 Scan-Diagnose (Version 1.54)
+
+1. In TRAKUNA einen QR-Code bzw. Barcode mit der Kamera scannen.
+2. Nach dem Scan die Karte **Scan-Diagnose** öffnen.
+3. Barcodeformat, Rohinhalt, Anzeigeinhalt und den von TRAKUNA extrahierten Kandidaten vergleichen.
+4. Den GLS-Testfall prüfen: erwartete Sendungsnummer laut Betreiber `31220879741`, bisher fälschlich erkannter Wert `8721335813708`, zusätzlich genannte GLS Track-ID `Z4EIOR5P`. Entscheidend ist zunächst, welcher Wert tatsächlich im QR-Rohinhalt steht; die Diagnose darf diese Kennungen nicht eigenmächtig gleichsetzen.
+5. Den Hermes-Test erneut durchführen und sicherstellen, dass die bekannte korrekte Hermes-Erkennung unverändert bleibt.
+6. Wenn ein Zebra/DataWedge-Scan verwendet wird, prüfen, ob Rohinhalt und extrahierter Kandidat ebenfalls angezeigt werden.
+- Beim Zebra/DataWedge-Scan muss das Format-Extra `com.symbol.datawedge.label_type` mitgeliefert werden. Zugelassen sind QR/GS1-QR sowie Code 128/EAN-128, Code 39/93, Codabar, EAN-13/8, Interleaved 2 of 5 und UPC-A/E0/E1. Fehlendes oder unbekanntes Format sowie Data Matrix, GS1 Data Matrix, PDF417, Aztec, Micro QR und andere nicht freigegebene Typen müssen abgewiesen werden.
+- Im DataWedge-Profil die Decoder möglichst zusätzlich auf die tatsächlich benötigten Formate begrenzen. Die App-Allowlist ist eine zweite Schutzschicht und ersetzt die Geräteprofil-Konfiguration nicht.
+- Auf Android 14 (API 34) muss TRAKUNA den ursprünglichen Broadcast-Absender `com.symbol.datawedge` verifizieren; andere oder nicht identifizierbare Absender werden abgewiesen. Auf Android 13 (API 33) und älter weist TRAKUNA DataWedge-Broadcasts vollständig zurück. Dort ausschließlich Kamera-Scanner oder manuelle Eingabe testen; DataWedge Component Information und Signaturprüfung sind kein Ersatz für die in TRAKUNA fehlende Absenderidentität.
+7. Diagnosekarte schließen bzw. einen neuen Scan ausführen. Die Rohdaten dürfen nach App-Neustart nicht als dauerhaft gespeicherte Historie erscheinen.
+8. Eine Sendungsnummer erfassen, TRAKUNA in den Hintergrund legen und das Gerät längere Zeit in Standby lassen. Falls Android den TRAKUNA-Prozess beendet, App wieder öffnen und prüfen, ob das aktive Eingabefeld wiederhergestellt wurde. Die Diagnose-Rohdaten sollen dabei bewusst nicht wiederhergestellt werden.
+
+**Datenschutz:** Die Rohdatenanzeige bleibt nur temporär im Arbeitsspeicher. Sie darf nicht in Logcat, Dateien, Backups oder die dauerhafte Sendungsdatenbank geschrieben werden. Screenshots von Diagnoseinhalten vor Weitergabe auf Namen, Adressen und andere persönliche Daten prüfen.
 
 ## 2. Funktionstests
 
@@ -32,13 +59,18 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 14 | CSV-Datei exportieren | Android-Dateidialog erscheint; die gespeicherte Datei enthält die Sendungsliste. |
 | 15 | Abgeschlossenen Vorgang archivieren, im Archiv wiederherstellen und erst danach endgültig löschen | Offene Vorgänge lassen sich nicht archivieren oder endgültig löschen. Wiederherstellen entfernt den Archivstatus; endgültiges Löschen ist nur nach Archivierung möglich. |
 | 16 | App schließen und neu öffnen | Lokal gespeicherte Vorgänge sind weiterhin vorhanden. |
-| 17 | Zebra-Scanner mit DataWedge-Profil scannen | Sendungsnummer erscheint im Eingabefeld; es erfolgt keine automatische Buchung. Ungültige Inhalte werden abgelehnt. |
+| 17 | Zebra-Scanner mit DataWedge-Profil auf Android 14+ scannen | Nur bei verifiziertem Absender und freigegebenem Labeltyp erscheint die Sendungsnummer im Eingabefeld; es erfolgt keine automatische Buchung. Auf Android 13 und älter muss DataWedge abgewiesen werden; Kamera/manuelle Eingabe bleiben nutzbar. |
 | 18 | Partner-App auswählen und übergeben | Cache wird vor dem Wechsel dauerhaft gespeichert; Clipboard-Ausfall darf keinen Absturz verursachen, Android 13+ markiert den Clipboard-Inhalt als sensibel; Ziel-App wird nur bei installierter App geöffnet. |
+| 18a | Nach einer erfolgreichen Übergabe das Sendungsnummernfeld leeren, TRAKUNA in den Hintergrund legen, das Gerät in den Standby schicken und TRAKUNA erneut öffnen | Die verschlüsselt gespeicherte letzte Sendungsnummer wird beim Start bzw. bei der Rückkehr in ein leeres Eingabefeld wiederhergestellt. Eine bereits eingegebene neue Nummer darf dabei nicht überschrieben werden. |
 | 19 | DPD, GLS, Hermes und UPS jeweils über „Betriebssoftware pro Paketdienst zuordnen“ einer installierten App zuweisen | Jede Zuordnung wird getrennt auf diesem Gerät gespeichert und in der Übersicht beim richtigen Carrier angezeigt. |
 | 20 | Carrier-Schnellauswahl öffnen und DPD, GLS, Hermes, UPS nacheinander auswählen | Der Auswahlknopf zeigt jeweils den gewählten Paketdienst; die Reihenfolge lautet DPD, GLS, Hermes, UPS. Die manuelle Auswahl wird bei allen drei lokalen Vorgangsarten gespeichert und an den Partner-App-Übergabeversuch weitergegeben. Es wird keine externe Buchung behauptet. |
 | 21 | „Ohne Auswahl“ wählen und einen bekannten UPS-1Z-Testcode eingeben | Die manuelle Auswahl wird geleert; der bekannte UPS-Format-Hinweis darf als Hinweis erscheinen. Der Format-Hinweis bestätigt keine Existenz oder Buchung. |
 | 22 | Nur DPD einer App zuordnen, danach einen GLS-Übergabeversuch starten | Die DPD-App darf nicht als Ersatz für GLS geöffnet werden. TRAKUNA meldet die fehlende GLS-Zuordnung; die lokale Cache-Sicherung bleibt erhalten. |
 | 23 | Eine Carrier-Zuordnung entfernen und denselben Übergabeversuch wiederholen | Es wird keine fremde Carrier-App als Fallback geöffnet. Die Nummer bleibt lokal gesichert; die Meldung erklärt die fehlende Zuordnung. |
+| 24 | Gerät ohne verfügbare Kamera bzw. Kamera-Hardware nicht verfügbar | Scanner meldet den fehlenden Kamerazugriff verständlich; manuelle Eingabe bleibt bedienbar und TRAKUNA stürzt nicht ab. |
+| 25 | Leeres Etikett, unlesbarer Barcode und ungültiger/zu kurzer Code | Es wird kein Sendungsnummern-Kandidat übernommen oder übergeben; Diagnose zeigt den fehlenden bzw. ungültigen Kandidaten. |
+| 26 | Dieselbe Sendung zweimal schnell hintereinander mit Kamera und – falls unterstützt – DataWedge scannen | Es wird keine Sendung automatisch angelegt oder an eine Partner-App übergeben. Ein lokaler Vorgang entsteht ausschließlich nach bewusster Bestätigung; doppelte Scan-Ereignisse dürfen keinen doppelten Vorgang erzeugen. |
+| 27 | Activity-Neuerstellung und Prozessneustart nach Übergabe testen | Verschlüsselter letzter Übergabewert wird nur in ein leeres Eingabefeld wiederhergestellt; eine zwischenzeitlich neu eingegebene Nummer bleibt erhalten. Temporäre Scan-Rohdaten werden nicht wiederhergestellt. |
 
 
 ### 2a. Zusätzlicher Erfassungstest nach der Rückmeldung „Speichern reagiert nicht“
@@ -65,8 +97,8 @@ Jeder Paketdienst wird getrennt mit freigegebenen Testetiketten bzw. fiktiven Te
 
 | Paketdienst | Auswahl in TRAKUNA | Scan-/Eingabetest | Partner-/Gerätetest | Freigabestatus |
 |---|---|---|---|---|
-| DPD | DPD im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische DPD-Erkennung voraussetzen | Bestehendes DPD-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
-| GLS | GLS im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische GLS-Erkennung voraussetzen | Bestehendes GLS-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
+| DPD | DPD im Schnellauswahlmenü | TC26/DataWedge nur bei Android 14+ mit verifiziertem Absender testen; auf älteren Android-Versionen Kamera/manuelle Eingabe. Keine automatische DPD-Erkennung voraussetzen | Bestehendes DPD-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
+| GLS | GLS im Schnellauswahlmenü | TC26/DataWedge nur bei Android 14+ mit verifiziertem Absender testen; auf älteren Android-Versionen Kamera/manuelle Eingabe. Keine automatische GLS-Erkennung voraussetzen | Bestehendes GLS-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
 | Hermes | Hermes im Schnellauswahlmenü | Für das bisherige MC3090BT wurde ein Ersatzgerät für die kommende Woche angekündigt; die tatsächliche Ankunft ist noch zu bestätigen. Nach Ankunft exaktes Modell, Betriebssystem, Hermes-App und Scanner erfassen; bis dahin keine Integrationstests am Altgerät | Bestehenden Hermes-Ablauf und Drucker nicht verändern. Neues Gerät erst nach Betreiberfreigabe untersuchen; offizielle Schnittstelle und Abnahme bleiben Pflicht | Offen – Pilotblocker |
 | UPS | UPS im Schnellauswahlmenü | Bekannte 1Z-Format-Erkennung nur als Hinweis prüfen; zusätzlich manuelle Nummern testen | Prüfen, ob die offizielle App `UPS Access Point` (`com.ups.accesspoint`) installiert und vom Standort freigegeben ist; Version und Android-Gerät erfassen. Die App verlangt laut Google-Play-Angabe Android 9.0 oder höher. Nicht eigenmächtig installieren oder konfigurieren. | Offen |
 
@@ -97,7 +129,7 @@ Die Carrier-Schnellauswahl und die getrennten App-Zuordnungen in Version 1.49 si
 - Historie darf nicht als manipulationssicheres Mitarbeiter-Audit oder als Carrier-Bestätigung ausgegeben werden.
 
 
-- Zebra-/DataWedge-Broadcast ohne Sendungsnummern-Extra oder mit einem falsch typisierten Extra prüfen: Der Scan wird ignoriert und TRAKUNA bleibt bedienbar.
+- Auf Android 14+ Zebra-/DataWedge-Broadcast ohne Sendungsnummern-Extra oder mit einem falsch typisierten Extra prüfen: Der Scan wird ignoriert und TRAKUNA bleibt bedienbar. Auf Android 13 und älter muss bereits der DataWedge-Eingang vollständig abgewiesen werden.
 
 - Ungültige oder zu kurze Sendungsnummern dürfen nicht als neuer Vorgang gespeichert werden.
 - Eine manuell eingegebene Sendungsnummer mit eingebetteten Steuerzeichen (z. B. NUL) muss abgelehnt werden; die Zeichen dürfen nicht stillschweigend entfernt und dadurch in eine andere Nummer umgewandelt werden.
@@ -139,7 +171,7 @@ Ein grüner GitHub-Build bestätigt nur, dass Tests und APK-Erstellung im CI-Lau
 2. Bei der Abfrage die Signaturprüfung aktivieren und kontrollieren, dass sie in der Component-Liste als aktiv angezeigt wird.
 3. Einen Barcode mit dem Zebra-Auslöser scannen. Der Wert muss in TRAKUNA erscheinen.
 4. TRAKUNA aktualisieren oder neu installieren und prüfen, ob die Signaturprüfung im DataWedge-Profil weiterhin aktiv ist. Bei einem Signaturwechsel die Komponente neu auswählen.
-5. Wenn ein verwalteter Gerätetest möglich ist, einen gleichartigen Broadcast aus einer nicht autorisierten Test-App senden lassen. Er darf nicht als vertrauenswürdiger Scan behandelt werden. Diesen Test nur auf einem Testgerät und mit einer eigens dafür erstellten Test-App durchführen.
+5. Auf Android 14 (API 34) einen gleichartigen Broadcast aus einer nicht autorisierten Test-App senden. TRAKUNA muss ihn wegen des abweichenden bzw. fehlenden Absenders ablehnen. Auf Android 13 (API 33) und älter darf ein DataWedge-Broadcast unabhängig von seinem Inhalt nicht übernommen werden; Kamera-Scanner und manuelle Eingabe müssen weiterhin funktionieren. Ein Spoofing-Test auf diesen älteren Versionen ist nur ergänzend und darf nicht als Ersatz für die vollständige Deaktivierung gewertet werden.
 
 Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Signaturprüfung aktiviert ist. Die Konfiguration muss daher vom Geräteadministrator dokumentiert werden.
 
@@ -221,9 +253,9 @@ Die automatisierten Parser-Tests prüfen die Regeln ohne Kamera-Hardware. Sie er
 
 ## 9. Verhalten bei Hintergrundbetrieb
 
-60. TRAKUNA öffnen und im Vordergrund lassen; einen DataWedge-Testbarcode scannen. Die erkannte Nummer muss im Sendungsnummernfeld erscheinen.
+60. TRAKUNA auf Android 14+ öffnen und im Vordergrund lassen; einen DataWedge-Testbarcode mit freigegebenem Labeltyp scannen. Bei verifiziertem Absender muss die erkannte Nummer im Sendungsnummernfeld erscheinen. Auf Android 13 und älter muss DataWedge abgewiesen werden; Kamera und manuelle Eingabe bleiben verfügbar.
 61. TRAKUNA in den Hintergrund wechseln, ohne die App zu beenden; einen weiteren Barcode scannen. Der Hintergrundscan darf die Eingabemaske nicht verändern.
-62. TRAKUNA wieder in den Vordergrund holen und erneut scannen. Der neue Scan muss wieder zur manuellen Prüfung übernommen werden.
+62. TRAKUNA auf Android 14+ wieder in den Vordergrund holen und erneut scannen. Der neue Scan muss wieder zur manuellen Prüfung übernommen werden. Auf Android 13 und älter sind für diesen Ablauf Kamera oder manuelle Eingabe zu verwenden.
 63. TRAKUNA über die Übersicht vollständig schließen und anschließend neu öffnen. Erst nach dem Öffnen darf der nächste Scan wieder verarbeitet werden.
 
 

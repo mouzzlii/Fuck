@@ -8,30 +8,30 @@
   <sub>Originaldatei unverändert · nur proportionale Skalierung · <a href="https://github.com/mouzzlii/logo-M-glichkeiten-">verbindliche Logo-Regeln</a></sub>
 </div>
 
+TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+## Aktueller Entwicklungsstand – Version 1.54 (versionCode 55)
 
-## Aktueller Entwicklungsstand – Version 1.53 (versionCode 54)
+- Version 1.54 ergänzt eine temporäre Scan-Diagnose für Kamera-/ML-Kit- und Zebra-DataWedge-Scans: Barcodeformat, unveränderter Rohinhalt, Anzeigeinhalt und daraus extrahierter Kandidat werden gegenübergestellt. Mehrere unterschiedliche Codes bleiben sichtbar; eine Sendungsnummer wird nur bei genau einem eindeutigen Kandidaten übernommen. Die Diagnose bleibt ausschließlich im Arbeitsspeicher und wird weder gespeichert noch protokolliert. Rohdaten können personenbezogene oder sendungsbezogene Informationen enthalten.
 
 - Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
 - JSON-Backups werden kompakt exportiert; der Import akzeptiert bis zu 4 MiB, während der verschlüsselte lokale Bestand auf 2 MiB begrenzt bleibt. Damit bleibt zusätzlicher Platz für Backup-Kopf und portable Exportstruktur.
-- Version 1.53 ergänzt Android-Instrumentierungstests für Keystore-Verschlüsselung, Wiederöffnung des lokalen Speichers, Fail-closed-Verhalten bei beschädigtem Sendungs- und Übergabe-Cache sowie Wiederherstellung aus einem gültigen Backup nach Beschädigung des lokalen Speichers. CI-Lauf 45293985061 für versionCode 54 war erfolgreich: Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. **Die Emulator-Instrumentierungstests laufen separat**; Workflow 45295645386 für den aktuellen Code-Commit ist gestartet, aber noch nicht abgeschlossen. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
-- Debug-APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
-- ZIP-Artefakt-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`.
-- Das ZIP-Artefakt wurde am 24.11.2026, 00:05 UTC erstellt und läuft am 08.12.2026, 00:05 UTC ab.
-- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45293985061
+- Version 1.53 ergänzte die ersten Android-Instrumentierungstestfälle für Keystore-Verschlüsselung, lokalen Speicher und Backup-Wiederherstellung. Der damalige Haupt-Build kompilierte diese Tests; die spätere Version 1.54 enthält die weiterentwickelten Scanner- und Sicherheitsprüfungen.
+- **Version 1.54 / versionCode 55:** Der Android-Build [45691683747](https://github.com/mouzzlii/Fuck/actions/runs/45691683747) und der separate Emulator-Instrumentierungslauf [45691683698](https://github.com/mouzzlii/Fuck/actions/runs/45691683698) waren für Code-Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` erfolgreich. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und Android-Keystore-/Speicher-Instrumentierung.
+- Debug-Artefakt: `TRAKUNA-Android`, Artifact-ID `15058952938`, verfügbar bis 09.12.2026, 20:08 UTC. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
+- Die nachfolgenden Änderungen auf PR #18 aktualisieren nur Dokumentation; ihre CI-Läufe sind separat und zum aktuellen PR-Head zu prüfen.
 
-**Wichtig:** Version 1.53 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.54 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
 - Die Daten werden lokal auf diesem Gerät gespeichert und verschlüsselt.
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
 - WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden noch nicht gesucht.
-- DataWedge-Empfangscode ist vorhanden; das Profil muss auf dem jeweiligen Zebra-Gerät eingerichtet und vor Ort getestet werden.
+- DataWedge-Empfangscode ist vorhanden; TRAKUNA verarbeitet ihn nur ab Android 14 (API 34) mit verifiziertem ursprünglichem Absender `com.symbol.datawedge`. Auf Android 13 (API 33) und älter sind Kamera-Scanner oder manuelle Eingabe zu verwenden. Das dedizierte Profil muss auf jedem geeigneten Zebra-Gerät eingerichtet und vor Ort getestet werden.
 - DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.53 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das bisherige Hermes-Handgerät MC3090BT ist zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen.** Modell, Betriebssystem, Scanner, Drucker und freigegebene Integrationsmöglichkeiten des Nachfolgers sind noch unbekannt. Bis zur Ankunft bleibt das bestehende Hermes-System unangetastet; danach wird das neue Gerät zunächst nur inventarisiert und geprüft, ohne Einstellungen oder den laufenden Hermes-Ablauf eigenmächtig zu verändern.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
@@ -56,7 +56,7 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 
 ## CI-Schutzprüfungen
 
-Der Android-Workflow startet nur bei App-/Build-Änderungen und prüft vor dem Build, dass die aktuelle Offline-Version keine INTERNET-Berechtigung anfordert, Android-Backups deaktiviert und Klartextverkehr deaktiviert bleibt. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden.
+Der Android-Workflow startet bei App-/Build-Änderungen sowie bei Änderungen am Sicherheitsprüfskript. `scripts/check-android-security-boundaries.sh` kontrolliert vor dem Build die Quellberechtigungen (nur CAMERA und ACCESS_NETWORK_STATE), die ausdrückliche Entfernung von INTERNET, optionale Kamera-Hardware, deaktiviertes Android-Backup, deaktivierten Klartextverkehr und das Fehlen direkter HTTP-/Socket-Client-Abhängigkeiten bzw. bekannter Netzwerk-APIs. Nach dem APK-Bau wird zusätzlich das tatsächlich paketierte Manifest geprüft. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden; sie ersetzt keinen vollständigen Audit transitiver Bibliotheken.
 
 Für die Android-Instrumentierungstests gibt es zusätzlich den getrennten Workflow [`.github/workflows/android-instrumentation.yml`](.github/workflows/android-instrumentation.yml). Er startet einen API-35-Emulator und führt Keystore-, Speicher- und Backup-Recovery-Tests aus. Dieser langsamere Emulatorlauf ist bewusst vom normalen APK-Build getrennt, damit ein nicht startender Emulator die Bereitstellung der lokalen Debug-Testversion nicht blockiert.
 
