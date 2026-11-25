@@ -571,27 +571,37 @@ object ShipmentRules {
                 uri.host.isNullOrBlank() || uri.rawUserInfo != null
             ) return null
 
-            val acceptedKeys = setOf(
-                "trackingnumber", "tracking_number", "tracking", "trackid", "shipment",
+            // Prefer fields explicitly named as shipment/tracking numbers over auxiliary
+            // carrier references. Some GLS QR payloads contain both a numeric parcel
+            // number and a separate alphanumeric track ID; treating both as equivalent
+            // makes a valid label look ambiguous or selects the wrong identifier.
+            val primaryKeys = setOf(
+                "trackingnumber", "tracking_number", "tracking", "shipment",
                 "shipmentid", "shipment_id", "consignment", "consignmentnumber",
-                "parcel", "parcelnumber", "barcode", "piececode", "sendungsnummer", "snr", "id"
+                "parcel", "parcelnumber", "barcode", "piececode", "sendungsnummer", "snr"
             )
             val queryCandidates = mutableListOf<String>()
+            val trackIdCandidates = mutableListOf<String>()
             for (part in uri.rawQuery.orEmpty().split("&")) {
                 if (part.isBlank()) continue
                 val key = part.substringBefore("=", "")
                 val value = part.substringAfter("=", "")
                 val decodedKey = runCatching { java.net.URLDecoder.decode(key, "UTF-8") }.getOrNull()
                     ?: continue
-                if (decodedKey.lowercase() !in acceptedKeys) continue
+                val normalizedKey = decodedKey.lowercase()
+                if (normalizedKey !in primaryKeys && normalizedKey != "trackid" && normalizedKey != "id") continue
                 val decodedValue = runCatching { java.net.URLDecoder.decode(value, "UTF-8") }.getOrNull()
                     ?: continue
                 val candidate = plausible(decodedValue) ?: continue
-                // Generic "id" is too ambiguous unless it has a known carrier structure.
-                if (decodedKey.equals("id", ignoreCase = true) && identifyCarrier(candidate) == null) continue
-                queryCandidates += candidate
+                when (normalizedKey) {
+                    in primaryKeys -> queryCandidates += candidate
+                    "trackid" -> trackIdCandidates += candidate
+                    // Generic "id" is too ambiguous unless it has a known carrier structure.
+                    "id" -> if (identifyCarrier(candidate) != null) trackIdCandidates += candidate
+                }
             }
             if (queryCandidates.isNotEmpty()) return unique(queryCandidates)
+            if (trackIdCandidates.isNotEmpty()) return unique(trackIdCandidates)
 
             // A path segment is accepted only when it has a distinctive known format.
             // Arbitrary IDs in unrelated URLs are not treated as parcel tracking numbers.
