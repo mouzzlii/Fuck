@@ -34,7 +34,8 @@ ZIP-Artefakt erstellt am 24.11.2026, 00:05 UTC; Ablauf am 08.12.2026, 00:05 UTC.
 - [ ] Android-Version und Gerätemanagement dokumentiert
 - [ ] Kamera-Scan mit echten Testetiketten je Paketdienst bestanden
 - [ ] Manuelle Eingabe einschließlich fehlerhafter/ungewöhnlicher Nummern geprüft
-- [ ] Zebra DataWedge-Profil auf jedem Gerät geprüft
+- [ ] Android-Version jedes Zebra-Geräts dokumentiert; DataWedge nur auf Android 14/API 34+ eingeplant und getestet
+- [ ] Zebra DataWedge-Profil auf jedem unterstützten Gerät geprüft
 - [ ] DataWedge Component Information auf TRAKUNA begrenzt und Signaturprüfung aktiviert
 - [ ] Getrennte Betriebssoftware-Zuordnung für DPD, GLS, Hermes und UPS geprüft; keine falsche Carrier-App wird als Fallback geöffnet
 - [ ] Scan-Broadcast kann keine automatische Buchung auslösen
