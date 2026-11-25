@@ -14,6 +14,7 @@ import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Build
 import android.os.PersistableBundle
+import android.view.MotionEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -32,6 +33,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.core.ExperimentalGetImage
@@ -1086,12 +1088,13 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
     DisposableEffect(previewView) {
         val executor = Executors.newSingleThreadExecutor()
         val mainExecutor = ContextCompat.getMainExecutor(context)
+        // TRAKUNA intentionally recognizes only QR codes and common 1D barcodes.
+        // Exclude Data Matrix, PDF417, Aztec and every other 2D/special format.
         val options = BarcodeScannerOptions.Builder().setBarcodeFormats(
+            Barcode.FORMAT_QR_CODE,
             Barcode.FORMAT_CODE_128, Barcode.FORMAT_CODE_39, Barcode.FORMAT_CODE_93,
             Barcode.FORMAT_CODABAR, Barcode.FORMAT_EAN_13, Barcode.FORMAT_EAN_8,
-            Barcode.FORMAT_ITF, Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E,
-            Barcode.FORMAT_QR_CODE, Barcode.FORMAT_DATA_MATRIX, Barcode.FORMAT_PDF417,
-            Barcode.FORMAT_AZTEC
+            Barcode.FORMAT_ITF, Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E
         ).build()
         val scanner: BarcodeScanner = BarcodeScanning.getClient(options)
         val delivered = AtomicBoolean(false)
@@ -1162,7 +1165,39 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                 }
                 if (!disposed.get()) {
                     cameraProvider.unbindAll()
-                    cameraProvider.bindToLifecycle(activity as LifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA, preview, analysis)
+                    val camera = cameraProvider.bindToLifecycle(
+                        activity as LifecycleOwner,
+                        CameraSelector.DEFAULT_BACK_CAMERA,
+                        preview,
+                        analysis
+                    )
+                    // CameraX uses the camera's continuous autofocus mode where supported.
+                    // Start with a center focus/metering request and allow the user to tap
+                    // any point in the preview to refocus on a nearby QR/barcode.
+                    previewView.setOnClickListener { }
+                    previewView.setOnTouchListener { view, event ->
+                        if (event.action == MotionEvent.ACTION_UP) {
+                            val point = previewView.meteringPointFactory.createPoint(event.x, event.y)
+                            val action = FocusMeteringAction.Builder(
+                                point,
+                                FocusMeteringAction.FLAG_AF or FocusMeteringAction.FLAG_AE
+                            ).setAutoCancelDuration(3, java.util.concurrent.TimeUnit.SECONDS).build()
+                            runCatching { camera.cameraControl.startFocusAndMetering(action) }
+                            view.performClick()
+                            true
+                        } else {
+                            true
+                        }
+                    }
+                    val centerPoint = previewView.meteringPointFactory.createPoint(
+                        previewView.width / 2f,
+                        previewView.height / 2f
+                    )
+                    val initialFocus = FocusMeteringAction.Builder(
+                        centerPoint,
+                        FocusMeteringAction.FLAG_AF or FocusMeteringAction.FLAG_AE
+                    ).setAutoCancelDuration(3, java.util.concurrent.TimeUnit.SECONDS).build()
+                    runCatching { camera.cameraControl.startFocusAndMetering(initialFocus) }
                 }
             } catch (error: Exception) {
                 if (!disposed.get()) {
