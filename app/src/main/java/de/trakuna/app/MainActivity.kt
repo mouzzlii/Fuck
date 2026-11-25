@@ -1068,7 +1068,7 @@ private fun ScannerPanel(onDetected: (ScanDiagnosticResult) -> Unit, onClose: ()
     }
 }
 
-@androidx.annotation.OptIn(markerClass = [ExperimentalGetImage::class])
+@androidx.annotation.OptIn(markerClass = [ExperimentalGetImage::class, androidx.camera.camera2.interop.ExperimentalCamera2Interop::class])
 @Composable
 private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
     val context = LocalContext.current
