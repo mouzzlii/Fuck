@@ -5,6 +5,16 @@ package de.trakuna.app
  * Keep this allow-list aligned with the CameraX/ML Kit scanner formats.
  * Missing and unknown symbology metadata is rejected rather than guessed.
  */
+internal const val DATAWEDGE_PACKAGE_NAME = "com.symbol.datawedge"
+
+/**
+ * Android 14 (API 34) exposes the original broadcast sender. Earlier Android versions
+ * cannot authenticate the sender in-app; DataWedge Component Information signature
+ * verification and managed-device restrictions are required there.
+ */
+internal fun isDataWedgeSenderAccepted(apiLevel: Int, senderPackage: String?): Boolean =
+    apiLevel < 34 || senderPackage == DATAWEDGE_PACKAGE_NAME
+
 internal fun isAllowedDataWedgeLabelType(labelType: String?): Boolean {
     val normalized = labelType?.trim()?.uppercase(java.util.Locale.ROOT) ?: return false
     return normalized in setOf(

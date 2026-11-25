@@ -25,6 +25,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -105,7 +106,7 @@ class MainActivity : ComponentActivity() {
             val handoffCache = remember(context) { SecureHandoffCache(context) }
             val initialHandoffRead = remember(handoffCache) { runCatching { handoffCache.trackingNumber() } }
             val initialHandoffNumber = initialHandoffRead.getOrDefault("")
-            var number by remember(handoffCache) { mutableStateOf(initialHandoffNumber) }
+            var number by rememberSaveable { mutableStateOf(initialHandoffNumber) }
             var showScanner by remember { mutableStateOf(false) }
             var scanDiagnostic by remember { mutableStateOf<ScanDiagnosticResult?>(null) }
             var showScanDiagnostics by remember { mutableStateOf(false) }
@@ -163,6 +164,16 @@ class MainActivity : ComponentActivity() {
                         // Ignore broadcasts while TRAKUNA is backgrounded or no longer active.
                         if (!this@MainActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return
                         if (intent?.action != DATAWEDGE_ACTION) return
+                        // Android 14+ exposes the original broadcast sender. Older Android
+                        // versions cannot authenticate it in-app and require DataWedge signature
+                        // verification in Component Information plus managed-device controls.
+                        val senderPackage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                            runCatching { getSentFromPackage() }.getOrNull()
+                        } else null
+                        if (!isDataWedgeSenderAccepted(Build.VERSION.SDK_INT, senderPackage)) {
+                            status = "Zebra-Scan abgelehnt: Der Broadcast stammt nicht von DataWedge."
+                            return
+                        }
                         // Broadcasts are externally supplied; ignore a missing or wrongly typed
                         // extra instead of allowing a malformed parcel to crash the receiver.
                         val raw = runCatching { intent.getStringExtra(DATAWEDGE_DATA_EXTRA) }.getOrNull() ?: return
@@ -176,7 +187,7 @@ class MainActivity : ComponentActivity() {
                         scanDiagnostic = ScanDiagnosticResult(
                             observations = listOf(
                                 ScanObservation(
-                                    source = "Zebra DataWedge",
+                                    source = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) "Zebra DataWedge (Absender verifiziert)" else "Zebra DataWedge (Absender nicht verifizierbar)",
                                     format = labelType ?: "Format nicht mitgeliefert",
                                     rawValue = raw,
                                     displayValue = raw,
@@ -195,7 +206,8 @@ class MainActivity : ComponentActivity() {
                             return
                         }
                         number = scanned
-                        status = "Zebra-Scan empfangen. Sendungsnummer bitte prüfen und den nächsten Schritt auswählen."
+                        val senderStatus = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) "DataWedge-Absender verifiziert." else "Absender auf dieser Android-Version nicht appseitig prüfbar; DataWedge-Signaturprüfung im Profil ist erforderlich."
+status = "Zebra-Scan empfangen. $senderStatus Sendungsnummer bitte prüfen und den nächsten Schritt auswählen."
                     }
                 }
                 val filter = IntentFilter(DATAWEDGE_ACTION)

@@ -46,4 +46,15 @@ class DataWedgeSymbologyTest {
     fun normalizesCaseAndSurroundingWhitespace() {
         assertTrue(isAllowedDataWedgeLabelType(" label-type-qrcode "))
     }
+    @Test
+    fun android14RequiresTheActualDataWedgeSender() {
+        assertTrue(isDataWedgeSenderAccepted(34, "com.symbol.datawedge"))
+        assertFalse(isDataWedgeSenderAccepted(34, null))
+        assertFalse(isDataWedgeSenderAccepted(34, "com.attacker.fake"))
+    }
+
+    @Test
+    fun olderAndroidCannotVerifyTheBroadcastSenderInApp() {
+        assertTrue(isDataWedgeSenderAccepted(33, null))
+    }
 }
