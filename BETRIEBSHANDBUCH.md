@@ -1,26 +1,28 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45293985061 (Debug-Testpaket)
+Stand: App-Version 1.54 (versionCode 55) · CI-Build 45691683747 und Emulator-Instrumentierung 45691683698 erfolgreich (Debug-Testpaket)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45293985061 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061).
-2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
+1. Den [erfolgreichen Android-Build 45691683747 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45691683747).
+2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen (Artifact-ID `15058952938`).
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
-4. Die Prüfsumme im entpackten Ordner mit `sha256sum -c SHA256SUMS.txt` prüfen; erwartet wird `app-debug.apk: OK`. Unter Windows kann alternativ `Get-FileHash .\app-debug.apk -Algorithm SHA256` mit dem oben genannten APK-Hash verglichen werden.
+4. Die Prüfsumme im entpackten Ordner mit `sha256sum -c SHA256SUMS.txt` prüfen; erwartet wird `app-debug.apk: OK`. Unter Windows kann alternativ `Get-FileHash .\\app-debug.apk -Algorithm SHA256` mit dem Wert in `SHA256SUMS.txt` verglichen werden.
 5. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
 6. TRAKUNA starten und zuerst mit erfundenen Testdaten prüfen.
 
-**Prüfsummen des bereitgestellten Testpakets**
+**Stand des Testpakets**
 
-- APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`
-- ZIP-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`
-- Erstellt: 24.11.2026, 00:05 UTC
-- Artefakt verfügbar bis: 08.12.2026, 00:05 UTC
+- App-Version: 1.54 (versionCode 55)
+- Geprüfter Commit: `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb`
+- Android-Build: [45691683747 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45691683747)
+- Emulator-Instrumentierung: [45691683698 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45691683698)
+- Artefakt: `TRAKUNA-Android`, Artifact-ID `15058952938`, 20.801.113 Bytes
+- Verfügbar bis: 09.12.2026, 20:08 UTC
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstestfälle wurden im Haupt-Build kompiliert. Der separate Emulator-Workflow 45295645386 für den aktuellen Code-Commit ist noch in Bearbeitung und hat noch kein bestätigtes Ergebnis. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
+Das Artefakt enthält `SHA256SUMS.txt`; ausschließlich den dort angegebenen Hash für genau diese APK verwenden. Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die CI-Prüfung ersetzt keine reale Kamera-, Zebra- oder Betreiberabnahme.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
@@ -36,7 +38,7 @@ Wenn Android eine abweichende Signatur meldet, Installation abbrechen. Die beste
 
 ## 3. DPD, GLS, Hermes und UPS getrennt zuordnen
 
-In Version 1.53 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
+In Version 1.54 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
 
 1. TRAKUNA öffnen.
 2. **Betriebssoftware pro Paketdienst zuordnen** antippen.
@@ -74,7 +76,7 @@ Wichtig:
 - Eine Sendung als abholbereit markieren und lokal an den Kunden übergeben.
 - Eine Kundenabgabe bzw. Retoure erfassen und den lokalen Ablauf bis zur Übergabe an den Paketdienst fortschreiben.
 
-Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.53 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
+Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.54 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
 
 ## 6. Zebra TC26 und DataWedge (DPD/GLS)
 
