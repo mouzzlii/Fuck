@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Version 1.53 · versionCode 54)
+# TRAKUNA – Praxis-Testplan (Version 1.54 · versionCode 55)
 
 Aktueller Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der erfolgreiche CI-Lauf 45293985061 auf Commit `45a02f7ec8de966100c406bbfdd8e3e572052b05` bestätigt Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK-Build und Artefakt-Upload. Die Android-Instrumentierungstests werden separat ausgeführt; Emulator-Workflow 45295645386 für den aktuellen Code-Commit ist noch in Bearbeitung. Ein erfolgreicher Lauf ist noch nicht bestätigt. [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061). APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
 
@@ -10,6 +10,18 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 - TRAKUNA-APK aus dem zugehörigen erfolgreichen GitHub-Actions-Lauf.
 - Kameraberechtigung für den Scan-Test.
 - Für die Partnerübergabe eine installierte Betriebssoftware. Eine automatische Übernahme ist nur möglich, wenn die Ziel-App die TRAKUNA-Intent-Extras oder eine dokumentierte API unterstützt.
+
+## 2.1 Scan-Diagnose (Version 1.54)
+
+1. In TRAKUNA einen QR-Code bzw. Barcode mit der Kamera scannen.
+2. Nach dem Scan die Karte **Scan-Diagnose** öffnen.
+3. Barcodeformat, Rohinhalt, Anzeigeinhalt und den von TRAKUNA extrahierten Kandidaten vergleichen.
+4. Den GLS-Testfall prüfen: erwartete Sendungsnummer laut Betreiber `31220879741`, bisher fälschlich erkannter Wert `8721335813708`, zusätzlich genannte GLS Track-ID `Z4EIOR5P`. Entscheidend ist zunächst, welcher Wert tatsächlich im QR-Rohinhalt steht; die Diagnose darf diese Kennungen nicht eigenmächtig gleichsetzen.
+5. Den Hermes-Test erneut durchführen und sicherstellen, dass die bekannte korrekte Hermes-Erkennung unverändert bleibt.
+6. Wenn ein Zebra/DataWedge-Scan verwendet wird, prüfen, ob Rohinhalt und extrahierter Kandidat ebenfalls angezeigt werden.
+7. Diagnosekarte schließen bzw. einen neuen Scan ausführen. Die Rohdaten dürfen nach App-Neustart nicht als dauerhaft gespeicherte Historie erscheinen.
+
+**Datenschutz:** Die Rohdatenanzeige bleibt nur temporär im Arbeitsspeicher. Sie darf nicht in Logcat, Dateien, Backups oder die dauerhafte Sendungsdatenbank geschrieben werden. Screenshots von Diagnoseinhalten vor Weitergabe auf Namen, Adressen und andere persönliche Daten prüfen.
 
 ## 2. Funktionstests
 
