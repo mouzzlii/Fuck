@@ -164,9 +164,8 @@ class MainActivity : ComponentActivity() {
                         // Ignore broadcasts while TRAKUNA is backgrounded or no longer active.
                         if (!this@MainActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return
                         if (intent?.action != DATAWEDGE_ACTION) return
-                        // Android 14+ exposes the original broadcast sender. Older Android
-                        // versions cannot authenticate it in-app and require DataWedge signature
-                        // verification in Component Information plus managed-device controls.
+                        // Android 14+ exposes the original broadcast sender. Older Android versions
+                        // cannot authenticate it in-app, so TRAKUNA rejects DataWedge input there.
                         val senderPackage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                             runCatching { getSentFromPackage() }.getOrNull()
                         } else null
@@ -187,7 +186,7 @@ class MainActivity : ComponentActivity() {
                         scanDiagnostic = ScanDiagnosticResult(
                             observations = listOf(
                                 ScanObservation(
-                                    source = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) "Zebra DataWedge (Absender verifiziert)" else "Zebra DataWedge (Absender nicht verifizierbar)",
+                                    source = "Zebra DataWedge (Absender verifiziert)",
                                     format = labelType ?: "Format nicht mitgeliefert",
                                     rawValue = raw,
                                     displayValue = raw,
@@ -206,8 +205,7 @@ class MainActivity : ComponentActivity() {
                             return
                         }
                         number = scanned
-                        val senderStatus = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) "DataWedge-Absender verifiziert." else "Absender auf dieser Android-Version nicht appseitig prüfbar; DataWedge-Signaturprüfung im Profil ist erforderlich."
-status = "Zebra-Scan empfangen. $senderStatus Sendungsnummer bitte prüfen und den nächsten Schritt auswählen."
+                        status = "Zebra-Scan empfangen. DataWedge-Absender verifiziert. Sendungsnummer bitte prüfen und den nächsten Schritt auswählen."
                     }
                 }
                 val filter = IntentFilter(DATAWEDGE_ACTION)
