@@ -523,72 +523,48 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         if (confirmCsvExport) {
-                            AlertDialog(
-                                onDismissRequest = { confirmCsvExport = false },
-                                title = { Text("CSV-Datei exportieren?") },
-                                text = {
-                                    Text("Die CSV-Datei enthält Sendungsnummern, Empfängernamen, interne Notizen und die lokal gespeicherte Vorgangshistorie. Sie wird unverschlüsselt gespeichert. Die Historie ist kein manipulationssicherer Prüfbeleg. Wähle einen geschützten Speicherort und gib die Datei nur an berechtigte Personen weiter.")
+                            CsvExportConfirmationDialog(
+                                onConfirm = {
+                                    confirmCsvExport = false
+                                    val exported = runCatching { shipmentStore.exportCsv() }
+                                    if (exported.isSuccess) {
+                                        pendingCsv = exported.getOrThrow()
+                                        csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
+                                    } else {
+                                        status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
+                                    }
                                 },
-                                confirmButton = {
-                                    TextButton(onClick = {
-                                        confirmCsvExport = false
-                                        val exported = runCatching { shipmentStore.exportCsv() }
-                                        if (exported.isSuccess) {
-                                            pendingCsv = exported.getOrThrow()
-                                            csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
-                                        } else {
-                                            status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
-                                        }
-                                    }) { Text("CSV erstellen") }
-                                },
-                                dismissButton = {
-                                    TextButton(onClick = { confirmCsvExport = false }) { Text("Abbrechen") }
-                                }
+                                onDismiss = { confirmCsvExport = false }
                             )
                         }
                         if (confirmBackupExport) {
-                            AlertDialog(
-                                onDismissRequest = { confirmBackupExport = false },
-                                title = { Text("Datensicherung erstellen?") },
-                                text = {
-                                    Text("Die Sicherungsdatei enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird unverschlüsselt gespeichert. Wähle einen vertrauenswürdigen Speicherort und gib die Datei nicht weiter.")
+                            BackupExportConfirmationDialog(
+                                onConfirm = {
+                                    confirmBackupExport = false
+                                    val exported = runCatching { shipmentStore.exportBackupJson() }
+                                    if (exported.isSuccess) {
+                                        pendingBackupJson = exported.getOrThrow()
+                                        backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
+                                    } else {
+                                        status = exported.exceptionOrNull()?.message ?: "Datensicherung fehlgeschlagen."
+                                    }
                                 },
-                                confirmButton = {
-                                    TextButton(onClick = {
-                                        confirmBackupExport = false
-                                        val exported = runCatching { shipmentStore.exportBackupJson() }
-                                        if (exported.isSuccess) {
-                                            pendingBackupJson = exported.getOrThrow()
-                                            backupDocumentLauncher.launch("TRAKUNA-Sicherung.json")
-                                        } else {
-                                            status = exported.exceptionOrNull()?.message ?: "Datensicherung fehlgeschlagen."
-                                        }
-                                    }) { Text("Sicherung erstellen") }
-                                },
-                                dismissButton = {
-                                    TextButton(onClick = { confirmBackupExport = false }) { Text("Abbrechen") }
-                                }
+                                onDismiss = { confirmBackupExport = false }
                             )
                         }
                         pendingBackupImport?.let { backupJson ->
-                            AlertDialog(
-                                onDismissRequest = { pendingBackupImport = null },
-                                title = { Text("Datensicherung wiederherstellen?") },
-                                text = {
-                                    Text("Die Sicherung enthält $pendingBackupCount Vorgänge. Die aktuell auf diesem Gerät gespeicherten Vorgänge werden vollständig ersetzt. Erstelle bei Bedarf zuerst eine Sicherung des aktuellen Standes.")
+                            BackupImportConfirmationDialog(
+                                recordCount = pendingBackupCount,
+                                onConfirm = {
+                                    val result = shipmentStore.restoreBackup(backupJson)
+                                    status = when (result) {
+                                        is BackupRestoreResult.Restored -> "${result.recordCount} Vorgänge wurden wiederhergestellt."
+                                        is BackupRestoreResult.Rejected -> "Wiederherstellung fehlgeschlagen: ${result.reason}"
+                                    }
+                                    shipmentRevision++
+                                    pendingBackupImport = null
                                 },
-                                confirmButton = {
-                                    TextButton(onClick = {
-                                        val result = shipmentStore.restoreBackup(backupJson)
-                                        status = when (result) {
-                                            is BackupRestoreResult.Restored -> "${result.recordCount} Vorgänge wurden wiederhergestellt."
-                                            is BackupRestoreResult.Rejected -> "Wiederherstellung fehlgeschlagen: ${result.reason}"
-                                        }
-                                        shipmentRevision++
-                                        pendingBackupImport = null
-                                    }) { Text("Ersetzen und wiederherstellen") }
-                                },
-                                dismissButton = { TextButton(onClick = { pendingBackupImport = null }) { Text("Abbrechen") } }
+                                onDismiss = { pendingBackupImport = null }
                             )
                         }
                         historyRecord?.let { record ->
