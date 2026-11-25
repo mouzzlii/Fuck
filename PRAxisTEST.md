@@ -1,6 +1,6 @@
-# TRAKUNA – Praxis-Testplan (Version 1.54 · versionCode 55)
+# TRAKUNA – Praxis-Testplan (Version 1.55 · versionCode 56)
 
-Basisstand Version 1.53: Der frühere CI-Lauf 45293985061 bestätigte Unit-Tests, Android-Lint, Manifestprüfungen und Debug-APK-Build. Version 1.54 ergänzt temporäre Scan-Diagnose, QR/1D-Filter, Fokusverbesserungen, DataWedge-Allowlist und verschlüsselte Cache-Wiederherstellung. Für jeden neuen Commit ist ein erfolgreicher CI-Lauf erforderlich; Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
+Basisstand Version 1.54: temporäre Scan-Diagnose, QR/1D-Filter, Fokusverbesserungen, DataWedge-Allowlist und verschlüsselte Cache-Wiederherstellung. Version 1.55 ergänzt portable, passwortgeschützte `.trakuna`-Sicherungen mit AES-256-GCM und PBKDF2-HMAC-SHA256 (600.000 Iterationen), Unicode-Passwortunterstützung sowie die Kompatibilität mit älteren JSON- und verschlüsselten V1-Sicherungen. Für jeden neuen Commit ist ein erfolgreicher CI-Lauf erforderlich; Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -177,13 +177,15 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 
 ## Datensicherung und Wiederherstellung
 
-1. In „Paketshop-Sendungen verwalten“ eine vollständige JSON-Datensicherung erstellen und in einem sicheren Speicherort ablegen.
-2. Prüfen, dass die Datei `TRAKUNA-Sicherung.json` vorhanden und nicht leer ist.
-3. Für eine Wiederherstellung die Sicherungsdatei auswählen. TRAKUNA liest höchstens 4 MiB ein und prüft UTF-8-Kodierung, Format, Version, Einträge und Höchstmenge. Beschädigte Textkodierung wird abgelehnt.
-4. Vor dem Ersetzen des lokalen Bestands erscheint eine Bestätigungsabfrage. Ohne Bestätigung bleiben die aktuellen Daten unverändert.
-5. Nach Wiederherstellung die angezeigte Anzahl mit dem erwarteten Datenbestand vergleichen.
+1. In „Paketshop-Sendungen verwalten“ **Vollständige Datensicherung erstellen** wählen.
+2. Ein Passwort mit 12 bis 128 Zeichen eingeben und wiederholen. Die Datei `TRAKUNA-Sicherung.trakuna` wird passwortgeschützt verschlüsselt erstellt.
+3. Das Passwort getrennt von der Datei aufbewahren. Ohne das Passwort ist eine Wiederherstellung nicht möglich.
+4. Für eine Wiederherstellung die `.trakuna`-Datei auswählen, das Passwort eingeben und die Entschlüsselung abwarten. TRAKUNA prüft anschließend Format, Version, Einträge und Höchstmenge.
+5. Vor dem Ersetzen des lokalen Bestands erscheint eine Bestätigungsabfrage. Ohne Bestätigung bleiben die aktuellen Daten unverändert.
+6. Nach Wiederherstellung die angezeigte Anzahl mit dem erwarteten Datenbestand vergleichen.
+7. Ältere unverschlüsselte JSON-Sicherungen bleiben importierbar; TRAKUNA zeigt vor dem Ersetzen eine deutliche Klartext-Warnung.
 
-**Wichtig:** Die Sicherungsdatei enthält personenbezogene Daten im Klartext. Nur auf einem geschützten Speicherort ablegen und nicht unverschlüsselt weitergeben.
+**Wichtig:** CSV-Exporte bleiben unverschlüsselt. Sie sind keine Datensicherung und müssen besonders geschützt gespeichert werden.
 
 6. Eine Sicherungsdatei mit verändertem Zähler, doppelter Vorgangs-ID oder doppelter aktiver Sendung testen. TRAKUNA muss sie ablehnen und den bisherigen Bestand unverändert lassen.
 7. Beschädigten lokalen Datenspeicher simulieren (nur in einer Testinstallation). TRAKUNA muss einen Warnhinweis anzeigen und Änderungen sowie CSV-/JSON-Exporte blockieren; vorhandene Rohdaten dürfen nicht automatisch überschrieben werden.
@@ -298,3 +300,20 @@ Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Tes
 - [ ] **Beschädigter Übergabe-Cache:** Verschlüsselten Cachewert beschädigen; die App muss einen Fehler melden und darf keinen leeren Cache vortäuschen.
 - [ ] **Backup-Recovery:** Gültige Sicherung erstellen, lokalen verschlüsselten Bestand beschädigen und anschließend die gültige Sicherung wiederherstellen. Die wiederhergestellten Daten müssen nach erneuter Leseprüfung vorhanden sein.
 
+## 11. Passwortgeschützte Datensicherung (Version 1.55)
+
+Die folgenden Praxistests sind auf einem realen Android-Gerät durchzuführen. Automatisierte Unit- und Emulatorprüfungen ersetzen diese Abnahme nicht.
+
+| Nr. | Test | Erwartetes Ergebnis |
+|---|---|---|
+| B1 | Neue Sicherung mit einem Passwort zwischen 12 und 128 Zeichen erstellen und bestätigen | Eine Datei mit der Endung `.trakuna` wird gespeichert; ein zu kurzes oder nicht übereinstimmendes Passwort wird nicht akzeptiert. |
+| B2 | Sicherungsdatei mit einem Texteditor öffnen | Sendungsnummern, Empfängernamen und interne Notizen sind nicht im Klartext sichtbar. |
+| B3 | Datei mit richtigem Passwort auf demselben Gerät importieren | Entschlüsselung und vollständige Validierung gelingen; der Bestand wird erst nach ausdrücklicher Bestätigung ersetzt. |
+| B4 | Falsches Passwort eingeben | Import wird abgelehnt; der bisherige Datenbestand bleibt unverändert. |
+| B5 | Header, Salt, Nonce oder Ciphertext einer Testkopie verändern | Authentifizierungsprüfung schlägt fehl; es werden keine Daten wiederhergestellt. |
+| B6 | Passwort mit Umlauten, Eurozeichen und Emoji verwenden | Export und Wiederherstellung funktionieren mit demselben Passwort; UTF-8 wird korrekt verarbeitet. |
+| B7 | Ältere unverschlüsselte JSON-Sicherung importieren | Import bleibt möglich; vor dem Ersetzen erscheint eine deutliche Warnung, dass die Datei Klartext enthält. |
+| B8 | Beschädigte oder übergroße Sicherungsdatei importieren | Datei wird abgelehnt; der vorhandene Datenbestand bleibt erhalten. |
+| B9 | App während Schlüsselableitung, Ver-/Entschlüsselung und Datei-I/O bedienen | Die Oberfläche bleibt bedienbar; diese Arbeiten blockieren nicht den UI-Thread. |
+
+**Grenzen:** Bei Verlust des Sicherungspassworts gibt es keine Wiederherstellungsmöglichkeit. CSV-Dateien bleiben Klartext. Ein erfolgreicher Emulatorlauf ersetzt weder die Geräteprüfung noch die Prüfung einer Wiederherstellung auf einem zweiten Gerät.

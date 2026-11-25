@@ -1,6 +1,6 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.54 (versionCode 55) · CI-Build 45691683747 und Emulator-Instrumentierung 45691683698 erfolgreich (Debug-Testpaket)
+Stand: App-Version 1.55 (versionCode 56) · neuer Integrationsstand; CI-Nachweis folgt nach dem kombinierten Lauf (Debug-Testpaket)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
@@ -28,17 +28,21 @@ Das Artefakt enthält `SHA256SUMS.txt`; ausschließlich den dort angegebenen Has
 
 **TRAKUNA vor einem Update nicht deinstallieren.** Lokale Sendungsdaten und der zugehörige Android-Keystore-Schlüssel können bei einer Deinstallation verloren gehen.
 
-1. In TRAKUNA eine vollständige JSON-Datensicherung erstellen.
-2. Die Datei an einem geschützten Ort ablegen. Sie enthält Sendungsnummern, Empfängernamen und Notizen im Klartext.
-3. Prüfen, ob die Sicherungsdatei tatsächlich vorhanden ist.
-4. Erst dann das neue APK installieren und – wenn Android es anbietet – die bestehende App aktualisieren, nicht deinstallieren.
-5. Nach dem Update einige vorhandene Testvorgänge kontrollieren.
+1. In TRAKUNA unter **Paketshop-Sendungen verwalten** die Funktion **Vollständige Datensicherung erstellen** wählen.
+2. Ein Passwort mit 12 bis 128 Zeichen eingeben und zur Kontrolle wiederholen.
+3. Die Datei `TRAKUNA-Sicherung.trakuna` an einem geschützten Ort speichern. Die Datei ist mit AES-256-GCM verschlüsselt.
+4. Das Passwort getrennt von der Sicherungsdatei aufbewahren. Ohne dieses Passwort kann TRAKUNA die Sicherung nicht wiederherstellen; es gibt keine Hintertür oder Passwortzurücksetzung.
+5. Vor dem Update prüfen, ob die Datei vorhanden ist. Wenn möglich, die Wiederherstellung mit einer Testkopie kontrollieren.
+6. Erst dann das neue APK installieren und – wenn Android es anbietet – die bestehende App aktualisieren, nicht deinstallieren.
+7. Nach dem Update einige vorhandene Testvorgänge kontrollieren.
+
+Ältere unverschlüsselte JSON-Sicherungen bleiben importierbar. TRAKUNA kennzeichnet sie vor dem Ersetzen des Bestands ausdrücklich als unverschlüsselt. Bereits vorhandene JSON-Dateien werden durch das Update nicht automatisch verschlüsselt.
 
 Wenn Android eine abweichende Signatur meldet, Installation abbrechen. Die bestehende App nicht löschen und keine App-Daten entfernen. Debug-Builds können unterschiedliche Signaturen besitzen.
 
 ## 3. DPD, GLS, Hermes und UPS getrennt zuordnen
 
-In Version 1.54 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
+In Version 1.55 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
 
 1. TRAKUNA öffnen.
 2. **Betriebssoftware pro Paketdienst zuordnen** antippen.
@@ -109,7 +113,9 @@ Die UPS-App nicht eigenmächtig installieren oder konfigurieren. Vorhandene App-
 - Lokale Daten liegen nur auf diesem Gerät; es gibt keine zentrale Synchronisierung und keine Cloud-Verbindung.
 - Es gibt keine Mitarbeiterkonten oder Rollen.
 - Maximal 500 Vorgänge werden lokal gespeichert; archivierte Vorgänge belegen weiterhin einen Platz.
-- JSON-Backups und CSV-Exporte enthalten vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
+- Neue `.trakuna`-Sicherungen sind passwortgeschützt verschlüsselt. Das Passwort muss getrennt von der Datei aufbewahrt werden; bei Verlust ist keine Wiederherstellung möglich.
+- Ältere JSON-Sicherungen enthalten vertrauliche Daten im Klartext und bleiben nur aus Kompatibilitätsgründen importierbar. Vor dem Ersetzen erscheint eine deutliche Warnung.
+- CSV-Exporte enthalten weiterhin vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
 - Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge mit Zeitstempel und Ereignistyp. Diese Historie ist weiterhin nur lokal und nicht manipulationssicher oder zentral bestätigt.
 - Keine echten Kundendaten in öffentliche Screenshots, GitHub-Issues oder Chat-Nachrichten aufnehmen.
 - Vor dem produktiven Einsatz sind Datenschutzprüfung, Mehrgeräte-/Mitarbeitermodell, Backup-Wiederherstellung und signiertes Produktionsrelease erforderlich.

@@ -8,9 +8,9 @@
   <sub>Originaldatei unverändert · nur proportionale Skalierung · <a href="https://github.com/mouzzlii/logo-M-glichkeiten-">verbindliche Logo-Regeln</a></sub>
 </div>
 
-TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.55 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.54 (versionCode 55)
+## Aktueller Entwicklungsstand – Version 1.55 (versionCode 56)
 
 - Version 1.54 ergänzt eine temporäre Scan-Diagnose für Kamera-/ML-Kit- und Zebra-DataWedge-Scans: Barcodeformat, unveränderter Rohinhalt, Anzeigeinhalt und daraus extrahierter Kandidat werden gegenübergestellt. Mehrere unterschiedliche Codes bleiben sichtbar; eine Sendungsnummer wird nur bei genau einem eindeutigen Kandidaten übernommen. Die Diagnose bleibt ausschließlich im Arbeitsspeicher und wird weder gespeichert noch protokolliert. Rohdaten können personenbezogene oder sendungsbezogene Informationen enthalten.
 
@@ -18,13 +18,14 @@ TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- JSON-Backups werden kompakt exportiert; der Import akzeptiert bis zu 4 MiB, während der verschlüsselte lokale Bestand auf 2 MiB begrenzt bleibt. Damit bleibt zusätzlicher Platz für Backup-Kopf und portable Exportstruktur.
+- Der interne JSON-Sicherungsinhalt bleibt kompakt (maximal 4 MiB); neue Exporte werden als portable `.trakuna`-Datei mit AES-256-GCM und PBKDF2-HMAC-SHA256 (600.000 Iterationen, zufälliger Salt und Nonce) passwortgeschützt gespeichert. Die verschlüsselte Datei ist auf 6 MiB begrenzt. Alte unverschlüsselte JSON-Sicherungen bleiben mit deutlicher Warnung importierbar; CSV-Exporte bleiben Klartext.
+- Version 1.55 ergänzt portable, passwortgeschützte `.trakuna`-Sicherungen. Passwörter müssen 12 bis 128 Zeichen lang sein; Verschlüsselung, Schlüsselableitung und Datei-I/O laufen außerhalb des UI-Threads. Falsche Passwörter, manipulierte Dateien und übergroße Sicherungen werden abgelehnt. Ohne das getrennt aufzubewahrende Passwort ist eine Sicherung nicht wiederherstellbar.
 - Version 1.53 ergänzte die ersten Android-Instrumentierungstestfälle für Keystore-Verschlüsselung, lokalen Speicher und Backup-Wiederherstellung. Der damalige Haupt-Build kompilierte diese Tests; die spätere Version 1.54 enthält die weiterentwickelten Scanner- und Sicherheitsprüfungen.
 - **Version 1.54 / versionCode 55:** Der Android-Build [45691683747](https://github.com/mouzzlii/Fuck/actions/runs/45691683747) und der separate Emulator-Instrumentierungslauf [45691683698](https://github.com/mouzzlii/Fuck/actions/runs/45691683698) waren für Code-Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` erfolgreich. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und Android-Keystore-/Speicher-Instrumentierung.
 - Debug-Artefakt: `TRAKUNA-Android`, Artifact-ID `15058952938`, verfügbar bis 09.12.2026, 20:08 UTC. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
 - Die nachfolgenden Änderungen auf PR #18 aktualisieren nur Dokumentation; ihre CI-Läufe sind separat und zum aktuellen PR-Head zu prüfen.
 
-**Wichtig:** Version 1.54 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Version 1.55 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
