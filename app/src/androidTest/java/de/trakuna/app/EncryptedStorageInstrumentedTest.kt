@@ -55,6 +55,27 @@ class EncryptedStorageInstrumentedTest {
     }
 
     @Test
+    fun repeatedStatusConfirmationCannotAdvanceTheSameShipmentTwice() {
+        val store = ShipmentStore(context)
+        val added = store.add(
+            rawTrackingNumber = "DOUBLE12345",
+            carrier = "DPD",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER
+        )
+        assertTrue(added is ShipmentUpdate.Saved)
+        val original = (added as ShipmentUpdate.Saved).record
+
+        val first = store.advance(original.id, expectedStatus = original.status)
+        assertTrue(first is ShipmentUpdate.Saved)
+        assertEquals(ShipmentStatus.READY_FOR_PICKUP, store.all().single().status)
+
+        // Simulate a second tap from the still-open confirmation dialog.
+        val duplicate = store.advance(original.id, expectedStatus = original.status)
+        assertTrue(duplicate is ShipmentUpdate.Rejected)
+        assertEquals(ShipmentStatus.READY_FOR_PICKUP, store.all().single().status)
+    }
+
+    @Test
     fun damagedEncryptedShipmentStorageFailsClosedInsteadOfBecomingAnEmptyWritableStore() {
         val store = ShipmentStore(context)
         assertTrue(
