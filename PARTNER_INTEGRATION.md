@@ -122,7 +122,7 @@ Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Ü
 
 ## Zebra DataWedge – Barcode-Eingang
 
-TRAKUNA kann Scan-Ergebnisse von Zebra DataWedge über einen Android-Broadcast empfangen.
+TRAKUNA verarbeitet Scan-Ergebnisse von Zebra DataWedge über einen Android-Broadcast nur auf Android 14 (API 34) oder höher und nur dann, wenn Android den Absender als `com.symbol.datawedge` bestätigt. Auf Android 13 (API 33) und älter weist TRAKUNA DataWedge-Broadcasts aus Sicherheitsgründen zurück; dort Kamera-Scanner oder manuelle Eingabe verwenden.
 
 ### Grundkonfiguration auf dem Zebra-Gerät
 
@@ -152,14 +152,14 @@ DataWedge sendet damit Intent-Daten nur an das festgelegte Paket und prüft zus�
 
 TRAKUNA liest den Scan nur ein, solange die App im Vordergrund aktiv ist, und zeigt ihn zur Prüfung im Sendungsnummernfeld an. Broadcasts während die App im Hintergrund ist, werden ignoriert. Auch ein Kamera-Scan löst keine automatische Buchung oder Partnerübergabe aus. Der Bediener muss die Nummer prüfen und die Übergabe bewusst starten. So wird vermieden, dass ein zufälliger Scan sofort einen betrieblichen Vorgang auslöst.
 
-**Sicherheitsgrenze:** Die DataWedge-Allowlist und Signaturprüfung müssen im Zebra-Profil tatsächlich aktiviert sein. TRAKUNA kann nicht erkennen oder erzwingen, ob ein Administrator diese Geräteeinstellung vorgenommen hat. Ohne korrekt eingerichtete Component Information bleibt der dynamische Android-Empfänger grundsätzlich durch andere Apps auf demselben Gerät nachahmbar. Eingehende Werte sind daher weiterhin nicht vertrauenswürdige Eingaben und müssen vor jeder Buchung geprüft werden.
+**Sicherheitsgrenze:** Die In-App-Absenderprüfung ist maßgeblich: Ab Android 14 (API 34) akzeptiert TRAKUNA nur Broadcasts, deren von Android gemeldeter Absender exakt `com.symbol.datawedge` ist. Auf Android 13 (API 33) und älter ist der DataWedge-Eingang in TRAKUNA deaktiviert, weil dort keine gleichwertig verifizierbare ursprüngliche Senderidentität verfügbar ist. DataWedge Component Information und Signaturprüfung sind zusätzliche Zustellkontrollen im Geräteprofil; sie ersetzen die In-App-Prüfung nicht. TRAKUNA kann nicht erkennen oder erzwingen, ob ein Administrator diese zusätzlichen Geräteeinstellungen aktiviert hat. Auch ein verifizierter DataWedge-Absender macht den Barcode-Inhalt nicht vertrauenswürdig: Nummern und sonstige Eingabewerte müssen vor jeder Buchung geprüft werden.
 
 
 ## GLS-/DPD-Handgeräte – Zebra TC26
 
 Nach den neuesten Vor-Ort-Angaben sind die beiden GLS-/DPD-Handgeräte sehr wahrscheinlich Zebra TC26. Ausschlaggebend ist die beschriebene TC21/TC26-Gehäuseform in Verbindung mit der sichtbaren 4G-Mobilfunkanzeige. Zebra dokumentiert den Unterschied ausdrücklich: TC21 bietet WLAN, TC26 WLAN und Mobilfunk. Die genaue TC26-Teilenummer ist vor Ort noch am Typenschild zu bestätigen.
 
-Zebra DataWedge ist der passende technische Scan-Eingang, sofern auf den konkreten TC26-Geräten vorhanden und freigegeben. TRAKUNA besitzt bereits einen dynamischen Broadcast-Empfänger für `de.trakuna.app.DATAWEDGE_SCAN` und liest `com.symbol.datawedge.data_string`. Die DataWedge-Konfiguration muss auf beiden Geräten einzeln mit dem dedizierten TRAKUNA-Profil und der unter „Zebra DataWedge – Barcode-Eingang“ beschriebenen Component-Allowlist/Signaturprüfung eingerichtet werden. Es wurde noch kein Testscan auf den GLS-/DPD-Shopgeräten ausgeführt.
+Zebra DataWedge ist als technischer Scan-Eingang nur auf Android 14 (API 34) oder höher für TRAKUNA freigegeben. Auf Android 13 (API 33) und älter bleibt der DataWedge-Eingang deaktiviert; dort sind Kamera-Scanner oder manuelle Eingabe zu verwenden. Auf unterstützten Geräten verarbeitet TRAKUNA den Broadcast nur, wenn Android den Absender als `com.symbol.datawedge` bestätigt. Die DataWedge-Konfiguration muss auf jedem Gerät einzeln mit dem dedizierten TRAKUNA-Profil eingerichtet werden. Component Information und Signaturprüfung sind zusätzliche Zustellkontrollen und ersetzen nicht die Absenderprüfung in TRAKUNA. Es wurde noch kein Testscan auf den GLS-/DPD-Shopgeräten ausgeführt.
 
 Offizielle Quellen:
 - Zebra TC21/TC26 Datenblatt: https://www.zebra.com/de/de/products/spec-sheets/mobile-computers/handheld/tc21-tc26.html
