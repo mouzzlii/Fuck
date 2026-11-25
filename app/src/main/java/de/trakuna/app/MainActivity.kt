@@ -60,6 +60,7 @@ private val Forest = Color(0xFF174B3A)
 private const val CACHE_PREFS = "trakuna_handoff"
 private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
 private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
+private const val DATAWEDGE_LABEL_TYPE_EXTRA = "com.symbol.datawedge.label_type"
 private const val MAX_SCAN_INPUT_CHARS = 4096
 
 /**
@@ -178,12 +179,16 @@ class MainActivity : ComponentActivity() {
                             status = "Scaninhalt ist zu lang und wurde aus Sicherheitsgründen abgelehnt. Bitte Sendungsnummer manuell prüfen."
                             return
                         }
-                        val scanned = extractTrackingNumber(raw)
+                        val labelType = runCatching {
+                            intent.getStringExtra(DATAWEDGE_LABEL_TYPE_EXTRA)
+                        }.getOrNull()
+                        val supportedFormat = isAllowedDataWedgeLabelType(labelType)
+                        val scanned = if (supportedFormat) extractTrackingNumber(raw) else null
                         scanDiagnostic = ScanDiagnosticResult(
                             observations = listOf(
                                 ScanObservation(
                                     source = "Zebra DataWedge",
-                                    format = "Vom Scanner nicht mitgeliefert",
+                                    format = labelType ?: "Format nicht mitgeliefert",
                                     rawValue = raw,
                                     displayValue = raw,
                                     extractedValue = scanned
@@ -192,6 +197,10 @@ class MainActivity : ComponentActivity() {
                             selectedValue = scanned
                         )
                         showScanDiagnostics = true
+                        if (!supportedFormat) {
+                            status = "Zebra-Barcodeformat fehlt oder wird nicht unterstützt. Scan wurde aus Sicherheitsgründen nicht übernommen. Bitte DataWedge-Profil prüfen."
+                            return
+                        }
                         if (scanned.isNullOrBlank()) {
                             status = "Zebra-Scan empfangen, aber keine unterstützte Sendungsnummer erkannt. Rohdaten stehen in der Scan-Diagnose zur Prüfung."
                             return
