@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.foundation.text.KeyboardOptions
@@ -39,7 +40,7 @@ internal fun BackupExportConfirmationDialog(
         onDismissRequest = onDismiss,
         title = { Text("Verschlüsselte Datensicherung") },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(androidx.compose.ui.unit.dp(10))) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("Die Sicherung enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird mit AES-256-GCM verschlüsselt. Verwende mindestens 12 Zeichen und bewahre das Passwort getrennt auf. Ohne dieses Passwort ist die Sicherung nicht wiederherstellbar.")
                 OutlinedTextField(
                     value = password,
@@ -83,7 +84,7 @@ internal fun EncryptedBackupImportPasswordDialog(
         onDismissRequest = onDismiss,
         title = { Text("Sicherung entschlüsseln") },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(androidx.compose.ui.unit.dp(10))) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("Diese Sicherung ist verschlüsselt. Gib das beim Erstellen verwendete Passwort ein.")
                 OutlinedTextField(
                     value = password,
