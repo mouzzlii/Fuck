@@ -37,7 +37,7 @@ Diese Schritte erst mit Zustimmung des Paketshop-Betreibers ausführen.
    - Action exakt: `de.trakuna.app.DATAWEDGE_SCAN`.
    - Daten-Extra: `com.symbol.datawedge.data_string`.
    - Profil der App `de.trakuna.app` zuordnen.
-7. Im DataWedge-Bereich „Component Information“ ausschließlich TRAKUNA als Empfänger zulassen und – soweit angeboten – die Signaturprüfung aktivieren. Das ist eine zusätzliche DataWedge-seitige Zustellkontrolle, ersetzt aber nicht TRAKUNAs Prüfung des eingehenden Absenders.
+7. Im DataWedge-Bereich „Component Information“ ausschließlich TRAKUNA (`de.trakuna.app`) als Empfänger zulassen und die Signaturprüfung aktivieren. Diese DataWedge-seitige Prüfung ist für den produktiven Geräteeinsatz vorgesehen und ergänzt, ersetzt aber nicht TRAKUNAs eigene Prüfung des eingehenden Absenders. Bei Debug-Testpaketen kann ein Update die Signatur ändern; Component Information danach erneut kontrollieren. Für den Produktivbetrieb ist ein stabiler Betreiber-Release-Signaturschlüssel erforderlich. Siehe [offizielle Zebra Intent-Output-Dokumentation](https://techdocs.zebra.com/datawedge/latest/guide/output/intent/).
 8. Mit einem vom Betreiber freigegebenen Testbarcode prüfen, ob die Nummer in TRAKUNA erscheint.
 9. Prüfen, dass ein Scan allein keine Buchung und keinen Etikettendruck auslöst.
 10. Erst nach dokumentierter Freigabe weitere Tests durchführen.
