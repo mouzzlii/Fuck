@@ -29,7 +29,7 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 | PR | Zweck | Status / wichtige Einschränkung |
 |---|---|---|
 | [#19](https://github.com/mouzzlii/Fuck/pull/19) | Projektregeln und Aufgabensteuerung | Offen; reine Dokumentation; Review/Merge ausstehend |
-| [#18](https://github.com/mouzzlii/Fuck/pull/18) | Übergabe-Cache-Wiederherstellung und Scanner-Härtung | Draft; Basis `feature/scan-diagnostics`; CI für Head `e5991fe` erfolgreich; echte Hardwareabnahme offen |
+| [#18](https://github.com/mouzzlii/Fuck/pull/18) | Übergabe-Cache-Wiederherstellung und Scanner-Härtung | Draft; Basis `feature/scan-diagnostics`; CI für Vor-Refactor-Head `e5991fe` erfolgreich; aktueller Refactor-Head `3df79fa` ohne CI-Nachweis; Hardwareabnahme offen |
 | [#17](https://github.com/mouzzlii/Fuck/pull/17) | Fokus, Codefilter und Standby-Wiederherstellung | Draft; laut aktuellem PR-Stand nicht mergebar; nicht separat vor #18 integrieren |
 | [#16](https://github.com/mouzzlii/Fuck/pull/16) | Scan-Diagnose und GLS-Parserkorrektur | Offen; dokumentierter APK-/CI-Nachweis vorhanden; reale Hardwareabnahme offen |
 | [#14](https://github.com/mouzzlii/Fuck/pull/14) | Verschlüsselte Backups | Draft; automatisierte Prüfungen dokumentiert; reale Geräteabnahme und Betreiber-Signierung offen |
