@@ -592,114 +592,46 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         historyRecord?.let { record ->
-                            AlertDialog(
-                                onDismissRequest = { historyRecord = null },
-                                title = { Text("Vorgangshistorie") },
-                                text = {
-                                    Column(
-                                        modifier = Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()),
-                                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                                    ) {
-                                        Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
-                                        if (record.history.isEmpty()) {
-                                            Text("Für diesen älteren Vorgang liegen noch keine einzelnen Verlaufseinträge vor.")
-                                        } else {
-                                            record.history.asReversed().forEach { event ->
-                                                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                                                    Text(
-                                                        when (event.type) {
-                                                            ShipmentEventType.CREATED -> "Vorgang angelegt"
-                                                            ShipmentEventType.STATUS_CHANGED -> "Status geändert: ${event.fromStatus?.let(::shipmentStatusLabel) ?: "unbekannt"} → ${event.toStatus?.let(::shipmentStatusLabel) ?: "unbekannt"}"
-                                                            ShipmentEventType.DETAILS_UPDATED -> "Empfänger oder Notiz bearbeitet"
-                                                            ShipmentEventType.ARCHIVED -> "Vorgang archiviert"
-                                                            ShipmentEventType.RESTORED -> "Vorgang aus Archiv wiederhergestellt"
-                                                        },
-                                                        style = MaterialTheme.typography.bodyMedium
-                                                    )
-                                                    Text(ShipmentRules.formatTimestamp(event.at), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                                }
-                                                HorizontalDivider()
-                                            }
-                                        }
-                                        Text("Die Historie wird lokal auf diesem Gerät gespeichert. Sie ist kein manipulationssicheres, zentrales Prüfprotokoll.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                    }
-                                },
-                                confirmButton = { TextButton(onClick = { historyRecord = null }) { Text("Schließen") } }
-                            )
+                            ShipmentHistoryDialog(record = record, onDismiss = { historyRecord = null })
                         }
                         editingRecord?.let { record ->
-                            AlertDialog(
-                                onDismissRequest = { editingRecord = null },
-                                title = { Text("Sendungsdetails bearbeiten") },
-                                text = {
-                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                        Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
-                                        OutlinedTextField(value = editRecipient, onValueChange = { editRecipient = it.take(100) }, label = { Text("Empfänger / Kundenname") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedTextField(value = editNote, onValueChange = { editNote = it.take(500) }, label = { Text("Interne Notiz") }, minLines = 3, modifier = Modifier.fillMaxWidth())
-                                    }
+                            EditShipmentDialog(
+                                record = record,
+                                recipient = editRecipient,
+                                note = editNote,
+                                onRecipientChange = { editRecipient = it },
+                                onNoteChange = { editNote = it },
+                                onSave = {
+                                    val result = shipmentStore.updateDetails(record.id, editRecipient, editNote)
+                                    status = shipmentResultText(result)
+                                    shipmentRevision++
+                                    editingRecord = null
                                 },
-                                confirmButton = {
-                                    TextButton(onClick = {
-                                        val result = shipmentStore.updateDetails(record.id, editRecipient, editNote)
-                                        status = shipmentResultText(result)
-                                        shipmentRevision++
-                                        editingRecord = null
-                                    }) { Text("Speichern") }
-                                },
-                                dismissButton = { TextButton(onClick = { editingRecord = null }) { Text("Abbrechen") } }
+                                onDismiss = { editingRecord = null }
                             )
                         }
                         pendingAdvance?.let { record ->
-                            val nextStatus = ShipmentRules.nextStatus(record.flow, record.status)
-                            val isPhysicalHandover = nextStatus == ShipmentStatus.HANDED_TO_CUSTOMER ||
-                                nextStatus == ShipmentStatus.HANDED_TO_CARRIER
-                            AlertDialog(
-                                onDismissRequest = { pendingAdvance = null },
-                                title = { Text("Statusänderung bestätigen?") },
-                                text = {
-                                    Text(
-                                        when {
-                                            nextStatus == ShipmentStatus.HANDED_TO_CARRIER ->
-                                                "Soll ${record.trackingNumber} lokal als an den Paketdienst übergeben dokumentiert werden? Wichtig: TRAKUNA erhält dabei keine Bestätigung von DPD, GLS, Hermes oder UPS. Erst markieren, wenn die Übergabe im offiziellen Carrier-System abgeschlossen und dort quittiert wurde."
-                                            nextStatus == ShipmentStatus.HANDED_TO_CUSTOMER ->
-                                                "Soll ${record.trackingNumber} wirklich als ${nextStatus.let { shipmentStatusLabel(it) }} markiert werden? Bitte erst bestätigen, wenn die Sendung tatsächlich an den Kunden bzw. Bevollmächtigten ausgehändigt wurde."
-                                            else ->
-                                                "Soll ${record.trackingNumber} wirklich als ${nextStatus?.let { shipmentStatusLabel(it) }} markiert werden?"
-                                        }
-                                    )
+                            AdvanceShipmentDialog(
+                                record = record,
+                                onConfirm = {
+                                    val result = shipmentStore.advance(record.id, expectedStatus = record.status)
+                                    status = shipmentResultText(result)
+                                    shipmentRevision++
+                                    pendingAdvance = null
                                 },
-                                confirmButton = {
-                                    TextButton(onClick = {
-                                        val result = shipmentStore.advance(record.id, expectedStatus = record.status)
-                                        status = shipmentResultText(result)
-                                        shipmentRevision++
-                                        pendingAdvance = null
-                                    }) { Text("Bestätigen") }
-                                },
-                                dismissButton = {
-                                    TextButton(onClick = { pendingAdvance = null }) { Text("Abbrechen") }
-                                }
+                                onDismiss = { pendingAdvance = null }
                             )
                         }
                         pendingDelete?.let { record ->
-                            AlertDialog(
-                                onDismissRequest = { pendingDelete = null },
-                                title = { Text("Vorgang endgültig löschen?") },
-                                text = {
-                                    Text(
-                                        "Achtung: ${record.trackingNumber} wird dauerhaft von diesem Gerät entfernt. " +
-                                            "Auch die lokal gespeicherte Vorgangshistorie geht dabei verloren. " +
-                                            "Diese Löschung wird nicht in einem manipulationssicheren Prüfprotokoll festgehalten und kann nicht rückgängig gemacht werden. " +
-                                            "Wenn du den Vorgang noch dokumentieren musst, brich ab und erstelle zuerst eine Datensicherung."
-                                    )
-                                },
-                                confirmButton = { TextButton(onClick = {
+                            DeleteShipmentDialog(
+                                record = record,
+                                onConfirm = {
                                     val removed = shipmentStore.remove(record.id)
                                     status = if (removed) "Vorgang und lokale Historie wurden endgültig gelöscht." else "Vorgang konnte nicht gelöscht werden. Datenspeicher prüfen."
                                     shipmentRevision++
                                     pendingDelete = null
-                                }) { Text("Endgültig löschen") } },
-                                dismissButton = { TextButton(onClick = { pendingDelete = null }) { Text("Abbrechen") } }
+                                },
+                                onDismiss = { pendingDelete = null }
                             )
                         }
                         if (showPartnerPicker) {
