@@ -20,7 +20,7 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 
 - [x] **T-06 — Offline-/Sicherheitsregressionen dauerhaft absichern.** CI-Skript `scripts/check-android-security-boundaries.sh` prüft Quellmanifest-Allowlist (CAMERA/ACCESS_NETWORK_STATE), explizite INTERNET-Entfernung, optionale Kamera, Backup-/Klartextschutz, direkte Netzwerk-Client-Abhängigkeiten und bekannte Netzwerk-APIs; nach dem Build wird das paketierte Manifest geprüft. Für Code-Head `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` liefen Build, Sicherheitsprüfungen, Lint und Emulator-Instrumentierung erfolgreich. Die erneute CI für den aktuellen Dokumentations-Head bleibt T-05 zugeordnet.
 
-- [ ] **T-07 — Backup-Wiederherstellung real abnehmen.** Für PR #14 die dokumentierten Emulator-/CI-Ergebnisse von realer Geräteprüfung trennen; Export, Import, falsches Passwort, beschädigte Datei und Gerätewechsel mit Betreiberfreigabe testen. Release-Signaturschlüssel bleiben außerhalb des Repositories.
+- [ ] **T-07 — Backup-Wiederherstellung real abnehmen und Integrationsreihenfolge sichern.** PR #14 (`c70bdad`) ist gegenüber aktuellem `main` auf Stand `8c826e5` (31 Commits ahead, 0 behind); CI-/Emulatorlauf `45647870214` erfolgreich, 7/7 Android-Instrumentierungstests bestanden. Passwortverschlüsselung, falsches Passwort, Manipulation, Unicode und Legacy-Backup-Kompatibilität sind automatisiert abgedeckt. Reale Geräteprüfung (Export, Import, falsches Passwort, beschädigte Datei, Gerätewechsel) bleibt offen. PR #14 überschneidet sich mit PR #18 in `MainActivity.kt`, `app/build.gradle.kts`, `README.md`, `PRAxisTEST.md`, `BETRIEBSHANDBUCH.md` und dem Instrumentierungsworkflow. Nicht unabhängig mergen; vor Integration gezielt auf einen gemeinsamen Feature-Stand zusammenführen und alle Tests erneut ausführen. Release-Signaturschlüssel bleiben außerhalb des Repositories.
 
 - [ ] **T-08 — Carrier- und Shop-Hardwareintegration nur nach Freigabe fortführen.** DPD/GLS/Hermes/UPS-Integrationsvoraussetzungen und neues Hermes-Gerät verifizieren. Bestehende Handgeräte, Drucker, Profile und produktive Abläufe bis zu ausdrücklicher Freigabe unangetastet lassen.
 
@@ -32,7 +32,7 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 | [#18](https://github.com/mouzzlii/Fuck/pull/18) | Übergabe-Cache-Wiederherstellung, Scanner-Härtung, Sicherheits-CI und Refaktorierung | Draft; Basis `feature/scan-diagnostics`; Code-Head `bb29cdab` mit erfolgreichem Android-Build und Emulatorlauf; aktuelle Dokumentations-Commits auf Head `6214d7d` haben neue CI ausgelöst (Build 45698479245 und Emulator 45698479073 laufen); Hardwareabnahme offen |
 | #17 | Fokus, Codefilter und Standby-Wiederherstellung | Geschlossen, nicht gemergt; Änderungen nach Prüfung in PR #18 integriert bzw. ersetzt |
 | [#16](https://github.com/mouzzlii/Fuck/pull/16) | Scan-Diagnose und GLS-Parserkorrektur | Offen; dokumentierter APK-/CI-Nachweis vorhanden; reale Hardwareabnahme offen |
-| [#14](https://github.com/mouzzlii/Fuck/pull/14) | Verschlüsselte Backups | Draft; automatisierte Prüfungen dokumentiert; reale Geräteabnahme und Betreiber-Signierung offen |
+| [#14](https://github.com/mouzzlii/Fuck/pull/14) | Verschlüsselte Backups | Draft; 31 Commits ahead / 0 behind aktuelles `main`; CI + 7/7 Emulator-Instrumentierungstests erfolgreich; reale Geräteabnahme offen; Dateiüberschneidungen mit PR #18 erfordern gemeinsame Integration |
 
 ## Scan-Befund auf main
 
@@ -47,4 +47,4 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 ## Änderungsprotokoll
 
 - 2026-11-25: T-01 auf `chore/repo-governance` umgesetzt und verifiziert; PR #19 eröffnet. `main` unverändert. Dokumentations-PR benötigt keinen Android-Build; GitHub-Review/Merge stehen aus.
-- 2026-11-25: T-02/T-06 mit erfolgreichen Build- und Emulatorläufen für Code-Head `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` aktualisiert. T-05: README, Sicherheits-, Partner-, Pilot-, Betriebs- und Freigabedokumente für Version 1.54 / 55 auf PR #18 synchronisiert; CI des aktuellen PR-Heads `6214d7d0cf2203d99fa6c3c5bc4b39d9c6803f37` läuft. Keine Änderungen an `main`.
+- 2026-11-25: T-02/T-06 mit erfolgreichen Build- und Emulatorläufen für Code-Head `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` aktualisiert. T-05: README, Sicherheits-, Partner-, Pilot-, Betriebs- und Freigabedokumente für Version 1.54 / 55 auf PR #18 synchronisiert; CI des aktuellen PR-Heads `6214d7d0cf2203d99fa6c3c5bc4b39d9c6803f37` läuft. T-07: PR #14 statisch geprüft, CI/Emulator 7/7 erfolgreich; Dateiüberschneidungen mit PR #18 dokumentiert, keine unabhängige Integration. Keine Änderungen an `main`.
