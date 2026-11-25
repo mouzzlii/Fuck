@@ -96,11 +96,24 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var number by remember { mutableStateOf("") }
+            val context = LocalContext.current
+            val handoffCache = remember(context) { SecureHandoffCache(context) }
+            val initialHandoffNumber = remember(handoffCache) {
+                runCatching { handoffCache.trackingNumber() }.getOrDefault("")
+            }
+            var number by remember(handoffCache) { mutableStateOf(initialHandoffNumber) }
             var showScanner by remember { mutableStateOf(false) }
             var scanDiagnostic by remember { mutableStateOf<ScanDiagnosticResult?>(null) }
             var showScanDiagnostics by remember { mutableStateOf(false) }
-            var status by remember { mutableStateOf("Sendungsnummer scannen oder manuell eingeben.") }
+            var status by remember(handoffCache) {
+                mutableStateOf(
+                    if (initialHandoffNumber.isNotBlank()) {
+                        "Gespeicherte Sendungsnummer wiederhergestellt."
+                    } else {
+                        "Sendungsnummer scannen oder manuell eingeben."
+                    }
+                )
+            }
             var showPartnerPicker by remember { mutableStateOf(false) }
             var partnerPickerCarrier by remember { mutableStateOf("DPD") }
             var showPartnerCarrierMenu by remember { mutableStateOf(false) }
@@ -121,12 +134,19 @@ class MainActivity : ComponentActivity() {
             var historyRecord by remember { mutableStateOf<ShipmentRecord?>(null) }
             var editRecipient by remember { mutableStateOf("") }
             var editNote by remember { mutableStateOf("") }
-            val context = LocalContext.current
             var wifiConnected by remember { mutableStateOf(isWifiConnected(context)) }
             DisposableEffect(context) {
                 val observer = LifecycleEventObserver { _, event ->
                     if (event == Lifecycle.Event.ON_RESUME) {
                         wifiConnected = isWifiConnected(context)
+                        // The Android process or Compose state may have been recreated while
+                        // the device was in deep standby. Restore only into an empty field so
+                        // an intentional manual edit is never overwritten.
+                        val cachedNumber = runCatching { handoffCache.trackingNumber() }.getOrNull().orEmpty()
+                        if (number.isBlank() && cachedNumber.isNotBlank()) {
+                            number = cachedNumber
+                            status = "Gespeicherte Sendungsnummer nach Rückkehr wiederhergestellt."
+                        }
                     }
                 }
                 this@MainActivity.lifecycle.addObserver(observer)
