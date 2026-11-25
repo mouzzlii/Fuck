@@ -24,6 +24,7 @@ internal data class ShipmentLedgerActions(
 internal fun ShipmentLedgerList(
     records: List<ShipmentRecord>,
     storageIssue: String?,
+    backupBusy: Boolean,
     archived: Boolean,
     search: String,
     visibleRecordLimit: Int,
@@ -62,10 +63,10 @@ internal fun ShipmentLedgerList(
     OutlinedButton(onClick = actions.onCsvExport, enabled = storageIssue == null, modifier = Modifier.fillMaxWidth()) {
         Text("CSV-Datei exportieren")
     }
-    OutlinedButton(onClick = actions.onBackupExport, enabled = storageIssue == null, modifier = Modifier.fillMaxWidth()) {
+    OutlinedButton(onClick = actions.onBackupExport, enabled = storageIssue == null && !backupBusy, modifier = Modifier.fillMaxWidth()) {
         Text("Vollständige Datensicherung erstellen")
     }
-    OutlinedButton(onClick = actions.onBackupImport, modifier = Modifier.fillMaxWidth()) {
+    OutlinedButton(onClick = actions.onBackupImport, enabled = !backupBusy, modifier = Modifier.fillMaxWidth()) {
         Text("Datensicherung wiederherstellen")
     }
     if (storageIssue != null) {

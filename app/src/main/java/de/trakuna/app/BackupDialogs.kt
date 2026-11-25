@@ -24,7 +24,7 @@ internal fun BackupExportConfirmationDialog(onConfirm: () -> Unit, onDismiss: ()
         onDismissRequest = onDismiss,
         title = { Text("Datensicherung erstellen?") },
         text = {
-            Text("Die Sicherungsdatei enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird unverschlüsselt gespeichert. Wähle einen vertrauenswürdigen Speicherort und gib die Datei nicht weiter.")
+            Text("Die Sicherungsdatei enthält Sendungsnummern, Empfängernamen und interne Notizen. Sie wird mit einem eigenen Passwort verschlüsselt. Bewahre das Passwort getrennt von der Datei auf; ohne das Passwort ist die Sicherung nicht wiederherstellbar.")
         },
         confirmButton = { TextButton(onClick = onConfirm) { Text("Sicherung erstellen") } },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Abbrechen") } }

@@ -72,12 +72,24 @@ fi
 # Remove pre-test emulator noise so a failure log starts near the actual test.
 adb logcat -c >/dev/null 2>&1 || true
 
+echo "JVM-Unit-Tests, Android-Lint und Debug-APK bauen."
+build_log="$report_dir/gradle-build-and-unit.log"
+gradle --no-daemon testDebugUnitTest lintDebug assembleDebug --stacktrace 2>&1 | tee "$build_log"
+result=${PIPESTATUS[0]}
+
+if [[ "$result" -ne 0 ]]; then
+  echo "JVM-Tests, Lint oder Debug-Build fehlgeschlagen (Exit-Code $result); Geräte- und Logcat-Diagnose wird gesichert."
+  capture_diagnostics
+  cat "$diagnostics_file"
+  exit "$result"
+fi
+
 echo "Android-Instrumentierungstests starten."
 gradle --no-daemon connectedDebugAndroidTest --stacktrace 2>&1 | tee "$gradle_log"
 result=${PIPESTATUS[0]}
 
 if [[ "$result" -eq 0 ]]; then
-  echo "Android-Instrumentierungstests erfolgreich."
+  echo "Unit-Tests, Lint, Debug-Build und Android-Instrumentierungstests erfolgreich."
   exit 0
 fi
 

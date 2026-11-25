@@ -14,7 +14,6 @@ on:
   pull_request:
     branches:
       - main
-      - feature/scan-diagnostics
     paths:
       - "app/src/androidTest/**"
       - "app/src/main/java/de/trakuna/app/**"
@@ -148,6 +147,25 @@ jobs:
             df -h
             free -h
           } 2>&1 | tee app/build/reports/trakuna-instrumentation/failure-diagnostics.txt
+
+      - name: Debug-APK prüfen und SHA-256 erstellen
+        if: success()
+        shell: bash
+        run: |
+          apk="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          sha256sum "$apk" | tee "$apk.sha256"
+
+      - name: TRAKUNA-Debug-APK für den Praxistest bereitstellen
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: TRAKUNA-debug-apk
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/apk/debug/app-debug.apk.sha256
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Emulator- und Instrumentierungsdiagnose bereitstellen
         if: always()
