@@ -8,12 +8,16 @@ package de.trakuna.app
 internal const val DATAWEDGE_PACKAGE_NAME = "com.symbol.datawedge"
 
 /**
- * Android 14 (API 34) exposes the original broadcast sender. Earlier Android versions
- * cannot authenticate the sender in-app; DataWedge Component Information signature
- * verification and managed-device restrictions are required there.
+ * Only Android 14 (API 34) and newer expose the original broadcast sender to a
+ * BroadcastReceiver. On older versions an exported receiver cannot distinguish
+ * a genuine DataWedge broadcast from an app forging the same action and extras.
+ *
+ * DataWedge Component Information signature verification protects delivery from
+ * DataWedge to TRAKUNA; it does not authenticate broadcasts sent by other apps
+ * to TRAKUNA. Therefore Zebra broadcast input is disabled below API 34.
  */
 internal fun isDataWedgeSenderAccepted(apiLevel: Int, senderPackage: String?): Boolean =
-    apiLevel < 34 || senderPackage == DATAWEDGE_PACKAGE_NAME
+    apiLevel >= 34 && senderPackage == DATAWEDGE_PACKAGE_NAME
 
 internal fun isAllowedDataWedgeLabelType(labelType: String?): Boolean {
     val normalized = labelType?.trim()?.uppercase(java.util.Locale.ROOT) ?: return false
