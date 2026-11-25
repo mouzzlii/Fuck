@@ -26,6 +26,8 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 
 - [ ] **T-09 — Verbleibende MainActivity-State-Orchestrierung prüfen.** Nach der kontrollierten Integration von PR #16/#18 und der Backup-Funktion aus PR #14 die Lifecycle-/Compose-State-Verantwortung aus `MainActivity.kt` weiter trennen. `rememberSaveable`, `ON_RESUME`, DataWedge-Vordergrundprüfung und bestehende Scanner-/Backup-Workflows müssen durch Regressionstests abgesichert bleiben. Nur umsetzen, wenn die Aufteilung die Wartbarkeit messbar verbessert; keine bloße Datei-Verschiebung.
 
+- [ ] **T-10 — PR #16 Merge-Status vor Integration klären.** PR #16 ist 26 Commits vor und 0 hinter `main`; Build und Emulatorläufe für Head `cfc148f` sind erfolgreich. GitHub meldet dennoch `mergeable=true`, aber `mergeable_state=unstable`; Commit-Status-API liefert keine Status-Kontexte, und die erforderlichen Branch-Protection-Details sind mit der aktuellen GitHub-Verbindung nicht lesbar (403). Vor einem Merge erforderliche Statuschecks/Review-Anforderungen mit Repository-Betreiber klären. `main` bis dahin unverändert lassen.
+
 ## Bekannte offene Pull Requests (Stand des Scans)
 
 | PR | Zweck | Status / wichtige Einschränkung |
@@ -33,7 +35,7 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 | [#19](https://github.com/mouzzlii/Fuck/pull/19) | Projektregeln und Aufgabensteuerung | Offen; reine Dokumentation; Review/Merge ausstehend |
 | [#18](https://github.com/mouzzlii/Fuck/pull/18) | Übergabe-Cache-Wiederherstellung, Scanner-Härtung, Sicherheits-CI und Refaktorierung | Draft; Basis `feature/scan-diagnostics`; Code-Head `bb29cdab` mit erfolgreichem Android-Build und Emulatorlauf; Dokumentations-Head `6214d7d` mit erfolgreichem Build 45698479245 und Emulatorlauf 45698479073; Hardwareabnahme offen |
 | #17 | Fokus, Codefilter und Standby-Wiederherstellung | Geschlossen, nicht gemergt; Änderungen nach Prüfung in PR #18 integriert bzw. ersetzt |
-| [#16](https://github.com/mouzzlii/Fuck/pull/16) | Scan-Diagnose und GLS-Parserkorrektur | Offen; dokumentierter APK-/CI-Nachweis vorhanden; reale Hardwareabnahme offen |
+| [#16](https://github.com/mouzzlii/Fuck/pull/16) | Scan-Diagnose und GLS-Parserkorrektur | 26 Commits ahead / 0 behind `main`; Build und Emulator erfolgreich; GitHub meldet `mergeable_state=unstable`, erforderliche Branch-Protection-Checks vor Merge klären; Hardwareabnahme offen |
 | [#14](https://github.com/mouzzlii/Fuck/pull/14) | Verschlüsselte Backups | Draft; 31 Commits ahead / 0 behind aktuelles `main`; CI + 7/7 Emulator-Instrumentierungstests erfolgreich; reale Geräteabnahme offen; Dateiüberschneidungen mit PR #18 erfordern gemeinsame Integration |
 
 ## Scan-Befund auf main
@@ -53,3 +55,4 @@ Regel: Genau ein Ticket gleichzeitig bearbeiten. Ein Häkchen bedeutet vollstän
 
 - 2026-11-25: T-05 auf PR #18 abgeschlossen: Release-/Betriebsdokumente für Version 1.54 / 55 synchronisiert; Android-Build 45698479245 und Emulator-Instrumentierung 45698479073 für Head `6214d7d0cf2203d99fa6c3c5bc4b39d9c6803f37` erfolgreich. PR #18 bleibt Draft wegen offener Geräteabnahme und Integrationsabhängigkeiten.
 - 2026-11-25: T-04 erste Extraktionsphase abgeschlossen: MainActivity von ca. 1.223 auf 639 Zeilen reduziert; extrahierte UI-/Scanner-/Partner-Komponenten durch erfolgreichen Build und Emulatorlauf auf aktuellem PR-Head validiert. Restliche State-Orchestrierung als T-09 nach gemeinsamer Integration vorgemerkt.
+- 2026-11-25: T-10 ergänzt: PR #16 hat erfolgreiche CI, aber GitHub meldet `mergeable_state=unstable`; Branch-Protection-Anforderungen sind über die aktuelle Verbindung nicht einsehbar. Kein Merge ausgeführt.
