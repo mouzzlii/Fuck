@@ -85,8 +85,8 @@ class DataWedgeSymbologyTest {
     @Test
     fun rejectsEan13PayloadOnlyWhenSymbologyConfirmsItIsEan13() {
         val productCode = "8721335813708"
-        assertFalse(isValidTrackingNumber(extractTrackingNumber(productCode, rejectEan13 = isDataWedgeEan13("LABEL-TYPE-EAN13")) ?: ""))
-        assertTrue(isValidTrackingNumber(extractTrackingNumber(productCode, rejectEan13 = isDataWedgeEan13("LABEL-TYPE-CODE128")) ?: ""))
+        assertFalse(ShipmentRules.isValidTrackingNumber(extractTrackingNumber(productCode, rejectEan13 = isDataWedgeEan13("LABEL-TYPE-EAN13")) ?: ""))
+        assertTrue(ShipmentRules.isValidTrackingNumber(extractTrackingNumber(productCode, rejectEan13 = isDataWedgeEan13("LABEL-TYPE-CODE128")) ?: ""))
     }
 
 }
