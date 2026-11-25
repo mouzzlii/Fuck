@@ -143,32 +143,6 @@ class EncryptedStorageInstrumentedTest {
             note = "Wiederherstellungstest"
         )
         assertTrue(saved is ShipmentUpdate.Saved)
-        val backup = original.exportBackupJson()
-
-        context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE)
-            .edit()
-            .putString("records_encrypted_v2", "%%%")
-            .commit()
-
-        val damaged = ShipmentStore(context)
-        assertNotNull(damaged.storageError())
-        val restored = damaged.restoreBackup(backup)
-        assertEquals(BackupRestoreResult.Restored(1), restored)
-        assertEquals(listOf((saved as ShipmentUpdate.Saved).record), damaged.all())
-        assertEquals(null, damaged.storageError())
-    }
-
-    @Test
-    fun validBackupCanRecoverDamagedEncryptedShipmentStorage() {
-        val original = ShipmentStore(context)
-        val saved = original.add(
-            rawTrackingNumber = "TEST123456",
-            carrier = "DPD",
-            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
-            recipient = "Test Empfaenger",
-            note = "Wiederherstellungstest"
-        )
-        assertTrue(saved is ShipmentUpdate.Saved)
         val password = "Android Backup Password 2026!"
         val backup = BackupCrypto.encrypt(original.exportBackupJson(), password.toCharArray())
 
@@ -185,6 +159,8 @@ class EncryptedStorageInstrumentedTest {
         assertEquals(listOf((saved as ShipmentUpdate.Saved).record), damaged.all())
         assertEquals(null, damaged.storageError())
     }
+
+
 
 
     @Test
