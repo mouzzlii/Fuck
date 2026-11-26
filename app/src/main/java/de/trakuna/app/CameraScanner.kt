@@ -33,7 +33,6 @@ import com.google.mlkit.vision.common.InputImage
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 /** CameraX/ML Kit scanner UI and lifecycle, isolated from the activity's parcel workflow. */
 private fun barcodeFormatLabel(format: Int): String = when (format) {
@@ -117,8 +116,8 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
         // Camera frames can reveal different barcodes on the same label at slightly
         // different times. Collect candidates across several frames before choosing.
         val observedObservations = ConcurrentHashMap.newKeySet<ScanObservation>()
-        val framesAfterFirstCandidate = AtomicInteger(0)
         val requiredConfirmationFrames = 12
+        val candidateConfirmation = ScanCandidateConfirmation(requiredConfirmationFrames)
         var provider: ProcessCameraProvider? = null
         val future = ProcessCameraProvider.getInstance(context)
         future.addListener({
@@ -165,20 +164,23 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                                             )
                                         }
                                         observedObservations.addAll(observations)
-                                        if (observedObservations.isNotEmpty() &&
-                                            framesAfterFirstCandidate.incrementAndGet() >= requiredConfirmationFrames &&
+                                        // Count only consecutive frames containing exactly one distinct
+                                        // tracking candidate. Empty or ambiguous frames reset confirmation.
+                                        val confirmedCandidate = candidateConfirmation.observe(
+                                            observations.mapNotNull { it.extractedValue }
+                                        )
+                                        if (confirmedCandidate != null &&
                                             !disposed.get() && delivered.compareAndSet(false, true)
                                         ) {
-                                            // Preserve every distinct raw code for diagnosis. Select a
-                                            // tracking number only when exactly one distinct candidate exists.
+                                            // Preserve every distinct raw code for diagnosis. The selected
+                                            // value is the candidate confirmed in consecutive frames.
                                             val snapshot = observedObservations.toList().sortedWith(
                                                 compareBy<ScanObservation> { it.format }.thenBy { it.rawValue }
                                             )
-                                            val candidates = snapshot.mapNotNull { it.extractedValue }.distinct()
                                             onDetected(
                                                 ScanDiagnosticResult(
                                                     observations = snapshot,
-                                                    selectedValue = candidates.singleOrNull()
+                                                    selectedValue = confirmedCandidate
                                                 )
                                             )
                                         }
