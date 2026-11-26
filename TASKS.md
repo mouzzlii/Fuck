@@ -1,17 +1,29 @@
-# AKTUELLER STATUSABGLEICH — 26.11.2026
+# AKTUELLER STATUSABGLEICH — 26.11.2026, 19:06 Europe/Vienna
 
-> Dieser Abschnitt ist die maßgebliche Aktualisierung. Die darunter dokumentierte Aufgaben- und PR-Liste stammt vom 25.11.2026 und ist historisch; widersprüchliche alte Statusangaben gelten nicht mehr.
+> Dieser Abschnitt ist die maßgebliche Aktualisierung. Ältere Angaben darunter sind historische Arbeitsprotokolle; bei Abweichungen gilt dieser aktuelle Abschnitt.
 
 ## Aktueller Stand der Integration
 
 | Bereich | Verifizierter Stand | Konsequenz |
 |---|---|---|
-| Android-App / PR #25 | Offen, Draft, nicht gemergt. Head: `fc0ff24075598e20092a837af51f8237ce35d338`; 97 Commits, 34 Dateien. | Einziger aktueller kombinierter Android-Integrationsstand. Keine zweite Scanner-/Backup-Integration parallel beginnen. |
-| CI für PR #25 | Build-Workflow [45846081795](https://github.com/mouzzlii/Fuck/actions/runs/45846081795) erfolgreich; Emulator-Instrumentierung [45846081555](https://github.com/mouzzlii/Fuck/actions/runs/45846081555) erfolgreich, 10/10 Tests. Diese Läufe beziehen sich auf den dokumentierten Integrationsstand. | Belegt CI/Emulator, nicht reale Kamera, Zebra/DataWedge oder Shopabläufe. |
-| Governance PR #19 | Offen, nicht gemergt; enthält `AGENTS.md` und `TASKS.md`. | Diese Statuskorrektur wird im selben PR dokumentiert. |
-| Gateway PR #4 | Offen, Draft, nicht gemergt; Head `5c42da6d7f431dcca93677441e844fa94c770a90`; sechs Dokumentationsdateien. | Zentrale Architektur-/Carrier-Dokumentation. Vor Merge vollständig reviewen. |
-| App-Dokumentations-PR #33 | Offen, Draft, nicht gemergt; nur README geändert. | Abhängig von Gateway PR #4; keinesfalls vorher mergen. |
-| `main` | Keine Änderung durch diese Aktualisierung. PR #25, #19, #33 und Gateway #4 sind weiterhin ungemergt. | Bestehende Hauptzweige und Produktionsdaten bleiben geschützt. |
+| Android-App / PR #25 | Offen, Draft, nicht gemergt. Head: `c631fc4f8f977a312f1810101a4805dd386a1124`; 104 Commits, 35 Dateien. | Einziger kombinierter Android-Integrationsstand. Keine parallele Scanner-/Backup-Implementierung beginnen. |
+| CI für PR #25 | Für exakt den aktuellen Head: Build [45868812214](https://github.com/mouzzlii/Fuck/actions/runs/45868812214) erfolgreich; Emulator-Instrumentierung [45868812255](https://github.com/mouzzlii/Fuck/actions/runs/45868812255) erfolgreich. Build-Schritte einschließlich Unit-Tests, Android-Lint, Manifest-/Offline-Grenzprüfungen und APK-Build erfolgreich. | Belegt CI auf diesem Commit, nicht reale Kamera, Autofokus, Zebra/DataWedge, Shopabläufe oder Geräte-Backup-Wiederherstellung. Release-Signierung wurde mangels Betreiber-Secrets übersprungen. |
+| Governance PR #19 | Offen, nicht gemergt; enthält ausschließlich `AGENTS.md` und `TASKS.md`; GitHub meldet mergeable. | Statusdokumentation wird hier fortgeschrieben; kein Merge ausgeführt. |
+| Gateway PR #4 | Offen, Draft, nicht gemergt; Head `3654623632c985db496cf4db58d2bbf4bdafb35d`; sechs Dokumentationsdateien; GitHub meldet mergeable. | Zentrale Architektur-/Carrier-Dokumentation; vor Merge vollständig reviewen. |
+| App-Dokumentations-PR #33 | Offen, Draft, nicht gemergt; Head `7869c8aebe1f6217ba03679c31a64abf3fcfa046`; nur README geändert; GitHub meldet mergeable. | Abhängig von Gateway PR #4; nicht vorher mergen. |
+| `main` | Unverändert durch diese Aktualisierung. PR #25, #19, #33 und Gateway #4 weiterhin ungemergt. | Hauptzweig und Produktionsdaten bleiben geschützt. |
+
+## Aktueller nächster Arbeitsstand
+
+- **PR #25 — automatisierte CI:** Beide Workflows sind auf dem exakten Head `c631fc4f8f977a312f1810101a4805dd386a1124` erfolgreich abgeschlossen. Der neue DataWedge-Intent-Filter-Test ist Teil dieses Head-Standes. Das ist kein Nachweis einer physischen Zebra-Geräteabnahme.
+- **T-03 — reale Scanner-End-to-End-Abnahme:** offen; benötigt ein echtes Android-Gerät, reale Paketetiketten und freigegebene Zebra/DataWedge-Hardware.
+- **T-07 — reale Backup-Wiederherstellungsabnahme:** offen; Export, Import, falsches Passwort, beschädigte Datei und Gerätewechsel auf einem realen Android-Gerät prüfen.
+- **Release:** Betreiber-Signaturschlüssel und signiertes Produktionsrelease fehlen; Debug-APK nicht als Produktionsrelease ausgeben.
+- **PR #4 vor PR #33:** Abhängigkeit bleibt bestehen. Beide Dokumentations-PRs sind offen und ungemergt.
+- **Keine Änderungen an `main`, keine Force-Pushes, keine Branch-/Repository-Löschungen, keine Kosten.**
+- **Nächster Code-Ticket-Schritt:** bis zur Verfügbarkeit realer Hardware keine vorgetäuschte Abnahme. Vor einem weiteren Code-Ticket zuerst den vollständigen PR #25-Diff auf Regressionen und die neue DataWedge-Filterintegration reviewen; TRAKUNA-Governance verlangt genau ein priorisiertes Ticket gleichzeitig.
+
+---
 
 ## Konsolidierte Ticketlage
 
