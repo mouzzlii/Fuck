@@ -11,7 +11,7 @@
 - Entschlüsselte Bytes sowohl des lokalen Sendungsbestands als auch des separaten Partner-Übergabe-Caches werden strikt als UTF-8 dekodiert. Fehlerhafte oder nicht abbildbare Bytefolgen werden als Speicherfehler behandelt und nicht stillschweigend durch Ersatzzeichen verändert.
 - Eine Einmalmigration übernimmt den bisherigen Klartextbestand. Der alte Eintrag wird erst nach erfolgreichem Commit des verschlüsselten Ersatzes entfernt.
 - Fehler bei Migration, Entschlüsselung oder Schlüsselzugriff führen zu einem sichtbaren Speicherfehler; die App darf solche Daten nicht als leeren Bestand behandeln.
-- Der verschlüsselte lokale Sendungsbestand ist auf maximal 2 MiB Nutzdaten begrenzt; Base64-Eingaben werden vor dem Dekodieren zusätzlich begrenzt. JSON-Sicherungen werden kompakt exportiert und dürfen beim Import bis zu 4 MiB groß sein, damit der Sicherungskopf und die Exportstruktur nicht dazu führen, dass ein gültiger lokaler Bestand seine eigene Sicherung nicht wiederherstellen kann.
+- Der verschlüsselte lokale Sendungsbestand ist auf maximal 2 MiB Nutzdaten begrenzt; Base64-Eingaben werden vor dem Dekodieren zusätzlich begrenzt. Portable `.trakuna`-Backups dürfen einschließlich Verschlüsselungskopf bis zu 6 MiB groß sein; der entschlüsselte JSON-Nutzinhalt ist auf 4 MiB begrenzt.
 - Der zuletzt an eine Partner-App übergebene Sendungsnummern-Cache wird separat mit AES-GCM und einem eigenen Android-Keystore-Schlüssel verschlüsselt. Vorhandene Klartext-Cachewerte werden nach erfolgreichem verschlüsseltem Commit entfernt.
 - Fehler beim Lesen/Entschlüsseln des Übergabe-Caches werden nicht als leerer Cache ausgegeben; der Lesezugriff meldet einen Fehler.
 
@@ -27,7 +27,7 @@
 - Archivierung und lokale Historie sind keine manipulationssicheren oder zentralen Audit-Nachweise.
 - Backup-Import ist auf 4 MiB begrenzt und erfordert eine Bestätigung, da der vorhandene lokale Bestand ersetzt wird.
 - Eine Wiederherstellung aus einer gültigen Sicherung ist auch bei beschädigtem lokalem verschlüsseltem Bestand möglich; der Erfolg wird erst nach bestätigtem verschlüsseltem Commit gemeldet.
-- JSON-Backups enthalten Sendungsnummern, Empfänger und Notizen und sind derzeit nicht verschlüsselt; die App weist vor dem Export darauf hin.
+- Neue portable `.trakuna`-Backups enthalten Sendungsnummern, Empfänger und Notizen verschlüsselt mit AES-256-GCM; der Schlüssel wird aus einem 12–128 Zeichen langen Passwort per PBKDF2-HMAC-SHA256 (600.000 Iterationen) abgeleitet. Alte unverschlüsselte JSON-Backups bleiben ausschließlich als Legacy-Importformat lesbar und werden vor dem Ersetzen des aktuellen Bestands ausdrücklich als Klartext gekennzeichnet.
 - CSV-Export entschärft Tabellenkalkulations-Formelanfänge auch dann, wenn unsichtbare Unicode-Leerzeichen, Zero-Width-Zeichen oder eine BOM vorangestellt sind.
 - Die Partnerübergabe verwendet dieselbe Sendungsnummern-Normalisierung wie das Speichern. Steuerzeichen werden nicht stillschweigend entfernt, sondern durch die Validierung abgelehnt.
 - Partnerübergabe speichert die Sendungsnummer synchron im lokalen Cache, bevor TRAKUNA die andere App startet.
@@ -85,6 +85,8 @@ TRAKUNA darf erst als produktionsbereit für einen realen Paketshop bezeichnet w
 Bitte keine realen Sendungsnummern, Empfängernamen, Passwörter oder Schlüssel in öffentlichen Issues posten. Sicherheitsprobleme sollten dem Projektverantwortlichen privat und mit möglichst wenigen personenbezogenen Beispieldaten gemeldet werden.
 
 ## Zebra DataWedge Broadcast
+
+**Legacy-Abgrenzung (26.11.2026):** DataWedge ist kein Bestandteil des neuen Smartphone-/Portal-/Druckablaufs. Zebra-Handgeräte dienen dort nur als Internet-/Portalgeräte; die zentrale Scanbedienung erfolgt über die Smartphone-Kamera oder manuelle Eingabe. Dieser Abschnitt dokumentiert ausschließlich vorhandenen Legacy-Code und ist keine neue Hardwareanforderung oder Freigabebedingung. Keine bestehenden Zebra-/Carrier-Geräte ohne separate Betreiberfreigabe umkonfigurieren.
 
 TRAKUNA registriert den DataWedge-Empfänger dynamisch. Scans werden nur verarbeitet, solange die TRAKUNA-Aktivität im Vordergrund (`RESUMED`) ist. Zusätzlich prüft TRAKUNA den ursprünglichen Absender des eingehenden Broadcasts:
 
