@@ -83,13 +83,17 @@ internal fun AdvanceShipmentDialog(
         title = { Text("Statusänderung bestätigen?") },
         text = {
             Text(
-                when {
-                    nextStatus == ShipmentStatus.HANDED_TO_CARRIER ->
-                        "Soll ${record.trackingNumber} lokal als an den Paketdienst übergeben dokumentiert werden? Wichtig: TRAKUNA erhält dabei keine Bestätigung von DPD, GLS, Hermes oder UPS. Erst markieren, wenn die Übergabe im offiziellen Carrier-System abgeschlossen und dort quittiert wurde."
-                    nextStatus == ShipmentStatus.HANDED_TO_CUSTOMER ->
-                        "Soll ${record.trackingNumber} wirklich als ${nextStatus.let { shipmentStatusLabel(it) }} markiert werden? Bitte erst bestätigen, wenn die Sendung tatsächlich an den Kunden bzw. Bevollmächtigten ausgehändigt wurde."
-                    else ->
-                        "Soll ${record.trackingNumber} wirklich als ${nextStatus?.let { shipmentStatusLabel(it) }} markiert werden?"
+                if (TrakunaTestMode.SHADOW_MODE_ENABLED) {
+                    "TESTMODUS: Diese Statusänderung betrifft ausschließlich den lokalen Testdatensatz für ${record.trackingNumber}. Es erfolgt keine echte Paketübergabe, Carrier-Buchung oder externe Statusmeldung."
+                } else {
+                    when {
+                        nextStatus == ShipmentStatus.HANDED_TO_CARRIER ->
+                            "Soll ${record.trackingNumber} lokal als an den Paketdienst übergeben dokumentiert werden? Wichtig: TRAKUNA erhält dabei keine Bestätigung von DPD, GLS, Hermes oder UPS. Erst markieren, wenn die Übergabe im offiziellen Carrier-System abgeschlossen und dort quittiert wurde."
+                        nextStatus == ShipmentStatus.HANDED_TO_CUSTOMER ->
+                            "Soll ${record.trackingNumber} wirklich als ${nextStatus.let { shipmentStatusLabel(it) }} markiert werden? Bitte erst bestätigen, wenn die Sendung tatsächlich an den Kunden bzw. Bevollmächtigten ausgehändigt wurde."
+                        else ->
+                            "Soll ${record.trackingNumber} wirklich als ${nextStatus?.let { shipmentStatusLabel(it) }} markiert werden?"
+                    }
                 }
             )
         },
