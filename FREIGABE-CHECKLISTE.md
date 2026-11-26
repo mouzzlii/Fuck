@@ -1,17 +1,17 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.54 (versionCode 55) · CI-Build 45691683747 und Emulator-Instrumentierung 45691683698 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
+Stand: App-Version 1.54 (versionCode 55) · CI-Build 45769123996 und Emulator-Instrumentierung 45769124107 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45691683747 für Version 1.54 / versionCode 55 auf Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` erfolgreich – Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, Manifest-/Offline-Sicherheitsprüfungen, APK-Build und Artefakt-Upload
+- [x] CI-Lauf 45769123996 für Version 1.54 / versionCode 55 auf Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07` erfolgreich – Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, Manifest-/Offline-Sicherheitsprüfungen, APK-Build und Artefakt-Upload
 - [x] Vorhandene Unit-Tests erfolgreich
 - [x] Android-Lint erfolgreich
 - [x] Zusammengeführtes Manifest ohne INTERNET-Berechtigung, aktiviertes Android-Backup oder Klartextverkehr geprüft
-- [x] Debug-APK und zugehörige `SHA256SUMS.txt` für Version 1.54 als Artefakt `15058952938` bereitgestellt
-- [x] Android-Instrumentierungstestfälle für Keystore-Verschlüsselung und lokale Speicherfunktionen auf Emulator ausgeführt: [Run 45691683698 erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45691683698)
+- [x] Debug-APK und zugehörige `SHA256SUMS.txt` für Version 1.54 als Artefakt `15093243107` bereitgestellt
+- [x] Android-Instrumentierungstestfälle für Keystore-Verschlüsselung und lokale Speicherfunktionen auf Emulator ausgeführt: [Run 45769124107 erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45769124107)
 - [ ] Archivieren/Wiederherstellen und Backup-Restore auf einem echten Android-Gerät praktisch geprüft
 - [ ] Release-Version und Versionsnummer fachlich geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
@@ -20,7 +20,7 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
 
-Letzter erfolgreicher Build für Version 1.54: [Android-Build 45691683747](https://github.com/mouzzlii/Fuck/actions/runs/45691683747), Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb`. Der separate [Emulator-Instrumentierungslauf 45691683698](https://github.com/mouzzlii/Fuck/actions/runs/45691683698) war für denselben Commit erfolgreich. Das Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15058952938`) ist bis 09.12.2026, 20:08 UTC verfügbar. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK; es wird hier kein Hash eines älteren Builds wiederverwendet. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die automatisierten Prüfungen sind kein Ersatz für reale Geräte-, Carrier- und Betreiberabnahme.
+Letzter erfolgreicher Build für Version 1.54: [Android-Build 45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996), Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07`. Der separate [Emulator-Instrumentierungslauf 45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) war für denselben Commit erfolgreich. Das Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15093243107`) ist bis 10.12.2026, 06:37 UTC verfügbar. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK; es wird hier kein Hash eines älteren Builds wiederverwendet. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die APK-SHA-256 lautet `18a4ec27365f31a0a21d2fd8dc04342dde4f9d4f7e6150a18eb56438de1e4dc3`. Die automatisierten Prüfungen sind kein Ersatz für reale Geräte-, Carrier- und Betreiberabnahme.
 
 
 ## B. Geräte- und Scannerabnahme
