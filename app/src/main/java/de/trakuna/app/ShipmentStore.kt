@@ -591,7 +591,7 @@ object ShipmentRules {
         return exactTrackId.takeIf { Regex("(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{8}").matches(it) }
     }
 
-    fun extractTrackingNumber(raw: String, maxInputChars: Int = 4096, rejectEan13: Boolean = false): String? {
+    fun extractTrackingNumber(raw: String, maxInputChars: Int = 4096, rejectRetailProductBarcode: Boolean = false): String? {
         if (raw.isEmpty() || raw.length > maxInputChars) return null
 
         // Zebra/DataWedge and GS1 scanners may prepend an AIM symbology identifier.
@@ -600,9 +600,10 @@ object ShipmentRules {
             .replace(Regex("^(?:\\]C[0-9]|\\]d[0-9]|\\]Q[0-9])"), "")
             .trim()
         if (cleaned.isBlank()) return null
-        // ML Kit reports EAN-13 symbology separately. Exclude these product
-        // barcodes at the camera boundary without banning 13-digit IDs globally.
-        if (rejectEan13 && Regex("^[0-9]{13}$").matches(cleaned)) return null
+        // CameraX/ML Kit and DataWedge provide the barcode symbology. When it
+        // confirms an EAN/UPC retail product code, never promote its payload to
+        // a shipment number; opaque numeric IDs remain allowed for other formats.
+        if (rejectRetailProductBarcode) return null
 
         fun plausible(value: String?): String? =
             value?.let(::normalizeTrackingNumber)?.takeIf(::isValidTrackingNumber)
