@@ -155,7 +155,12 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                                                 displayValue = barcode.displayValue,
                                                 extractedValue = extractTrackingNumber(
                                                     raw,
-                                                    rejectEan13 = barcode.format == Barcode.FORMAT_EAN_13
+                                                    rejectRetailProductBarcode = barcode.format in setOf(
+                                                        Barcode.FORMAT_EAN_13,
+                                                        Barcode.FORMAT_EAN_8,
+                                                        Barcode.FORMAT_UPC_A,
+                                                        Barcode.FORMAT_UPC_E
+                                                    )
                                                 )
                                             )
                                         }
