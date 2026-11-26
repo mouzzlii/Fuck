@@ -31,8 +31,8 @@ TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Die Daten werden lokal auf diesem Gerät gespeichert und verschlüsselt.
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
 - WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden noch nicht gesucht.
-- DataWedge-Empfangscode ist vorhanden; das Profil muss auf dem jeweiligen Zebra-Gerät eingerichtet und vor Ort getestet werden.
-- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.53 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das bisherige Hermes-Handgerät MC3090BT ist zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen.** Modell, Betriebssystem, Scanner, Drucker und freigegebene Integrationsmöglichkeiten des Nachfolgers sind noch unbekannt. Bis zur Ankunft bleibt das bestehende Hermes-System unangetastet; danach wird das neue Gerät zunächst nur inventarisiert und geprüft, ohne Einstellungen oder den laufenden Hermes-Ablauf eigenmächtig zu verändern.
+- Vorhandener DataWedge-Code bleibt bis zur gesonderten Abhängigkeitsprüfung im Bestand. Er ist keine Voraussetzung und keine neue Hardwareanforderung des aktuellen Smartphone-/Portal-/Druckablaufs.
+- DPD, GLS, Hermes und UPS waren die ersten lokalen Auswahlprioritäten in Version 1.53. Eine Carrier-Auswahl ist nur eine lokale Kennzeichnung; das Öffnen eines Anbieterportals bestätigt keine Datenübernahme oder Buchung. Acht Carrier-Profile werden zentral im Gateway dokumentiert; Profile sind keine Live-Integrationen. Offizielle Freigaben und bestätigte Schnittstellen sind je Anbieter weiterhin offen. Zebra-Handgeräte dienen im neuen Ablauf ausschließlich als Internet-/Portalgeräte. Ihre konkreten Modelle und die freigegebenen Integrationsmöglichkeiten bleiben zu inventarisieren; bestehende Shopgeräte und Carrier-Systeme werden nicht eigenmächtig verändert.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
 ## Release-Build
@@ -41,12 +41,28 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 
 ## Integrations- und Sicherheitsdokumentation
 
+### Verbindliche Zielarchitektur ab 26.11.2026
+
+- Ein Android-Smartphone ist die zentrale Bedienoberfläche für alle unterstützten Carrier.
+- Ein gemeinsamer Etikettendrucker wird direkt vom Smartphone aus genutzt; WLAN und Bluetooth sind die vorgesehenen Verbindungswege, abhängig von der tatsächlichen Druckerkompatibilität.
+- Die offiziellen Carrier-Portale bleiben nutzbar. Labels dürfen nur über offizielle APIs oder dokumentierte Download-/Export-/Teilen-Funktionen übernommen werden.
+- Zebra-Handgeräte dienen in diesem Ablauf nur als Internet-/Portalgeräte. Keine neue Zebra-Scanner-, DataWedge- oder Drucker-Hardwareintegration dafür planen.
+- Vorhandener DataWedge-Code bleibt bis zur gesonderten Diff-/Abhängigkeitsprüfung erhalten, ist aber kein Bestandteil der neuen Zielstrecke.
+- Kein zusätzlicher PC, Cloud-Printserver oder separater Drucker ist vorausgesetzt.
+- WLAN-/Bluetooth-Druckcode, Druckerkompatibilität und reale Etikettenabnahme sind noch nicht umgesetzt.
+- Ein angenommener Druckauftrag ist keine physische Druckbestätigung. Unklare Timeouts bleiben UNKNOWN und dürfen nicht automatisch einen zweiten Druck auslösen.
+
+### Aktueller Integrationsnachweis
+
+Der offene Android-PR [#25](https://github.com/mouzzlii/Fuck/pull/25) enthält den aktuellen Integrationsstand auf Head `a372591b131888a144f59b5780ccab7730d6db18`. Android-Build, Unit-Tests, Lint, Manifest-/Offline-Prüfungen und API-35-Emulator-Instrumentierung liefen erfolgreich (Runs [45883226923](https://github.com/mouzzlii/Fuck/actions/runs/45883226923) und [45883226995](https://github.com/mouzzlii/Fuck/actions/runs/45883226995)). PR #25 bleibt Draft und ungemergt; reale Kamera-/Druckerhardware, Backup-Restore auf einem echten Gerät und Carrier-API-Freigaben sind nicht abgenommen.
+
+
 - [Hardwareinventar des ersten Paketshops](HARDWARE-INVENTAR.md): vor Ort erfasste DPD-/GLS-/Hermes-Geräte sowie offene UPS-Hardwareangaben, Verbindungen, Versionsangaben und Prüfpunkte.
-- [WLAN- und Startvorbereitung](WLAN-STARTVORBEREITUNG.md): WLAN-Verbindung, DataWedge-Einrichtung, sicherer Start und Abnahmetest.
+- [WLAN- und Startvorbereitung](WLAN-STARTVORBEREITUNG.md): historische Hinweise zum früheren Geräte-/DataWedge-Ablauf; nicht als Zielarchitektur des neuen Smartphone-Portalablaufs verwenden.
 - [Pilotpaket für den ersten Paketshop](PILOT-PAKETSHOP.md): aktueller Build, Testablauf, Zielarchitektur, Integrationsvoraussetzungen und Produktionssperren.
-- [Carrier-Integrationsrecherche](CARRIER-INTEGRATIONS.md): offizielle DPD-/GLS-/Hermes-/UPS-Einstiege, technische Grenzen und konkrete nächste Schritte.
+- [Carrier-Integrationsrecherche](CARRIER-INTEGRATIONS.md): historische Recherche; die zentrale Carrier-Registry im Gateway ist die aktuelle Architekturquelle.
 - [Anfrage zur Carrier-Freigabe](ANFRAGE-CARRIER-FREIGABE.md): vorbereitete Partneranfrage mit konkreten Fragen für DPD, GLS, Hermes und UPS in Österreich.
-- [Partner-Schnittstelle und Abnahmekriterien](PARTNER_INTEGRATION.md): beschreibt den aktuellen Android-Übergabeversuch, den notwendigen Vertrag mit dem Softwareanbieter und die Tests für eine echte Integration.
+- [Partner-Schnittstelle und Abnahmekriterien](PARTNER_INTEGRATION.md): ältere Übergabe-/Integrationsnotizen; vor Umsetzung mit dem zentralen Gateway-Adaptervertrag abgleichen.
 - [Sicherheitsstatus und Produktionsfreigabe](SECURITY.md): dokumentiert umgesetzte Schutzmaßnahmen, bekannte Restrisiken und verbindliche Freigabekriterien.
 - [Sichere Mehrgerätearchitektur](MEHRGERAETE-ARCHITEKTUR.md): Zielmodell für Geräteidentität, Rollen, Offline-Warteschlange, Ereignissynchronisierung und Konfliktbehandlung; noch nicht implementiert.
 - [Mehr-KI-Arbeitsprotokoll](MEHR-KI-ARBEITSPROTOKOLL.md): gemeinsamer GitHub-Arbeitsablauf, Aufgabenpakete, unabhängige Reviews, Zugangsstatus und Kosten-/Datenschutzgrenzen.
@@ -112,5 +128,7 @@ TRAKUNA ist die gemeinsame Produktlinie. Die Android-App bleibt in diesem Reposi
 - [Projektkonsolidierung und Repository-Quellenentscheidung](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/PROJECT-CONSOLIDATION.md)
 - [Zentrale Carrier-Registry für DPD, GLS, Hermes, UPS, Österreichische Post, DHL, FedEx und LogoiX](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/CARRIER-REGISTRY.md)
 - [Anbieterneutraler Carrier-Adaptervertrag](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/CARRIER-ADAPTER-CONTRACT.md)
+- [Smartphone-only-Druckarchitektur](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/SMARTPHONE-UNIFIED-PRINTING.md)
+- [Hermes-Systemrecherche Österreich](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/HERMES-SYSTEMRECHERCHE.md)
 
 Die Dokumentation beschreibt Ziel und Freigabegrenzen. Der tatsächliche Quellcode-Merge von ZIP-/Prototypständen ist noch offen; ungeprüfte Archive werden nicht blind importiert. Bestehende Quellrepositorys bleiben bis zur verifizierten Migration erhalten.
