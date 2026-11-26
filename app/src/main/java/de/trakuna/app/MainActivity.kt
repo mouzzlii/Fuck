@@ -282,6 +282,20 @@ class MainActivity : ComponentActivity() {
                         Image(painter = painterResource(id = R.drawable.w_signature), contentDescription = "W-Signatur – Original", contentScale = ContentScale.Fit, modifier = Modifier.height(48.dp).fillMaxWidth())
                         Text("TRAKUNA", style = MaterialTheme.typography.headlineLarge, color = Forest)
                         Text("SCAN-ZENTRALE", style = MaterialTheme.typography.labelLarge)
+                        if (TrakunaTestMode.SHADOW_MODE_ENABLED) {
+                            Card(
+                                Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = Color(0xFFE5F0EA))
+                            ) {
+                                Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text("TESTMODUS AKTIV", style = MaterialTheme.typography.titleSmall, color = Forest)
+                                    Text(
+                                        "TRAKUNA simuliert Übergaben. Externe Partner-Apps und echte Buchungen werden durch TRAKUNA nicht ausgelöst.",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                        }
                         Card(Modifier.fillMaxWidth()) {
                             Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 Text(
