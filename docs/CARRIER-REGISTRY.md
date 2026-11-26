@@ -2,13 +2,7 @@
 
 Stand: 26.11.2026
 
-Diese Registry ist die zentrale Anbieterübersicht für TRAKUNA und das integrierte Multi-Carrier-Modul. Ein Registrierungs- oder Login-Link bedeutet weder ein eröffnetes Geschäftskonto noch eine API-Freigabe.
-
-## Anbieterübersicht
-
-| Anbieter | Region / Zweck | Portal / Einstieg | Status der technischen Integration |
-|---|---|---|---|
-| DPD | Österreichischer Paketshop und Geschäftskundenversand | [DPD Business Österreich](https://dpd-business.at/main.php?dmode=1) · [DPD Österreich Paketshop-Partner](https://www.dpd.com/at/de/pickup-paketshops/paketshop-werden/) | Priorität 1 für Shopbetrieb; offizielle Standort-Schnittstelle und Testzugang nicht bestätigt |
+Diese Registry ist die zentrale Anbieterübersicht für TRAKUNA undhttps://auth.dc.gls-group.eu/auth/realms/gls/protocol/openid-connect/authterreich Paketshop-Partner](https://www.dpd.com/at/de/pickup-paketshops/paketshop-werden/) | Priorität 1 für Shopbetrieb; offizielle Standort-Schnittstelle und Testzugang nicht bestätigt |
 | Hermes | Österreichischer Paketshop; Geschäftskundenregistrierung ist länderabhängig | [Hermes Business Deutschland](https://business.myhermes.de/registrierung/) · [Hermes Österreich PaketShop](https://www.hermesworld.com/at/unsere-dienstleistungen/distribution/paketversand/paketshops/) | Priorität 3 für Shopbetrieb; deutsche HSI-Versand-API ist keine bestätigte österreichische Paketshop-API |
 | UPS | Österreichischer Versand und Access Point | [UPS Österreich Login](https://www.ups.com/at/de) · [UPS Geschäftskonto](https://www.ups.com/) | Priorität 4 für Shopbetrieb; Access-Point-Partnerfreigabe und erlaubte App-Übergabe offen |
 | GLS | Österreichischer Paketshop und Geschäftskundenversand | [GLS One Österreich](https://www.gls-one.at/) · [YourGLS Anmeldung](https://auth.dc.gls-group.eu/auth/realms/gls/protocol/openid-connect/auth?client_id=uniportal-yourgls&redirect_uri=https%3A%2F%2Fgls-group.eu%2Fauthenticate%2F%3Flocale%3Dde-AT&response_type=code&scope=openid%20openid&state=8259cd9a841240f194ca7732d68b4a82&code_challenge=V5QlyHPM_U2ZQtfElVD48VBZRlza2_99xUn04k-BO6w&code_challenge_method=S256&response_mode=query&ui_locales=de-AT&ui_allowed_locales=en-AT%2Cde-AT) | Priorität 2 für Shopbetrieb; OIDC-Loginaufruf mit Authorization Code + PKCE erkannt, aber kein API-Zugang oder Shopprozess dadurch belegt |
