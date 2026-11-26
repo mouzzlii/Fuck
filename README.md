@@ -107,9 +107,10 @@ See [PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md) for the bilingual rights noti
 
 ## Vereinheitlichte Paket- und Multi-Carrier-Plattform
 
-TRAKUNA ist die kanonische Android-Scan-Zentrale. Die parallelen Paketscanner- und Multi-Carrier-Gateway-Prototypen werden schrittweise als Module und geprüfte Komponenten in dieser Produktlinie konsolidiert, statt als konkurrierende Apps weitergeführt zu werden.
+TRAKUNA ist die gemeinsame Produktlinie. Die Android-App bleibt in diesem Repository; die verbindliche Architektur, Repository-Konsolidierung, Carrier-Registry und Adapterverträge werden zentral im [TRAKUNA Multi-Carrier Gateway](https://github.com/mouzzlii/multi-carrier-gateway) gepflegt:
 
-- [Konsolidierungsarchitektur und Repository-Auswahl](docs/UNIFIED-LOGISTICS-ARCHITECTURE.md)
-- [Zentrale Carrier-Registry für DPD, Hermes, UPS, GLS, Österreichische Post, DHL, FedEx und LogoiX](docs/CARRIER-REGISTRY.md)
+- [Projektkonsolidierung und Repository-Quellenentscheidung](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/PROJECT-CONSOLIDATION.md)
+- [Zentrale Carrier-Registry für DPD, GLS, Hermes, UPS, Österreichische Post, DHL, FedEx und LogoiX](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/CARRIER-REGISTRY.md)
+- [Anbieterneutraler Carrier-Adaptervertrag](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/CARRIER-ADAPTER-CONTRACT.md)
 
-Die Dokumentation legt die Zielarchitektur und Migration fest. Der vollständige Quellcode-Merge der ZIP-/Prototypstände ist noch offen; ungeprüfte Archive werden nicht blind importiert. Bestehende Quellrepositorys bleiben bis zur verifizierten Migration erhalten.
+Die Dokumentation beschreibt Ziel und Freigabegrenzen. Der tatsächliche Quellcode-Merge von ZIP-/Prototypständen ist noch offen; ungeprüfte Archive werden nicht blind importiert. Bestehende Quellrepositorys bleiben bis zur verifizierten Migration erhalten.
