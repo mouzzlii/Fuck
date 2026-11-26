@@ -182,6 +182,20 @@ Der Server führt innerhalb einer Datenbanktransaktion aus:
 
 Bei Versionskonflikt: HTTP 409 mit aktuellem Serverstand und Konfliktkennung. Der Client darf nicht automatisch den neueren Stand überschreiben. Ein Supervisor kann nach Prüfung eine separate Korrekturaktion auslösen.
 
+### 4.1.1 Abgleich mit den tatsächlich vorhandenen App-Statuswerten
+
+Der bestehende lokale Code verwendet aktuell diese Flows und Statuswerte. Diese Namen sind bei der API-Migration zunächst kompatibel zu halten; die globale Zustandsmaschine muss sie serverseitig validieren:
+
+| Flow | Startstatus | Erlaubte nächste Schritte | Terminalstatus |
+|---|---|---|---|
+| `INCOMING_FOR_CUSTOMER` | `RECEIVED_BY_SHOP` | `READY_FOR_PICKUP` → `HANDED_TO_CUSTOMER` | `HANDED_TO_CUSTOMER` |
+| `OUTGOING_FROM_CUSTOMER` | `ACCEPTED_FROM_CUSTOMER` | `HANDED_TO_CARRIER` | `HANDED_TO_CARRIER` |
+| `CUSTOMER_RETURN` | `RETURN_ACCEPTED` | `HANDED_TO_CARRIER` | `HANDED_TO_CARRIER` |
+
+Diese Übergänge stammen aus der vorhandenen `ShipmentRules.nextStatus()`-Logik im aktuellen Integrationsbranch. Sie sind keine Carrier-Bestätigung. Die API darf keine zusätzlichen Statusübergänge stillschweigend zulassen.
+
+Die bestehende lokale Duplikatregel verhindert eine zweite aktive Sendung mit derselben normalisierten Sendungsnummer unabhängig vom Flow. Diese Regel muss zentral pro Shop erhalten bleiben. Archivierte Datensätze und terminale Vorgänge sind gesondert zu behandeln; eine erneute Erfassung derselben Sendungsnummer darf nicht allein anhand eines einfachen globalen Unique-Constraints blockiert werden.
+
 ### 4.2 Offline-Outbox
 
 - Lokale Aktionen erhalten vor Speicherung eine UUID.
