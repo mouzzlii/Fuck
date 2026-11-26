@@ -1,5 +1,16 @@
 # TRAKUNA – Praxis-Testplan (Integrationsversion 1.55 · versionCode 56)
 
+## Aktueller Prüfstand Version 1.55 – 26.11.2026
+
+Quell-Commit: `91a64ff0c601378193b410a118582f292855f275`.
+
+- Android Build [45885920335](https://github.com/mouzzlii/Fuck/actions/runs/45885920335): erfolgreich.
+- Emulator-Instrumentierung [45885920372](https://github.com/mouzzlii/Fuck/actions/runs/45885920372): **15/15 Tests bestanden**, 0 Fehler, 0 übersprungen.
+- Die neuen Shadow-Protokolltests prüfen das Schreiben und Auslesen des Ereignislogs sowie die Redaktion nicht erlaubter Carrier-Angaben.
+- Debug-APK Artifact-ID `15150190262`; SHA-256 der APK: `ec2645561b56e5916f6a18f3e43df935f4266683ec86313a97235c29ff932aeb`.
+- Dies belegt automatisierte und Emulatorprüfungen, nicht den physischen Betrieb. Kamera-/Autofokus, echte Paketetiketten, Drucker, Backup-/Restore und Paketshop-Betreiberabnahme bleiben offen.
+
+
 ## 0. Shadow-Mode-Sicherheitsprüfung (Version 1.55 / versionCode 56)
 
 Diese Pilotversion muss den Testmodus sichtbar anzeigen und vor jeder externen Partnerübergabe blockieren.
