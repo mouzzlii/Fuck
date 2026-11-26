@@ -1,13 +1,13 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: Integrationsversion 1.54 (versionCode 55) · Build 45722303637 und API-35-Emulator 45722303671 erfolgreich · 8/8 Instrumentierungstests (Debug-Testpaket, noch nicht in main)
+Stand: Integrationsversion 1.54 (versionCode 55) · Build 45769123996 und API-35-Emulator 45769124107 erfolgreich · 8/8 Instrumentierungstests (Debug-Testpaket, noch nicht in main)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45722303637 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45722303637).
-2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen (Artifact-ID `15072192619`).
+1. Den [erfolgreichen Android-Build 45769123996 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45769123996).
+2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen (Artifact-ID `15093243107`).
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
 4. Die Prüfsumme im entpackten Ordner mit `sha256sum -c SHA256SUMS.txt` prüfen; erwartet wird `app-debug.apk: OK`. Unter Windows kann alternativ `Get-FileHash .\\app-debug.apk -Algorithm SHA256` mit dem Wert in `SHA256SUMS.txt` verglichen werden.
 5. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
@@ -16,11 +16,12 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 **Stand des Testpakets**
 
 - App-Version: 1.54 (versionCode 55)
-- Geprüfter Commit: `25558994d553a509ea7733fd478b5153a539ff94`
-- Android-Build: [45722303637 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45722303637)
-- Emulator-Instrumentierung: [45722303671 – erfolgreich, 8/8 Tests](https://github.com/mouzzlii/Fuck/actions/runs/45722303671)
-- Artefakt: `TRAKUNA-Android`, Artifact-ID `15072192619`
-- Verfügbar bis: 09.12.2026, 23:26 UTC
+- Geprüfter Commit: `8d9f4058b754084e47d177f0b1190a0bc2860c07`
+- Android-Build: [45769123996 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45769123996)
+- Emulator-Instrumentierung: [45769124107 – erfolgreich, 8/8 Tests](https://github.com/mouzzlii/Fuck/actions/runs/45769124107)
+- Artefakt: `TRAKUNA-Android`, Artifact-ID `15093243107`
+- Verfügbar bis: 10.12.2026, 06:37 UTC
+- APK-SHA-256: `18a4ec27365f31a0a21d2fd8dc04342dde4f9d4f7e6150a18eb56438de1e4dc3`
 
 Das Artefakt enthält `SHA256SUMS.txt`; ausschließlich den dort angegebenen Hash für genau diese APK verwenden. Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die CI-Prüfung ersetzt keine reale Kamera-, Zebra- oder Betreiberabnahme.
 
