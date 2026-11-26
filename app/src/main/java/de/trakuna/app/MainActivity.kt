@@ -423,6 +423,28 @@ class MainActivity : ComponentActivity() {
                                 else "Betriebssoftware pro Paketdienst zuordnen"
                             )
                         }
+                        OutlinedButton(
+                            onClick = {
+                                val report = ShadowAuditLog.readAll(context)
+                                if (report.isBlank()) {
+                                    status = "Noch keine protokollierten Testaktionen vorhanden."
+                                } else {
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(Intent.EXTRA_SUBJECT, "TRAKUNA – Testprotokoll")
+                                        putExtra(Intent.EXTRA_TEXT, report)
+                                    }
+                                    context.startActivity(Intent.createChooser(shareIntent, "Testprotokoll teilen"))
+                                }
+                            },
+                            enabled = ShadowAuditLog.readAll(context).isNotBlank(),
+                            modifier = Modifier.fillMaxWidth()
+                        ) { Text("Lokales Testprotokoll teilen") }
+                        Text(
+                            "Testereignisse liegen geschützt im App-Speicher. Das Protokoll enthält keine Sendungsnummern.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                             val partnerPrefs = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
                             PartnerAppConfig.priorityCarriers.forEach { carrier ->
