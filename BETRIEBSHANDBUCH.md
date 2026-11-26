@@ -23,7 +23,7 @@ Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA is
 - Verfügbar bis: 10.12.2026, 06:37 UTC
 - APK-SHA-256: `18a4ec27365f31a0a21d2fd8dc04342dde4f9d4f7e6150a18eb56438de1e4dc3`
 
-Das Artefakt enthält `SHA256SUMS.txt`; ausschließlich den dort angegebenen Hash für genau diese APK verwenden. Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die CI-Prüfung ersetzt keine reale Kamera-, Zebra- oder Betreiberabnahme.
+Das Artefakt enthält `SHA256SUMS.txt`; ausschließlich den dort angegebenen Hash für genau diese APK verwenden. Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die CI-Prüfung ersetzt keine reale Kamera-, Drucker-/Portal- oder Betreiberabnahme.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
@@ -82,6 +82,8 @@ Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. E
 
 ## 6. Zebra TC26 und DataWedge (DPD/GLS)
 
+**Legacy-Hinweis (26.11.2026):** Dieser Abschnitt beschreibt ausschließlich den vorhandenen DataWedge-Codepfad. Die verbindliche Zielarchitektur verwendet ein Android-Smartphone als zentrale TRAKUNA-Bedienoberfläche und die Kamera bzw. manuelle Eingabe. Zebra-Handgeräte sind in diesem Ablauf nur Internet-/Portalgeräte. Es wird keine neue DataWedge- oder Zebra-Hardwareintegration geplant; die folgenden Einrichtungsdetails sind keine Voraussetzung für den neuen Ablauf. Bestehende Shopgeräte und Profile nicht verändern.
+
 Die DPD- und GLS-Handgeräte wurden anhand der bisherigen Angaben als Zebra TC26 vermutet; das genaue Modell und die Android-Version müssen am Gerät bzw. Typenschild bestätigt werden.
 
 **Wichtige Android-Voraussetzung:** TRAKUNA verarbeitet DataWedge-Broadcasts nur ab Android 14 (API 34), wenn Android den Absender eindeutig als `com.symbol.datawedge` bestätigt. Auf Android 13 (API 33) und älteren Versionen ist der DataWedge-Eingang in TRAKUNA aus Sicherheitsgründen deaktiviert. Dort bitte den Kamera-Scanner oder die manuelle Eingabe verwenden.
@@ -90,7 +92,7 @@ Für Android 14 oder höher ist ein eigenes DataWedge-Profil erforderlich. Die b
 
 Die vollständige Anleitung und die Sicherheitshinweise stehen in [PARTNER_INTEGRATION.md](PARTNER_INTEGRATION.md) und [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md).
 
-Ein Scan wird nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Die DataWedge-Konfiguration und der echte Scan-Empfang sind auf den Shopgeräten noch nicht vor Ort abgenommen. Vor produktivem Einsatz müssen Gerätemodell, Android-Version, DataWedge-Profil und ein echter Scan mit Betreiberzustimmung geprüft werden.
+Ein DataWedge-Scan wird – sofern dieser historische Legacy-Pfad separat weiter genutzt werden soll – nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Dieser Pfad ist keine Voraussetzung des neuen Smartphone-/Portalablaufs. Eine Prüfung wäre nur nach gesonderter Betreiberfreigabe erforderlich.
 
 ## 7. Hermes – neues Handgerät angekündigt
 
