@@ -31,6 +31,7 @@ internal object ShadowAuditLog {
     private const val DIRECTORY = "test-evidence"
     private const val FILE_NAME = "shadow-events.jsonl"
 
+    @Synchronized
     fun readAll(context: Context): String = runCatching {
         val file = java.io.File(java.io.File(context.filesDir, DIRECTORY), FILE_NAME)
         if (file.isFile) file.readText(Charsets.UTF_8).take(1_000_000) else ""
