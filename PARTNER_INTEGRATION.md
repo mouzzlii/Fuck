@@ -130,7 +130,7 @@ Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Ü
 
 - Eine manuelle Sendungsnummer wird als vollständiger kompakter Wert akzeptiert, wenn sie die allgemeinen Eingaberegeln erfüllt. Das allein bestätigt weder Paketdienst noch Existenz der Sendung.
 - Aus freiem Etikettentext werden nur die derzeit ausdrücklich hinterlegten, strukturell eindeutigen Muster extrahiert. Mehrere unterschiedliche Treffer führen zur Ablehnung statt zur willkürlichen Auswahl.
-- Bei QR-Links werden ausdrücklich benannte Sendungsnummern-Felder ausgewertet. Allgemeine numerische IDs und beliebige URL-Pfadsegmente gelten nicht als ausreichender Nachweis.
+- Bei QR-Links haben ausdrücklich benannte Sendungsnummern-Felder Vorrang. Ein URL-Pfadsegment wird nur bei einer freigegebenen offiziellen Carrier-Domain und als eindeutiger plausibler Wert mit mindestens 8 Zeichen übernommen. Auf fremden Domains werden Pfadnummern nur bei einem bereits bekannten eindeutigen Sendungsnummernformat akzeptiert.
 - Die Kamera sammelt erkannte Nummern über mehrere Bilder. Tauchen im Bestätigungsfenster mehrere unterschiedliche Nummern auf, fordert TRAKUNA einen erneuten bzw. manuellen Scan.
 - Automatische Paketdienst-Hinweise bleiben begrenzt auf UPS, Österreichische Post und bestimmte DHL-Muster. DPD, GLS und Hermes müssen bis zur Prüfung freigegebener Originaletiketten manuell ausgewählt werden.
 

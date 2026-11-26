@@ -15,7 +15,7 @@
 **Hinweis:** Der lokale Shadow Mode blockiert den durch TRAKUNA ausgelösten Partner-App-Start. Er kontrolliert keine separat gestarteten Apps und ist keine netzwerkweite Sperre für externe Buchungen. Derzeit werden nur blockierte Partnerübergabe-Versuche automatisch protokolliert; eine vollständige Ereigniserfassung bleibt offen.
 
 
-Stand: App-Version 1.55 (versionCode 56) · CI-Build und API-35-Emulatorprüfung für den aktuellen PR-Head `6bef8c42936a141dacd023691dd3e2c2e587606b` erfolgreich; Build `45901408936`, Emulator `45901401776`, 15/15 Instrumentierungstests bestanden. Reale Geräteabnahme bleibt offen.
+Stand: App-Version 1.55 (versionCode 56) · Code-Commit `2e4ae2435c29bed959662e4a1734f6826d508244` erfolgreich geprüft; Build `45902341310`, API-35-Emulator `45902341262`, 15/15 Instrumentierungstests bestanden. Reale Geräteabnahme bleibt offen.
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
@@ -35,7 +35,7 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] Neue passwortgeschützte `.trakuna`-Sicherung (AES-256-GCM) mit korrektem Passwort exportiert und wiederhergestellt; falsches Passwort/beschädigte Datei abgewiesen; alte unverschlüsselte JSON-Sicherung nur als Legacy-Import geprüft
 
-Letzter erfolgreicher Build für Version 1.55: [Android-Build 45899394764](https://github.com/mouzzlii/Fuck/actions/runs/45899394764), Commit `cddd6559e59653ef8adc636f0c26fdf20f864`. Der separate [Emulator-Instrumentierungslauf 45899394747](https://github.com/mouzzlii/Fuck/actions/runs/45899394747) war für denselben Commit erfolgreich; **15/15 Tests bestanden**. Der ältere Version-1.54-Nachweis ist historisch. Das Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15093243107`) ist bis 10.12.2026, 06:37 UTC verfügbar. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK; es wird hier kein Hash eines älteren Builds wiederverwendet. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die APK-SHA-256 lautet `18a4ec27365f31a0a21d2fd8dc04342dde4f9d4f7e6150a18eb56438de1e4dc3`. Die automatisierten Prüfungen sind kein Ersatz für reale Geräte-, Carrier- und Betreiberabnahme.
+Letzter erfolgreicher Build für Version 1.55: [Android-Build 45902341310](https://github.com/mouzzlii/Fuck/actions/runs/45902341310), Code-Commit `2e4ae2435c29bed959662e4a1734f6826d508244`. Der separate [Emulator-Instrumentierungslauf 45902341262](https://github.com/mouzzlii/Fuck/actions/runs/45902341262) war für denselben Commit erfolgreich; **15/15 Tests bestanden**. Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15155914301`) ist bis 10.12.2026 22:06 UTC verfügbar. Die enthaltene `SHA256SUMS.txt` wurde gegen die APK geprüft; SHA-256: `230bf3cdd79000d25fb7c86a73c7f739abb87f43f2a656ee75aa4182f3346fe9`. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die automatisierten Prüfungen ersetzen keine reale Geräte-, Carrier- und Betreiberabnahme.
 
 
 ## B. Geräte- und Scannerabnahme
