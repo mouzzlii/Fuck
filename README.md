@@ -103,3 +103,13 @@ Für die Android-Instrumentierungstests gibt es zusätzlich den getrennten Workf
 ## Rights and confidentiality
 
 See [PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md) for the bilingual rights notice, third-party materials disclaimer, and rules for confidential information. Do not place unpublished invention details, customer data, passwords, API keys, or private signing keys in this repository.
+
+
+## Vereinheitlichte Paket- und Multi-Carrier-Plattform
+
+TRAKUNA ist die kanonische Android-Scan-Zentrale. Die parallelen Paketscanner- und Multi-Carrier-Gateway-Prototypen werden schrittweise als Module und geprüfte Komponenten in dieser Produktlinie konsolidiert, statt als konkurrierende Apps weitergeführt zu werden.
+
+- [Konsolidierungsarchitektur und Repository-Auswahl](docs/UNIFIED-LOGISTICS-ARCHITECTURE.md)
+- [Zentrale Carrier-Registry für DPD, Hermes, UPS, GLS, Österreichische Post, DHL, FedEx und LogoiX](docs/CARRIER-REGISTRY.md)
+
+Die Dokumentation legt die Zielarchitektur und Migration fest. Der vollständige Quellcode-Merge der ZIP-/Prototypstände ist noch offen; ungeprüfte Archive werden nicht blind importiert. Bestehende Quellrepositorys bleiben bis zur verifizierten Migration erhalten.
