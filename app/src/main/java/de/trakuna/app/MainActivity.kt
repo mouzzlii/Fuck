@@ -251,14 +251,24 @@ class MainActivity : ComponentActivity() {
                 if (uri == null || csv == null) {
                     status = "CSV-Export abgebrochen."
                 } else {
-                    val saved = runCatching {
-                        context.contentResolver.openOutputStream(uri)?.bufferedWriter(Charsets.UTF_8)?.use {
-                            it.write("\uFEFF")
-                            it.write(csv)
-                        } ?: error("Datei konnte nicht geöffnet werden.")
+                    backupBusy = true
+                    status = "CSV-Datei wird gespeichert…"
+                    backupScope.launch {
+                        try {
+                            val saved = withContext(Dispatchers.IO) {
+                                runCatching {
+                                    context.contentResolver.openOutputStream(uri)?.bufferedWriter(Charsets.UTF_8)?.use {
+                                        it.write("\uFEFF")
+                                        it.write(csv)
+                                    } ?: error("Datei konnte nicht geöffnet werden.")
+                                }
+                            }
+                            status = if (saved.isSuccess) "CSV-Datei wurde gespeichert."
+                            else "CSV-Datei konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
+                        } finally {
+                            backupBusy = false
+                        }
                     }
-                    status = if (saved.isSuccess) "CSV-Datei wurde gespeichert."
-                    else "CSV-Datei konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
                 }
             }
             val shipmentRecords = remember(shipmentRevision) { shipmentStore.all() }
@@ -481,7 +491,7 @@ class MainActivity : ComponentActivity() {
                                                     visibleRecordLimit = 100
                                                 },
                                                 onVisibleLimitChange = { visibleRecordLimit = it },
-                                                onCsvExport = { confirmCsvExport = true },
+                                                onCsvExport = { if (!backupBusy) confirmCsvExport = true },
                                                 onBackupExport = { if (!backupBusy) confirmBackupExport = true },
                                                 onBackupImport = {
                                                     if (!backupBusy) restoreDocumentLauncher.launch(arrayOf("application/json", "text/json", "application/octet-stream"))
@@ -517,12 +527,31 @@ class MainActivity : ComponentActivity() {
                             CsvExportConfirmationDialog(
                                 onConfirm = {
                                     confirmCsvExport = false
-                                    val exported = runCatching { shipmentStore.exportCsv() }
-                                    if (exported.isSuccess) {
-                                        pendingCsv = exported.getOrThrow()
-                                        csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
-                                    } else {
-                                        status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
+                                    if (!backupBusy) {
+                                        backupBusy = true
+                                        status = "CSV-Export wird vorbereitet…"
+                                        backupScope.launch {
+                                            try {
+                                                val exported = withContext(Dispatchers.IO) {
+                                                    runCatching { shipmentStore.exportCsv() }
+                                                }
+                                                if (exported.isSuccess) {
+                                                    pendingCsv = exported.getOrThrow()
+                                                    backupBusy = false
+                                                    val launched = runCatching {
+                                                        csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
+                                                    }
+                                                    if (launched.isFailure) {
+                                                        pendingCsv = null
+                                                        status = "CSV-Dateiauswahl konnte nicht geöffnet werden."
+                                                    }
+                                                } else {
+                                                    status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
+                                                }
+                                            } finally {
+                                                backupBusy = false
+                                            }
+                                        }
                                     }
                                 },
                                 onDismiss = { confirmCsvExport = false }
