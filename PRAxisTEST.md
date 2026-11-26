@@ -168,7 +168,7 @@ Ein grüner GitHub-Build bestätigt nur, dass Tests und APK-Erstellung im CI-Lau
 
 ## 7. Zusätzlicher Zebra DataWedge-Sicherheitstest
 
-1. DataWedge-Profil für TRAKUNA öffnen und unter Intent Output → Component Information das Paket `de.trakuna.app` hinzufügen.
+1. DataWedge-Profil für TRAKUNA öffnen und Intent Output exakt konfigurieren: Action `de.trakuna.app.DATAWEDGE_SCAN`, Intent category `android.intent.category.DEFAULT`, Delivery `Broadcast Intent`, Daten-Extra `com.symbol.datawedge.data_string` und Labeltyp-Extra `com.symbol.datawedge.label_type`. Android-Intent-Kategorien müssen mit dem registrierten Empfängerfilter übereinstimmen.
 2. Bei der Abfrage die Signaturprüfung aktivieren und kontrollieren, dass sie in der Component-Liste als aktiv angezeigt wird.
 3. Einen Barcode mit dem Zebra-Auslöser scannen. Der Wert muss in TRAKUNA erscheinen.
 4. TRAKUNA aktualisieren oder neu installieren und prüfen, ob die Signaturprüfung im DataWedge-Profil weiterhin aktiv ist. Bei einem Signaturwechsel die Komponente neu auswählen.
