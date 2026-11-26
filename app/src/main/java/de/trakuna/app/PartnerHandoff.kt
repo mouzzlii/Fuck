@@ -46,7 +46,9 @@ internal object ShadowAuditLog {
             .put("carrier", TrakunaTestMode.auditCarrier(carrier))
             .put("result", "BLOCKED_BEFORE_EXTERNAL_APP")
             .put("appVersion", BuildConfig.VERSION_NAME)
-        java.io.FileOutputStream(java.io.File(directory, FILE_NAME), true).bufferedWriter(Charsets.UTF_8).use { writer ->
+        val logFile = java.io.File(directory, FILE_NAME)
+        check(!logFile.exists() || logFile.length() < 1_000_000L) { "Testprotokoll hat die maximale Größe erreicht." }
+        java.io.FileOutputStream(logFile, true).bufferedWriter(Charsets.UTF_8).use { writer ->
             writer.append(record.toString())
             writer.newLine()
             writer.flush()
