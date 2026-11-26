@@ -10,6 +10,7 @@ import android.os.PersistableBundle
 
 internal const val CACHE_PREFS = "trakuna_handoff"
 
+// Test evidence is private to this app installation; only the redacted log is shareable.
 // The pilot build is deliberately locked to shadow mode. Disabling this constant
 // requires a separate, reviewed release-readiness change and real-world approval.
 internal object TrakunaTestMode {
