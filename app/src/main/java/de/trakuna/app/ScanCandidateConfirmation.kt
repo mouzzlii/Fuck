@@ -14,6 +14,7 @@ internal class ScanCandidateConfirmation(
         require(requiredFrames > 0) { "Mindestens ein Bestätigungsbild ist erforderlich." }
     }
 
+    @Synchronized
     fun observe(candidates: Collection<String>): String? {
         val distinctCandidates = candidates.filter { it.isNotBlank() }.distinct()
         if (distinctCandidates.size != 1) {
