@@ -125,7 +125,7 @@ class MainActivity : ComponentActivity() {
                         }
                         val labelType = runCatching { intent.getStringExtra(DATAWEDGE_LABEL_TYPE_EXTRA) }.getOrNull()
                         val supportedFormat = isAllowedDataWedgeLabelType(labelType)
-                        val scanned = if (supportedFormat) extractTrackingNumber(raw, rejectEan13 = isDataWedgeEan13(labelType)) else null
+                        val scanned = if (supportedFormat) extractTrackingNumber(raw, rejectRetailProductBarcode = isDataWedgeRetailProductBarcode(labelType)) else null
                         scanDiagnostic = ScanDiagnosticResult(
                             observations = listOf(
                                 ScanObservation(

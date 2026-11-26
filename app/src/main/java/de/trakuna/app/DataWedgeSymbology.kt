@@ -46,6 +46,12 @@ internal fun isAllowedDataWedgeLabelType(labelType: String?): Boolean {
     )
 }
 
-/** EAN-13 is a product identifier, not a parcel tracking number. */
-internal fun isDataWedgeEan13(labelType: String?): Boolean =
-    labelType?.trim()?.equals("LABEL-TYPE-EAN13", ignoreCase = true) == true
+/** EAN/UPC retail symbologies identify products, not parcel tracking numbers. */
+internal fun isDataWedgeRetailProductBarcode(labelType: String?): Boolean =
+    labelType?.trim()?.uppercase(java.util.Locale.ROOT) in setOf(
+        "LABEL-TYPE-EAN13",
+        "LABEL-TYPE-EAN8",
+        "LABEL-TYPE-UPCA",
+        "LABEL-TYPE-UPCE0",
+        "LABEL-TYPE-UPCE1"
+    )
