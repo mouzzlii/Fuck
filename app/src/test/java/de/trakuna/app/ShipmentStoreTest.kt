@@ -573,4 +573,16 @@ class ShipmentStoreTest {
         assertFalse(ShipmentRules.canPermanentlyDelete(archived.copy(archivedAt = 250L)))
         assertFalse(ShipmentRules.canPermanentlyDelete(archived.copy(status = ShipmentStatus.READY_FOR_PICKUP)))
     }
+
+    @Test
+    fun csvCellsEscapeDelimitersQuotesAndSpreadsheetFormulaStarters() {
+        assertEquals("\"plain value\"", ShipmentRules.csvSafeCell("plain value"))
+        assertEquals("\"a; b\"", ShipmentRules.csvSafeCell("a; b"))
+        assertEquals("\"a\"\"b\"", ShipmentRules.csvSafeCell("a\"b"))
+        assertEquals("\"'=1+1\"", ShipmentRules.csvSafeCell("=1+1"))
+        assertEquals("\"'  +SUM(A1:A2)\"", ShipmentRules.csvSafeCell("  +SUM(A1:A2)"))
+        assertEquals("\"'\uFEFF@SUM(A1:A2)\"", ShipmentRules.csvSafeCell("\uFEFF@SUM(A1:A2)"))
+        assertEquals("\"'\u200B-1+1\"", ShipmentRules.csvSafeCell("\u200B-1+1"))
+        assertEquals("\"line 1\nline 2\"", ShipmentRules.csvSafeCell("line 1\nline 2"))
+    }
 }
