@@ -6,12 +6,24 @@ import android.content.ClipDescription
 import android.os.Build
 import android.os.PersistableBundle
 import android.content.Context
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+
+/** Creates a plain-text diagnostic clip without exposing its preview on Android 13+. */
+internal fun createSensitiveDiagnosticClip(report: String): ClipData {
+    val clip = ClipData.newPlainText("TRAKUNA Scan-Diagnose", report)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        clip.description.extras = PersistableBundle().apply {
+            putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
+        }
+    }
+    return clip
+}
 
 /** Displays transient scan observations without persisting or logging raw label content. */
 @Composable
@@ -76,14 +88,7 @@ internal fun ScanDiagnosticsPanel(
                             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
                                 ?: error("Zwischenablage ist nicht verfügbar.")
                             // Raw scan payloads may contain recipient or shipment data.
-                            // Hide the clipboard preview on Android 13+.
-                            val clip = ClipData.newPlainText("TRAKUNA Scan-Diagnose", report)
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                clip.description.extras = PersistableBundle().apply {
-                                    putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
-                                }
-                            }
-                            clipboard.setPrimaryClip(clip)
+                            clipboard.setPrimaryClip(createSensitiveDiagnosticClip(report))
                         }.isSuccess
                         onCopyResult(copied)
                     },
