@@ -2,6 +2,9 @@ package de.trakuna.app
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ClipDescription
+import android.os.Build
+import android.os.PersistableBundle
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -72,7 +75,15 @@ internal fun ScanDiagnosticsPanel(
                         val copied = runCatching {
                             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
                                 ?: error("Zwischenablage ist nicht verfügbar.")
-                            clipboard.setPrimaryClip(ClipData.newPlainText("TRAKUNA Scan-Diagnose", report))
+                            // Raw scan payloads may contain recipient or shipment data.
+                            // Hide the clipboard preview on Android 13+.
+                            val clip = ClipData.newPlainText("TRAKUNA Scan-Diagnose", report)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                clip.description.extras = PersistableBundle().apply {
+                                    putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
+                                }
+                            }
+                            clipboard.setPrimaryClip(clip)
                         }.isSuccess
                         onCopyResult(copied)
                     },
