@@ -318,3 +318,18 @@ Diese Prüfungen sind trotz erfolgreicher automatisierter JVM- und Emulatorläuf
 | B9 | Oberfläche während KDF und Datei-I/O beobachten | App bleibt bedienbar; Kryptografie und Dateioperationen blockieren nicht den UI-Thread. |
 
 **Abnahmesperre:** Erst nach dokumentierter Durchführung von B1–B9 auf einem realen Android-Gerät kann die manuelle Backup-Funktion als abgenommen gelten. Ein Emulatorlauf ersetzt diese Prüfung nicht.
+
+## 12. Zusätzliche Kamera-Abnahme für die stabile Scanbestätigung (Version 1.55)
+
+Die Kamera übernimmt einen Sendungsnummern-Kandidaten erst nach zwölf aufeinanderfolgenden ML-Kit-Analysebildern mit genau einem eindeutigen Kandidaten. Diese Bestätigung ist eine zusätzliche Schutzmaßnahme und ersetzt nicht die Sichtprüfung durch den Mitarbeiter.
+
+- [ ] **Stabiles Etikett:** Einen einzelnen gültigen Paketbarcode ruhig und scharf vor die Kamera halten. Erst nach stabiler Erkennung muss die Nummer ins Eingabefeld übernommen werden.
+- [ ] **Kurz sichtbarer Code:** Barcode nur kurz ins Bild halten und vor Ablauf der zwölf aufeinanderfolgenden Bestätigungsbilder entfernen. Es darf keine Nummer automatisch übernommen werden.
+- [ ] **Unterbrochene Folge:** Einen Barcode zunächst sichtbar halten, dann kurz aus dem Bild nehmen und erneut zeigen. Die Zählung muss nach dem leeren Bild neu beginnen.
+- [ ] **Wechselnder Code:** Während der Bestätigung zwischen zwei unterschiedlichen Sendungsnummern wechseln. Ein Kandidat darf nicht aus einer unterbrochenen Folge übernommen werden.
+- [ ] **Mehrere Codes gleichzeitig:** Zwei unterschiedliche Sendungsnummern gleichzeitig ins Bild halten. Die Bestätigung muss zurückgesetzt werden; keine der Nummern darf automatisch übernommen werden.
+- [ ] **Produktbarcode neben Sendungscode:** Einen EAN-/UPC-Produktcode gemeinsam mit einem gültigen Versandbarcode zeigen. Der Produktcode darf nicht als Sendungsnummer gelten; ein eindeutiger Versandkandidat muss zwölf aufeinanderfolgende Bilder lang bestätigt werden.
+- [ ] **Diagnosebegrenzung:** Bei wechselnden Codes prüfen, dass die Diagnose höchstens 30 unterschiedliche Rohbeobachtungen anzeigt und die App währenddessen stabil bleibt.
+- [ ] **Keine automatische Buchung:** Auch nach bestätigtem Scan darf TRAKUNA keine Partner-App automatisch öffnen und keinen Paketshop-Vorgang anlegen. Der Mitarbeiter muss den nächsten Schritt bewusst auswählen.
+
+Die automatisierte Unit-Prüfung deckt die Bestätigungslogik (stabile Folge, leeres Bild, mehrdeutiges Bild, Kandidatenwechsel) ab. Die tatsächliche Kameraerkennung, Bildrate, Autofokusleistung und Bedienbarkeit sind auf dem Android-Zielgerät zu prüfen.
