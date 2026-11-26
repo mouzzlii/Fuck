@@ -1,5 +1,21 @@
 # TRAKUNA – Praxis-Testplan (Integrationsversion 1.54 · versionCode 55)
 
+## 0. Shadow-Mode-Sicherheitsprüfung (Version 1.55 / versionCode 56)
+
+Diese Pilotversion muss den Testmodus sichtbar anzeigen und vor jeder externen Partnerübergabe blockieren.
+
+1. In TRAKUNA einen ausdrücklich fiktiven Testdatensatz eingeben.
+2. **„Übergabe simulieren · TESTMODUS“** betätigen.
+3. Prüfen, dass TRAKUNA eine Simulation meldet und keine externe Carrier-App öffnet.
+4. Prüfen, dass die Sendungsnummer nicht in die Zwischenablage kopiert wird.
+5. Prüfen, dass die Partner-App-Zuordnung deaktiviert ist.
+6. **„Lokales Testprotokoll teilen“** öffnen und den exportierten Text kontrollieren: Zeitstempel, Ereignis, Shadow-Mode, Carrier-Kürzel, Ergebnis und App-Version vorhanden; keine Sendungsnummer oder Empfängerdaten enthalten.
+7. Testen, dass ein ungültiger/leer gelassener Scan keine Übergabe auslöst.
+8. Falls eine externe Carrier-App unabhängig von TRAKUNA auf dem Gerät installiert ist, sicherstellen, dass Mitarbeiter diese während des Tests nicht manuell für echte Buchungen verwenden.
+
+**Grenze:** Die aktuelle automatische Ereignisprotokollierung erfasst blockierte Partnerübergabe-Versuche. Andere Scan-, Bearbeitungs-, Druck- und Portalereignisse müssen weiterhin mit den bestehenden Testfällen bzw. separat dokumentiert werden. Diese Version ist noch kein vollständiger End-to-End-Shadow-Mode aller Arbeitsabläufe.
+
+
 Aktueller App-Code-Stand: Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07`. Android-Build [45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) und API-35-Emulatorlauf [45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) sind erfolgreich; 8/8 Instrumentierungstests bestanden. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und die Android-Keystore-/Backup-Instrumentierung. Die manuelle Kamera-/Autofokus-Abnahme und die Backup-Abnahme B1–B9 auf einem realen Android-Gerät bleiben offen. Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
