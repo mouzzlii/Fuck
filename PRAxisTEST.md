@@ -1,4 +1,4 @@
-# TRAKUNA – Praxis-Testplan (Integrationsversion 1.54 · versionCode 55)
+# TRAKUNA – Praxis-Testplan (Integrationsversion 1.55 · versionCode 56)
 
 ## 0. Shadow-Mode-Sicherheitsprüfung (Version 1.55 / versionCode 56)
 
