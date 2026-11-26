@@ -35,6 +35,21 @@ TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.53 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das bisherige Hermes-Handgerät MC3090BT ist zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen.** Modell, Betriebssystem, Scanner, Drucker und freigegebene Integrationsmöglichkeiten des Nachfolgers sind noch unbekannt. Bis zur Ankunft bleibt das bestehende Hermes-System unangetastet; danach wird das neue Gerät zunächst nur inventarisiert und geprüft, ohne Einstellungen oder den laufenden Hermes-Ablauf eigenmächtig zu verändern.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
+## Aktualisierte Zielarchitektur: ein Smartphone, ein Drucker (26.11.2026)
+
+Die neueste Betreiberentscheidung präzisiert den künftigen Paketportal- und Etikettendruckablauf:
+
+- Ein Android-Smartphone ist die zentrale TRAKUNA-Bedienoberfläche.
+- Ein einziger Etikettendrucker soll die Labels aller vorgesehenen Paketdienste ausgeben.
+- WLAN und Bluetooth sind als Druckverbindungen vorzusehen; die tatsächliche Nutzbarkeit hängt vom konkreten Druckermodell, dessen Firmware und Android-Unterstützung ab.
+- Die Paketdienst-Portale werden auf dem Smartphone verwendet. TRAKUNA übernimmt fertige Etiketten nur über offizielle APIs, Downloads, den Android-Teilen-Dialog oder andere dokumentierte Übergabewege.
+- Der Druck soll direkt vom Smartphone aus funktionieren. Ein zusätzlicher PC, Cloud-Druckdienst oder separater Printserver ist keine Voraussetzung.
+- Zebra-Handgeräte sind für diesen Portalablauf keine von TRAKUNA gesteuerten Scanner oder Druckserver. Sie können allenfalls als Internet-/Browsergeräte für Portale dienen. Neue DataWedge-, Zebra-SDK- oder Zebra-Hardwareintegration ist für diesen Ablauf nicht vorgesehen.
+
+**Abgrenzung zum bestehenden Code:** Version 1.53 enthält weiterhin lokale Kamera-/DataWedge-Funktionen und ältere Hardwaredokumentation. Diese beschreiben den vorhandenen Entwicklungsstand bzw. den bisherigen Betrieb, nicht die neue Zielarchitektur. Bestehende Funktionen werden nicht unkontrolliert entfernt. Offene PRs mit Scanner-/DataWedge-Änderungen sind vor einer Übernahme gegen die neue Zielrichtung zu prüfen.
+
+**Noch nicht umgesetzt oder abgenommen:** zentraler Smartphone-Druckcode, WLAN-/Bluetooth-Erkennung und -Druck, Kompatibilität eines konkreten Ein-Drucker-Modells, automatische Labelübergabe aller Anbieter sowie physische Ende-zu-Ende-Drucktests. Die bestehende Offline-Sicherheitsgrenze (keine INTERNET-Berechtigung) darf für Netzwerkdruck nicht stillschweigend gelockert werden; mögliche Berechtigungsänderungen benötigen eine gezielte Sicherheitsprüfung und passende CI-Anpassung.
+
 ## Release-Build
 
 Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald der Betreiber die vier Signierungs-Secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` und `ANDROID_KEY_PASSWORD` in den GitHub-Repository-Secrets hinterlegt hat. Der private Keystore bleibt außerhalb des Repositorys. Ohne diese Betreiber-Schlüssel wird bewusst nur die Debug-Testversion veröffentlicht.
