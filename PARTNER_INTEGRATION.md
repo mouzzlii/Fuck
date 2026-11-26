@@ -9,7 +9,7 @@ Dieses Dokument beschreibt die technische Vereinbarung für eine autorisierte Ü
 
 Für den ersten Start sind **DPD, GLS, Hermes und UPS** die vier priorisierten Paketdienste. Die Reihenfolge in der TRAKUNA-Auswahl ist DPD, GLS, Hermes, UPS. Alle vier müssen im Pilotablauf separat geprüft werden; eine manuelle Carrier-Auswahl ist zunächst nur eine Kennzeichnung des lokalen Vorgangs und keine Buchung im Partnersystem.
 
-- **DPD und GLS:** vorhandene separate Zebra-Handgeräte und Bluetooth-Drucker bleiben unangetastet. DataWedge-Scan auf den TC26-Geräten muss vor Ort getestet werden.
+- **DPD und GLS:** offizielle Portal-/Labelwege und Betreiberberechtigungen separat prüfen. Bestehende Zebra-Handgeräte und Druckerkopplungen bleiben unangetastet; DataWedge ist keine Voraussetzung des neuen Smartphone-Ablaufs.
 - **Hermes:** Das bisherige MC3090BT ist laut Betreiber zu alt und soll in der kommenden Woche ersetzt werden. Das bestehende System bleibt bis zur freigegebenen Umstellung unangetastet; das Nachfolgegerät wird nach Ankunft inventarisiert. Offizielle Hermes-Schnittstelle/Freigabe bleibt Pflicht.
 - **UPS:** Sendungsnummern im bekannten `1Z`-Format können als Format-Hinweis erkannt werden. Das bestätigt weder Gültigkeit noch UPS-Paketshop-Berechtigung. Hardware, Shopsoftware und offizieller Integrationsweg sind noch zu ermitteln.
 
@@ -121,6 +121,8 @@ Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Ü
 **Wichtig:** Diese Schutzregeln verringern Fehlzuordnungen, ersetzen aber keine Prüfung mit echten, vom Paketshop freigegebenen Testetiketten. Eine automatisch extrahierte Nummer ist keine offizielle Sendungs- oder Buchungsbestätigung.
 
 ## Zebra DataWedge – Barcode-Eingang
+
+**Legacy-Abgrenzung (26.11.2026):** Dieser Abschnitt dokumentiert ausschließlich den vorhandenen DataWedge-Codepfad. Die verbindliche Zielarchitektur verwendet ein Android-Smartphone als zentrale Bedienoberfläche, Kamera/manuelle Eingabe und einen gemeinsamen Etikettendrucker. Zebra-Handgeräte dienen dabei ausschließlich als Internet-/Portalgeräte. Keine neue DataWedge- oder Zebra-Hardwareintegration planen und keine bestehenden Shopgeräte/Profile verändern. DataWedge ist keine Abnahmebedingung des neuen Ablaufs.
 
 TRAKUNA verarbeitet Scan-Ergebnisse von Zebra DataWedge über einen Android-Broadcast nur auf Android 14 (API 34) oder höher und nur dann, wenn Android den Absender als `com.symbol.datawedge` bestätigt. Auf Android 13 (API 33) und älter weist TRAKUNA DataWedge-Broadcasts aus Sicherheitsgründen zurück; dort Kamera-Scanner oder manuelle Eingabe verwenden.
 
