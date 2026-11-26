@@ -30,7 +30,7 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import java.util.concurrent.ConcurrentHashMap
+import java.util.LinkedHashSet
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -115,7 +115,7 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
         val disposed = AtomicBoolean(false)
         // Camera frames can reveal different barcodes on the same label at slightly
         // different times. Collect candidates across several frames before choosing.
-        val observedObservations = ConcurrentHashMap.newKeySet<ScanObservation>()
+        val observedObservations = LinkedHashSet<ScanObservation>()
         val requiredConfirmationFrames = 12
         val candidateConfirmation = ScanCandidateConfirmation(requiredConfirmationFrames)
         var provider: ProcessCameraProvider? = null
@@ -164,6 +164,10 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                                             )
                                         }
                                         observedObservations.addAll(observations)
+                                        // Bound transient diagnostic data if the camera sees changing labels.
+                                        while (observedObservations.size > 30) {
+                                            observedObservations.remove(observedObservations.first())
+                                        }
                                         // Count only consecutive frames containing exactly one distinct
                                         // tracking candidate. Empty or ambiguous frames reset confirmation.
                                         val confirmedCandidate = candidateConfirmation.observe(
