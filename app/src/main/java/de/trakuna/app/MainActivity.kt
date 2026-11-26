@@ -399,7 +399,7 @@ class MainActivity : ComponentActivity() {
                             enabled = normalizeTrackingNumber(number).isNotBlank(),
                             modifier = Modifier.fillMaxWidth().height(54.dp)
                         ) {
-                            Text("An Partner-App übergeben")
+                            Text(if (TrakunaTestMode.SHADOW_MODE_ENABLED) "Übergabe simulieren · TESTMODUS" else "An Partner-App übergeben")
                         }
                         OutlinedButton(
                             onClick = { showShipmentLedger = true },
@@ -415,8 +415,14 @@ class MainActivity : ComponentActivity() {
                                 showAllApps = false
                                 showPartnerPicker = true
                             },
+                            enabled = !TrakunaTestMode.SHADOW_MODE_ENABLED,
                             modifier = Modifier.fillMaxWidth()
-                        ) { Text("Betriebssoftware pro Paketdienst zuordnen") }
+                        ) {
+                            Text(
+                                if (TrakunaTestMode.SHADOW_MODE_ENABLED) "Partner-App-Zuordnung im Testmodus gesperrt"
+                                else "Betriebssoftware pro Paketdienst zuordnen"
+                            )
+                        }
                         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                             val partnerPrefs = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
                             PartnerAppConfig.priorityCarriers.forEach { carrier ->
