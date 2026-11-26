@@ -136,6 +136,9 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                 analysis.setAnalyzer(executor) { proxy ->
                     val mediaImage = proxy.image
                     if (mediaImage == null || delivered.get() || disposed.get()) {
+                        if (mediaImage == null && !delivered.get() && !disposed.get()) {
+                            candidateConfirmation.observe(emptyList())
+                        }
                         proxy.close()
                     } else {
                         try {
@@ -190,8 +193,15 @@ private fun CameraPreview(onDetected: (ScanDiagnosticResult) -> Unit) {
                                         }
                                     }
                                 }
+                                .addOnFailureListener(mainExecutor) {
+                                    if (!disposed.get()) candidateConfirmation.observe(emptyList())
+                                }
+                                .addOnCanceledListener(mainExecutor) {
+                                    if (!disposed.get()) candidateConfirmation.observe(emptyList())
+                                }
                                 .addOnCompleteListener { proxy.close() }
                         } catch (_: Exception) {
+                            candidateConfirmation.observe(emptyList())
                             proxy.close()
                         }
                     }
