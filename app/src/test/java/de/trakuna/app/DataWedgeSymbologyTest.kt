@@ -74,8 +74,8 @@ class DataWedgeSymbologyTest {
         org.junit.Assert.assertTrue(message.contains("nicht als DataWedge verifiziert"))
     }
     @Test
-    fun identifiesEan13AsProductBarcodeWithoutRejectingOtherSymbologies() {
-        assertTrue(isDataWedgeEan13("LABEL-TYPE-EAN13"))
+    fun identifiesRetailEanAndUpcFormatsAsProductBarcodesWithoutRejectingOtherSymbologies() {
+        assertTrue(isDataWedgeRetailProductBarcode("LABEL-TYPE-EAN13"))
         assertTrue(isDataWedgeEan13(" label-type-ean13 "))
         assertFalse(isDataWedgeEan13("LABEL-TYPE-EAN8"))
         assertFalse(isDataWedgeEan13("LABEL-TYPE-CODE128"))
@@ -83,14 +83,14 @@ class DataWedgeSymbologyTest {
     }
 
     @Test
-    fun rejectsEan13PayloadOnlyWhenSymbologyConfirmsItIsEan13() {
+    fun rejectsRetailProductPayloadOnlyWhenSymbologyConfirmsRetailFormat() {
         // Valid EAN-13 product barcode (including its check digit).
         val productCode = "8721335813708"
         assertTrue(isDataWedgeEan13("LABEL-TYPE-EAN13"))
         assertFalse(ShipmentRules.isValidTrackingNumber(
             extractTrackingNumber(productCode, rejectEan13 = isDataWedgeEan13("LABEL-TYPE-EAN13")) ?: ""
         ))
-        // The same 13 digits are not globally banned: only the scanner's symbology
+        // The same digits are not globally banned: only the scanner's symbology
         // metadata lets us distinguish a product barcode from an opaque tracking ID.
         assertTrue(ShipmentRules.isValidTrackingNumber(
             extractTrackingNumber(productCode, rejectEan13 = isDataWedgeEan13("LABEL-TYPE-CODE128")) ?: ""
