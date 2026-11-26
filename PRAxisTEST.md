@@ -1,8 +1,10 @@
 # TRAKUNA – Praxis-Testplan (Integrationsversion 1.54 · versionCode 55)
 
-Aktueller App-Code-Stand: Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07`. Android-Build [45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) und API-35-Emulatorlauf [45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) sind erfolgreich; 8/8 Instrumentierungstests bestanden. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und die Android-Keystore-/Backup-Instrumentierung. Die manuelle Kamera-/Zebra-Abnahme und die Backup-Abnahme B1–B9 auf einem realen Android-Gerät bleiben offen. Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
+Aktueller App-Code-Stand: Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07`. Android-Build [45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) und API-35-Emulatorlauf [45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) sind erfolgreich; 8/8 Instrumentierungstests bestanden. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und die Android-Keystore-/Backup-Instrumentierung. Die manuelle Kamera-/Autofokus-Abnahme und die Backup-Abnahme B1–B9 auf einem realen Android-Gerät bleiben offen. Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
+
+**Zielarchitektur-Abgrenzung (26.11.2026):** Ein Android-Smartphone ist die zentrale Bedienoberfläche; Scan erfolgt über Kamera oder manuelle Eingabe. Ein gemeinsamer Etikettendrucker soll direkt vom Smartphone über WLAN oder Bluetooth bedient werden, sofern das konkrete Modell beide Wege unterstützt. Zebra-Geräte sind im neuen Ablauf nur Internet-/Portalgeräte. Sämtliche DataWedge-/TC26-Testfälle weiter unten sind historische optionale Legacy-Regressionen und keine Voraussetzung oder Freigabesperre des neuen Ablaufs. Keine bestehenden Carrier-Geräte oder Profile dafür verändern. Die Drucker- und Portalabnahme bleibt ein eigener offener Testbereich.
 
 ## 1. Voraussetzungen
 
@@ -198,7 +200,7 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 20. **Neuer Datensatz:** Testsendung erfassen, App vollständig schließen und neu öffnen; Datensatz muss weiterhin lesbar sein.
 21. **Verschlüsselter Bestand:** In den App-SharedPreferences darf der Wert des Paketbestands nicht mehr als lesbares JSON mit Sendungsnummern oder Empfängernamen erscheinen.
 22. **Schlüssel-/Datenfehler:** Auf einem isolierten Testgerät den Keystore-Schlüssel entfernen bzw. beschädigte Testdaten verwenden; App muss einen Speicherfehler melden und darf keine neuen Datensätze über den beschädigten Bestand schreiben.
-23. **Backup:** JSON-Export und Wiederherstellung testen; ausdrücklich beachten, dass exportierte Dateien weiterhin Klartext enthalten.
+23. **Backup:** Neue `.trakuna`-Sicherung mit Passwort exportieren und wiederherstellen; zusätzlich den Legacy-Import einer alten unverschlüsselten JSON-Sicherung prüfen und die Klartextwarnung vor dem Ersetzen des Bestands bestätigen.
 
 
 ## Zusätzliche Tests für Version 1.20 – Größenbegrenzung
@@ -250,7 +252,7 @@ Diese Prüfungen ergänzen die Kamera- und DataWedge-Tests. Sie können mit gedr
 58. **Ungültiger Inhalt:** Beliebige URL, ungültige Nummer, Unicode-Zeichen, beschädigte Prozentkodierung und überlange Scan-Inhalte testen. Es darf kein erfundener oder stillschweigend veränderter Wert übernommen werden.
 59. **Keine automatische Aktion:** Nach jeder Erkennung muss die Nummer zunächst sichtbar im Eingabefeld stehen. Ohne bewusste Bedienung darf kein Paketshop-Vorgang angelegt und keine Partner-App geöffnet werden.
 
-Die automatisierten Parser-Tests prüfen die Regeln ohne Kamera-Hardware. Sie ersetzen nicht den Test mit echten Zebra-Geräten, echten Etiketten und der konkret eingesetzten Betriebssoftware.
+Die automatisierten Parser-Tests prüfen die Regeln ohne Kamera-Hardware. Sie ersetzen nicht den Test mit echten Paketetiketten auf dem vorgesehenen Android-Smartphone und die Prüfung des offiziellen Portal-/Labelablaufs. DataWedge-/Zebra-Prüfungen in diesem Dokument sind ausschließlich optionale Legacy-Regressionstests, falls dieser Altpfad separat freigegeben weiterverwendet wird.
 
 
 ## 9. Verhalten bei Hintergrundbetrieb
