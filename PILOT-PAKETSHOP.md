@@ -12,7 +12,7 @@ Die aktuelle Log-Abdeckung protokolliert zunächst blockierte Partnerübergabe-V
 **Zielarchitektur:** ein Android-Smartphone, eine gemeinsame TRAKUNA-App, ein Etikettendrucker; WLAN und Bluetooth sind die vorgesehenen Druckwege. [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) enthält historische Gerätehinweise und ist nicht die neue DataWedge-Zielanleitung.
 
 
-Stand: 25. November 2026 · Testversion 1.54 (versionCode 55) · CI-Build und Emulator-Instrumentierung erfolgreich (Debug-Testpaket)
+Stand: 26. November 2026 · Testversion 1.55 (versionCode 56) · neue Shadow-Mode-Fassung; CI- und Emulatorprüfung für den aktuellen Commit noch ausstehend
 
 ## 1. Zweck und Freigabestatus
 
