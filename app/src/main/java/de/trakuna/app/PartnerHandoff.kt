@@ -31,6 +31,10 @@ internal object ShadowAuditLog {
     private const val DIRECTORY = "test-evidence"
     private const val FILE_NAME = "shadow-events.jsonl"
 
+    @Suppress("DEPRECATION")
+    private fun appVersionName(context: Context): String =
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "unknown"
+
     @Synchronized
     fun readAll(context: Context): String = runCatching {
         val file = java.io.File(java.io.File(context.filesDir, DIRECTORY), FILE_NAME)
@@ -47,7 +51,7 @@ internal object ShadowAuditLog {
             .put("mode", "SHADOW")
             .put("carrier", TrakunaTestMode.auditCarrier(carrier))
             .put("result", "BLOCKED_BEFORE_EXTERNAL_APP")
-            .put("appVersion", BuildConfig.VERSION_NAME)
+            .put("appVersion", appVersionName(context))
         val logFile = java.io.File(directory, FILE_NAME)
         check(!logFile.exists() || logFile.length() < 1_000_000L) { "Testprotokoll hat die maximale Größe erreicht." }
         java.io.FileOutputStream(logFile, true).bufferedWriter(Charsets.UTF_8).use { writer ->
