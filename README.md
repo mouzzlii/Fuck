@@ -29,6 +29,8 @@ TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 ## Aktuelle Betriebsgrenzen
 
+**Aktueller Pilot-Sicherheitsmodus:** Die Partnerübergabe ist fest auf SHADOW MODE geschaltet. Die Sendungsnummer wird lokal im geschützten TRAKUNA-Bestand abgelegt; die Übergabe wird simuliert. Es wird keine externe Carrier-/Partner-App geöffnet, keine Sendungsnummer in die Zwischenablage kopiert und keine Buchung oder Labelbestellung ausgelöst. Das lokale Testprotokoll enthält nur redigierte Ereignismetadaten, keine Sendungsnummer. Eine Freigabe des Live-Handoffs erfordert eine separate geprüfte Änderung und Betreiberfreigabe.
+
 - Die Daten werden lokal auf diesem Gerät gespeichert und verschlüsselt.
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
 - WLAN ist für lokale Kamera-/manuelle Scans nicht erforderlich und aktiviert keine Synchronisierung. Der künftige lokale Druckweg soll WLAN oder Bluetooth nutzen; dafür ist noch kein Druckcode freigegeben oder real getestet. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden nicht gesucht.
