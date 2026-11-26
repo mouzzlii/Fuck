@@ -18,25 +18,25 @@ Für den ersten Pilot stehen **DPD, GLS, Hermes und UPS** im Vordergrund. Die TR
 - UPS: bekannte 1Z-Nummernstruktur ist nur ein Format-Hinweis; Hardware, Betriebssoftware und offizielle Schnittstelle sind noch zu erheben. Die offizielle App UPS Access Point (`com.ups.accesspoint`) verlangt Android 9.0 oder höher, wenn sie auf demselben Gerät laufen soll.
 
 
-Version 1.54 (versionCode 55) wurde auf dem Code-Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb` erfolgreich geprüft. Der [Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45691683747) bestand Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, Manifest-/Offline-Sicherheitsprüfungen, APK-Build, Prüfsummenerstellung und Artefakt-Upload. Der separate [Emulator-Instrumentierungslauf](https://github.com/mouzzlii/Fuck/actions/runs/45691683698) war ebenfalls erfolgreich. Das Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15058952938`) ist bis 09.12.2026, 20:08 UTC verfügbar. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Diese CI-Ergebnisse sind kein Nachweis für einen produktiven Paketshop-Betrieb oder eine reale Kamera-/Zebra-Abnahme. Die Übergabe an einen Paketdienst bleibt lokale Dokumentation, keine Carrier-Buchungsbestätigung.
+Version 1.54 (versionCode 55) wurde auf dem Code-Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07` erfolgreich geprüft. Der [Android-Build](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) bestand Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, Manifest-/Offline-Sicherheitsprüfungen, APK-Build, Prüfsummenerstellung und Artefakt-Upload. Der separate [Emulator-Instrumentierungslauf](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) war ebenfalls erfolgreich. Das Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15093243107`) ist bis 10.12.2026, 06:37 UTC verfügbar. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die APK-SHA-256 lautet `18a4ec27365f31a0a21d2fd8dc04342dde4f9d4f7e6150a18eb56438de1e4dc3`. Diese CI-Ergebnisse sind kein Nachweis für einen produktiven Paketshop-Betrieb oder eine reale Kamera-/Zebra-Abnahme. Die Übergabe an einen Paketdienst bleibt lokale Dokumentation, keine Carrier-Buchungsbestätigung.
 
 **Aktueller Status:** CI-Build und Emulator-Instrumentierung für Version 1.54 erfolgreich; reale Geräte- und Betreiberabnahme weiterhin offen. Bis zur Freigabe nur auf Testgeräten mit ausdrücklich erfundenen Testsendungen arbeiten. Keine produktive Nutzung mit Kundensendungen, solange die Freigabepunkte in Abschnitt 7 offen sind.
 
 ## 2. Download des aktuellen Testpakets
 
-Version 1.54 (versionCode 55) ergänzt die temporäre Scan-Diagnose und die Scanner-Härtungen; die vollständigen Änderungen stehen im [Praxis-Testplan](PRAxisTEST.md). Der erfolgreiche [Android-Build 45691683747](https://github.com/mouzzlii/Fuck/actions/runs/45691683747) und der erfolgreiche [Emulator-Instrumentierungslauf 45691683698](https://github.com/mouzzlii/Fuck/actions/runs/45691683698) beziehen sich beide auf Commit `bb29cdab5d8e4ac25a382641d9d4ca418c4342eb`.
+Version 1.54 (versionCode 55) ergänzt die temporäre Scan-Diagnose und die Scanner-Härtungen; die vollständigen Änderungen stehen im [Praxis-Testplan](PRAxisTEST.md). Der erfolgreiche [Android-Build 45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) und der erfolgreiche [Emulator-Instrumentierungslauf 45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) beziehen sich beide auf Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07`.
 
 - Unit-Tests, Android-Lint, Offline-/Manifestprüfungen und APK-Build: erfolgreich
 - Android-Keystore-/Speicher-Instrumentierung auf Emulator: erfolgreich
-- Debug-Artefakt: `TRAKUNA-Android`, Artifact-ID `15058952938`, 20.801.113 Bytes
+- Debug-Artefakt: `TRAKUNA-Android`, Artifact-ID `15093243107`, 20.898.359 Bytes
 - Verfügbar bis: 09.12.2026, 20:08 UTC
 - Release-Signierung: übersprungen, da kein Betreiber-Signaturschlüssel konfiguriert ist
 
-[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45691683747) – im Abschnitt **Artifacts** das Paket `TRAKUNA-Android` laden. Die enthaltene `SHA256SUMS.txt` dient zur Prüfung der APK; hier wird bewusst kein Hash eines anderen Builds wiederverwendet.
+[Neues Testpaket herunterladen (GitHub Actions)](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) – im Abschnitt **Artifacts** das Paket `TRAKUNA-Android` laden. Die enthaltene `SHA256SUMS.txt` dient zur Prüfung der APK; hier wird bewusst kein Hash eines anderen Builds wiederverwendet.
 
 **Historischer Build 1.44** (ohne Carrier-Schnellauswahl): [CI-Lauf 45227305052](https://github.com/mouzzlii/Fuck/actions/runs/45227305052). Nicht mehr als aktuelles Testpaket verwenden.
 
-Das aktuelle Artefakt im Actions-Lauf 45691683747 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update ein JSON-Backup erstellen und die Wiederherstellung prüfen. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
+Das aktuelle Artefakt im Actions-Lauf 45769123996 herunterladen und das enthaltene ZIP entpacken. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; bei abweichender Signatur verweigert Android ein Update über die bestehende Installation. Vor jedem Update ein JSON-Backup erstellen und die Wiederherstellung prüfen. Nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Wiederholbare Updates benötigen einen dauerhaft vom Betreiber verwalteten Signaturschlüssel.
 
 ### Sicherheitsverbesserung in Version 1.52
 
@@ -70,6 +70,7 @@ Die Partner-App-Übergabe ist derzeit ein Android-Intent-Versuch. Das Öffnen ei
 - Lokale Sendungsdaten werden verschlüsselt im Android Keystore-gestützten Speicher gehalten.
 - Kamera-Scan und manuelle Eingabe sind vorgesehen.
 - Das bisherige Hermes-MC3090BT ist kein Android-Zielgerät für TRAKUNA. Zebra führt die MC3090-Reihe mit Windows CE 5.0 bzw. Windows Mobile 6.1; TRAKUNA benötigt Android 8.0/API 26 oder neuer. Ob das angekündigte Nachfolgegerät mit TRAKUNA kompatibel ist, wird erst nach Ankunft anhand des genauen Modells und Betriebssystems geprüft. [Zebra-Kompatibilitätsübersicht](https://www.zebra.com/us/en/support-downloads/software/mobile-computer-software/enterprise-browser.html).
+- Bestätigte EAN-13-, EAN-8-, UPC-A- und UPC-E-Produktcodes werden in Kamera und DataWedge nur diagnostisch angezeigt und nicht als Sendungsnummer übernommen; die gleiche Ziffernfolge bleibt bei anderen Symbologien wie Code 128 zulässig.
 - Zebra DataWedge ist als Broadcast-Eingangsweg vorbereitet. TRAKUNA akzeptiert DataWedge-Scans ausschließlich ab Android 14 (API 34), wenn Android den ursprünglichen Absender als `com.symbol.datawedge` bestätigt. Auf Android 13 (API 33) und älter bleibt dieser Eingang deaktiviert; dort Kamera-Scanner oder manuelle Eingabe verwenden. Die GLS- und DPD-Handgeräte werden nach den vorliegenden Gerätehinweisen als Zebra TC26 eingestuft (4G-Anzeige; endgültige Bestätigung über Typenschild/Teilenummer steht aus).
 - Für TC26 ist ein dediziertes DataWedge-Profil für TRAKUNA vorgesehen: Barcode Input + Intent Output, Action `de.trakuna.app.DATAWEDGE_SCAN`, Extra `com.symbol.datawedge.data_string`, Delivery `Broadcast Intent`. Das muss auf jedem Handgerät mit Betreiberfreigabe eingerichtet und praktisch getestet werden; eine erfolgreiche Übertragung ist bislang nicht nachgewiesen.
 - Sendungsstatus und begrenzte Ereignishistorie werden lokal gespeichert.
