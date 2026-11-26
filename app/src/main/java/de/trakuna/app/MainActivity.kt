@@ -3,7 +3,6 @@ package de.trakuna.app
 import android.content.Context
 import android.content.Intent
 import android.content.BroadcastReceiver
-import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -37,7 +36,6 @@ import androidx.core.content.ContextCompat
 import androidx.compose.ui.text.input.KeyboardCapitalization
 
 private val Forest = Color(0xFF174B3A)
-private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
 private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
 private const val DATAWEDGE_LABEL_TYPE_EXTRA = "com.symbol.datawedge.label_type"
 
@@ -151,7 +149,7 @@ class MainActivity : ComponentActivity() {
                         status = "Zebra-Scan empfangen. DataWedge-Absender verifiziert. Sendungsnummer bitte prüfen und den nächsten Schritt auswählen."
                     }
                 }
-                val filter = IntentFilter(DATAWEDGE_ACTION)
+                val filter = createDataWedgeIntentFilter()
                 // DataWedge is a separate Android app, so the receiver must be exported.
                 // ContextCompat supplies the required explicit flag on every supported API level.
                 ContextCompat.registerReceiver(
