@@ -1,3 +1,39 @@
+# AKTUELLER STATUSABGLEICH — 26.11.2026
+
+> Dieser Abschnitt ist die maßgebliche Aktualisierung. Die darunter dokumentierte Aufgaben- und PR-Liste stammt vom 25.11.2026 und ist historisch; widersprüchliche alte Statusangaben gelten nicht mehr.
+
+## Aktueller Stand der Integration
+
+| Bereich | Verifizierter Stand | Konsequenz |
+|---|---|---|
+| Android-App / PR #25 | Offen, Draft, nicht gemergt. Head: `fc0ff24075598e20092a837af51f8237ce35d338`; 97 Commits, 34 Dateien. | Einziger aktueller kombinierter Android-Integrationsstand. Keine zweite Scanner-/Backup-Integration parallel beginnen. |
+| CI für PR #25 | Build-Workflow [45846081795](https://github.com/mouzzlii/Fuck/actions/runs/45846081795) erfolgreich; Emulator-Instrumentierung [45846081555](https://github.com/mouzzlii/Fuck/actions/runs/45846081555) erfolgreich, 10/10 Tests. Diese Läufe beziehen sich auf den dokumentierten Integrationsstand. | Belegt CI/Emulator, nicht reale Kamera, Zebra/DataWedge oder Shopabläufe. |
+| Governance PR #19 | Offen, nicht gemergt; enthält `AGENTS.md` und `TASKS.md`. | Diese Statuskorrektur wird im selben PR dokumentiert. |
+| Gateway PR #4 | Offen, Draft, nicht gemergt; Head `5c42da6d7f431dcca93677441e844fa94c770a90`; sechs Dokumentationsdateien. | Zentrale Architektur-/Carrier-Dokumentation. Vor Merge vollständig reviewen. |
+| App-Dokumentations-PR #33 | Offen, Draft, nicht gemergt; nur README geändert. | Abhängig von Gateway PR #4; keinesfalls vorher mergen. |
+| `main` | Keine Änderung durch diese Aktualisierung. PR #25, #19, #33 und Gateway #4 sind weiterhin ungemergt. | Bestehende Hauptzweige und Produktionsdaten bleiben geschützt. |
+
+## Konsolidierte Ticketlage
+
+- **Abgeschlossen/integriert in PR #25:** die früheren Scanner-/Diagnose-/Backup-/CSV-Arbeiten aus den PRs #14, #26, #27–#32 sind im kombinierten Branch enthalten. #14, #26 und #32 wurden nach Vergleich/Integration geschlossen; PR #25 ersetzt die alten parallelen Integrationsstände. Nicht erneut implementieren.
+- **T-03 — reale Scanner-End-to-End-Abnahme:** weiterhin offen. Benötigt echtes Android-Gerät, Paketetiketten und freigegebene Zebra/DataWedge-Hardware. Emulatorergebnisse ersetzen diese Abnahme nicht.
+- **T-07 — reale Backup-Wiederherstellungsabnahme:** automatisierte Tests sind im kombinierten PR #25 enthalten; Export/Import, falsches Passwort, beschädigte Datei und Gerätewechsel müssen auf einem realen Android-Gerät geprüft werden.
+- **T-08 — Carrier-/Shop-Integration:** blockiert bis schriftliche Betreiber-/Carrier-Freigabe, konkrete API-/Geräteunterlagen und autorisierter Testzugang vorliegen. YourGLS-Login ist kein API-Zugang. Keine Login-Automation, kein Scraping und keine Buchungen.
+- **T-09 — weitere MainActivity-State-Entflechtung:** zurückgestellt, bis der kombinierte PR #25 geprüft und kontrolliert integriert ist. Keine vorsorgliche Refaktorierung ohne messbaren Wartbarkeitsgewinn und Regressionstests.
+- **T-10 — alter PR #16:** als eigenständige Integrationsaufgabe überholt; seine relevanten Scanner-/Diagnosearbeiten sind im kombinierten PR #25 konsolidiert. Nicht separat mergen.
+- **Nächste priorisierte technische Aufgabe:** den ShopScannerNeu-Archivstand dateiweise mit TRAKUNA vergleichen. ZIP-Abruf und Strukturinventur sind erledigt; vollständiger Kotlin-/Web-Quellcodevergleich ist ausdrücklich noch offen. Nur lesend prüfen, zunächst keine Übernahme. Firecrawl-Interaktionszugriff war zuletzt wegen eines Limits für parallele Jobs blockiert; vor erneutem Versuch aktive Sitzungen sauber identifizieren/freigeben oder einen anderen unterstützten Abrufweg verwenden.
+
+## Verbindliche Reihenfolge / Schutzregeln
+
+1. Genau ein priorisiertes TRAKUNA-Ticket gleichzeitig bearbeiten.
+2. Vor Codeänderungen den exakten Branch-/Commitstand, vorhandene Implementierungen, Lizenz/Rechte, Datenmodell und Tests vergleichen.
+3. Keine ungeprüften Archivdateien übernehmen. Webhook-/Cloud-Funktionen aus Altständen sind nicht mit der Offline-first-Architektur vereinbar, solange keine ausdrückliche Architektur- und Sicherheitsfreigabe besteht.
+4. PR #4 vor PR #33 reviewen; PR #33 nicht vor #4 mergen.
+5. PR #25 erst nach vollständigem Diff-Review, realer Geräteabnahme, Backup-Praxistest und geklärter Release-Signierung zur Integration freigeben.
+6. Keine Änderungen an `main`, keine Force-Pushes, keine Löschung von Repositories/Branches und keine Kosten ohne ausdrückliche Freigabe.
+
+---
+
 # TRAKUNA — TASKS
 
 Stand: 2026-11-25  
