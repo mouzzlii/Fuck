@@ -2,8 +2,8 @@
 
 ## Zusätzliche Sperren für den Paketshop-Pilot – Shadow Mode 1.55
 
-- [x] Exakter Commit und erfolgreicher CI-Build für Version 1.55 / versionCode 56 bestätigt
-- [x] Emulator-Instrumentierung für exakt denselben Commit erfolgreich – 15/15 Tests bestanden
+- [x] Exakter Commit `3da8dbeb571e4b2421ce375ccbb854e6171dd2b0` und erfolgreicher CI-Build für Version 1.55 / versionCode 56 bestätigt (Run `45902838085`)
+- [x] API-35-Emulator-Instrumentierung für exakt denselben Commit erfolgreich (Run `45902838084`; Workflow erfolgreich, ohne hier eine nicht separat verifizierte Testfallzahl anzugeben)
 - [ ] Auf Testgerät sichtbar: „Übergabe simulieren · TESTMODUS“
 - [ ] Partner-App wird durch TRAKUNA bei Übergabeversuch nicht geöffnet
 - [ ] Zwischenablage bleibt bei simuliertem Übergabeversuch unverändert
@@ -15,7 +15,7 @@
 **Hinweis:** Der lokale Shadow Mode blockiert den durch TRAKUNA ausgelösten Partner-App-Start. Er kontrolliert keine separat gestarteten Apps und ist keine netzwerkweite Sperre für externe Buchungen. Derzeit werden nur blockierte Partnerübergabe-Versuche automatisch protokolliert; eine vollständige Ereigniserfassung bleibt offen.
 
 
-Stand: App-Version 1.55 (versionCode 56) · Code-Commit `2e4ae2435c29bed959662e4a1734f6826d508244` erfolgreich geprüft; Build `45902341310`, API-35-Emulator `45902341262`, 15/15 Instrumentierungstests bestanden. Reale Geräteabnahme bleibt offen.
+Stand: App-Version 1.55 (versionCode 56) · aktueller Integrations-Commit `3da8dbeb571e4b2421ce375ccbb854e6171dd2b0` · Build `45902838085` und API-35-Emulatorlauf `45902838084` für exakt diesen Commit erfolgreich. Reale Geräteabnahme bleibt offen.
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
@@ -35,7 +35,7 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
 - [ ] Neue passwortgeschützte `.trakuna`-Sicherung (AES-256-GCM) mit korrektem Passwort exportiert und wiederhergestellt; falsches Passwort/beschädigte Datei abgewiesen; alte unverschlüsselte JSON-Sicherung nur als Legacy-Import geprüft
 
-Letzter erfolgreicher Build für Version 1.55: [Android-Build 45902341310](https://github.com/mouzzlii/Fuck/actions/runs/45902341310), Code-Commit `2e4ae2435c29bed959662e4a1734f6826d508244`. Der separate [Emulator-Instrumentierungslauf 45902341262](https://github.com/mouzzlii/Fuck/actions/runs/45902341262) war für denselben Commit erfolgreich; **15/15 Tests bestanden**. Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15155914301`) ist bis 10.12.2026 22:06 UTC verfügbar. Die enthaltene `SHA256SUMS.txt` wurde gegen die APK geprüft; SHA-256: `230bf3cdd79000d25fb7c86a73c7f739abb87f43f2a656ee75aa4182f3346fe9`. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die automatisierten Prüfungen ersetzen keine reale Geräte-, Carrier- und Betreiberabnahme.
+Letzter erfolgreich verifizierter Build für Version 1.55: [Android-Build 45902838085](https://github.com/mouzzlii/Fuck/actions/runs/45902838085), Code-Commit `3da8dbeb571e4b2421ce375ccbb854e6171dd2b0`. Die Workflow-Schritte für Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, APK-Build, Manifest-/Offline-Sicherheitsprüfungen und APK-Prüfsumme waren erfolgreich; Release-Signierung und Release-Artefakt wurden mangels Betreiber-Secrets übersprungen. Der separate [API-35-Emulator-Instrumentierungslauf 45902838084](https://github.com/mouzzlii/Fuck/actions/runs/45902838084) war für exakt denselben Commit erfolgreich (`connectedDebugAndroidTest`, `BUILD SUCCESSFUL`). Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15156119686`, 20.921.405 Bytes) ist laut GitHub bis 10.12.2026 22:10 UTC verfügbar. Die automatisierten Prüfungen ersetzen keine reale Geräte-, Carrier- und Betreiberabnahme.
 
 
 ## B. Geräte- und Scannerabnahme
