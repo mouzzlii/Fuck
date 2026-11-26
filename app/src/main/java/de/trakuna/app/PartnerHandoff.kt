@@ -10,6 +10,45 @@ import android.os.PersistableBundle
 
 internal const val CACHE_PREFS = "trakuna_handoff"
 
+// The pilot build is deliberately locked to shadow mode. Disabling this constant
+// requires a separate, reviewed release-readiness change and real-world approval.
+internal object TrakunaTestMode {
+    const val SHADOW_MODE_ENABLED: Boolean = true
+
+    fun auditCarrier(carrier: String?): String =
+        carrier?.takeIf { it in PartnerAppConfig.priorityCarriers } ?: "OTHER"
+
+    fun blockedHandoffMessage(carrier: String?): String {
+        val label = auditCarrier(carrier).takeIf { it != "OTHER" } ?: "Paketdienst"
+        return "TESTMODUS: Die Übergabe an $label wurde nur simuliert. " +
+            "Die Partner-App wurde NICHT geöffnet; es wurde keine Buchung, " +
+            "Labelbestellung oder externe Übermittlung ausgelöst."
+    }
+}
+
+internal object ShadowAuditLog {
+    private const val DIRECTORY = "test-evidence"
+    private const val FILE_NAME = "shadow-events.jsonl"
+
+    @Synchronized
+    fun recordPartnerHandoff(context: Context, carrier: String?): Boolean = runCatching {
+        val directory = java.io.File(context.filesDir, DIRECTORY)
+        check(directory.isDirectory || directory.mkdirs()) { "Testprotokoll-Ordner konnte nicht angelegt werden." }
+        val record = org.json.JSONObject()
+            .put("timestamp", java.time.Instant.now().toString())
+            .put("event", "PARTNER_HANDOFF_BLOCKED")
+            .put("mode", "SHADOW")
+            .put("carrier", TrakunaTestMode.auditCarrier(carrier))
+            .put("result", "BLOCKED_BEFORE_EXTERNAL_APP")
+            .put("appVersion", BuildConfig.VERSION_NAME)
+        java.io.FileOutputStream(java.io.File(directory, FILE_NAME), true).bufferedWriter(Charsets.UTF_8).use { writer ->
+            writer.append(record.toString())
+            writer.newLine()
+            writer.flush()
+        }
+    }.isSuccess
+}
+
 data class HandoffResult(val message: String)
 
 internal data class PartnerCandidate(
@@ -51,6 +90,16 @@ internal fun handoffToPartnerApp(context: Context, rawNumber: String, carrier: S
         return HandoffResult(
             "Sendungsnummer konnte nicht sicher gespeichert werden. " +
                 (detail ?: "Bitte Gerätespeicher prüfen und erneut versuchen.")
+        )
+    }
+
+    // Shadow mode is a hard gate: do not copy to the clipboard and do not
+    // launch any external carrier app. The attempt is recorded without shipment data.
+    if (TrakunaTestMode.SHADOW_MODE_ENABLED) {
+        val logged = ShadowAuditLog.recordPartnerHandoff(context, carrier)
+        val message = TrakunaTestMode.blockedHandoffMessage(carrier)
+        return HandoffResult(
+            if (logged) message else "$message Das lokale Testprotokoll konnte allerdings nicht geschrieben werden."
         )
     }
 
