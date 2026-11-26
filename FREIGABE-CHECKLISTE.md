@@ -18,20 +18,23 @@ Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die
 - [ ] Stabiler Betreiber-Signaturschlüssel für wiederholbare Test-/Release-Updates eingerichtet und Update ohne Datenverlust geprüft
 - [ ] Update von der vorherigen freigegebenen Version getestet
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
-- [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
+- [ ] Neue passwortgeschützte `.trakuna`-Sicherung (AES-256-GCM) mit korrektem Passwort exportiert und wiederhergestellt; falsches Passwort/beschädigte Datei abgewiesen; alte unverschlüsselte JSON-Sicherung nur als Legacy-Import geprüft
 
 Letzter erfolgreicher Build für Version 1.54: [Android-Build 45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996), Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07`. Der separate [Emulator-Instrumentierungslauf 45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) war für denselben Commit erfolgreich. Das Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15093243107`) ist bis 10.12.2026, 06:37 UTC verfügbar. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK; es wird hier kein Hash eines älteren Builds wiederverwendet. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die APK-SHA-256 lautet `18a4ec27365f31a0a21d2fd8dc04342dde4f9d4f7e6150a18eb56438de1e4dc3`. Die automatisierten Prüfungen sind kein Ersatz für reale Geräte-, Carrier- und Betreiberabnahme.
 
 
 ## B. Geräte- und Scannerabnahme
 
-- [ ] Jedes tatsächlich eingesetzte Android-/Zebra-Modell dokumentiert
-- [ ] Android-Version und Gerätemanagement dokumentiert
-- [ ] Kamera-Scan mit echten Testetiketten je Paketdienst bestanden
+**Zielarchitektur:** ein Android-Smartphone und ein gemeinsamer Etikettendrucker. Zebra-/DataWedge-Tests sind keine Freigabebedingung des neuen Ablaufs; vorhandener Legacy-Code bleibt davon getrennt.
+
+- [ ] Vorgesehenes Android-Smartphone (Modell, Android-Version und Gerätemanagement) dokumentiert
+- [ ] Kamera-/Autofokus-Scan mit echten Testetiketten je freigegebenem Carrier bestanden
 - [ ] Manuelle Eingabe einschließlich fehlerhafter/ungewöhnlicher Nummern geprüft
-- [ ] Android-Version jedes Zebra-Geräts dokumentiert; DataWedge nur auf Android 14/API 34+ eingeplant und getestet
-- [ ] Zebra DataWedge-Profil auf jedem unterstützten Gerät geprüft
-- [ ] DataWedge Component Information auf TRAKUNA begrenzt und Signaturprüfung aktiviert
+- [ ] Ein gemeinsamer Etikettendrucker (Modell, Firmware, Medienformat und Auflösung) dokumentiert
+- [ ] WLAN-Druck mit echten Testlabels geprüft
+- [ ] Bluetooth-Druck mit echten Testlabels geprüft, sofern das konkrete Modell diesen Weg unterstützt
+- [ ] Duplikatschutz und UNKNOWN-Status nach Timeout praktisch geprüft
+- [ ] Zebra/DataWedge nur dann separat geprüft, wenn der bestehende Legacy-Pfad ausdrücklich weiterverwendet und dafür freigegeben wird; keine neue Hardwareintegration vorausgesetzt
 - [ ] Getrennte Betriebssoftware-Zuordnung für DPD, GLS, Hermes und UPS geprüft; keine falsche Carrier-App wird als Fallback geöffnet
 - [ ] Scan-Broadcast kann keine automatische Buchung auslösen
 - [ ] Hintergrundverhalten geprüft: Scans werden nur bei aktiver TRAKUNA-App im Vordergrund verarbeitet
@@ -55,8 +58,8 @@ Für **jeden** Paketdienst und jede Betriebssoftware ist ein eigener Nachweis er
 
 ### Carrier-spezifische Pflichtfreigaben
 
-- [ ] **DPD:** TC26/DataWedge-Test, autorisierte Shop-Schnittstelle und alle vier Shopabläufe bestätigt
-- [ ] **GLS:** TC26/DataWedge-Test, autorisierte Shop-Schnittstelle und alle vier Shopabläufe bestätigt
+- [ ] **DPD:** offizieller Portal-/Labelübergabeweg, Betreiberberechtigung und die benötigten Shopabläufe bestätigt
+- [ ] **GLS:** offizieller Portal-/Labelübergabeweg, Betreiberberechtigung und die benötigten Shopabläufe bestätigt
 - [ ] **Hermes:** angekündigtes Nachfolgegerät nach Ankunft inventarisiert und Kompatibilität geprüft; bestehender Ablauf bis zur freigegebenen Umstellung unangetastet; autorisierte Schnittstelle und alle vier Shopabläufe bestätigt
 - [ ] **UPS:** Hardware/Shopsoftware erhoben, offizielle App `com.ups.accesspoint`/Android-9+-Anforderung geprüft, Access-Point-Partnerfreigabe und alle vier Shopabläufe bestätigt
 
