@@ -292,6 +292,15 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun officialCarrierUrlsCanSupplyOpaquePathIdsButUntrustedHostsCannot() {
+        assertEquals("12345678901234", ShipmentRules.extractTrackingNumber("https://www.dpd.com/track/12345678901234"))
+        assertEquals("GLS123456789", ShipmentRules.extractTrackingNumber("https://gls-group.eu/parcel/GLS123456789"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/track/12345678901234"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://dpd.com.attacker.example/track/12345678901234"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://www.dpd.com/track/123456"))
+    }
+
+    @Test
     fun outgoingAndReturnFlowsFinishAtCarrierHandover() {
         assertEquals(ShipmentStatus.HANDED_TO_CARRIER, ShipmentRules.nextStatus(ShipmentFlow.OUTGOING_FROM_CUSTOMER, ShipmentStatus.ACCEPTED_FROM_CUSTOMER))
         assertEquals(ShipmentStatus.HANDED_TO_CARRIER, ShipmentRules.nextStatus(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.RETURN_ACCEPTED))

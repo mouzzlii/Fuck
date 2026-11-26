@@ -624,6 +624,8 @@ object ShipmentRules {
             if (uri.scheme?.lowercase() !in setOf("http", "https") ||
                 uri.host.isNullOrBlank() || uri.rawUserInfo != null
             ) return null
+            // Official carrier hosts provide context for opaque IDs in URL paths.
+            val recognizedUrlCarrier = CarrierPortalDomains.identifyFromUrl(cleaned)
 
             // Prefer fields explicitly named as shipment/tracking numbers over auxiliary
             // carrier references. Some GLS QR payloads contain both a numeric parcel
@@ -657,12 +659,16 @@ object ShipmentRules {
             if (queryCandidates.isNotEmpty()) return unique(queryCandidates)
             if (trackIdCandidates.isNotEmpty()) return unique(trackIdCandidates)
 
-            // A path segment is accepted only when it has a distinctive known format.
-            // Arbitrary IDs in unrelated URLs are not treated as parcel tracking numbers.
+            // Official carrier URLs can contain opaque path IDs (e.g. DPD numeric codes).
+            // Accept one plausible >=8-character ID only on an allowlisted carrier host.
+            // For every other host, retain the stricter distinctive-format requirement.
             val pathCandidates = uri.path.orEmpty().split("/")
                 .filter { it.isNotBlank() }
                 .mapNotNull(::plausible)
-                .filter { identifyCarrier(it) != null }
+                .filter { candidate ->
+                    if (recognizedUrlCarrier != null) candidate.length >= 8
+                    else identifyCarrier(candidate) != null
+                }
             return unique(pathCandidates)
         }
 
