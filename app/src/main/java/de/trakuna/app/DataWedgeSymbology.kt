@@ -45,3 +45,7 @@ internal fun isAllowedDataWedgeLabelType(labelType: String?): Boolean {
         "LABEL-TYPE-UPCE1"
     )
 }
+
+/** EAN-13 is a product identifier, not a parcel tracking number. */
+internal fun isDataWedgeEan13(labelType: String?): Boolean =
+    labelType?.trim()?.equals("LABEL-TYPE-EAN13", ignoreCase = true) == true
