@@ -342,3 +342,13 @@ Die automatisierte Unit-Prüfung deckt die Bestätigungslogik (stabile Folge, le
 - [ ] **Wiederherstellung nach Migrationsfehler:** Eine zuvor erstellte gültige Sicherung importieren. Der beschädigte lokale Bestand darf erst nach erfolgreicher Validierung und ausdrücklicher Bestätigung ersetzt werden.
 
 Die automatisierten Android-Instrumentierungstests prüfen sowohl eine erfolgreiche Legacy-Migration als auch den Erhalt eines ungültigen Altbestands. Der beschädigte Fall darf nur in einer isolierten Testinstallation durchgeführt werden.
+
+## 14. CSV-Export: Responsivität und Dateispeicherung
+
+- [ ] **Kleiner Export:** Eine kleine Sendungsliste exportieren und prüfen, dass die CSV-Datei mit UTF-8-BOM gespeichert wird und Umlaute korrekt dargestellt werden.
+- [ ] **Großer Export:** Mit einem umfangreichen Testbestand exportieren. Die Oberfläche muss während Vorbereitung und Dateischreiben bedienbar bleiben; keine sichtbare Blockade durch Datei-I/O.
+- [ ] **Abbrechen:** Dateiauswahl abbrechen. TRAKUNA muss den Abbruch melden und darf nicht im Beschäftigt-Zustand bleiben.
+- [ ] **Schreibfehler:** In einer isolierten Testumgebung einen nicht verfügbaren oder fehlerhaften Dokumentanbieter verwenden. TRAKUNA muss den Fehler verständlich melden und danach wieder bedienbar sein.
+- [ ] **Parallelaktionen:** Während CSV-Vorbereitung oder -Speicherung dürfen Backup-Import und Backup-Export nicht gleichzeitig gestartet werden.
+
+CSV-Erstellung läuft auf einem Hintergrund-Dispatcher; das Schreiben in den vom Android-Dokumentanbieter gelieferten Ausgabestrom läuft auf `Dispatchers.IO`. Die manuelle Prüfung auf einem realen Android-Gerät bleibt erforderlich.
