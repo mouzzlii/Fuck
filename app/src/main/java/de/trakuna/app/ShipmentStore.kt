@@ -93,6 +93,9 @@ class ShipmentStore(context: Context) {
                     error("Alte unverschlüsselte Daten konnten nicht entfernt werden.")
                 }
             } else if (legacy != null) {
+                // Validate the plaintext source before replacing it. If an old
+                // preference is malformed, keep the original recoverable value.
+                validateStoredPayload(legacy)
                 val replacement = encrypt(legacy)
                 if (!prefs.edit()
                         .putString(KEY_RECORDS_ENCRYPTED, replacement)

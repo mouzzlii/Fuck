@@ -227,6 +227,35 @@ class EncryptedStorageInstrumentedTest {
     }
 
 
+    @Test
+    fun validLegacyPlaintextStoreMigratesOnlyAfterValidation() {
+        val legacy = """[{"id":"legacy-migration","trackingNumber":"LEGACY123456","carrier":"DPD","flow":"INCOMING_FOR_CUSTOMER","status":"RECEIVED_BY_SHOP","createdAt":100,"updatedAt":100,"recipient":"Legacy Empfaenger","note":"Alter Datensatz"}]"""
+        val preferences = context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE)
+        assertTrue(preferences.edit().putString("records_v1", legacy).commit())
+
+        val migrated = ShipmentStore(context)
+
+        assertEquals(null, migrated.storageError())
+        assertEquals("LEGACY123456", migrated.all().single().trackingNumber)
+        assertFalse(preferences.contains("records_v1"))
+        val encrypted = preferences.getString("records_encrypted_v2", null)
+        assertNotNull(encrypted)
+        assertFalse(encrypted!!.contains("LEGACY123456"))
+    }
+
+    @Test
+    fun malformedLegacyPlaintextStoreIsPreservedInsteadOfEncryptedAndDeleted() {
+        val legacy = "not valid JSON"
+        val preferences = context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE)
+        assertTrue(preferences.edit().putString("records_v1", legacy).commit())
+
+        val reopened = ShipmentStore(context)
+
+        assertNotNull(reopened.storageError())
+        assertEquals(legacy, preferences.getString("records_v1", null))
+        assertFalse(preferences.contains("records_encrypted_v2"))
+    }
+
     private fun clearStorePreferences() {
         context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE).edit().clear().commit()
         context.getSharedPreferences("trakuna_handoff", Context.MODE_PRIVATE).edit().clear().commit()
