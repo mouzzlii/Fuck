@@ -15,7 +15,7 @@
 **Hinweis:** Der lokale Shadow Mode blockiert den durch TRAKUNA ausgelösten Partner-App-Start. Er kontrolliert keine separat gestarteten Apps und ist keine netzwerkweite Sperre für externe Buchungen. Derzeit werden nur blockierte Partnerübergabe-Versuche automatisch protokolliert; eine vollständige Ereigniserfassung bleibt offen.
 
 
-Stand: App-Version 1.55 (versionCode 56) · CI-Build und API-35-Emulatorprüfung für Commit `cddd6559e59653ef8adc636f0c26fdf20f864` erfolgreich; 15/15 Instrumentierungstests bestanden. Reale Geräteabnahme bleibt offen.
+Stand: App-Version 1.55 (versionCode 56) · CI-Build und API-35-Emulatorprüfung für den aktuellen PR-Head `6bef8c42936a141dacd023691dd3e2c2e587606b` erfolgreich; Build `45901408936`, Emulator `45901401776`, 15/15 Instrumentierungstests bestanden. Reale Geräteabnahme bleibt offen.
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
