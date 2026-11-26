@@ -1,11 +1,19 @@
 package de.trakuna.app
 
+import android.content.Intent
+import android.content.IntentFilter
+
 /**
  * DataWedge label types accepted by TRAKUNA.
  * Keep this allow-list aligned with the CameraX/ML Kit scanner formats.
  * Missing and unknown symbology metadata is rejected rather than guessed.
  */
 internal const val DATAWEDGE_PACKAGE_NAME = "com.symbol.datawedge"
+internal const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
+
+/** DataWedge requires both the configured action and category to match. */
+internal fun createDataWedgeIntentFilter(): IntentFilter =
+    IntentFilter(DATAWEDGE_ACTION).apply { addCategory(Intent.CATEGORY_DEFAULT) }
 
 /**
  * Only Android 14 (API 34) and newer expose the original broadcast sender to a
