@@ -1,5 +1,14 @@
 # TRAKUNA – Pilotpaket für den ersten Paketshop
 
+## Aktueller Shadow-Mode-Pilotstand (Version 1.55 / versionCode 56)
+
+**Wichtige Sicherheitsgrenze:** Diese Pilotversion ist fest auf Shadow Mode eingestellt. Die Schaltfläche simuliert die Übergabe. TRAKUNA öffnet keine externe Carrier-/Partner-App, kopiert keine Sendungsnummer in die Zwischenablage und löst selbst keine Buchung oder Labelbestellung aus. Die Partner-App-Zuordnung ist im Testmodus gesperrt. Ein lokaler, redigierter Ereigniseintrag wird unter `files/test-evidence/shadow-events.jsonl` im privaten App-Speicher geführt und kann über **„Lokales Testprotokoll teilen“** weitergegeben werden. Das Protokoll enthält nur Zeitstempel, Ereignis, Testmodus, freigegebenes Carrier-Kürzel, Ergebnis und App-Version – keine Sendungsnummern.
+
+Der Shadow Mode ist eine zusätzliche Barriere innerhalb von TRAKUNA. Er kann nicht verhindern, dass Mitarbeiter unabhängig davon eine separate Carrier-App öffnen und dort manuell echte Vorgänge ausführen. Für den Pilot müssen daher Betreiber und Mitarbeiter organisatorisch festlegen, dass ausschließlich ausdrücklich freigegebene Testdaten verwendet und keine echten Buchungen in anderen Apps vorgenommen werden.
+
+Die aktuelle Log-Abdeckung protokolliert zunächst blockierte Partnerübergabe-Versuche. Eine vollständige automatische Erfassung sämtlicher Bedienhandlungen, Scanfehler, Druck- und Portalereignisse ist noch nicht umgesetzt. Nicht als vorhanden ausgeben.
+
+
 **Zielarchitektur:** ein Android-Smartphone, eine gemeinsame TRAKUNA-App, ein Etikettendrucker; WLAN und Bluetooth sind die vorgesehenen Druckwege. [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md) enthält historische Gerätehinweise und ist nicht die neue DataWedge-Zielanleitung.
 
 
