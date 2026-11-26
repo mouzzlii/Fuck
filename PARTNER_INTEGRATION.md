@@ -24,7 +24,15 @@ DPD, GLS, Hermes und UPS können getrennt jeweils einer auf dem Android-Gerät i
 
 ## Aktueller Übergabeversuch von TRAKUNA
 
-TRAKUNA versucht, die installierte Ziel-App über deren Android-Launcher-Intent zu öffnen und hängt folgende Extras an:
+**Aktueller Status (26.11.2026):** Der Pilotbuild ist fest auf SHADOW MODE geschaltet. Die Sendungsnummer wird lokal im geschützten TRAKUNA-Bestand abgelegt; der Übergabeversuch wird nur simuliert. Es wird aktuell keine externe App geöffnet, keine Nummer in die Zwischenablage kopiert und keine Buchung/Labelbestellung ausgelöst. Das lokale Testprotokoll enthält nur Zeitstempel, Ereignis, Testmodus, freigegebenes Carrier-Kürzel, Ergebnis und App-Version – keine Sendungsnummer.
+
+Die folgende Intent-Übergabe ist daher ausschließlich der **zukünftige Integrationsvertrag**, nicht das Verhalten des aktuellen Pilotbuilds. Eine Aktivierung ist erst nach separater Codeprüfung, erfolgreicher CI, Betreiberfreigabe und bestätigter Partner-Schnittstelle zulässig.
+
+TRAKUNA würde in einem späteren, ausdrücklich freigegebenen Live-Modus die installierte Ziel-App über deren Android-Launcher-Intent öffnen und folgende Extras anhängen:**Aktueller Status (26.11.2026):** Der Pilotbuild ist fest auf SHADOW MODE geschaltet. Die Sendungsnummer wird lokal im geschützten TRAKUNA-Bestand abgelegt; der Übergabeversuch wird nur simuliert. Es wird aktuell keine externe App geöffnet, keine Nummer in die Zwischenablage kopiert und keine Buchung/Labelbestellung ausgelöst. Das lokale Testprotokoll enthält nur Zeitstempel, Ereignis, Testmodus, freigegebenes Carrier-Kürzel, Ergebnis und App-Version – keine Sendungsnummer.
+
+Die folgende Intent-Übergabe ist daher ausschließlich der **zukünftige Integrationsvertrag**, nicht das Verhalten des aktuellen Pilotbuilds. Eine Aktivierung ist erst nach separater Codeprüfung, erfolgreicher CI, Betreiberfreigabe und bestätigter Partner-Schnittstelle zulässig.
+
+TRAKUNA würde in einem späteren, ausdrücklich freigegebenen Live-Modus die installierte Ziel-App über deren Android-Launcher-Intent öffnen und folgende Extras anhängen:
 
 | Schlüssel | Typ | Inhalt |
 |---|---|---|
