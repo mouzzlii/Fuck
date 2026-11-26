@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - integration/trakuna-combined-2026-11-25
     paths:
       - "app/src/androidTest/**"
       - "app/src/main/java/de/trakuna/app/**"
@@ -15,6 +16,7 @@ on:
     branches:
       - main
       - feature/scan-diagnostics
+      - integration/trakuna-combined-2026-11-25
     paths:
       - "app/src/androidTest/**"
       - "app/src/main/java/de/trakuna/app/**"
