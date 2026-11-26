@@ -7,6 +7,13 @@ import android.os.Build
 import android.os.PersistableBundle
 import android.content.Context
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+
 /** Creates a plain-text diagnostic clip without exposing its preview on Android 13+. */
 internal fun createSensitiveDiagnosticClip(report: String): ClipData {
     val clip = ClipData.newPlainText("TRAKUNA Scan-Diagnose", report)
@@ -17,12 +24,6 @@ internal fun createSensitiveDiagnosticClip(report: String): ClipData {
     }
     return clip
 }
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 
 /** Displays transient scan observations without persisting or logging raw label content. */
 @Composable
