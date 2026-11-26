@@ -2,10 +2,14 @@
 
 Stand: 26.11.2026
 
-Diese Registry ist die zentrale Anbieterübersicht für TRAKUNA undhttps://auth.dc.gls-group.eu/auth/realms/gls/protocol/openid-connect/auth) | Priorität 1 für Shopbetrieb; offizielle Standort-Schnittstelle und Testzugang nicht bestätigt |
-| Hermes | Österreichischer Paketshop; Geschäftskundenregistrierung ist länderabhängig | [Hermes Business Deutschland](https://business.myhermes.de/registrierung/) · [Hermes Österreich PaketShop](https://www.hermesworld.com/at/unsere-dienstleistungen/distribution/paketversand/paketshops/) | Priorität 3 für Shopbetrieb; deutsche HSI-Versand-API ist keine bestätigte österreichische Paketshop-API |
-| UPS | Österreichischer Versand und Access Point | [UPS Österreich Login](https://www.ups.com/at/de) · [UPS Geschäftskonto](https://www.ups.com/) | Priorität 4 für Shopbetrieb; Access-Point-Partnerfreigabe und erlaubte App-Übergabe offen |
+Diese Registry ist die zentrale Anbieterübersicht für TRAKUNA und die spätere Multi-Carrier-Erweiterung. Anbieterprofile sind Integrationen innerhalb eines Produkts, keine eigenständigen Projekte.
+
+| Anbieter | Ziel / Land | Portal / Registrierung | Status |
+|---|---|---|---|
+| DPD | Österreichischer Paketshop und Geschäftskundenversand | [DPD Österreich Geschäftskunden](https://www.dpd.com/at/de/) | Priorität 1 für Shopbetrieb; offizielle Standort-Schnittstelle und Testzugang nicht bestätigt |
 | GLS | Österreichischer Paketshop und Geschäftskundenversand | [GLS One Österreich](https://www.gls-one.at/) · [YourGLS Anmeldung](https://auth.dc.gls-group.eu/auth/realms/gls/protocol/openid-connect/auth) | Priorität 2 für Shopbetrieb; OIDC-Loginaufruf mit Authorization Code + PKCE erkannt, aber kein API-Zugang oder Shopprozess dadurch belegt |
+| Hermes | Österreichischer Paketshop; Geschäftskundenregistrierung ist länderabhängig | [Hermes Business Deutschland](https://business.myhermes.de/registrierung/) · [Hermes Österreich PaketShops](https://www.hermesworld.com/at/unsere-dienstleistungen/distribution/paketversand/paketshops/) | Priorität 3 für Shopbetrieb; deutsche HSI-Versand-API ist keine bestätigte österreichische Paketshop-API |
+| UPS | Österreichischer Versand und Access Point | [UPS Österreich](https://www.ups.com/at/de) · [UPS Geschäftskunden](https://www.ups.com/) | Priorität 4 für Shopbetrieb; Access-Point-Partnerfreigabe und erlaubte App-Übergabe offen |
 | Österreichische Post | Österreichischer Versand und Post-Services | [Post Registrierung](https://www.post.at/sh/s/registrierung) | Anbieterprofil vorgemerkt; Geschäftskunden-/Paketshop-Schnittstelle noch zu prüfen |
 | DHL | DHL Express / MyDHL+ und internationale Sendungen | [DHL Österreich Login-Portale](https://www.dhl.com/at-de/home/login.html) | Noch einzurichten; Produkt-/Länder- und API-Berechtigung offen |
 | FedEx | Internationaler Versand | [FedEx Österreich Geschäftskonto](https://www.fedex.com/en-at/open-account.html) | Noch einzurichten; API-Zugang, Testumgebung und Tarife offen |
