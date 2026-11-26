@@ -333,3 +333,12 @@ Die Kamera übernimmt einen Sendungsnummern-Kandidaten erst nach zwölf aufeinan
 - [ ] **Keine automatische Buchung:** Auch nach bestätigtem Scan darf TRAKUNA keine Partner-App automatisch öffnen und keinen Paketshop-Vorgang anlegen. Der Mitarbeiter muss den nächsten Schritt bewusst auswählen.
 
 Die automatisierte Unit-Prüfung deckt die Bestätigungslogik (stabile Folge, leeres Bild, mehrdeutiges Bild, Kandidatenwechsel) ab. Die tatsächliche Kameraerkennung, Bildrate, Autofokusleistung und Bedienbarkeit sind auf dem Android-Zielgerät zu prüfen.
+
+## 13. Zusätzliche Abnahme der Migration alter lokaler Sendungsdaten
+
+- [ ] **Gültiger Altbestand:** Eine Testinstallation mit vorhandenen unverschlüsselten Sendungsdaten aktualisieren. Alle Vorgänge, Empfänger, Notizen und Status müssen nach der Migration vollständig erhalten bleiben.
+- [ ] **Verschlüsselte Übernahme:** Nach erfolgreicher Migration prüfen, dass der neue verschlüsselte Speicher vorhanden ist und der alte Klartextschlüssel erst nach bestätigtem Commit entfernt wurde.
+- [ ] **Beschädigter Altbestand:** In einer isolierten Testinstallation einen ungültigen Legacy-Wert simulieren. TRAKUNA muss einen Speicherfehler melden; der ursprüngliche Klartextwert muss unverändert erhalten bleiben und darf nicht durch einen verschlüsselten fehlerhaften oder leeren Bestand ersetzt werden.
+- [ ] **Wiederherstellung nach Migrationsfehler:** Eine zuvor erstellte gültige Sicherung importieren. Der beschädigte lokale Bestand darf erst nach erfolgreicher Validierung und ausdrücklicher Bestätigung ersetzt werden.
+
+Die automatisierten Android-Instrumentierungstests prüfen sowohl eine erfolgreiche Legacy-Migration als auch den Erhalt eines ungültigen Altbestands. Der beschädigte Fall darf nur in einer isolierten Testinstallation durchgeführt werden.
