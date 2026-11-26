@@ -35,6 +35,7 @@ Diese Schritte erst mit Zustimmung des Paketshop-Betreibers ausführen.
    - Intent output aktivieren.
    - Delivery: Broadcast Intent.
    - Action exakt: `de.trakuna.app.DATAWEDGE_SCAN`.
+   - Intent category exakt: `android.intent.category.DEFAULT`.
    - Daten-Extra: `com.symbol.datawedge.data_string`.
    - Profil der App `de.trakuna.app` zuordnen.
 7. Im DataWedge-Bereich „Component Information“ ausschließlich TRAKUNA (`de.trakuna.app`) als Empfänger zulassen und die Signaturprüfung aktivieren. Diese DataWedge-seitige Prüfung ist für den produktiven Geräteeinsatz vorgesehen und ergänzt, ersetzt aber nicht TRAKUNAs eigene Prüfung des eingehenden Absenders. Bei Debug-Testpaketen kann ein Update die Signatur ändern; Component Information danach erneut kontrollieren. Für den Produktivbetrieb ist ein stabiler Betreiber-Release-Signaturschlüssel erforderlich. Siehe [offizielle Zebra Intent-Output-Dokumentation](https://techdocs.zebra.com/datawedge/latest/guide/output/intent/).
