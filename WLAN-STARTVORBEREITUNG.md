@@ -1,8 +1,10 @@
 # TRAKUNA – WLAN- und Startvorbereitung für den ersten Paketshop
 
-Stand: 24. November 2026
+Stand: 26. November 2026
 
 ## Ziel
+
+**Verbindliche Zielarchitektur (26.11.2026):** Ein Android-Smartphone ist die zentrale Bedienoberfläche für die gemeinsame TRAKUNA-App und offizielle Carrier-Portale. Ein gemeinsamer Etikettendrucker soll direkt vom Smartphone über WLAN oder Bluetooth genutzt werden; konkrete Druckerkompatibilität und App-Druckcode sind noch nicht bestätigt bzw. implementiert. Zebra/DataWedge ist nur vorhandener Legacy-Code und keine Voraussetzung des neuen Ablaufs. Die nachfolgenden TC26-/DataWedge-Konfigurationsschritte sind historische optionale Regressionstests; keine bestehenden Geräte oder Profile verändern und keine neue Zebra-Hardwareintegration einrichten.
 
 Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: TRAKUNA starten und einen kontrollierten Funktionstest durchführen. Eine WLAN-Verbindung ist für die aktuelle lokale Testversion optional und nicht erforderlich.
 
@@ -12,9 +14,9 @@ Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: T
 
 | Verbindung | Zweck | Aktueller Stand |
 |---|---|---|
-| TC26 ↔ eigenes TRAKUNA auf demselben Gerät | Barcode-Übergabe von Zebra DataWedge an TRAKUNA | In TRAKUNA nur ab Android 14 (API 34) mit verifiziertem DataWedge-Absender freigeschaltet; Profil und echter Scan am Shopgerät noch nicht getestet |
+| Android-Smartphone ↔ Internet/WLAN oder Mobilfunk | Offizielle Carrier-Portale im Browser | Portalzugang und Betreiberberechtigung je Carrier prüfen; TRAKUNA selbst arbeitet derzeit lokal und besitzt keine INTERNET-Berechtigung |
 | TC26 ↔ Shop-WLAN | Internetzugang für spätere freigegebene Online-Dienste | WLAN-Fähigkeit des wahrscheinlichen TC26 vorhanden; Shop-Zugangsdaten/Netzrichtlinien vor Ort unbekannt |
-| GLS-Handgerät ↔ GLS-Drucker | Bestehender GLS-Etikettendruck | Laut Betreiber Bluetooth; nicht verändern |
+| Android-Smartphone ↔ gemeinsamer Etikettendrucker | WLAN-/Bluetooth-Druck | Zielarchitektur; konkretes Modell, Protokoll, Netzwerkfreigabe und App-Druckcode noch nicht geprüft/implementiert |
 | DPD-Handgerät ↔ DPD-Drucker | Bestehender DPD-Etikettendruck | Laut Betreiber Bluetooth; nicht verändern |
 | Bisheriges Hermes-MC3090BT ↔ Hermes-Drucker/System | Bisheriger Hermes-Ablauf bis zur Umstellung | Altgerät; laut Betreiber nächste Woche Austausch, bis dahin nicht verändern |
 | UPS-Gerät/Arbeitsplatz ↔ UPS-System/Drucker | UPS-Paketshop-Ablauf | Hardware und Verbindung noch nicht erhoben; vor Ort aufnehmen, nichts verändern |
@@ -43,7 +45,7 @@ Diese Schritte erst mit Zustimmung des Paketshop-Betreibers ausführen.
 9. Prüfen, dass ein Scan allein keine Buchung und keinen Etikettendruck auslöst.
 10. Erst nach dokumentierter Freigabe weitere Tests durchführen.
 
-Die DataWedge-Konfiguration muss auf jedem Zebra-Gerät separat vorgenommen werden. Sie ist nicht automatisch durch die Installation von TRAKUNA eingerichtet. Auf Android 14+ akzeptiert TRAKUNA nur Broadcasts, deren ursprüngliches Absenderpaket Android als exakt `com.symbol.datawedge` meldet. Kann der Absender nicht verifiziert werden, wird der Scan abgelehnt. Auf älteren Android-Versionen bleibt DataWedge in TRAKUNA deaktiviert; Kamera- und manuelle Eingabe funktionieren davon unabhängig. Eingehende Scanwerte bleiben in jedem Fall nicht vertrauenswürdige Eingaben und müssen geprüft werden.
+Die folgenden Details beschreiben ausschließlich den vorhandenen Legacy-Pfad; sie sind keine aktuelle Installationsanweisung. Die DataWedge-Konfiguration müsste bei einer gesondert freigegebenen Legacy-Nutzung auf jedem Zebra-Gerät separat vorgenommen werden. Sie ist nicht automatisch durch die Installation von TRAKUNA eingerichtet. Auf Android 14+ akzeptiert TRAKUNA nur Broadcasts, deren ursprüngliches Absenderpaket Android als exakt `com.symbol.datawedge` meldet. Kann der Absender nicht verifiziert werden, wird der Scan abgelehnt. Auf älteren Android-Versionen bleibt DataWedge in TRAKUNA deaktiviert; Kamera- und manuelle Eingabe funktionieren davon unabhängig. Eingehende Scanwerte bleiben in jedem Fall nicht vertrauenswürdige Eingaben und müssen geprüft werden.
 
 ## 3. Netzwerkanforderungen
 
@@ -75,8 +77,11 @@ Offizielle Android-Dokumentation:
 - [ ] TRAKUNA startet ohne Absturz.
 - [ ] Kamera-Berechtigung und Kamerascanner funktionieren (falls genutzt).
 - [ ] Manuelle Sendungsnummerneingabe funktioniert.
-- [ ] Android-Version des Zebra-Geräts wurde dokumentiert.
-- [ ] Falls Android 14 (API 34) oder neuer: DataWedge-Profil ist nur TRAKUNA zugeordnet und Component Information / Signaturprüfung eingerichtet.
+- [ ] Zentrales Android-Smartphone und freigegebener Internetzugang für Carrier-Portale dokumentiert.
+- [ ] Gemeinsamer Drucker, Etikettenformat und unterstützter WLAN-/Bluetooth-Weg dokumentiert.
+- [ ] Kamera-/Autofokus-Scan und manuelle Eingabe mit Testetiketten geprüft.
+- [ ] WLAN-/Bluetooth-Druck mit echten Testlabels praktisch geprüft.
+- [ ] DataWedge nur bei gesonderter Freigabe als optionaler Legacy-Regressionstest geprüft.
 - [ ] Falls Android 13 (API 33) oder älter: DataWedge-Deaktivierung in TRAKUNA berücksichtigt; Kamera oder manuelle Eingabe getestet.
 - [ ] Freigegebener Testbarcode erscheint über den tatsächlich genutzten Eingabeweg im richtigen Eingabefeld.
 - [ ] Unbekannte oder mehrdeutige Scans werden nicht automatisch gebucht.
