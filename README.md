@@ -22,7 +22,8 @@ TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 - Version 1.53 ergänzte die ersten Android-Instrumentierungstestfälle für Keystore-Verschlüsselung, lokalen Speicher und Backup-Wiederherstellung. Der damalige Haupt-Build kompilierte diese Tests; die spätere Version 1.54 enthält die weiterentwickelten Scanner- und Sicherheitsprüfungen.
 - **Integrationsstand 1.54 / versionCode 55:** Der aktuelle Android-Build [45722303637](https://github.com/mouzzlii/Fuck/actions/runs/45722303637) und der API-35-Emulatorlauf [45722303671](https://github.com/mouzzlii/Fuck/actions/runs/45722303671) sind für Commit `25558994d553a509ea7733fd478b5153a539ff94` erfolgreich. Geprüft wurden Unit-Tests, Kompilierung der Android-Instrumentierungstests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und **8/8 Emulator-Instrumentierungstests**. Die Debug-APK-Prüfsumme wurde lokal gegen die Artefakt-Prüfsummendatei verifiziert.
 - Debug-Artefakt: `TRAKUNA-Android`, Artifact-ID `15072192619`, verfügbar bis 09.12.2026, 23:26 UTC. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
-- Der Integrationsstand liegt in Draft-PR #25 und ist noch nicht in `main` übernommen. Reale Kamera-/Zebra-Gerätetests sowie manuelle Backup-Wiederherstellung bleiben offen.
+- Der Integrationsstand liegt in Draft-PR #25 und ist noch nicht in `main` übernommen. Reale Kamera-/Druckerhardware sowie manuelle Backup-Wiederherstellung bleiben offen.
+- **Nachintegration PR #35 – aktueller Integrations-Head:** `a372591b131888a144f59b5780ccab7730d6db18`. Vollständiger Android-Build/Unit-Tests/Lint/Manifest-/Offline-Prüfungen erfolgreich (Run [45883226923](https://github.com/mouzzlii/Fuck/actions/runs/45883226923)); API-35-Emulator-Instrumentierung erfolgreich (Run [45883226995](https://github.com/mouzzlii/Fuck/actions/runs/45883226995)). PR #25 bleibt Draft und ungemergt; reale Kamera-/Autofokusprüfung, Drucker-/WLAN-/Bluetooth-Abnahme und Backup-Restore auf einem echten Gerät bleiben offen.
 
 **Wichtig:** Der aktuelle Integrationsstand ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update eine passwortgeschützte `.trakuna`-Sicherung erstellen und das Passwort getrennt aufbewahren. Die App nicht deinstallieren, solange keine verifizierte Sicherungsdatei vorliegt. CSV-Exporte bleiben Klartext. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Erfolgreiche CI-Tests ersetzen keine Tests auf den tatsächlichen Shopgeräten.
 
@@ -30,9 +31,9 @@ TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 - Die Daten werden lokal auf diesem Gerät gespeichert und verschlüsselt.
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
-- WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden noch nicht gesucht.
-- DataWedge-Empfangscode ist vorhanden; TRAKUNA verarbeitet ihn nur ab Android 14 (API 34) mit verifiziertem ursprünglichem Absender `com.symbol.datawedge`. Auf Android 13 (API 33) und älter sind Kamera-Scanner oder manuelle Eingabe zu verwenden. Das dedizierte Profil muss auf jedem geeigneten Zebra-Gerät eingerichtet werden: Intent Output als Broadcast, Action `de.trakuna.app.DATAWEDGE_SCAN`, Component Information nur für `de.trakuna.app` und aktivierte Signaturprüfung. Die In-App-Absenderprüfung bleibt zusätzlich maßgeblich. [Zebra Intent Output](https://techdocs.zebra.com/datawedge/latest/guide/output/intent/).
-- DPD, GLS, Hermes und UPS sind die vier Start-Prioritäten und in Version 1.53 direkt auswählbar. Die Auswahl ist nur eine lokale Kennzeichnung. Die App-Zuordnung öffnet die gewählte App, bestätigt aber keine Datenübernahme. Offizielle Carrier-Buchungen und bestätigte Schnittstellen sind noch nicht umgesetzt. **Das bisherige Hermes-Handgerät MC3090BT ist zu alt und soll laut letzter Betreiberinformation in der kommenden Woche durch ein neues Gerät ersetzt werden; die tatsächliche Ankunft ist noch zu bestätigen.** Modell, Betriebssystem, Scanner, Drucker und freigegebene Integrationsmöglichkeiten des Nachfolgers sind noch unbekannt. Bis zur Ankunft bleibt das bestehende Hermes-System unangetastet; danach wird das neue Gerät zunächst nur inventarisiert und geprüft, ohne Einstellungen oder den laufenden Hermes-Ablauf eigenmächtig zu verändern.
+- WLAN ist für lokale Kamera-/manuelle Scans nicht erforderlich und aktiviert keine Synchronisierung. Der künftige lokale Druckweg soll WLAN oder Bluetooth nutzen; dafür ist noch kein Druckcode freigegeben oder real getestet. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden nicht gesucht.
+- Vorhandener DataWedge-Empfangscode bleibt bis zur gesonderten Abhängigkeitsprüfung im Bestand. Er ist keine Voraussetzung und keine neue Hardwareanforderung des aktuellen Smartphone-/Portal-/Druckablaufs. Zebra-Handgeräte dienen darin ausschließlich als Internet-/Portalgeräte; keine neue Zebra-Scanner-, DataWedge- oder Drucker-Hardwareintegration dafür planen.
+- DPD, GLS, Hermes und UPS waren die ersten lokalen Auswahlprioritäten in Version 1.53. Die Auswahl ist nur eine lokale Kennzeichnung. Das Öffnen eines Anbieterportals bestätigt keine Datenübernahme oder Buchung. Acht Carrier-Profile werden zentral im Gateway dokumentiert; Profile sind keine Live-Integrationen. Offizielle Freigaben und bestätigte Schnittstellen sind je Anbieter weiterhin offen. Zebra-Handgeräte sind in der neuen Zielarchitektur ausschließlich Internet-/Portalgeräte; tatsächliche Modelle und freigegebene Integrationsmöglichkeiten bleiben zu inventarisieren. Bestehende Carrier-Systeme und Shopgeräte werden nicht eigenmächtig verändert.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
 
 ## Release-Build
@@ -41,12 +42,28 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 
 ## Integrations- und Sicherheitsdokumentation
 
+### Verbindliche Zielarchitektur ab 26.11.2026
+
+- Ein Android-Smartphone ist die zentrale Bedienoberfläche für alle unterstützten Carrier.
+- Ein gemeinsamer Etikettendrucker wird direkt vom Smartphone aus genutzt; WLAN und Bluetooth sind die vorgesehenen Verbindungswege, abhängig von der tatsächlichen Druckerkompatibilität.
+- Die offiziellen Carrier-Portale bleiben nutzbar. Labels dürfen nur über offizielle APIs oder dokumentierte Download-/Export-/Teilen-Funktionen übernommen werden.
+- Zebra-Handgeräte dienen in diesem Ablauf ausschließlich als Internet-/Portalgeräte. Keine neue Zebra-Scanner-, DataWedge- oder Drucker-Hardwareintegration dafür planen.
+- Vorhandener DataWedge-Code bleibt bis zur gesonderten Diff-/Abhängigkeitsprüfung erhalten, ist aber kein Bestandteil der neuen Zielstrecke.
+- Kein zusätzlicher PC, Cloud-Printserver oder separater Drucker ist vorausgesetzt.
+- WLAN-/Bluetooth-Druckcode, Druckerkompatibilität und reale Etikettenabnahme sind noch nicht umgesetzt.
+- Ein angenommener Druckauftrag ist keine physische Druckbestätigung. Unklare Timeouts bleiben UNKNOWN und dürfen nicht automatisch einen zweiten Druck auslösen.
+
+### Aktueller Integrationsnachweis
+
+Der offene Android-PR [#25](https://github.com/mouzzlii/Fuck/pull/25) enthält den aktuellen Integrationsstand auf Head `a372591b131888a144f59b5780ccab7730d6db18`. Android-Build, Unit-Tests, Lint, Manifest-/Offline-Prüfungen und API-35-Emulator-Instrumentierung liefen erfolgreich (Runs [45883226923](https://github.com/mouzzlii/Fuck/actions/runs/45883226923) und [45883226995](https://github.com/mouzzlii/Fuck/actions/runs/45883226995)). PR #25 bleibt Draft und ungemergt; reale Kamera-/Druckerhardware, Backup-Restore auf echtem Gerät und Carrier-API-Freigaben sind nicht abgenommen.
+
+
 - [Hardwareinventar des ersten Paketshops](HARDWARE-INVENTAR.md): vor Ort erfasste DPD-/GLS-/Hermes-Geräte sowie offene UPS-Hardwareangaben, Verbindungen, Versionsangaben und Prüfpunkte.
-- [WLAN- und Startvorbereitung](WLAN-STARTVORBEREITUNG.md): WLAN-Verbindung, DataWedge-Einrichtung, sicherer Start und Abnahmetest.
+- [WLAN- und Startvorbereitung](WLAN-STARTVORBEREITUNG.md): historische Hinweise zum früheren Geräte-/DataWedge-Ablauf; nicht als Zielarchitektur des neuen Smartphone-Portalablaufs verwenden.
 - [Pilotpaket für den ersten Paketshop](PILOT-PAKETSHOP.md): aktueller Build, Testablauf, Zielarchitektur, Integrationsvoraussetzungen und Produktionssperren.
-- [Carrier-Integrationsrecherche](CARRIER-INTEGRATIONS.md): offizielle DPD-/GLS-/Hermes-/UPS-Einstiege, technische Grenzen und konkrete nächste Schritte.
+- [Carrier-Integrationsrecherche](CARRIER-INTEGRATIONS.md): historische Recherche; die zentrale Carrier-Registry im Gateway ist die aktuelle Architekturquelle.
 - [Anfrage zur Carrier-Freigabe](ANFRAGE-CARRIER-FREIGABE.md): vorbereitete Partneranfrage mit konkreten Fragen für DPD, GLS, Hermes und UPS in Österreich.
-- [Partner-Schnittstelle und Abnahmekriterien](PARTNER_INTEGRATION.md): beschreibt den aktuellen Android-Übergabeversuch, den notwendigen Vertrag mit dem Softwareanbieter und die Tests für eine echte Integration.
+- [Partner-Schnittstelle und Abnahmekriterien](PARTNER_INTEGRATION.md): ältere Übergabe-/Integrationsnotizen; vor Umsetzung mit dem zentralen Gateway-Adaptervertrag abgleichen.
 - [Sicherheitsstatus und Produktionsfreigabe](SECURITY.md): dokumentiert umgesetzte Schutzmaßnahmen, bekannte Restrisiken und verbindliche Freigabekriterien.
 - [Sichere Mehrgerätearchitektur](MEHRGERAETE-ARCHITEKTUR.md): Zielmodell für Geräteidentität, Rollen, Offline-Warteschlange, Ereignissynchronisierung und Konfliktbehandlung; noch nicht implementiert.
 - [Mehr-KI-Arbeitsprotokoll](MEHR-KI-ARBEITSPROTOKOLL.md): gemeinsamer GitHub-Arbeitsablauf, Aufgabenpakete, unabhängige Reviews, Zugangsstatus und Kosten-/Datenschutzgrenzen.
