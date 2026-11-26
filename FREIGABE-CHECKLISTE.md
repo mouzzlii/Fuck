@@ -2,8 +2,8 @@
 
 ## Zusätzliche Sperren für den Paketshop-Pilot – Shadow Mode 1.55
 
-- [ ] Exakter Commit und erfolgreicher CI-Build für Version 1.55 / versionCode 56 bestätigt
-- [ ] Emulator-Instrumentierung für exakt denselben Commit erfolgreich
+- [x] Exakter Commit und erfolgreicher CI-Build für Version 1.55 / versionCode 56 bestätigt
+- [x] Emulator-Instrumentierung für exakt denselben Commit erfolgreich – 15/15 Tests bestanden
 - [ ] Auf Testgerät sichtbar: „Übergabe simulieren · TESTMODUS“
 - [ ] Partner-App wird durch TRAKUNA bei Übergabeversuch nicht geöffnet
 - [ ] Zwischenablage bleibt bei simuliertem Übergabeversuch unverändert
