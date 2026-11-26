@@ -1,5 +1,20 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
+## Zusätzliche Sperren für den Paketshop-Pilot – Shadow Mode 1.55
+
+- [ ] Exakter Commit und erfolgreicher CI-Build für Version 1.55 / versionCode 56 bestätigt
+- [ ] Emulator-Instrumentierung für exakt denselben Commit erfolgreich
+- [ ] Auf Testgerät sichtbar: „Übergabe simulieren · TESTMODUS“
+- [ ] Partner-App wird durch TRAKUNA bei Übergabeversuch nicht geöffnet
+- [ ] Zwischenablage bleibt bei simuliertem Übergabeversuch unverändert
+- [ ] Partner-App-Zuordnung ist im Testmodus deaktiviert
+- [ ] Redigiertes lokales Testprotokoll lässt sich teilen und enthält keine Sendungsnummern/Kundendaten
+- [ ] Paketshop-Betreiber hat Testablauf und Verbot echter Buchungen in separaten Carrier-Apps bestätigt
+- [ ] Reale Kamera-/Autofokus-, Backup-/Restore- und Druckertests separat abgeschlossen
+
+**Hinweis:** Der lokale Shadow Mode blockiert den durch TRAKUNA ausgelösten Partner-App-Start. Er kontrolliert keine separat gestarteten Apps und ist keine netzwerkweite Sperre für externe Buchungen. Derzeit werden nur blockierte Partnerübergabe-Versuche automatisch protokolliert; eine vollständige Ereigniserfassung bleibt offen.
+
+
 Stand: App-Version 1.54 (versionCode 55) · CI-Build 45769123996 und Emulator-Instrumentierung 45769124107 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
