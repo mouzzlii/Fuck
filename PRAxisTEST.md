@@ -1,6 +1,6 @@
 # TRAKUNA – Praxis-Testplan (Integrationsversion 1.54 · versionCode 55)
 
-Aktueller App-Code-Stand: Commit `25558994d553a509ea7733fd478b5153a539ff94`. Android-Build [45722303637](https://github.com/mouzzlii/Fuck/actions/runs/45722303637) und API-35-Emulatorlauf [45722303671](https://github.com/mouzzlii/Fuck/actions/runs/45722303671) sind erfolgreich; 8/8 Instrumentierungstests bestanden. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und die Android-Keystore-/Backup-Instrumentierung. Die manuellen Kamera-/Zebra-Tests und die Backup-Abnahme B1–B9 auf einem realen Android-Gerät bleiben offen. Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
+Aktueller App-Code-Stand: Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07`. Android-Build [45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) und API-35-Emulatorlauf [45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) sind erfolgreich; 8/8 Instrumentierungstests bestanden. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und die Android-Keystore-/Backup-Instrumentierung. Die manuelle Kamera-/Zebra-Abnahme und die Backup-Abnahme B1–B9 auf einem realen Android-Gerät bleiben offen. Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
 
@@ -13,7 +13,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 
 ## 2.0 Kamera-Fokus und erlaubte Codeformate
 
-- Der Kamera-Scanner ist auf QR-Code sowie lineare Strichcodes (Code 128/39/93, Codabar, EAN-13/8, ITF, UPC-A/E) begrenzt.
+- Der Kamera-Scanner ist auf QR-Code sowie lineare Strichcodes (Code 128/39/93, Codabar, EAN-13/8, ITF, UPC-A/E) begrenzt. EAN-/UPC-Retailformate werden zwar diagnostisch erkannt, aber nicht als Sendungsnummer übernommen.
 - Data Matrix, PDF417, Aztec und andere Formate dürfen von der Kamera nicht als Treffer geliefert werden.
 - Kamera nach Öffnen prüfen: Fokus stellt sich auf den mittleren Bildbereich ein; bei unterstützten Kameras läuft kontinuierlicher Autofokus.
 - Auf einen QR-Code bzw. Strichcode tippen: Autofokus-/Belichtungsmessung muss auf diesen Bereich neu auslösen.
@@ -32,7 +32,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 6. Wenn ein Zebra/DataWedge-Scan verwendet wird, prüfen, ob Rohinhalt und extrahierter Kandidat ebenfalls angezeigt werden.
 - Beim Zebra/DataWedge-Scan muss das Format-Extra `com.symbol.datawedge.label_type` mitgeliefert werden. Zugelassen sind QR/GS1-QR sowie Code 128/EAN-128, Code 39/93, Codabar, EAN-13/8, Interleaved 2 of 5 und UPC-A/E0/E1. Fehlendes oder unbekanntes Format sowie Data Matrix, GS1 Data Matrix, PDF417, Aztec, Micro QR und andere nicht freigegebene Typen müssen abgewiesen werden.
 - Im DataWedge-Profil die Decoder möglichst zusätzlich auf die tatsächlich benötigten Formate begrenzen. Die App-Allowlist ist eine zweite Schutzschicht und ersetzt die Geräteprofil-Konfiguration nicht.
-- **EAN-13-Produktbarcode (neuer Regressionstest):** Einen bekannten EAN-13-Produktbarcode über Zebra/DataWedge scannen. Das Diagnosefenster muss Format und Rohinhalt anzeigen, aber „Kein Sendungsnummern-Kandidat“ melden; das Eingabefeld darf den Produktcode nicht übernehmen. Anschließend einen ausdrücklich als Code 128 gekennzeichneten 13-stelligen Testwert prüfen: EAN-13 darf nicht pauschal alle 13-stelligen Nummern sperren. Der Test darf nur mit einem freigegebenen, nicht produktiven Testetikett erfolgen.
+- **EAN-/UPC-Retailcode (Regressionstest):** Über Zebra/DataWedge je einen bekannten EAN-13-, EAN-8-, UPC-A- und UPC-E-Produktbarcode scannen. Das Diagnosefenster muss Format und Rohinhalt anzeigen, aber „Kein Sendungsnummern-Kandidat“ melden; das Eingabefeld darf keinen dieser Produktcodes übernehmen. Anschließend dieselbe geeignete numerische Testzeichenfolge ausdrücklich als Code 128 prüfen: Die Sperre darf nur von der gemeldeten Symbologie abhängen und keine Nummern anderer Formate pauschal blockieren. Dieselben vier Retailformate auch mit der Kamera testen. Nur freigegebene, nicht produktive Testetiketten verwenden.
 - Auf Android 14 (API 34) muss TRAKUNA den ursprünglichen Broadcast-Absender `com.symbol.datawedge` verifizieren; andere oder nicht identifizierbare Absender werden abgewiesen. Auf Android 13 (API 33) und älter weist TRAKUNA DataWedge-Broadcasts vollständig zurück. Dort ausschließlich Kamera-Scanner oder manuelle Eingabe testen; DataWedge Component Information und Signaturprüfung sind kein Ersatz für die in TRAKUNA fehlende Absenderidentität.
 7. Diagnosekarte schließen bzw. einen neuen Scan ausführen. Die Rohdaten dürfen nach App-Neustart nicht als dauerhaft gespeicherte Historie erscheinen.
 8. Eine Sendungsnummer erfassen, TRAKUNA in den Hintergrund legen und das Gerät längere Zeit in Standby lassen. Falls Android den TRAKUNA-Prozess beendet, App wieder öffnen und prüfen, ob das aktive Eingabefeld wiederhergestellt wurde. Die Diagnose-Rohdaten sollen dabei bewusst nicht wiederhergestellt werden.
@@ -291,7 +291,7 @@ Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/202
 
 ## 10. Ergänzende Android-Instrumentierungstests (Integrationsversion 1.54)
 
-Der Android-Build [45722303637](https://github.com/mouzzlii/Fuck/actions/runs/45722303637) ist erfolgreich. Der separate API-35-Emulatorlauf [45722303671](https://github.com/mouzzlii/Fuck/actions/runs/45722303671) hat **8/8 Instrumentierungstests** erfolgreich ausgeführt. Dazu gehören die verschlüsselte Backup-Wiederherstellung, falsche Passwortablehnung, Legacy-PBKDF2-Kompatibilität, verschlüsselte lokale Speicherung und der Schutz vor doppelter Statusfortschreibung. Die Tests bestätigen keinen Kamera- oder Zebra-Hardwarebetrieb.
+Der Android-Build [45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) auf Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07` ist erfolgreich. Der separate API-35-Emulatorlauf [45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) auf demselben Commit hat **8/8 Instrumentierungstests** erfolgreich ausgeführt. Dazu gehören die verschlüsselte Backup-Wiederherstellung, falsche Passwortablehnung, Legacy-PBKDF2-Kompatibilität, verschlüsselte lokale Speicherung und der Schutz vor doppelter Statusfortschreibung. Die Tests bestätigen keinen Kamera- oder Zebra-Hardwarebetrieb.
 
 - [ ] **Keystore-Verschlüsselung:** Testsendung speichern, SharedPreferences kontrollieren und bestätigen, dass Sendungsnummer, Empfänger und Notiz nicht im Klartext vorkommen.
 - [ ] **Speicher-Wiederöffnung:** Neue `ShipmentStore`-Instanz erstellen und kontrollieren, dass der verschlüsselte Bestand vollständig wieder lesbar ist.
