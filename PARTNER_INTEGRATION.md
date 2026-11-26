@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: App-Version 1.54 (versionCode 55)
+Stand: App-Version 1.55 (versionCode 56)
 
 ## Zweck
 Dieses Dokument beschreibt die technische Vereinbarung für eine autorisierte Übergabe zwischen TRAKUNA und der jeweiligen Paketshop-Betriebssoftware.
@@ -17,6 +17,14 @@ Für den ersten Start sind **DPD, GLS, Hermes und UPS** die vier priorisierten P
 Die öffentlich dokumentierten Integrationswege für DPD, GLS, Hermes und UPS sind in [CARRIER-INTEGRATIONS.md](CARRIER-INTEGRATIONS.md) zusammengefasst. Diese Versand-APIs sind nicht automatisch Paketshop-Schnittstellen.
 
 Dieses Dokument beschreibt die minimale technische Vereinbarung, damit eine Paketshop- oder Carrier-App eine Sendungsnummer aus TRAKUNA übernehmen kann. Es ist **keine Behauptung**, dass eine bestehende Post-, DHL-, DPD-, GLS- oder UPS-App diese Schnittstelle bereits unterstützt.
+
+## Automatische Anbietererkennung und Browser-Portalrouting ab Version 1.55
+
+TRAKUNA erkennt einen Anbieter vorrangig anhand einer offiziellen HTTPS-Zieladresse in einem QR-Code. Zusätzlich werden nur eindeutige bekannte Sendungsnummernformate verwendet (UPS `1Z…`, UPU-S10 mit `AT` für Österreichische Post, bekannte DHL-Paket-Präfixe). DPD, GLS, Hermes, FedEx und LogoiX werden nicht anhand bloßer Nummernlängen geraten. Mehrdeutige oder unbekannte Treffer bleiben manuell zuzuordnen.
+
+Nach eindeutiger Erkennung kann TRAKUNA das zuvor vom Betreiber für genau diesen Anbieter konfigurierte offizielle HTTPS-Portal im Browser öffnen. Die Adresse wird gegen eine Anbieter-Domain-Allowlist geprüft; fremde Domains, HTTP und URLs mit eingebetteten Zugangsdaten werden abgelehnt. Weil Geschäftskundenportale je nach Land, Vertrag und Standort variieren, wird kein Login-Portal geraten oder fest als allgemeingültig vorgegeben.
+
+**Datengrenze:** Das Öffnen des Portals überträgt keine Sendungsnummer, keine Empfängerdaten und keine Zugangsdaten. Es erfolgt keine Anmeldung, Buchung, Labelbestellung oder Statusänderung. Der Mitarbeiter muss im offiziellen Portal selbst weiterarbeiten. Die native Partner-App-Übergabe bleibt unabhängig davon im Shadow Mode.
 
 ## Carrier-spezifische App-Zuordnung ab Version 1.47
 

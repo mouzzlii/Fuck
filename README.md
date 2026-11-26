@@ -8,11 +8,15 @@
   <sub>Originaldatei unverändert · nur proportionale Skalierung · <a href="https://github.com/mouzzlii/logo-M-glichkeiten-">verbindliche Logo-Regeln</a></sub>
 </div>
 
-TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+TRAKUNA 1.55 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung der Paketshop-Abläufe.
 
-## Aktueller Entwicklungsstand – Version 1.54 (versionCode 55)
+## Aktueller Entwicklungsstand – Version 1.55 (versionCode 56)
 
-- Version 1.54 ergänzt eine temporäre Scan-Diagnose für Kamera-/ML-Kit- und Zebra-DataWedge-Scans: Barcodeformat, unveränderter Rohinhalt, Anzeigeinhalt und daraus extrahierter Kandidat werden gegenübergestellt. Mehrere unterschiedliche Codes bleiben sichtbar; eine Sendungsnummer wird nur bei genau einem eindeutigen Kandidaten übernommen. Die Diagnose bleibt ausschließlich im Arbeitsspeicher und wird weder gespeichert noch protokolliert. Rohdaten können personenbezogene oder sendungsbezogene Informationen enthalten.
+- **Version 1.55 – automatische Anbietererkennung und Portalrouting:** Ein Scan kann den Paketdienst anhand einer offiziellen HTTPS-QR-Zieladresse erkennen; zusätzlich bleiben nur die bereits eindeutigen Sendungsnummernformate für UPS, Österreichische Post und DHL Paket aktiv. DPD, GLS, Hermes, Fedex und LogoiX werden nicht aus mehrdeutigen Nummernlängen erraten. Nach eindeutiger Erkennung öffnet TRAKUNA das für diesen Anbieter vom Betreiber konfigurierte offizielle HTTPS-Portal im Browser. Portaladressen werden gegen eine Anbieter-Domain-Allowlist geprüft. Unbekannte oder mehrdeutige Scans verlangen weiterhin eine manuelle Auswahl.
+- Das Portalrouting überträgt weder Sendungsnummer noch Kundendaten, meldet sich nicht an und löst keine Buchung aus. Es speichert keine Zugangsdaten oder Cookies. Die Portaladresse ist je Anbieter/Gerät separat zu konfigurieren; account- oder standortspezifische Portale werden nicht geraten.
+- **CI-Nachweis für Commit `cddd6559e59653ef8adc636378f0c26fdf20f864`:** Android-Build, Unit-Tests, Lint und Manifest-/Offline-Sicherheitsprüfungen erfolgreich ([Run 45899394764](https://github.com/mouzzlii/Fuck/actions/runs/45899394764)); Android-API-35-Emulator erfolgreich mit **15/15 Instrumentierungstests** ([Run 45899394747](https://github.com/mouzzlii/Fuck/actions/runs/45899394747)). Debug-Artefakt `TRAKUNA-Android`, Artifact-ID `15154923498`, gültig bis 10.12.2026 21:40 UTC. Release-Signierung weiterhin nicht vorhanden.
+
+- Version 1.54 ergänzte eine temporäre Scan-Diagnose für Kamera-/ML-Kit- und Zebra-DataWedge-Scans: Barcodeformat, unveränderter Rohinhalt, Anzeigeinhalt und daraus extrahierter Kandidat werden gegenübergestellt. Mehrere unterschiedliche Codes bleiben sichtbar; eine Sendungsnummer wird nur bei genau einem eindeutigen Kandidaten übernommen. Die Diagnose bleibt ausschließlich im Arbeitsspeicher und wird weder gespeichert noch protokolliert. Rohdaten können personenbezogene oder sendungsbezogene Informationen enthalten.
 
 - Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
@@ -29,7 +33,7 @@ TRAKUNA 1.54 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zu
 
 ## Aktuelle Betriebsgrenzen
 
-**Aktueller Pilot-Sicherheitsmodus:** Die Partnerübergabe ist fest auf SHADOW MODE geschaltet. Die Sendungsnummer wird lokal im geschützten TRAKUNA-Bestand abgelegt; die Übergabe wird simuliert. Es wird keine externe Carrier-/Partner-App geöffnet, keine Sendungsnummer in die Zwischenablage kopiert und keine Buchung oder Labelbestellung ausgelöst. Das lokale Testprotokoll enthält nur redigierte Ereignismetadaten, keine Sendungsnummer. Eine Freigabe des Live-Handoffs erfordert eine separate geprüfte Änderung und Betreiberfreigabe.
+**Aktueller Pilot-Sicherheitsmodus:** Die native Partner-App-Übergabe ist fest auf SHADOW MODE geschaltet. Die Sendungsnummer wird lokal im geschützten TRAKUNA-Bestand abgelegt; eine native Übergabe wird nur simuliert. Das separat implementierte Browser-Portalrouting kann nach eindeutiger Anbietererkennung ein vom Betreiber konfiguriertes offizielles Portal öffnen. Dabei werden weder Sendungsnummer noch Kundendaten übertragen; es erfolgen keine Anmeldung, Buchung oder Labelbestellung. Es wird keine native Carrier-/Partner-App geöffnet und keine Sendungsnummer in die Zwischenablage kopiert. Das lokale Testprotokoll enthält nur redigierte Ereignismetadaten, keine Sendungsnummer. Eine Freigabe des Live-Handoffs erfordert eine separate geprüfte Änderung und Betreiberfreigabe.
 
 - Die Daten werden lokal auf diesem Gerät gespeichert und verschlüsselt.
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
