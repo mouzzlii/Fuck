@@ -277,6 +277,21 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun officialCarrierQrUrlsAreRecognizedButLookalikeHostsAreRejected() {
+        assertEquals("DPD", ShipmentRules.identifyCarrier("https://www.dpd.com/track/123"))
+        assertEquals("GLS", ShipmentRules.identifyCarrier("https://gls-one.at/parcel/123"))
+        assertEquals("Hermes", ShipmentRules.identifyCarrier("https://tracking.hermesworld.com/parcel/123"))
+        assertEquals("UPS", ShipmentRules.identifyCarrier("https://www.ups.com/track"))
+        assertEquals("Österreichische Post", ShipmentRules.identifyCarrier("https://www.post.at/track"))
+        assertEquals("DHL Paket", ShipmentRules.identifyCarrier("https://www.dhl.de/track"))
+        assertEquals("DHL Express", ShipmentRules.identifyCarrier("https://mydhl.express.dhl/track"))
+        assertEquals("FedEx", ShipmentRules.identifyCarrier("https://www.fedex.com/track"))
+        assertEquals("LogoiX", ShipmentRules.identifyCarrier("https://www.logoix.com/track"))
+        assertEquals(null, ShipmentRules.identifyCarrier("https://dpd.com.attacker.example/track"))
+        assertEquals(null, ShipmentRules.identifyCarrier("12345678901234"))
+    }
+
+    @Test
     fun outgoingAndReturnFlowsFinishAtCarrierHandover() {
         assertEquals(ShipmentStatus.HANDED_TO_CARRIER, ShipmentRules.nextStatus(ShipmentFlow.OUTGOING_FROM_CUSTOMER, ShipmentStatus.ACCEPTED_FROM_CUSTOMER))
         assertEquals(ShipmentStatus.HANDED_TO_CARRIER, ShipmentRules.nextStatus(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.RETURN_ACCEPTED))

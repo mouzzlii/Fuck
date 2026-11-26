@@ -816,7 +816,10 @@ object ShipmentRules {
      * never be used to select a paid shipping product or confirm carrier acceptance.
      */
     fun identifyCarrier(raw: String): String? {
-        val value = normalizeTrackingNumber(raw).uppercase()
+        // QR labels may contain an official carrier URL. Resolve its hostname first;
+        // never infer a carrier from an ambiguous numeric length alone.
+        CarrierPortalDomains.identifyFromUrl(raw)?.let { return it }
+        val value = normalizeTrackingNumber(raw).uppercase(java.util.Locale.ROOT)
         return when {
             Regex("^1Z[A-Z0-9]{16}$").matches(value) -> "UPS"
             Regex("^[A-Z]{2}[0-9]{9}AT$").matches(value) -> "Österreichische Post"

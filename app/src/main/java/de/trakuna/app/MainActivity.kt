@@ -68,6 +68,9 @@ class MainActivity : ComponentActivity() {
             var recipient by remember { mutableStateOf("") }
             var carrierOverride by remember { mutableStateOf("") }
             var showCarrierMenu by remember { mutableStateOf(false) }
+            var showPortalSettings by remember { mutableStateOf(false) }
+            var portalSettingsCarrier by remember { mutableStateOf("DPD") }
+            var openPortalAfterSave by remember { mutableStateOf(false) }
             var shipmentNote by remember { mutableStateOf("") }
             var shipmentSearch by remember { mutableStateOf("") }
             var showArchivedShipments by remember { mutableStateOf(false) }
@@ -99,6 +102,26 @@ class MainActivity : ComponentActivity() {
             // Keep one store instance for the screen: its synchronization and initialization state
             // must be shared by every read/write operation in this UI.
             val shipmentStore = remember(context) { ShipmentStore(context) }
+
+            fun openCarrierPortal(carrier: String) {
+                when (val result = CarrierPortalRouter.open(context, carrier)) {
+                    is PortalOpenResult.Opened -> {
+                        openPortalAfterSave = false
+                        status = "Anbieter erkannt: ${result.carrier}. Das offizielle Portal wurde geöffnet. Die Sendungsnummer bleibt in TRAKUNA; es wurde nichts an den Anbieter übertragen oder gebucht."
+                    }
+                    is PortalOpenResult.Missing -> {
+                        portalSettingsCarrier = result.carrier
+                        openPortalAfterSave = true
+                        showPortalSettings = true
+                        status = "Anbieter erkannt: ${result.carrier}. Bitte einmalig die offizielle Portaladresse für diesen Paketshop hinterlegen."
+                    }
+                    is PortalOpenResult.Rejected -> {
+                        openPortalAfterSave = false
+                        status = result.message
+                    }
+                }
+            }
+
             DisposableEffect(context) {
                 val receiver = object : BroadcastReceiver() {
                     override fun onReceive(context: Context?, intent: Intent?) {
@@ -146,7 +169,14 @@ class MainActivity : ComponentActivity() {
                             return
                         }
                         number = scanned
-                        status = "Zebra-Scan empfangen. DataWedge-Absender verifiziert. Sendungsnummer bitte prüfen und den nächsten Schritt auswählen."
+                        val detectedCarrier = ShipmentRules.identifyCarrier(raw) ?: ShipmentRules.identifyCarrier(scanned)
+                        if (detectedCarrier != null) {
+                            carrierOverride = detectedCarrier
+                            status = "Zebra-Scan empfangen. Anbieter automatisch erkannt: $detectedCarrier."
+                            openCarrierPortal(detectedCarrier)
+                        } else {
+                            status = "Zebra-Scan empfangen. Anbieter nicht eindeutig erkannt; bitte Paketdienst manuell auswählen."
+                        }
                     }
                 }
                 val filter = createDataWedgeIntentFilter()
@@ -336,7 +366,16 @@ class MainActivity : ComponentActivity() {
                                         status = "Scan erfasst, aber kein eindeutiger Sendungsnummern-Kandidat. Bitte Scan-Diagnose prüfen und Nummer manuell bestätigen."
                                     } else {
                                         number = scanned
-                                        status = "Scan erkannt: $scanned. Bitte Sendungsnummer und Paketdienst prüfen. Es wurde noch nichts an eine andere App übergeben."
+                                        val detectedCarrier = diagnostic.observations.asSequence()
+                                            .mapNotNull { ShipmentRules.identifyCarrier(it.rawValue) }
+                                            .firstOrNull() ?: ShipmentRules.identifyCarrier(scanned)
+                                        if (detectedCarrier != null) {
+                                            carrierOverride = detectedCarrier
+                                            status = "Scan erkannt: $scanned · Anbieter automatisch erkannt: $detectedCarrier."
+                                            openCarrierPortal(detectedCarrier)
+                                        } else {
+                                            status = "Scan erkannt: $scanned. Anbieter nicht eindeutig erkannt; bitte Paketdienst manuell auswählen."
+                                        }
                                     }
                                 },
                                 onClose = { showScanner = false }
@@ -400,10 +439,32 @@ class MainActivity : ComponentActivity() {
                             onValueChange = { carrierOverride = it.take(80) },
                             modifier = Modifier.fillMaxWidth(),
                             label = { Text("Paketdienst (manuell änderbar)") },
-                            placeholder = { Text("DPD, GLS, Hermes oder UPS") },
+                            placeholder = { Text("DPD, GLS, Hermes, UPS oder weiterer Anbieter") },
                             supportingText = { Text("Die Auswahl kennzeichnet nur den Vorgang. Eine offizielle Carrier-Buchung oder Schnittstelle ist damit nicht verbunden.") },
                             singleLine = true
                         )
+                        OutlinedButton(
+                            onClick = {
+                                val selectedCarrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
+                                if (selectedCarrier.isBlank()) {
+                                    status = "Bitte zuerst einen Paketdienst auswählen oder einen eindeutigen Barcode scannen."
+                                } else {
+                                    openCarrierPortal(selectedCarrier)
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) { Text("Erkanntes Anbieterportal öffnen") }
+                        OutlinedButton(
+                            onClick = {
+                                val selectedCarrier = CarrierPortalDomains.canonicalCarrier(
+                                    ShipmentRules.resolveCarrierLabel(carrierOverride, number)
+                                )
+                                portalSettingsCarrier = selectedCarrier.ifBlank { "DPD" }
+                                openPortalAfterSave = false
+                                showPortalSettings = true
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) { Text("Anbieterportale konfigurieren") }
                         Button(
                             onClick = {
                                 val carrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
@@ -750,6 +811,34 @@ class MainActivity : ComponentActivity() {
                                     pendingDelete = null
                                 },
                                 onDismiss = { pendingDelete = null }
+                            )
+                        }
+                        if (showPortalSettings) {
+                            CarrierPortalSettingsDialog(
+                                context = context,
+                                initialCarrier = portalSettingsCarrier,
+                                onDismiss = {
+                                    showPortalSettings = false
+                                    openPortalAfterSave = false
+                                },
+                                onSave = { carrier, url ->
+                                    val saved = CarrierPortalRouter.savePortalUrl(context, carrier, url)
+                                    if (!saved) {
+                                        status = "Portaladresse abgelehnt. Bitte eine gültige HTTPS-Adresse auf der offiziellen Domain von $carrier verwenden."
+                                        false
+                                    } else {
+                                        status = "Offizielle Portaladresse für $carrier gespeichert."
+                                        if (openPortalAfterSave) {
+                                            openPortalAfterSave = false
+                                            when (val result = CarrierPortalRouter.open(context, carrier)) {
+                                                is PortalOpenResult.Opened -> status = "Offizielles Portal von ${result.carrier} geöffnet. Die Sendungsnummer bleibt in TRAKUNA; es wurde nichts übertragen oder gebucht."
+                                                is PortalOpenResult.Missing -> status = "Portaladresse fehlt weiterhin."
+                                                is PortalOpenResult.Rejected -> status = result.message
+                                            }
+                                        }
+                                        true
+                                    }
+                                }
                             )
                         }
                         if (showPartnerPicker) {
