@@ -1,5 +1,7 @@
 # KI-Team und kostenfreier Entwicklungsmodus
 
+**Geltungsbereich:** Dieses Dokument beschreibt den kostenfreien Entwicklungsmodus für TRAKUNA. Globale Arbeitsweise und Freigabegrenzen sind im [MAINPROMPT 2.0.6](https://github.com/mouzzlii/KI-Arbeitsplatz/blob/main/docs/MAINPROMPT.md) geregelt; die hier genannten Regeln ergänzen sie TRAKUNA-spezifisch.
+
 Stand: 23.11.2026
 
 ## Ziel
@@ -13,7 +15,10 @@ TRAKUNA wird schrittweise mit nachvollziehbarer, unabhängiger Prüfung weiteren
 | ChatGPT | In dieser Arbeitsumgebung verfügbar | Planung, Code-/Dokumentationsprüfung, Tool-Orchestrierung |
 | GitHub `mouzzlii/Fuck` | Verbunden | Quellcode, Dokumentation, Commits, Actions und Artefakte |
 | Vercel-Team `Kreislauf` | Konto-/Team-Metadaten und öffentlicher AI-Gateway-Modellkatalog lesbar | Vorprüfung von Modellen und Plattformoptionen |
-| Gemini | Kein eigener ausführbarer Zugang nachgewiesen | Erst nach freiwilliger, autorisierter Verbindung einsetzen |
+| Claude | Kein eigener ausführbarer Zugang nachgewiesen | Bevorzugte unabhängige Gegenprüfung nach autorisierter Verbindung |
+| Meta Muse | Kein eigener ausführbarer Zugang nachgewiesen | Dritter Council-Beitrag nach autorisierter Verbindung |
+| Llama | Kein EU-konformer/ausführbarer Zugang nachgewiesen | Nur öffentliche, synthetische oder anonymisierte Daten bis EU-Verarbeitung belegt ist |
+| Gemini | Kein eigener ausführbarer Zugang nachgewiesen | Optional nach ausdrücklicher Auswahl und autorisierter Verbindung einsetzen |
 | Grok | Kein eigener ausführbarer Zugang nachgewiesen | Erst nach freiwilliger, autorisierter Verbindung einsetzen |
 | Bolt | Keine direkte Steuerung/Verbindung nachgewiesen | Kann später über einen freigegebenen GitHub-Workflow eingebunden werden |
 
