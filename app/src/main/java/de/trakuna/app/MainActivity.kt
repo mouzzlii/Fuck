@@ -173,7 +173,8 @@ class MainActivity : ComponentActivity() {
                         val detectedCarrier = ShipmentRules.identifyCarrier(raw) ?: ShipmentRules.identifyCarrier(scanned)
                         if (detectedCarrier != null) {
                             carrierOverride = detectedCarrier
-                            status = "Sendungsnummer erkannt · $detectedCarrier"
+                            status = "Anbieter erkannt · $detectedCarrier"
+                            openCarrierPortal(detectedCarrier)
                         } else {
                             status = "Sendungsnummer erkannt. Paketdienst bei Bedarf auswählen."
                         }
@@ -347,7 +348,8 @@ class MainActivity : ComponentActivity() {
                                             .firstOrNull() ?: ShipmentRules.identifyCarrier(scanned)
                                         if (detectedCarrier != null) {
                                             carrierOverride = detectedCarrier
-                                            status = "Sendungsnummer erkannt · $detectedCarrier"
+                                            status = "Anbieter erkannt · $detectedCarrier"
+                                            openCarrierPortal(detectedCarrier)
                                         } else {
                                             status = "Sendungsnummer erkannt. Paketdienst bei Bedarf auswählen."
                                         }
