@@ -105,7 +105,9 @@ Eine Änderung ist nur dann eine Verbesserung, wenn sie den Arbeitsablauf tatsä
 - WLAN-Statuskarte, Partner-App-Zuordnung/-Picker und Übergabe-Schaltfläche aus der normalen Oberfläche entfernt.
 - Such-/Abholansicht verschlankt: CSV-Export, Historien-/Bearbeitungsdialoge, Archiv-Umschalter/-Aktionen und endgültige Löschaktion aus der normalen Oberfläche entfernt. Bereits archivierte Datensätze bleiben in der gemeinsamen Suche sichtbar und werden nicht gelöscht.
 - Lokale Datenspeicherung, Duplikatprüfung, Statusbestätigung und Backup/Wiederherstellung bleiben erhalten.
-- Unbenutzte Partner-App-Handoff-Helfer und den externen DataWedge-/Zebra-Broadcast-Empfang aus der Hauptaktivität entfernt. Der Smartphone-Kamera-Scan und die manuelle Eingabe bleiben der einzige vorgesehene Scanweg.
+- Partner-App-Zuordnungslogik und den externen DataWedge-/Zebra-Broadcast-Empfang aus dem normalen App-Pfad entfernt. Der Smartphone-Kamera-Scan und die manuelle Eingabe bleiben der einzige vorgesehene Scanweg. Der isolierte verschlüsselte Alt-Übergabe-Cache bleibt vorerst ausschließlich zur Kompatibilität mit älteren lokalen Daten erhalten.
+- Nicht mehr benötigte Android-Paketabfragen und die Netzwerkstatus-Berechtigung entfernt; der Internetzugriff bleibt gesperrt.
+- Veralteten Speicherlimit-Hinweis an die vereinfachte Oberfläche angepasst; keine Aufforderung mehr zu nicht verfügbaren CSV-/Löschfunktionen.
 
 **Bereits nachgewiesen für Code-Commit `e737286` (Entfernung des externen DataWedge-/Zebra-Broadcast-Empfangs):** GitHub-Instrumentierungsworkflow [Run 46068641940](https://github.com/mouzzlii/Fuck/actions/runs/46068641940) erfolgreich; `:app:connectedDebugAndroidTest` endete mit `BUILD SUCCESSFUL`. Auch der vorherige UI-Stand `5929eb8` wurde erfolgreich instrumentiert.
 
