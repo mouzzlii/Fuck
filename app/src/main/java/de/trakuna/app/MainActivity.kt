@@ -370,27 +370,25 @@ class MainActivity : ComponentActivity() {
                             )
                         )
 
-                        if (carrierOverride.isNotBlank()) {
-                            Text("Paketdienst: $carrierOverride", style = MaterialTheme.typography.bodyMedium, color = Forest)
-                        } else {
-                            Box(Modifier.fillMaxWidth()) {
-                                OutlinedButton(
-                                    onClick = { showCarrierMenu = true },
-                                    modifier = Modifier.fillMaxWidth()
-                                ) { Text("Paketdienst auswählen (optional)") }
-                                DropdownMenu(
-                                    expanded = showCarrierMenu,
-                                    onDismissRequest = { showCarrierMenu = false }
-                                ) {
-                                    listOf("DPD", "GLS", "Hermes", "UPS", "Ohne Auswahl").forEach { option ->
-                                        DropdownMenuItem(
-                                            text = { Text(option) },
-                                            onClick = {
-                                                carrierOverride = if (option == "Ohne Auswahl") "" else option
-                                                showCarrierMenu = false
-                                            }
-                                        )
-                                    }
+                        Box(Modifier.fillMaxWidth()) {
+                            OutlinedButton(
+                                onClick = { showCarrierMenu = true },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(if (carrierOverride.isBlank()) "Paketdienst auswählen (optional)" else "Paketdienst: $carrierOverride")
+                            }
+                            DropdownMenu(
+                                expanded = showCarrierMenu,
+                                onDismissRequest = { showCarrierMenu = false }
+                            ) {
+                                listOf("DPD", "GLS", "Hermes", "UPS", "Ohne Auswahl").forEach { option ->
+                                    DropdownMenuItem(
+                                        text = { Text(option) },
+                                        onClick = {
+                                            carrierOverride = if (option == "Ohne Auswahl") "" else option
+                                            showCarrierMenu = false
+                                        }
+                                    )
                                 }
                             }
                         }
