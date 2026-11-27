@@ -48,7 +48,7 @@ Die Hauptansicht soll im Alltag nur enthalten:
 - eine dominante Schaltfläche **„Scannen“**;
 - ein Sendungsnummernfeld als Rückfallweg;
 - die nötige Anbieteranzeige/-auswahl, möglichst automatisch;
-- die vier Erfassungsarten in klarer, verständlicher Sprache;
+- die je nach Vorgang notwendigen Aktionen in klarer, verständlicher Sprache;
 - einen direkten Zugang zu **„Offene Sendungen“**;
 - eine knappe Rückmeldung, ob der Vorgang erfolgreich gespeichert wurde.
 
