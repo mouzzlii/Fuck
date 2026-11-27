@@ -381,3 +381,8 @@ Die automatisierten Android-Instrumentierungstests prüfen sowohl eine erfolgrei
 - [ ] **Parallelaktionen:** Während CSV-Vorbereitung oder -Speicherung dürfen Backup-Import und Backup-Export nicht gleichzeitig gestartet werden.
 
 CSV-Erstellung läuft auf einem Hintergrund-Dispatcher; das Schreiben in den vom Android-Dokumentanbieter gelieferten Ausgabestrom läuft auf `Dispatchers.IO`. Die manuelle Prüfung auf einem realen Android-Gerät bleibt erforderlich.
+
+
+## Verifizierungsnachtrag – 27.11.2026
+
+Der aktuelle PR-Head ist `eb5f861e7f225adab1de258745b3ce1dd54b305d` (Version 1.55 / versionCode 56). Für exakt diesen Commit sind Android-Build [45911560033](https://github.com/mouzzlii/Fuck/actions/runs/45911560033) und API-35-Emulatorlauf [45911560010](https://github.com/mouzzlii/Fuck/actions/runs/45911560010) erfolgreich. Im Emulator wurden 15 Instrumentierungstests gestartet und beendet; 0 fehlgeschlagen, 0 übersprungen. Frühere Commit-/Run-Angaben in den nachfolgenden historischen Abschnitten gelten nur für ihre jeweiligen Commits. Die B1–B9-Praxisabnahme und die realen Kamera-/Druckerprüfungen sind weiterhin offen.
