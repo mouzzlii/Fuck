@@ -1,5 +1,7 @@
 # KI-Council – gemeinsame Governance für vier Projekte
 
+**Geltungsbereich:** Diese Governance regelt ausschließlich Council-Verfahren, Projektgrenzen und Abnahme für TRAKUNA, SCAN-PROFIT, CHRONOS und KREISLAUF. Die globale Arbeitsverfassung ist [MAINPROMPT 2.0.7](https://github.com/mouzzlii/KI-Arbeitsplatz/blob/main/docs/MAINPROMPT.md); dieses Dokument bildet keine zweite globale Prompt- oder Befehlsquelle.
+
 Stand: 24.11.2026
 
 ## Auftrag und Geltungsbereich
@@ -12,7 +14,7 @@ Das Council koordiniert die vier eigenständigen Softwareprojekte TRAKUNA, SCAN-
 
 | Projekt | GitHub-Repository | bekannte Ausgangslage |
 |---|---|---|
-| TRAKUNA | mouzzlii/Fuck | Version 1.53 / versionCode 54; CI-Lauf 45293985061 erfolgreich, Debug-APK und Prüfsumme unabhängig verifiziert. Unit-Tests, Lint, Manifestprüfungen und Instrumentierungstest-Kompilierung erfolgreich; separater Emulator-Workflow 45295645386 für den aktuellen Code-Commit noch in Bearbeitung. Keine bestätigte Carrier-Buchung; Hermes-Nachfolgegerät, DataWedge und Shopgeräte-Abnahme offen. |
+| TRAKUNA | mouzzlii/Fuck | Version 1.55 / versionCode 56; Debug-Build und API-35-Emulatorlauf für Commit 05b7963 erfolgreich (16/16 Instrumentierungstests). Vereinfachte Oberfläche, ML-Kit-Scanner und abgesicherter 24-Stunden-Handoff-Cache. Aktuelle Praxisabnahme auf echtem Android-Gerät, Carrier-/Drucker- und Hermes-Nachfolgegerät-Prüfung offen. Keine bestätigte Carrier-Buchung. |
 | SCAN-PROFIT | mouzzlii/SCAN-PROFIT | README dokumentiert Version 2.0.65, 154 Tests und einen Vercel-READY-Deployment-Alias. Deployment basiert auf älterem Commit; neuerer GitHub-Stand und Android-Praxistest offen. |
 | CHRONOS | mouzzlii/CHRONOS | Milestone 0.5 mit Desktop- und Android-Prototyp, lokaler API, Backup/Restore und CI. Authentifizierung, Android-Gerätetests, Verschlüsselung und Großlasttests offen. |
 | KREISLAUF | mouzzlii/Kreislauf | Demo mit Marktplatz, Karma-Ledger, Profilen, Übergabe-/Treuhandmodell und PGlite. Keine öffentliche Freigabe; echte Konten, Ende-zu-Ende-Abnahme und produktive Datenhaltung offen. |
@@ -23,8 +25,9 @@ Die laufend aktualisierte, dokumentengestützte Restarbeitenliste liegt in [KI-C
 
 ### Stimmfähige KI-Mitglieder – Zielbild
 - ChatGPT: Koordination, Architekturentwürfe, Aufgabenzerlegung und Protokollführung.
-- Gemini: unabhängige Gegenentwürfe und Reviews, sobald autorisierter Zugang tatsächlich eingerichtet und getestet ist.
-- Grok: unabhängige Gegenentwürfe und Reviews, sobald autorisierter Zugang tatsächlich eingerichtet und getestet ist.
+- Anthropic / Claude: bevorzugter unabhängiger Gegenentwurf und Review, sobald ein realer autorisierter Zugang eingerichtet und getestet ist.
+- Meta / Muse oder ein echtes Meta-Llama-Modell: dritter unabhängiger Gegenentwurf und Review; Meta Muse und Llama sind technisch getrennte Providerwege und werden nicht gleichgesetzt.
+- Gemini und Grok können später als zusätzliche Perspektiven hinzukommen, sofern der Nutzer dies für den Council freigibt und reale autorisierte Zugänge nachgewiesen sind.
 
 Jede KI hat genau eine Stimme. ChatGPT erhält als Koordinator kein zusätzliches Stimmgewicht.
 
@@ -33,7 +36,7 @@ Jede KI hat genau eine Stimme. ChatGPT erhält als Koordinator kein zusätzliche
 - GitHub ist die gemeinsame, versionierte Arbeits- und Nachweiszentrale; GitHub selbst ist kein KI-Mitglied.
 - CI, Build-Systeme und Testgeräte liefern Prüfnachweise, aber keine Stimmen.
 
-**Ist-Status:** In dieser Chat-Umgebung ist ChatGPT verfügbar und GitHub verbunden. Ein ausführbarer Gemini-, Grok- oder Bolt-Zugang ist hier nicht nachgewiesen. Diese Dienste gelten daher ausdrücklich noch nicht als verbunden oder einsatzbereit.
+**Ist-Status:** ChatGPT und die GitHub-Verbindung sind in dieser Arbeitsumgebung verfügbar. Ein tatsächlicher ausführbarer Claude-, Meta-Muse-, Llama-, Gemini-, Grok- oder Bolt-Zugang ist hier nicht nachgewiesen. Diese Dienste gelten daher ausdrücklich noch nicht als verbunden oder einsatzbereit.
 
 ## Demokratisches Entscheidungsverfahren
 
