@@ -31,6 +31,8 @@ class CarrierPortalDomainsTest {
         assertNull(CarrierPortalDomains.validatePortalUrl("DPD", "https://www.ups.com/parcel"))
         assertNull(CarrierPortalDomains.validatePortalUrl("DPD", "https://dpd.com.attacker.example/parcel"))
         assertNull(CarrierPortalDomains.validatePortalUrl("DPD", "https://user@www.dpd.com/parcel"))
+        assertNull(CarrierPortalDomains.validatePortalUrl("DPD", "https://www.dpd.com/parcel?session=secret"))
+        assertNull(CarrierPortalDomains.validatePortalUrl("DPD", "https://www.dpd.com/parcel#access-token"))
         assertNull(CarrierPortalDomains.validatePortalUrl("Unknown", "https://www.dpd.com/parcel"))
     }
 }
