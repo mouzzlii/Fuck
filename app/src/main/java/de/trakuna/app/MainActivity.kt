@@ -102,20 +102,30 @@ class MainActivity : ComponentActivity() {
             val shipmentStore = remember(context) { ShipmentStore(context) }
 
             fun openCarrierPortal(carrier: String) {
+                val normalizedNumber = normalizeTrackingNumber(number)
+                val cacheSaved = ShipmentRules.isValidTrackingNumber(normalizedNumber) &&
+                    handoffCache.save(normalizedNumber, carrier)
+                if (cacheSaved) hasPendingHandoff = true
+
+                val resumeHint = if (cacheSaved) {
+                    " Die Nummer ist lokal verschlüsselt und kann 24 Stunden lang bewusst wiederaufgenommen werden."
+                } else {
+                    " Die Nummer konnte nicht für eine spätere Wiederaufnahme gespeichert werden."
+                }
                 when (val result = CarrierPortalRouter.open(context, carrier)) {
                     is PortalOpenResult.Opened -> {
                         openPortalAfterSave = false
-                        status = "Anbieter erkannt: ${result.carrier}. Das offizielle Portal wurde geöffnet. Die Sendungsnummer bleibt in TRAKUNA; es wurde nichts an den Anbieter übertragen oder gebucht."
+                        status = "Anbieter erkannt: ${result.carrier}. Das offizielle Portal wurde geöffnet. Es wurde nichts an den Anbieter übertragen oder gebucht.$resumeHint"
                     }
                     is PortalOpenResult.Missing -> {
                         portalSettingsCarrier = result.carrier
                         openPortalAfterSave = true
                         showPortalSettings = true
-                        status = "Anbieter erkannt: ${result.carrier}. Bitte einmalig die offizielle Portaladresse für diesen Paketshop hinterlegen."
+                        status = "Anbieter erkannt: ${result.carrier}. Bitte einmalig die offizielle Portaladresse für diesen Paketshop hinterlegen.$resumeHint"
                     }
                     is PortalOpenResult.Rejected -> {
                         openPortalAfterSave = false
-                        status = result.message
+                        status = result.message + resumeHint
                     }
                 }
             }
@@ -333,7 +343,7 @@ class MainActivity : ComponentActivity() {
                             OutlinedButton(
                                 onClick = { showResumeHandoffConfirmation = true },
                                 modifier = Modifier.fillMaxWidth()
-                            ) { Text("Letzte Sendung wiederaufnehmen") }
+                            ) { Text("Letzte Sendungsnummer wiederaufnehmen") }
                         }
 
                         if (showScanner) {
@@ -792,7 +802,7 @@ class MainActivity : ComponentActivity() {
                                 onDismissRequest = { showResumeHandoffConfirmation = false },
                                 title = { Text("Letzte Sendung wiederaufnehmen?") },
                                 text = {
-                                    Text("Eine zuvor übergebene Sendungsnummer wird nur innerhalb von 24 Stunden angeboten. Möchtest du sie erneut in das Eingabefeld übernehmen?")
+                                    Text("Die zuletzt für das offizielle Portal verwendete Sendungsnummer wird höchstens 24 Stunden verschlüsselt gespeichert. Möchtest du sie erneut in das Eingabefeld übernehmen?")
                                 },
                                 confirmButton = {
                                     TextButton(
