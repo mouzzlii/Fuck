@@ -44,21 +44,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val context = LocalContext.current
-            val handoffCache = remember(context) { SecureHandoffCache(context) }
-            val initialHandoffRead = remember(handoffCache) { runCatching { handoffCache.hasPendingHandoff() } }
-            var hasPendingHandoff by remember(handoffCache) { mutableStateOf(initialHandoffRead.getOrDefault(false)) }
-            var showResumeHandoffConfirmation by remember { mutableStateOf(false) }
             var number by rememberSaveable { mutableStateOf("") }
             var showScanner by remember { mutableStateOf(false) }
             var scanDiagnostic by remember { mutableStateOf<ScanDiagnosticResult?>(null) }
             var showScanDiagnostics by remember { mutableStateOf(false) }
             var showSettings by remember { mutableStateOf(false) }
-            var status by remember(handoffCache) {
-                mutableStateOf(
-                    if (initialHandoffRead.isFailure) "Gespeicherte Übergabe konnte nicht geprüft werden. Bitte erneut scannen oder manuell eingeben."
-                    else "Sendungsnummer scannen oder manuell eingeben."
-                )
-            }
+            var status by remember { mutableStateOf("Sendungsnummer scannen oder manuell eingeben.") }
             var showPartnerPicker by remember { mutableStateOf(false) }
             var partnerPickerCarrier by remember { mutableStateOf("DPD") }
             var showPartnerCarrierMenu by remember { mutableStateOf(false) }
@@ -82,50 +73,26 @@ class MainActivity : ComponentActivity() {
             var historyRecord by remember { mutableStateOf<ShipmentRecord?>(null) }
             var editRecipient by remember { mutableStateOf("") }
             var editNote by remember { mutableStateOf("") }
-            var wifiConnected by remember { mutableStateOf(isWifiConnected(context)) }
-            DisposableEffect(context) {
-                val observer = LifecycleEventObserver { _, event ->
-                    if (event == Lifecycle.Event.ON_RESUME) {
-                        wifiConnected = isWifiConnected(context)
-                        val cachedNumberRead = runCatching { handoffCache.hasPendingHandoff() }
-                        hasPendingHandoff = cachedNumberRead.getOrDefault(false)
-                        if (cachedNumberRead.isFailure) {
-                            status = "Gespeicherte Übergabe konnte nicht geprüft werden. Bitte erneut scannen oder manuell eingeben."
-                        }
-                    }
-                }
-                this@MainActivity.lifecycle.addObserver(observer)
-                onDispose { this@MainActivity.lifecycle.removeObserver(observer) }
-            }
+
             // Keep one store instance for the screen: its synchronization and initialization state
             // must be shared by every read/write operation in this UI.
             val shipmentStore = remember(context) { ShipmentStore(context) }
 
             fun openCarrierPortal(carrier: String) {
-                val normalizedNumber = normalizeTrackingNumber(number)
-                val cacheSaved = ShipmentRules.isValidTrackingNumber(normalizedNumber) &&
-                    handoffCache.save(normalizedNumber, carrier)
-                if (cacheSaved) hasPendingHandoff = true
-
-                val resumeHint = if (cacheSaved) {
-                    " Die Nummer ist lokal verschlüsselt und kann 24 Stunden lang bewusst wiederaufgenommen werden."
-                } else {
-                    " Die Nummer konnte nicht für eine spätere Wiederaufnahme gespeichert werden."
-                }
                 when (val result = CarrierPortalRouter.open(context, carrier)) {
                     is PortalOpenResult.Opened -> {
                         openPortalAfterSave = false
-                        status = "Anbieter erkannt: ${result.carrier}. Das offizielle Portal wurde geöffnet. Es wurde nichts an den Anbieter übertragen oder gebucht.$resumeHint"
+                        status = "Offizielles Portal von ${result.carrier} geöffnet. Die Sendungsnummer bleibt in TRAKUNA; es wurde nichts übertragen oder gebucht."
                     }
                     is PortalOpenResult.Missing -> {
                         portalSettingsCarrier = result.carrier
                         openPortalAfterSave = true
                         showPortalSettings = true
-                        status = "Anbieter erkannt: ${result.carrier}. Bitte einmalig die offizielle Portaladresse für diesen Paketshop hinterlegen.$resumeHint"
+                        status = "Offizielle Portaladresse für ${result.carrier} fehlt. Bitte einmalig in den Einstellungen hinterlegen."
                     }
                     is PortalOpenResult.Rejected -> {
                         openPortalAfterSave = false
-                        status = result.message + resumeHint
+                        status = result.message
                     }
                 }
             }
@@ -336,14 +303,7 @@ class MainActivity : ComponentActivity() {
                             onClick = { showScanner = !showScanner },
                             modifier = Modifier.fillMaxWidth().height(64.dp)
                         ) {
-                            Text(if (showScanner) "Scanner schließen" else "Barcode scannen")
-                        }
-
-                        if (hasPendingHandoff) {
-                            OutlinedButton(
-                                onClick = { showResumeHandoffConfirmation = true },
-                                modifier = Modifier.fillMaxWidth()
-                            ) { Text("Letzte Sendungsnummer wiederaufnehmen") }
+                            Text(if (showScanner) "Scanner schließen" else "Scannen")
                         }
 
                         if (showScanner) {
@@ -363,7 +323,6 @@ class MainActivity : ComponentActivity() {
                                         if (detectedCarrier != null) {
                                             carrierOverride = detectedCarrier
                                             status = "Anbieter erkannt · $detectedCarrier"
-                                            openCarrierPortal(detectedCarrier)
                                         } else {
                                             status = "Sendungsnummer erkannt. Paketdienst bei Bedarf auswählen."
                                         }
@@ -409,6 +368,13 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
+                        if (normalizeTrackingNumber(number).isNotBlank() && carrierOverride.isNotBlank()) {
+                            OutlinedButton(
+                                onClick = { openCarrierPortal(carrierOverride) },
+                                modifier = Modifier.fillMaxWidth()
+                            ) { Text("Offizielles Portal öffnen") }
+                        }
+
                         Button(
                             onClick = { showShipmentLedger = true },
                             enabled = normalizeTrackingNumber(number).isNotBlank(),
@@ -418,7 +384,7 @@ class MainActivity : ComponentActivity() {
                         OutlinedButton(
                             onClick = { showShipmentLedger = true },
                             modifier = Modifier.fillMaxWidth()
-                        ) { Text("Sendungen verwalten") }
+                        ) { Text("Offene Sendungen") }
 
                         Text(status, style = MaterialTheme.typography.bodyMedium, color = Forest)
 
@@ -431,7 +397,6 @@ class MainActivity : ComponentActivity() {
                             Card(Modifier.fillMaxWidth()) {
                                 Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                                     Text("Einstellungen", style = MaterialTheme.typography.titleMedium, color = Forest)
-                                    Text(if (wifiConnected) "WLAN verbunden" else "Kein WLAN verbunden", style = MaterialTheme.typography.bodySmall)
                                     OutlinedButton(
                                         onClick = { showScanDiagnostics = !showScanDiagnostics },
                                         modifier = Modifier.fillMaxWidth()
@@ -463,28 +428,6 @@ class MainActivity : ComponentActivity() {
                                         },
                                         modifier = Modifier.fillMaxWidth()
                                     ) { Text("Anbieterportale konfigurieren") }
-                                    OutlinedButton(
-                                        onClick = {
-                                            val selectedCarrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
-                                            if (selectedCarrier.isBlank()) {
-                                                status = "Bitte zuerst einen Paketdienst auswählen."
-                                            } else {
-                                                openCarrierPortal(selectedCarrier)
-                                            }
-                                        },
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) { Text("Anbieterportal öffnen") }
-
-                                    OutlinedButton(
-                                        onClick = {
-                                            val cleared = handoffCache.clear()
-                                            hasPendingHandoff = !cleared && runCatching { handoffCache.hasPendingHandoff() }.getOrDefault(false)
-                                            status = if (cleared) "Gespeicherte Übergabe wurde gelöscht."
-                                            else "Gespeicherte Übergabe konnte nicht sicher gelöscht werden."
-                                        },
-                                        enabled = hasPendingHandoff,
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) { Text("Gespeicherte Übergabe löschen") }
                                     OutlinedButton(
                                         onClick = {
                                             val report = ShadowAuditLog.readAll(context)
@@ -544,11 +487,6 @@ class MainActivity : ComponentActivity() {
                                                     carrierOverride = ""
                                                     shipmentNote = ""
                                                     showShipmentLedger = false
-                                                    val cachedHandoff = runCatching { handoffCache.trackingNumber() }.getOrNull()
-                                                    if (cachedHandoff == result.record.trackingNumber) {
-                                                        if (handoffCache.clear()) hasPendingHandoff = false
-                                                        else status += " Die zugehörige gespeicherte Übergabe konnte nicht automatisch gelöscht werden."
-                                                    }
                                                 }
                                                 shipmentRevision++
                                             }
@@ -772,13 +710,6 @@ class MainActivity : ComponentActivity() {
                                 onConfirm = {
                                     val result = shipmentStore.advance(record.id, expectedStatus = record.status)
                                     status = shipmentResultText(result)
-                                    if (result is ShipmentUpdate.Saved && ShipmentRules.isTerminalStatus(result.record.status)) {
-                                        val cachedHandoff = runCatching { handoffCache.trackingNumber() }.getOrNull()
-                                        if (cachedHandoff == result.record.trackingNumber) {
-                                            if (handoffCache.clear()) hasPendingHandoff = false
-                                            else status += " Die zugehörige gespeicherte Übergabe konnte nicht automatisch gelöscht werden."
-                                        }
-                                    }
                                     shipmentRevision++
                                     pendingAdvance = null
                                 },
@@ -797,36 +728,6 @@ class MainActivity : ComponentActivity() {
                                 onDismiss = { pendingDelete = null }
                             )
                         }
-                        if (showResumeHandoffConfirmation) {
-                            AlertDialog(
-                                onDismissRequest = { showResumeHandoffConfirmation = false },
-                                title = { Text("Letzte Sendung wiederaufnehmen?") },
-                                text = {
-                                    Text("Die zuletzt für das offizielle Portal verwendete Sendungsnummer wird höchstens 24 Stunden verschlüsselt gespeichert. Möchtest du sie erneut in das Eingabefeld übernehmen?")
-                                },
-                                confirmButton = {
-                                    TextButton(
-                                        onClick = {
-                                            val restored = runCatching { handoffCache.trackingNumber() }
-                                            val restoredNumber = restored.getOrDefault("")
-                                            if (restored.isSuccess && restoredNumber.isNotBlank()) {
-                                                number = restoredNumber
-                                                status = "Gespeicherte Sendungsnummer bewusst wiederaufgenommen."
-                                            } else {
-                                                status = if (restored.isFailure) "Gespeicherte Übergabe konnte nicht gelesen werden."
-                                                else "Die gespeicherte Übergabe ist abgelaufen oder wurde bereits gelöscht."
-                                            }
-                                            hasPendingHandoff = runCatching { handoffCache.hasPendingHandoff() }.getOrDefault(false)
-                                            showResumeHandoffConfirmation = false
-                                        }
-                                    ) { Text("Wiederaufnehmen") }
-                                },
-                                dismissButton = {
-                                    TextButton(onClick = { showResumeHandoffConfirmation = false }) { Text("Abbrechen") }
-                                }
-                            )
-                        }
-
                         if (showPortalSettings) {
                             CarrierPortalSettingsDialog(
                                 context = context,
