@@ -1,5 +1,7 @@
 # KI-Council – gemeinsame Governance für vier Projekte
 
+**Geltungsbereich:** Diese Governance regelt ausschließlich Council-Verfahren, Projektgrenzen und Abnahme für TRAKUNA, SCAN-PROFIT, CHRONOS und KREISLAUF. Die globale Arbeitsverfassung ist [MAINPROMPT 2.0.6](https://github.com/mouzzlii/KI-Arbeitsplatz/blob/main/docs/MAINPROMPT.md); dieses Dokument bildet keine zweite globale Prompt- oder Befehlsquelle.
+
 Stand: 24.11.2026
 
 ## Auftrag und Geltungsbereich
@@ -23,8 +25,9 @@ Die laufend aktualisierte, dokumentengestützte Restarbeitenliste liegt in [KI-C
 
 ### Stimmfähige KI-Mitglieder – Zielbild
 - ChatGPT: Koordination, Architekturentwürfe, Aufgabenzerlegung und Protokollführung.
-- Gemini: unabhängige Gegenentwürfe und Reviews, sobald autorisierter Zugang tatsächlich eingerichtet und getestet ist.
-- Grok: unabhängige Gegenentwürfe und Reviews, sobald autorisierter Zugang tatsächlich eingerichtet und getestet ist.
+- Anthropic / Claude: bevorzugter unabhängiger Gegenentwurf und Review, sobald ein realer autorisierter Zugang eingerichtet und getestet ist.
+- Meta / Muse oder ein echtes Meta-Llama-Modell: dritter unabhängiger Gegenentwurf und Review; Meta Muse und Llama sind technisch getrennte Providerwege und werden nicht gleichgesetzt.
+- Gemini und Grok können später als zusätzliche Perspektiven hinzukommen, sofern der Nutzer dies für den Council freigibt und reale autorisierte Zugänge nachgewiesen sind.
 
 Jede KI hat genau eine Stimme. ChatGPT erhält als Koordinator kein zusätzliches Stimmgewicht.
 
@@ -33,7 +36,7 @@ Jede KI hat genau eine Stimme. ChatGPT erhält als Koordinator kein zusätzliche
 - GitHub ist die gemeinsame, versionierte Arbeits- und Nachweiszentrale; GitHub selbst ist kein KI-Mitglied.
 - CI, Build-Systeme und Testgeräte liefern Prüfnachweise, aber keine Stimmen.
 
-**Ist-Status:** In dieser Chat-Umgebung ist ChatGPT verfügbar und GitHub verbunden. Ein ausführbarer Gemini-, Grok- oder Bolt-Zugang ist hier nicht nachgewiesen. Diese Dienste gelten daher ausdrücklich noch nicht als verbunden oder einsatzbereit.
+**Ist-Status:** ChatGPT und die GitHub-Verbindung sind in dieser Arbeitsumgebung verfügbar. Ein tatsächlicher ausführbarer Claude-, Meta-Muse-, Llama-, Gemini-, Grok- oder Bolt-Zugang ist hier nicht nachgewiesen. Diese Dienste gelten daher ausdrücklich noch nicht als verbunden oder einsatzbereit.
 
 ## Demokratisches Entscheidungsverfahren
 
