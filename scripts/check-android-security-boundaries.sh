@@ -15,6 +15,7 @@ mode, source_manifest, packaged_manifest = sys.argv[1:4]
 android = "{http://schemas.android.com/apk/res/android}"
 tools = "{http://schemas.android.com/tools}"
 internet = "android.permission.INTERNET"
+# Google Code Scanner is hosted by Google Play services; TRAKUNA must not request CAMERA.
 allowed_source_permissions = {
     "android.permission.ACCESS_NETWORK_STATE",
 }
