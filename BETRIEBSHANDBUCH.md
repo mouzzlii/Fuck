@@ -54,6 +54,7 @@ Das Ziel bleibt ein Android-Smartphone und ein gemeinsamer Etikettendrucker für
 ## 6. Test- und Freigabestatus
 
 - GitHub-Instrumentierung für den Code-Stand `e737286` erfolgreich: [Run 46068641940](https://github.com/mouzzlii/Fuck/actions/runs/46068641940), einschließlich `:app:connectedDebugAndroidTest`.
+- Für Code-Commit `741f952` (Speicherlimit-Hinweis) ist der Instrumentierungslauf [Run 46069647978](https://github.com/mouzzlii/Fuck/actions/runs/46069647978) noch ausstehend.
 - Ein erfolgreicher Emulatorlauf ersetzt keinen Test auf dem tatsächlichen Shop-Smartphone.
 - Kamera-Scan, reale Sendungsabläufe, Drucker und Carrier-Portale sind noch nicht vor Ort abgenommen.
 - PR #36 ist Draft und nicht gemergt. Der bestehende PR #25 bleibt getrennt.
