@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
             var showScanner by remember { mutableStateOf(false) }
             var scanDiagnostic by remember { mutableStateOf<ScanDiagnosticResult?>(null) }
             var showScanDiagnostics by remember { mutableStateOf(false) }
+            var showSettings by remember { mutableStateOf(false) }
             var status by remember(handoffCache) {
                 mutableStateOf(
                     if (initialHandoffNumber.isNotBlank()) "Gespeicherte Sendungsnummer wiederhergestellt."
@@ -159,7 +160,7 @@ class MainActivity : ComponentActivity() {
                             ),
                             selectedValue = scanned
                         )
-                        showScanDiagnostics = true
+                        showScanDiagnostics = false
                         if (!supportedFormat) {
                             status = "Zebra-Barcodeformat fehlt oder wird nicht unterstützt. Scan wurde aus Sicherheitsgründen nicht übernommen. Bitte DataWedge-Profil prüfen."
                             return
@@ -172,10 +173,9 @@ class MainActivity : ComponentActivity() {
                         val detectedCarrier = ShipmentRules.identifyCarrier(raw) ?: ShipmentRules.identifyCarrier(scanned)
                         if (detectedCarrier != null) {
                             carrierOverride = detectedCarrier
-                            status = "Zebra-Scan empfangen. Anbieter automatisch erkannt: $detectedCarrier."
-                            openCarrierPortal(detectedCarrier)
+                            status = "Sendungsnummer erkannt · $detectedCarrier"
                         } else {
-                            status = "Zebra-Scan empfangen. Anbieter nicht eindeutig erkannt; bitte Paketdienst manuell auswählen."
+                            status = "Sendungsnummer erkannt. Paketdienst bei Bedarf auswählen."
                         }
                     }
                 }
@@ -305,65 +305,41 @@ class MainActivity : ComponentActivity() {
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
                 Surface(Modifier.fillMaxSize(), color = Color(0xFFF3F6F3)) {
                     Column(
-                        Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing).imePadding().padding(20.dp).verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        Modifier.fillMaxSize()
+                            .windowInsetsPadding(WindowInsets.safeDrawing)
+                            .imePadding()
+                            .padding(horizontal = 20.dp, vertical = 16.dp)
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
-                        Spacer(Modifier.height(24.dp))
-                        Image(painter = painterResource(id = R.drawable.w_signature), contentDescription = "W-Signatur – Original", contentScale = ContentScale.Fit, modifier = Modifier.height(48.dp).fillMaxWidth())
+                        Spacer(Modifier.height(8.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.w_signature),
+                            contentDescription = "TRAKUNA",
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.height(42.dp).fillMaxWidth()
+                        )
                         Text("TRAKUNA", style = MaterialTheme.typography.headlineLarge, color = Forest)
-                        Text("SCAN-ZENTRALE", style = MaterialTheme.typography.labelLarge)
                         if (TrakunaTestMode.SHADOW_MODE_ENABLED) {
-                            Card(
-                                Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(containerColor = Color(0xFFE5F0EA))
-                            ) {
-                                Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    Text("TESTMODUS AKTIV", style = MaterialTheme.typography.titleSmall, color = Forest)
-                                    Text(
-                                        "TRAKUNA simuliert Übergaben. Externe Partner-Apps und echte Buchungen werden durch TRAKUNA nicht ausgelöst.",
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                }
-                            }
-                        }
-                        Card(Modifier.fillMaxWidth()) {
-                            Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Text(
-                                    if (wifiConnected) "WLAN verbunden" else "Kein WLAN verbunden",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = if (wifiConnected) Forest else MaterialTheme.colorScheme.error
-                                )
-                                Text(
-                                    if (wifiConnected)
-                                        "Dieses TRAKUNA-Gerät ist mit einem WLAN verbunden. Ob die anderen Handgeräte im selben Netzwerk erreichbar sind, ist damit noch nicht geprüft."
-                                    else
-                                        "Dieses Gerät ist derzeit nicht mit einem WLAN verbunden. Der lokale Scanbetrieb funktioniert weiterhin.",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
-                        }
-                        Button(
-                            onClick = { showScanner = !showScanner },
-                            modifier = Modifier.fillMaxWidth().height(58.dp)
-                        ) {
-                            Text(if (showScanner) "Scanner schließen" else "Barcode / QR-Code scannen")
+                            Text("TESTMODUS", style = MaterialTheme.typography.labelMedium, color = Forest)
                         }
 
-                        OutlinedButton(
-                            onClick = { showScanDiagnostics = !showScanDiagnostics },
-                            modifier = Modifier.fillMaxWidth()
+                        Button(
+                            onClick = { showScanner = !showScanner },
+                            modifier = Modifier.fillMaxWidth().height(64.dp)
                         ) {
-                            Text(if (showScanDiagnostics) "Scan-Diagnose schließen" else "Scan-Diagnose öffnen")
+                            Text(if (showScanner) "Scanner schließen" else "Barcode scannen")
                         }
+
                         if (showScanner) {
                             ScannerPanel(
                                 onDetected = { diagnostic ->
                                     showScanner = false
                                     scanDiagnostic = diagnostic
-                                    showScanDiagnostics = true
+                                    showScanDiagnostics = false
                                     val scanned = diagnostic.selectedValue
                                     if (scanned == null) {
-                                        status = "Scan erfasst, aber kein eindeutiger Sendungsnummern-Kandidat. Bitte Scan-Diagnose prüfen und Nummer manuell bestätigen."
+                                        status = "Kein eindeutiger Wert erkannt. Bitte erneut scannen oder Nummer manuell eingeben."
                                     } else {
                                         number = scanned
                                         val detectedCarrier = diagnostic.observations.asSequence()
@@ -371,36 +347,21 @@ class MainActivity : ComponentActivity() {
                                             .firstOrNull() ?: ShipmentRules.identifyCarrier(scanned)
                                         if (detectedCarrier != null) {
                                             carrierOverride = detectedCarrier
-                                            status = "Scan erkannt: $scanned · Anbieter automatisch erkannt: $detectedCarrier."
-                                            openCarrierPortal(detectedCarrier)
+                                            status = "Sendungsnummer erkannt · $detectedCarrier"
                                         } else {
-                                            status = "Scan erkannt: $scanned. Anbieter nicht eindeutig erkannt; bitte Paketdienst manuell auswählen."
+                                            status = "Sendungsnummer erkannt. Paketdienst bei Bedarf auswählen."
                                         }
                                     }
                                 },
                                 onClose = { showScanner = false }
                             )
                         }
-                        if (showScanDiagnostics) {
-                            ScanDiagnosticsPanel(
-                                diagnostic = scanDiagnostic,
-                                expanded = showScanDiagnostics,
-                                onExpandedChange = { showScanDiagnostics = it },
-                                onClear = {
-                                    scanDiagnostic = null
-                                    showScanDiagnostics = false
-                                },
-                                onCopyResult = { copied ->
-                                    status = if (copied) "Scan-Diagnose wurde in die Zwischenablage kopiert."
-                                    else "Kopieren fehlgeschlagen. Bitte Zwischenablage bzw. Geräteeinstellungen prüfen."
-                                }
-                            )
-                        }
+
                         OutlinedTextField(
                             value = number,
                             onValueChange = { number = it.take(80) },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("Sendungsnummer manuell eingeben") },
+                            label = { Text("Oder Sendungsnummer eingeben") },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Ascii,
@@ -408,139 +369,125 @@ class MainActivity : ComponentActivity() {
                                 imeAction = ImeAction.Done
                             )
                         )
-                        Text("Start-Paketdienste", style = MaterialTheme.typography.titleSmall, color = Forest)
-                        Box(modifier = Modifier.fillMaxWidth()) {
-                            OutlinedButton(
-                                onClick = { showCarrierMenu = true },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    if (carrierOverride.isBlank()) "Paketdienst auswählen (DPD, GLS, Hermes, UPS)"
-                                    else "Ausgewählt: ${carrierOverride}"
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = showCarrierMenu,
-                                onDismissRequest = { showCarrierMenu = false }
-                            ) {
-                                listOf("DPD", "GLS", "Hermes", "UPS", "Ohne Auswahl").forEach { option ->
-                                    DropdownMenuItem(
-                                        text = { Text(option) },
-                                        onClick = {
-                                            carrierOverride = if (option == "Ohne Auswahl") "" else option
-                                            showCarrierMenu = false
-                                        }
-                                    )
+
+                        if (carrierOverride.isNotBlank()) {
+                            Text("Paketdienst: $carrierOverride", style = MaterialTheme.typography.bodyMedium, color = Forest)
+                        } else {
+                            Box(Modifier.fillMaxWidth()) {
+                                OutlinedButton(
+                                    onClick = { showCarrierMenu = true },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) { Text("Paketdienst auswählen (optional)") }
+                                DropdownMenu(
+                                    expanded = showCarrierMenu,
+                                    onDismissRequest = { showCarrierMenu = false }
+                                ) {
+                                    listOf("DPD", "GLS", "Hermes", "UPS", "Ohne Auswahl").forEach { option ->
+                                        DropdownMenuItem(
+                                            text = { Text(option) },
+                                            onClick = {
+                                                carrierOverride = if (option == "Ohne Auswahl") "" else option
+                                                showCarrierMenu = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
-                        OutlinedTextField(
-                            value = carrierOverride,
-                            onValueChange = { carrierOverride = it.take(80) },
-                            modifier = Modifier.fillMaxWidth(),
-                            label = { Text("Paketdienst (manuell änderbar)") },
-                            placeholder = { Text("DPD, GLS, Hermes, UPS oder weiterer Anbieter") },
-                            supportingText = { Text("Die Auswahl kennzeichnet nur den Vorgang. Eine offizielle Carrier-Buchung oder Schnittstelle ist damit nicht verbunden.") },
-                            singleLine = true
-                        )
-                        OutlinedButton(
-                            onClick = {
-                                val selectedCarrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
-                                if (selectedCarrier.isBlank()) {
-                                    status = "Bitte zuerst einen Paketdienst auswählen oder einen eindeutigen Barcode scannen."
-                                } else {
-                                    openCarrierPortal(selectedCarrier)
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) { Text("Erkanntes Anbieterportal öffnen") }
-                        OutlinedButton(
-                            onClick = {
-                                val selectedCarrier = CarrierPortalDomains.canonicalCarrier(
-                                    ShipmentRules.resolveCarrierLabel(carrierOverride, number)
-                                )
-                                portalSettingsCarrier = selectedCarrier.ifBlank { "DPD" }
-                                openPortalAfterSave = false
-                                showPortalSettings = true
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) { Text("Anbieterportale konfigurieren") }
+
                         Button(
-                            onClick = {
-                                val carrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
-                                val result = handoffToPartnerApp(context, number, carrier.ifBlank { null })
-                                status = result.message
-                            },
+                            onClick = { showShipmentLedger = true },
                             enabled = normalizeTrackingNumber(number).isNotBlank(),
-                            modifier = Modifier.fillMaxWidth().height(54.dp)
-                        ) {
-                            Text(if (TrakunaTestMode.SHADOW_MODE_ENABLED) "Übergabe simulieren · TESTMODUS" else "An Partner-App übergeben")
-                        }
+                            modifier = Modifier.fillMaxWidth().height(56.dp)
+                        ) { Text("Sendung erfassen") }
+
                         OutlinedButton(
                             onClick = { showShipmentLedger = true },
                             modifier = Modifier.fillMaxWidth()
-                        ) { Text("Paketshop-Sendungen verwalten") }
-                        OutlinedButton(
-                            onClick = {
-                                val suggestedCarrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
-                                partnerPickerCarrier = PartnerAppConfig.priorityCarriers.firstOrNull {
-                                    it == suggestedCarrier
-                                } ?: "DPD"
-                                installedApps = findLaunchableApps(context)
-                                showAllApps = false
-                                showPartnerPicker = true
-                            },
-                            enabled = !TrakunaTestMode.SHADOW_MODE_ENABLED,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                if (TrakunaTestMode.SHADOW_MODE_ENABLED) "Partner-App-Zuordnung im Testmodus gesperrt"
-                                else "Betriebssoftware pro Paketdienst zuordnen"
-                            )
-                        }
-                        OutlinedButton(
-                            onClick = {
-                                val report = ShadowAuditLog.readAll(context)
-                                if (report.isBlank()) {
-                                    status = "Noch keine protokollierten Testaktionen vorhanden."
-                                } else {
-                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                        type = "text/plain"
-                                        putExtra(Intent.EXTRA_SUBJECT, "TRAKUNA – Testprotokoll")
-                                        putExtra(Intent.EXTRA_TEXT, report)
-                                    }
-                                    context.startActivity(Intent.createChooser(shareIntent, "Testprotokoll teilen"))
-                                }
-                            },
-                            enabled = ShadowAuditLog.readAll(context).isNotBlank(),
-                            modifier = Modifier.fillMaxWidth()
-                        ) { Text("Lokales Testprotokoll teilen") }
-                        Text(
-                            "Testereignisse liegen geschützt im App-Speicher. Das Protokoll enthält keine Sendungsnummern.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                            val partnerPrefs = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-                            PartnerAppConfig.priorityCarriers.forEach { carrier ->
-                                val label = partnerPrefs.getString("partner_label_$carrier", null)
-                                Text(
-                                    "$carrier: ${label ?: "noch nicht zugeordnet"}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = Forest
-                                )
-                            }
-                            if (PartnerAppConfig.priorityCarriers.none { partnerPrefs.contains("partner_package_$it") }) {
-                                partnerPrefs.getString("partner_label", null)?.let {
-                                    Text(
-                                        "Alte gemeinsame Zuordnung vorhanden: $it. Sie gilt vorübergehend für alle vier Paketdienste, bis Einzelzuordnungen gespeichert werden.",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                            }
-                        }
+                        ) { Text("Sendungen verwalten") }
+
                         Text(status, style = MaterialTheme.typography.bodyMedium, color = Forest)
+
+                        TextButton(
+                            onClick = { showSettings = !showSettings },
+                            modifier = Modifier.fillMaxWidth()
+                        ) { Text(if (showSettings) "Einstellungen schließen" else "Einstellungen") }
+
+                        if (showSettings) {
+                            Card(Modifier.fillMaxWidth()) {
+                                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    Text("Einstellungen", style = MaterialTheme.typography.titleMedium, color = Forest)
+                                    Text(if (wifiConnected) "WLAN verbunden" else "Kein WLAN verbunden", style = MaterialTheme.typography.bodySmall)
+                                    OutlinedButton(
+                                        onClick = { showScanDiagnostics = !showScanDiagnostics },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(if (showScanDiagnostics) "Scan-Diagnose ausblenden" else "Scan-Diagnose anzeigen")
+                                    }
+                                    if (showScanDiagnostics) {
+                                        ScanDiagnosticsPanel(
+                                            diagnostic = scanDiagnostic,
+                                            expanded = true,
+                                            onExpandedChange = { showScanDiagnostics = it },
+                                            onClear = {
+                                                scanDiagnostic = null
+                                                showScanDiagnostics = false
+                                            },
+                                            onCopyResult = { copied ->
+                                                status = if (copied) "Scan-Diagnose kopiert." else "Kopieren fehlgeschlagen."
+                                            }
+                                        )
+                                    }
+                                    OutlinedButton(
+                                        onClick = {
+                                            val selectedCarrier = CarrierPortalDomains.canonicalCarrier(
+                                                ShipmentRules.resolveCarrierLabel(carrierOverride, number)
+                                            )
+                                            portalSettingsCarrier = selectedCarrier.ifBlank { "DPD" }
+                                            openPortalAfterSave = false
+                                            showPortalSettings = true
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) { Text("Anbieterportale konfigurieren") }
+                                    OutlinedButton(
+                                        onClick = {
+                                            val selectedCarrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
+                                            if (selectedCarrier.isBlank()) {
+                                                status = "Bitte zuerst einen Paketdienst auswählen."
+                                            } else {
+                                                openCarrierPortal(selectedCarrier)
+                                            }
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) { Text("Anbieterportal öffnen") }
+                                    OutlinedButton(
+                                        onClick = {
+                                            val report = ShadowAuditLog.readAll(context)
+                                            if (report.isBlank()) {
+                                                status = "Noch keine protokollierten Testaktionen vorhanden."
+                                            } else {
+                                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                                    type = "text/plain"
+                                                    putExtra(Intent.EXTRA_SUBJECT, "TRAKUNA – Testprotokoll")
+                                                    putExtra(Intent.EXTRA_TEXT, report)
+                                                }
+                                                context.startActivity(Intent.createChooser(shareIntent, "Testprotokoll teilen"))
+                                            }
+                                        },
+                                        enabled = ShadowAuditLog.readAll(context).isNotBlank(),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) { Text("Testprotokoll teilen") }
+                                    if (TrakunaTestMode.SHADOW_MODE_ENABLED) {
+                                        Text(
+                                            "Übergaben werden in dieser Testversion nur simuliert. Echte Buchungen sind deaktiviert.",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
                         if (showShipmentLedger) {
                             AlertDialog(
                                 onDismissRequest = { showShipmentLedger = false },
