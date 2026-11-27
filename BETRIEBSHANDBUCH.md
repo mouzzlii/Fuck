@@ -54,7 +54,7 @@ Die aktuelle App-Version 1.55 läuft fest im **SHADOW MODE**. Die Zuordnung exte
 4. **„Übergabe simulieren · TESTMODUS“** betätigen, sofern dieser Testschritt benötigt wird.
 5. TRAKUNA speichert den letzten Übergabewert lokal verschlüsselt. Im Shadow Mode wird keine Partner-App geöffnet, nichts in die Zwischenablage kopiert und keine externe Buchung oder Labelbestellung ausgelöst.
 
-**Lebensdauer und Wiederaufnahme:** Wenn nach einem Scan ein offizielles Paketdienstportal geöffnet wird, speichert TRAKUNA die Sendungsnummer zusätzlich lokal verschlüsselt als Wiederaufnahmeoption. Der Wert läuft nach 24 Stunden ab. TRAKUNA setzt ihn nach einem App-Neustart oder bei Rückkehr aus dem Hintergrund nicht automatisch in das Eingabefeld ein. Stattdessen erscheint – solange der Cache gültig ist – die Schaltfläche **„Letzte Sendungsnummer wiederaufnehmen“**. Die Sendungsnummer wird erst nach ausdrücklicher Bestätigung übernommen. Unter **Einstellungen** kann der Cache jederzeit manuell gelöscht werden. Nach erfolgreicher Erfassung oder Abschluss löscht TRAKUNA nur den Cache-Eintrag, dessen Nummer zum jeweiligen Vorgang passt.
+**Portalaufruf:** Nach dem Scan öffnet TRAKUNA kein Browserfenster automatisch. Wenn der Paketdienst eindeutig erkannt wurde, kann der Mitarbeiter nach Prüfung der Sendungsnummer bewusst **„Offizielles Portal öffnen“** auswählen. Die Sendungsnummer wird dabei nicht an das Portal übertragen und es erfolgt keine Buchung. Die manuelle Portal-Konfiguration bleibt in den Einstellungen.
 
 **Nicht als Buchungserfolg werten:** Der Shadow Mode ist eine lokale Simulation. TRAKUNA besitzt derzeit keine bestätigte DPD-, GLS-, Hermes- oder UPS-Buchungsschnittstelle. Eine erfolgreiche lokale Erfassung ist keine Carrier-Bestätigung.
 
