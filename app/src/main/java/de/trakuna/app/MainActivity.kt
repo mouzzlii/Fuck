@@ -226,7 +226,7 @@ class MainActivity : ComponentActivity() {
                             value = carrierOverride,
                             onValueChange = { carrierOverride = it.take(80) },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("Paketdienst (optional)") },
+                            label = { Text("Paketdienst") },
                             placeholder = { Text(detectedCarrier ?: "Wird bei eindeutiger Nummer erkannt") },
                             singleLine = true,
                             supportingText = {
@@ -262,6 +262,7 @@ class MainActivity : ComponentActivity() {
                             onClick = { showShipmentLedger = true },
                             modifier = Modifier.fillMaxWidth().height(54.dp)
                         ) { Text("Sendungen suchen / Abholung") }
+                        Text(status, style = MaterialTheme.typography.bodyMedium, color = Forest)
 
                         if (showShipmentLedger) {
                             AlertDialog(
