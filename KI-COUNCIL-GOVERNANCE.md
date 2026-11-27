@@ -1,6 +1,6 @@
 # KI-Council – gemeinsame Governance für vier Projekte
 
-**Geltungsbereich:** Diese Governance regelt ausschließlich Council-Verfahren, Projektgrenzen und Abnahme für TRAKUNA, SCAN-PROFIT, CHRONOS und KREISLAUF. Die globale Arbeitsverfassung ist [MAINPROMPT 2.0.6](https://github.com/mouzzlii/KI-Arbeitsplatz/blob/main/docs/MAINPROMPT.md); dieses Dokument bildet keine zweite globale Prompt- oder Befehlsquelle.
+**Geltungsbereich:** Diese Governance regelt ausschließlich Council-Verfahren, Projektgrenzen und Abnahme für TRAKUNA, SCAN-PROFIT, CHRONOS und KREISLAUF. Die globale Arbeitsverfassung ist [MAINPROMPT 2.0.7](https://github.com/mouzzlii/KI-Arbeitsplatz/blob/main/docs/MAINPROMPT.md); dieses Dokument bildet keine zweite globale Prompt- oder Befehlsquelle.
 
 Stand: 24.11.2026
 
