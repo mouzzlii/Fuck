@@ -109,6 +109,8 @@ Eine Änderung ist nur dann eine Verbesserung, wenn sie den Arbeitsablauf tatsä
 - Nicht mehr benötigte Android-Paketabfragen und die Netzwerkstatus-Berechtigung entfernt; der Internetzugriff bleibt gesperrt.
 - Veralteten Speicherlimit-Hinweis an die vereinfachte Oberfläche angepasst; keine Aufforderung mehr zu nicht verfügbaren CSV-/Löschfunktionen.
 
-**Bereits nachgewiesen für Code-Commit `e737286` (Entfernung des externen DataWedge-/Zebra-Broadcast-Empfangs):** GitHub-Instrumentierungsworkflow [Run 46068641940](https://github.com/mouzzlii/Fuck/actions/runs/46068641940) erfolgreich; `:app:connectedDebugAndroidTest` endete mit `BUILD SUCCESSFUL`. Auch der vorherige UI-Stand `5929eb8` wurde erfolgreich instrumentiert.
+**Bereits nachgewiesen:** GitHub-Instrumentierung für Code-Commit `e737286` erfolgreich ([Run 46068641940](https://github.com/mouzzlii/Fuck/actions/runs/46068641940)); `:app:connectedDebugAndroidTest` endete mit `BUILD SUCCESSFUL`. Auch die vorherigen UI-Stände wurden erfolgreich instrumentiert.
+
+**Aktueller Code-Commit `741f952`:** Speicherlimit-Hinweis an die vereinfachte Oberfläche angepasst; der zugehörige Instrumentierungsworkflow [Run 46069647978](https://github.com/mouzzlii/Fuck/actions/runs/46069647978) war beim letzten Abruf noch ausstehend.
 
 **Noch nicht nachgewiesen:** Bedienung auf einem echten Android-Gerät, Kamera-Scan-Abnahme, reale Paketshop-Abläufe sowie Drucker- oder Carrier-End-to-End-Funktion. Der Emulatorlauf belegt keinen Praxistest. Bis diese Punkte geprüft sind, bleibt der PR Draft und wird nicht gemergt.
