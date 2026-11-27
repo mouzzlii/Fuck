@@ -2,9 +2,6 @@ package de.trakuna.app
 
 import android.Manifest
 import android.content.Context
-import android.content.BroadcastReceiver
-import android.content.IntentFilter
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -33,7 +30,6 @@ import androidx.camera.core.Preview
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanner
@@ -48,8 +44,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.ConcurrentHashMap
 
 private val Forest = Color(0xFF174B3A)
-private const val DATAWEDGE_ACTION = "de.trakuna.app.DATAWEDGE_SCAN"
-private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
 private const val MAX_SCAN_INPUT_CHARS = 4096
 
 class MainActivity : ComponentActivity() {
@@ -69,39 +63,6 @@ class MainActivity : ComponentActivity() {
             // Keep one store instance for the screen: its synchronization and initialization state
             // must be shared by every read/write operation in this UI.
             val shipmentStore = remember(context) { ShipmentStore(context) }
-            DisposableEffect(context) {
-                val receiver = object : BroadcastReceiver() {
-                    override fun onReceive(context: Context?, intent: Intent?) {
-                        // Ignore broadcasts while TRAKUNA is backgrounded or no longer active.
-                        if (!this@MainActivity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return
-                        if (intent?.action != DATAWEDGE_ACTION) return
-                        // Broadcasts are externally supplied; ignore a missing or wrongly typed
-                        // extra instead of allowing a malformed parcel to crash the receiver.
-                        val raw = runCatching { intent.getStringExtra(DATAWEDGE_DATA_EXTRA) }.getOrNull() ?: return
-                        if (raw.length > MAX_SCAN_INPUT_CHARS) {
-                            status = "Scaninhalt ist zu lang und wurde aus Sicherheitsgründen abgelehnt. Bitte Sendungsnummer manuell prüfen."
-                            return
-                        }
-                        val scanned = extractTrackingNumber(raw)
-                        if (scanned.isNullOrBlank()) {
-                            status = "Zebra-Scan empfangen, aber keine unterstützte Sendungsnummer erkannt. Bitte manuell prüfen."
-                            return
-                        }
-                        number = scanned
-                        status = "Zebra-Scan empfangen. Sendungsnummer bitte prüfen und den nächsten Schritt auswählen."
-                    }
-                }
-                val filter = IntentFilter(DATAWEDGE_ACTION)
-                // DataWedge is a separate Android app, so the receiver must be exported.
-                // ContextCompat supplies the required explicit flag on every supported API level.
-                ContextCompat.registerReceiver(
-                    context,
-                    receiver,
-                    filter,
-                    ContextCompat.RECEIVER_EXPORTED
-                )
-                onDispose { runCatching { context.unregisterReceiver(receiver) } }
-            }
             var pendingBackupJson by remember { mutableStateOf<String?>(null) }
             var confirmBackupExport by remember { mutableStateOf(false) }
             var pendingBackupImport by remember { mutableStateOf<String?>(null) }
