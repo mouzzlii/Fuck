@@ -136,3 +136,15 @@ Keine Passwörter, API-Schlüssel oder Kundendaten in GitHub-Issues oder Chat-Na
 - [x] TRAKUNA kennzeichnet die Übergabe an DPD/GLS/Hermes/UPS ausdrücklich nur als lokale Dokumentation.
 - [ ] Vor Ort prüfen, dass die Original-Carrier-App bzw. der Partner-Scanner die Übergabe tatsächlich quittiert.
 - [ ] Schriftliche Schnittstellenfreigabe und technische Rückmeldung pro Carrier nachweisen.
+
+
+## Aktualisierter Software-Nachweis – 27.11.2026
+
+- [x] Aktueller PR-Head `eb5f861e7f225adab1de258745b3ce1dd54b305d`, Version 1.55 / versionCode 56, identifiziert.
+- [x] Android-Build für exakt diesen Commit erfolgreich: [Run 45911560033](https://github.com/mouzzlii/Fuck/actions/runs/45911560033).
+- [x] API-35-Emulator-Instrumentierung für exakt diesen Commit erfolgreich: [Run 45911560010](https://github.com/mouzzlii/Fuck/actions/runs/45911560010), 15/15 Tests bestanden, 0 Fehler, 0 übersprungen.
+- [ ] B1–B9 manuell auf einem realen Android-Gerät durchführen und dokumentieren.
+- [ ] Reale Kamera-/Autofokus- und Druckerabnahme durchführen.
+- [ ] Release-Signierung und Update mit dauerhaftem Betreiber-Schlüssel prüfen.
+
+Historische Commit- und Run-Nachweise in den folgenden Abschnitten bleiben als Verlauf erhalten und ersetzen nicht den Nachweis für den aktuellen Head.
