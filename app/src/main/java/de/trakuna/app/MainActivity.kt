@@ -63,7 +63,6 @@ class MainActivity : ComponentActivity() {
             var shipmentRevision by remember { mutableStateOf(0) }
             var carrierOverride by remember { mutableStateOf("") }
             var shipmentSearch by remember { mutableStateOf("") }
-            var showArchivedShipments by remember { mutableStateOf(false) }
             var visibleRecordLimit by remember { mutableStateOf(100) }
             var pendingAdvance by remember { mutableStateOf<ShipmentRecord?>(null) }
             val context = LocalContext.current
@@ -270,15 +269,10 @@ class MainActivity : ComponentActivity() {
                                         Text("Suche eine Sendung und dokumentiere die Abholung über die nächste Aktion.")
                                         Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
                                         if (shipmentStorageIssue == null) {
-                                            Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} möglichen Einträgen belegt · ${shipmentRecords.count { it.archivedAt == null }} aktiv · ${shipmentRecords.count { it.archivedAt != null }} archiviert", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                            Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} Sendungen gespeichert", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         } else {
                                             Text("ACHTUNG: Lokaler Datenspeicher kann nicht gelesen werden: $shipmentStorageIssue. Neue Vorgänge und Exporte sind gesperrt. Du kannst eine vertrauenswürdige Sicherung wiederherstellen oder dich an den Support wenden.", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                                         }
-                                        OutlinedButton(
-                                            onClick = { showArchivedShipments = !showArchivedShipments; visibleRecordLimit = 100 },
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) { Text(if (showArchivedShipments) "Aktive Vorgänge anzeigen" else "Archivierte Vorgänge anzeigen") }
-                                        Text(if (showArchivedShipments) "Archiv – Vorgänge bleiben erhalten und können wiederhergestellt werden." else "Aktive Vorgänge – abgeschlossene Vorgänge können archiviert werden.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it.take(120); visibleRecordLimit = 100 }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                                         OutlinedButton(onClick = { confirmBackupExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) {
                                             Text("Vollständige Datensicherung erstellen")
@@ -292,7 +286,6 @@ class MainActivity : ComponentActivity() {
                                             Text("Noch keine Paketshop-Vorgänge erfasst.")
                                         } else {
                                             val filteredRecords = shipmentRecords.filter { record ->
-                                                (record.archivedAt != null) == showArchivedShipments &&
                                                     (shipmentSearch.isBlank() || listOf(record.trackingNumber, record.recipient, record.carrier, shipmentStatusLabel(record.status)).any { it.contains(shipmentSearch, ignoreCase = true) })
                                             }
                                             if (filteredRecords.isEmpty()) {
@@ -304,7 +297,6 @@ class MainActivity : ComponentActivity() {
                                                     Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                                         Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
                                                         Text("${shipmentFlowLabel(record.flow)} · ${shipmentStatusLabel(record.status)}")
-                                                        if (record.archivedAt != null) Text("Archiviert: ${ShipmentRules.formatTimestamp(record.archivedAt)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                         Text("Erfasst: ${ShipmentRules.formatTimestamp(record.createdAt)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                         Text("Zuletzt geändert: ${ShipmentRules.formatTimestamp(record.updatedAt)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                         if (record.carrier.isNotBlank()) Text(record.carrier, style = MaterialTheme.typography.bodySmall)
@@ -314,21 +306,6 @@ class MainActivity : ComponentActivity() {
                                                             TextButton(onClick = { pendingAdvance = record }) {
                                                                 Text(shipmentNextAction(record.flow, record.status))
                                                             }
-                                                        }
-                                                        if (record.archivedAt == null) {
-                                                            if (ShipmentRules.isTerminalStatus(record.status)) {
-                                                                TextButton(onClick = {
-                                                                    val archived = shipmentStore.archive(record.id)
-                                                                    status = if (archived) "Vorgang archiviert. Die Sendungsdaten und Historie bleiben erhalten." else "Nur abgeschlossene Vorgänge können archiviert werden."
-                                                                    shipmentRevision++
-                                                                }) { Text("Vorgang archivieren") }
-                                                            }
-                                                        } else {
-                                                            TextButton(onClick = {
-                                                                val restored = shipmentStore.restoreArchived(record.id)
-                                                                status = if (restored) "Vorgang wurde aus dem Archiv wiederhergestellt." else "Vorgang konnte nicht wiederhergestellt werden."
-                                                                shipmentRevision++
-                                                            }) { Text("Wiederherstellen") }
                                                         }
                                                     }
                                                 }
