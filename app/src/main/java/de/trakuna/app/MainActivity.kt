@@ -147,8 +147,7 @@ class MainActivity : ComponentActivity() {
                         val detectedCarrier = ShipmentRules.identifyCarrier(raw) ?: ShipmentRules.identifyCarrier(scanned)
                         if (detectedCarrier != null) {
                             carrierOverride = detectedCarrier
-                            status = "Anbieter erkannt · $detectedCarrier"
-                            openCarrierPortal(detectedCarrier)
+                            status = "Anbieter erkannt · $detectedCarrier. Prüfe den Vorgang und wähle anschließend die passende Aktion."
                         } else {
                             status = "Sendungsnummer erkannt. Paketdienst bei Bedarf auswählen."
                         }
