@@ -91,7 +91,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 16 | App schließen und neu öffnen | Lokal gespeicherte Vorgänge sind weiterhin vorhanden. |
 | 17 | Zebra-Scanner mit DataWedge-Profil auf Android 14+ scannen | Nur bei verifiziertem Absender und freigegebenem Labeltyp erscheint die Sendungsnummer im Eingabefeld; es erfolgt keine automatische Buchung. Auf Android 13 und älter muss DataWedge abgewiesen werden; Kamera/manuelle Eingabe bleiben nutzbar. |
 | 18 | Partner-App auswählen und übergeben | Cache wird vor dem Wechsel dauerhaft gespeichert; Clipboard-Ausfall darf keinen Absturz verursachen, Android 13+ markiert den Clipboard-Inhalt als sensibel; Ziel-App wird nur bei installierter App geöffnet. |
-| 18a | Nach einer erfolgreichen Übergabe das Sendungsnummernfeld leeren, TRAKUNA in den Hintergrund legen, das Gerät in den Standby schicken und TRAKUNA erneut öffnen | Die verschlüsselt gespeicherte letzte Sendungsnummer wird beim Start bzw. bei der Rückkehr in ein leeres Eingabefeld wiederhergestellt. Eine bereits eingegebene neue Nummer darf dabei nicht überschrieben werden. |
+| 18a | Nach einem Übergabeversuch TRAKUNA neu öffnen bzw. aus dem Hintergrund zurückholen | Eine gültige Cache-Nummer wird höchstens 24 Stunden angeboten, niemals automatisch ins Eingabefeld eingesetzt. Erst nach bewusster Bestätigung über „Letzte Sendung wiederaufnehmen“ wird sie übernommen; eine neue manuelle Eingabe bleibt unberührt. |
 | 19 | DPD, GLS, Hermes und UPS jeweils über „Betriebssoftware pro Paketdienst zuordnen“ einer installierten App zuweisen | Jede Zuordnung wird getrennt auf diesem Gerät gespeichert und in der Übersicht beim richtigen Carrier angezeigt. |
 | 20 | Carrier-Schnellauswahl öffnen und DPD, GLS, Hermes, UPS nacheinander auswählen | Der Auswahlknopf zeigt jeweils den gewählten Paketdienst; die Reihenfolge lautet DPD, GLS, Hermes, UPS. Die manuelle Auswahl wird bei allen drei lokalen Vorgangsarten gespeichert und an den Partner-App-Übergabeversuch weitergegeben. Es wird keine externe Buchung behauptet. |
 | 21 | „Ohne Auswahl“ wählen und einen bekannten UPS-1Z-Testcode eingeben | Die manuelle Auswahl wird geleert; der bekannte UPS-Format-Hinweis darf als Hinweis erscheinen. Der Format-Hinweis bestätigt keine Existenz oder Buchung. |
@@ -100,7 +100,7 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 24 | Gerät ohne verfügbare Kamera bzw. Kamera-Hardware nicht verfügbar | Scanner meldet den fehlenden Kamerazugriff verständlich; manuelle Eingabe bleibt bedienbar und TRAKUNA stürzt nicht ab. |
 | 25 | Leeres Etikett, unlesbarer Barcode und ungültiger/zu kurzer Code | Es wird kein Sendungsnummern-Kandidat übernommen oder übergeben; Diagnose zeigt den fehlenden bzw. ungültigen Kandidaten. |
 | 26 | Dieselbe Sendung zweimal schnell hintereinander mit Kamera und – falls unterstützt – DataWedge scannen | Es wird keine Sendung automatisch angelegt oder an eine Partner-App übergeben. Ein lokaler Vorgang entsteht ausschließlich nach bewusster Bestätigung; doppelte Scan-Ereignisse dürfen keinen doppelten Vorgang erzeugen. |
-| 27 | Activity-Neuerstellung und Prozessneustart nach Übergabe testen | Verschlüsselter letzter Übergabewert wird nur in ein leeres Eingabefeld wiederhergestellt; eine zwischenzeitlich neu eingegebene Nummer bleibt erhalten. Temporäre Scan-Rohdaten werden nicht wiederhergestellt. |
+| 27 | Activity-Neuerstellung und Prozessneustart nach Übergabe testen | Cache wird mit 24-Stunden-TTL geprüft; Wiederaufnahme erfolgt ausschließlich nach Bestätigung. Abgelaufene Werte werden entfernt; manuelles Löschen in Einstellungen funktioniert; nach Erfassung bzw. Abschluss wird nur die zugehörige Cache-Nummer gelöscht. Temporäre Scan-Rohdaten werden nicht wiederhergestellt. |
 
 
 ### 2a. Zusätzlicher Erfassungstest nach der Rückmeldung „Speichern reagiert nicht“
@@ -386,3 +386,10 @@ CSV-Erstellung läuft auf einem Hintergrund-Dispatcher; das Schreiben in den vom
 ## Verifizierungsnachtrag – 27.11.2026
 
 Der aktuelle PR-Head ist `eb5f861e7f225adab1de258745b3ce1dd54b305d` (Version 1.55 / versionCode 56). Für exakt diesen Commit sind Android-Build [45911560033](https://github.com/mouzzlii/Fuck/actions/runs/45911560033) und API-35-Emulatorlauf [45911560010](https://github.com/mouzzlii/Fuck/actions/runs/45911560010) erfolgreich. Im Emulator wurden 15 Instrumentierungstests gestartet und beendet; 0 fehlgeschlagen, 0 übersprungen. Frühere Commit-/Run-Angaben in den nachfolgenden historischen Abschnitten gelten nur für ihre jeweiligen Commits. Die B1–B9-Praxisabnahme und die realen Kamera-/Druckerprüfungen sind weiterhin offen.
+
+
+## Nachtrag: Lebensdauer der letzten Übergabe
+
+Der verschlüsselte Handoff-Cache ist auf 24 Stunden begrenzt. Ein gültiger Wert wird beim Start oder bei Rückkehr in die App nur als Wiederaufnahmeoption angezeigt und nie automatisch in das Eingabefeld geschrieben. Die Übernahme erfordert eine ausdrückliche Bestätigung. Abgelaufene oder zeitlich unplausible Werte werden verworfen. Unter Einstellungen kann der Cache jederzeit manuell gelöscht werden. Nach erfolgreicher Erfassung oder Abschluss wird nur ein Cache-Eintrag gelöscht, dessen Sendungsnummer mit dem abgeschlossenen Vorgang übereinstimmt.
+
+Automatisierte Verifikation auf dem Integrationsbranch: Unit-Tests für die Ablaufgrenze und Android-Instrumentierung für verschlüsselte Speicherung sowie explizites Löschen. Die manuelle Bedienprüfung auf einem realen Android-Gerät bleibt Teil der offenen Praxisabnahme.
