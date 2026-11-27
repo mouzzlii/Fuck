@@ -4,14 +4,7 @@
     <!-- ML Kit pulls a telemetry transport manifest that requests INTERNET. TRAKUNA is intentionally offline. -->
     <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent>
-    </queries>
     <application
         android:icon="@drawable/w_signature"
         android:roundIcon="@drawable/w_signature"
