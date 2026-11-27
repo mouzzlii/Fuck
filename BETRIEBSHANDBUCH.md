@@ -66,6 +66,8 @@ Wichtig:
 3. Die angezeigte Nummer und den Paketdienst vor jeder weiteren Aktion kontrollieren.
 4. **An Partner-App übergeben** antippen.
 5. TRAKUNA speichert die Übergabe lokal verschlüsselt und versucht, die für diesen Paketdienst zugeordnete App zu öffnen.
+
+**Lebensdauer und Wiederaufnahme:** Der letzte verschlüsselte Übergabewert läuft nach 24 Stunden ab. TRAKUNA setzt ihn nach einem App-Neustart oder bei Rückkehr aus dem Hintergrund nicht automatisch in das Eingabefeld ein. Stattdessen erscheint – solange der Cache gültig ist – die Schaltfläche **„Letzte Sendung wiederaufnehmen“**. Die Sendungsnummer wird erst nach ausdrücklicher Bestätigung übernommen. Unter **Einstellungen** kann der Cache jederzeit manuell gelöscht werden. Nach erfolgreicher Erfassung oder Abschluss löscht TRAKUNA nur den Cache-Eintrag, dessen Nummer zum jeweiligen Vorgang passt.
 6. Falls keine App zugeordnet oder installiert ist, bleibt die Nummer im TRAKUNA-Cache; gegebenenfalls wird sie zusätzlich in die Zwischenablage kopiert.
 
 **Nicht als Buchungserfolg werten:** Das Öffnen einer Partner-App ist keine Bestätigung, dass diese die Nummer empfangen, validiert oder einen Vorgang angelegt hat. TRAKUNA besitzt derzeit keine bestätigte DPD-, GLS-, Hermes- oder UPS-Buchungsschnittstelle.
