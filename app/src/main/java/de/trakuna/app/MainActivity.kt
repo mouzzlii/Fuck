@@ -45,17 +45,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val handoffCache = remember(context) { SecureHandoffCache(context) }
-            val initialHandoffRead = remember(handoffCache) { runCatching { handoffCache.trackingNumber() } }
-            val initialHandoffNumber = initialHandoffRead.getOrDefault("")
-            var number by rememberSaveable { mutableStateOf(initialHandoffNumber) }
+            val initialHandoffRead = remember(handoffCache) { runCatching { handoffCache.hasPendingHandoff() } }
+            var hasPendingHandoff by remember(handoffCache) { mutableStateOf(initialHandoffRead.getOrDefault(false)) }
+            var showResumeHandoffConfirmation by remember { mutableStateOf(false) }
+            var number by rememberSaveable { mutableStateOf("") }
             var showScanner by remember { mutableStateOf(false) }
             var scanDiagnostic by remember { mutableStateOf<ScanDiagnosticResult?>(null) }
             var showScanDiagnostics by remember { mutableStateOf(false) }
             var showSettings by remember { mutableStateOf(false) }
             var status by remember(handoffCache) {
                 mutableStateOf(
-                    if (initialHandoffNumber.isNotBlank()) "Gespeicherte Sendungsnummer wiederhergestellt."
-                    else if (initialHandoffRead.isFailure) "Gespeicherte Sendungsnummer konnte nicht gelesen werden. Bitte erneut scannen oder manuell eingeben."
+                    if (initialHandoffRead.isFailure) "Gespeicherte Übergabe konnte nicht geprüft werden. Bitte erneut scannen oder manuell eingeben."
                     else "Sendungsnummer scannen oder manuell eingeben."
                 )
             }
@@ -87,13 +87,10 @@ class MainActivity : ComponentActivity() {
                 val observer = LifecycleEventObserver { _, event ->
                     if (event == Lifecycle.Event.ON_RESUME) {
                         wifiConnected = isWifiConnected(context)
-                        val cachedNumberRead = runCatching { handoffCache.trackingNumber() }
-                        val cachedNumber = cachedNumberRead.getOrDefault("")
-                        if (number.isBlank() && cachedNumber.isNotBlank()) {
-                            number = cachedNumber
-                            status = "Gespeicherte Sendungsnummer nach Rückkehr wiederhergestellt."
-                        } else if (number.isBlank() && cachedNumberRead.isFailure) {
-                            status = "Gespeicherte Sendungsnummer konnte nicht gelesen werden. Bitte erneut scannen oder manuell eingeben."
+                        val cachedNumberRead = runCatching { handoffCache.hasPendingHandoff() }
+                        hasPendingHandoff = cachedNumberRead.getOrDefault(false)
+                        if (cachedNumberRead.isFailure) {
+                            status = "Gespeicherte Übergabe konnte nicht geprüft werden. Bitte erneut scannen oder manuell eingeben."
                         }
                     }
                 }
@@ -332,6 +329,13 @@ class MainActivity : ComponentActivity() {
                             Text(if (showScanner) "Scanner schließen" else "Barcode scannen")
                         }
 
+                        if (hasPendingHandoff) {
+                            OutlinedButton(
+                                onClick = { showResumeHandoffConfirmation = true },
+                                modifier = Modifier.fillMaxWidth()
+                            ) { Text("Letzte Sendung wiederaufnehmen") }
+                        }
+
                         if (showScanner) {
                             ScannerPanel(
                                 onDetected = { diagnostic ->
@@ -460,6 +464,17 @@ class MainActivity : ComponentActivity() {
                                         },
                                         modifier = Modifier.fillMaxWidth()
                                     ) { Text("Anbieterportal öffnen") }
+
+                                    OutlinedButton(
+                                        onClick = {
+                                            val cleared = handoffCache.clear()
+                                            hasPendingHandoff = !cleared && runCatching { handoffCache.hasPendingHandoff() }.getOrDefault(false)
+                                            status = if (cleared) "Gespeicherte Übergabe wurde gelöscht."
+                                            else "Gespeicherte Übergabe konnte nicht sicher gelöscht werden."
+                                        },
+                                        enabled = hasPendingHandoff,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) { Text("Gespeicherte Übergabe löschen") }
                                     OutlinedButton(
                                         onClick = {
                                             val report = ShadowAuditLog.readAll(context)
@@ -519,6 +534,8 @@ class MainActivity : ComponentActivity() {
                                                     carrierOverride = ""
                                                     shipmentNote = ""
                                                     showShipmentLedger = false
+                                                    if (handoffCache.clear()) hasPendingHandoff = false
+                                                    else status += " Die alte Übergabe konnte nicht automatisch gelöscht werden."
                                                 }
                                                 shipmentRevision++
                                             }
@@ -742,6 +759,10 @@ class MainActivity : ComponentActivity() {
                                 onConfirm = {
                                     val result = shipmentStore.advance(record.id, expectedStatus = record.status)
                                     status = shipmentResultText(result)
+                                    if (result is ShipmentUpdate.Saved && ShipmentRules.isTerminalStatus(result.record.status)) {
+                                        if (handoffCache.clear()) hasPendingHandoff = false
+                                        else status += " Die gespeicherte Übergabe konnte nicht automatisch gelöscht werden."
+                                    }
                                     shipmentRevision++
                                     pendingAdvance = null
                                 },
@@ -760,6 +781,36 @@ class MainActivity : ComponentActivity() {
                                 onDismiss = { pendingDelete = null }
                             )
                         }
+                        if (showResumeHandoffConfirmation) {
+                            AlertDialog(
+                                onDismissRequest = { showResumeHandoffConfirmation = false },
+                                title = { Text("Letzte Sendung wiederaufnehmen?") },
+                                text = {
+                                    Text("Eine zuvor übergebene Sendungsnummer wird nur innerhalb von 24 Stunden angeboten. Möchtest du sie erneut in das Eingabefeld übernehmen?")
+                                },
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            val restored = runCatching { handoffCache.trackingNumber() }
+                                            val restoredNumber = restored.getOrDefault("")
+                                            if (restored.isSuccess && restoredNumber.isNotBlank()) {
+                                                number = restoredNumber
+                                                status = "Gespeicherte Sendungsnummer bewusst wiederaufgenommen."
+                                            } else {
+                                                status = if (restored.isFailure) "Gespeicherte Übergabe konnte nicht gelesen werden."
+                                                else "Die gespeicherte Übergabe ist abgelaufen oder wurde bereits gelöscht."
+                                            }
+                                            hasPendingHandoff = runCatching { handoffCache.hasPendingHandoff() }.getOrDefault(false)
+                                            showResumeHandoffConfirmation = false
+                                        }
+                                    ) { Text("Wiederaufnehmen") }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = { showResumeHandoffConfirmation = false }) { Text("Abbrechen") }
+                                }
+                            )
+                        }
+
                         if (showPortalSettings) {
                             CarrierPortalSettingsDialog(
                                 context = context,
