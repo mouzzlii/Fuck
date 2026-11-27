@@ -53,8 +53,7 @@ Das Ziel bleibt ein Android-Smartphone und ein gemeinsamer Etikettendrucker für
 
 ## 6. Test- und Freigabestatus
 
-- Der Instrumentierungslauf für den UI-Stand vor Entfernung des externen DataWedge-Empfangs war erfolgreich: [Run 46067395466](https://github.com/mouzzlii/Fuck/actions/runs/46067395466).
-- Die Entfernung des externen Scanpfads ist im aktuellen Code enthalten; der zugehörige Lauf ist noch abzuwarten.
+- GitHub-Instrumentierung für den Code-Stand `e737286` erfolgreich: [Run 46068641940](https://github.com/mouzzlii/Fuck/actions/runs/46068641940), einschließlich `:app:connectedDebugAndroidTest`.
 - Ein erfolgreicher Emulatorlauf ersetzt keinen Test auf dem tatsächlichen Shop-Smartphone.
 - Kamera-Scan, reale Sendungsabläufe, Drucker und Carrier-Portale sind noch nicht vor Ort abgenommen.
 - PR #36 ist Draft und nicht gemergt. Der bestehende PR #25 bleibt getrennt.
