@@ -53,7 +53,8 @@ internal object CarrierPortalDomains {
         if (canonical.isBlank()) return null
         val profile = profiles.firstOrNull { it.label == canonical } ?: return null
         val uri = runCatching { URI(raw.trim()) }.getOrNull() ?: return null
-        if (uri.isOpaque || uri.scheme?.lowercase(Locale.ROOT) != "https" || uri.rawUserInfo != null) return null
+        if (uri.isOpaque || uri.scheme?.lowercase(Locale.ROOT) != "https" || uri.rawUserInfo != null ||
+            uri.rawQuery != null || uri.rawFragment != null) return null
         val host = uri.host?.lowercase(Locale.ROOT) ?: return null
         val allowed = profile.allowedDomains.any { domain -> host == domain || host.endsWith(".$domain") }
         if (!allowed) return null
