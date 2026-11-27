@@ -103,8 +103,10 @@ Eine Änderung ist nur dann eine Verbesserung, wenn sie den Arbeitsablauf tatsä
 - Startseite auf vier klare Aktionen reduziert: Paket für Kunden annehmen, Versand vom Kunden annehmen, Retoure annehmen sowie Sendungen suchen/Abholung.
 - Scan und manuelle Eingabe bleiben; erkannter Paketdienst wird als Hinweis angezeigt. Wenn kein eindeutiger Treffer vorliegt, muss der Paketdienst eingegeben werden.
 - WLAN-Statuskarte, Partner-App-Zuordnung/-Picker und Übergabe-Schaltfläche aus der normalen Oberfläche entfernt.
-- Such-/Abholansicht verschlankt: CSV-Export, Historien-/Bearbeitungsdialoge und endgültige Löschaktion aus der normalen Oberfläche entfernt.
+- Such-/Abholansicht verschlankt: CSV-Export, Historien-/Bearbeitungsdialoge, Archiv-Umschalter/-Aktionen und endgültige Löschaktion aus der normalen Oberfläche entfernt. Bereits archivierte Datensätze bleiben in der gemeinsamen Suche sichtbar und werden nicht gelöscht.
 - Lokale Datenspeicherung, Duplikatprüfung, Statusbestätigung und Backup/Wiederherstellung bleiben erhalten.
 - Unbenutzte Partner-App-Handoff-Helfer aus der Hauptaktivität entfernt. Ein passiver externer Scan-Empfang bleibt vorerst bestehen; TRAKUNA steuert kein Zebra-Gerät.
 
-**Noch nicht nachgewiesen:** erfolgreicher Build und Tests des neuen UI-Commits, Bedienung auf einem echten Android-Gerät, Kamera-/Scanner-Abnahme, Drucker- oder Carrier-End-to-End-Funktion. Der zugehörige GitHub-Instrumentierungsworkflow war beim letzten Abruf noch ausstehend. Bis diese Nachweise vorliegen, bleibt der PR Draft und wird nicht gemergt.
+**Bereits nachgewiesen für Commit `7338dce`:** GitHub-Instrumentierungsworkflow erfolgreich; `connectedDebugAndroidTest` lief bis `BUILD SUCCESSFUL`. Der Lauf prüfte den PR-Merge-Commit `6666977`, der diesen Head mit dem damaligen `main` verband.
+
+**Noch nicht nachgewiesen für den nachfolgenden Archiv-UI-Entfernungscommit:** neuer Build/Testlauf, Bedienung auf einem echten Android-Gerät, Kamera-/Scanner-Abnahme sowie Drucker- oder Carrier-End-to-End-Funktion. Bereits archivierte Datensätze bleiben erhalten und werden gemeinsam mit aktiven Datensätzen angezeigt; die Archivierungs-/Wiederherstellungssteuerung wurde aus der normalen Oberfläche entfernt. Bis die aktuelle Änderung erneut geprüft und reale Geräteabläufe abgenommen wurden, bleibt der PR Draft und wird nicht gemergt.
