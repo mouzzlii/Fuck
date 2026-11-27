@@ -204,12 +204,17 @@ class MainActivity : ComponentActivity() {
                                 onClose = { showScanner = false }
                             )
                         }
+                        val trackingNumberValid = ShipmentRules.isValidTrackingNumber(normalizeTrackingNumber(number))
                         OutlinedTextField(
                             value = number,
                             onValueChange = { number = it.take(80) },
                             modifier = Modifier.fillMaxWidth(),
                             label = { Text("Sendungsnummer") },
                             singleLine = true,
+                            isError = number.isNotBlank() && !trackingNumberValid,
+                            supportingText = {
+                                if (number.isNotBlank() && !trackingNumberValid) Text("Bitte eine gültige Sendungsnummer prüfen.")
+                            },
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Ascii,
                                 capitalization = KeyboardCapitalization.Characters,
@@ -223,16 +228,21 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxWidth(),
                             label = { Text("Paketdienst (optional)") },
                             placeholder = { Text(detectedCarrier ?: "Wird bei eindeutiger Nummer erkannt") },
-                            singleLine = true
+                            singleLine = true,
+                            supportingText = {
+                                if (carrierOverride.isBlank() && detectedCarrier == null && trackingNumberValid) {
+                                    Text("Bitte Paketdienst eingeben.")
+                                }
+                            }
                         )
                         Text(
                             if (carrierOverride.isNotBlank()) "Paketdienst: ${carrierOverride.trim()}"
-                            else detectedCarrier?.let { "Erkannt: $it – bitte kurz prüfen" } ?: "Paketdienst bei Bedarf auswählen oder eingeben.",
+                            else detectedCarrier?.let { "Erkannt: $it – bitte kurz prüfen" } ?: "Paketdienst fehlt.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         val canSaveShipment = shipmentStorageIssue == null &&
-                            ShipmentRules.isValidTrackingNumber(normalizeTrackingNumber(number))
+                            trackingNumberValid && (carrierOverride.isNotBlank() || detectedCarrier != null)
                         Button(
                             onClick = { addShipment(ShipmentFlow.INCOMING_FOR_CUSTOMER) },
                             enabled = canSaveShipment,
