@@ -166,7 +166,7 @@ class MainActivity : ComponentActivity() {
                             return
                         }
                         if (scanned.isNullOrBlank()) {
-                            status = "Zebra-Scan empfangen, aber keine unterstützte Sendungsnummer erkannt. Rohdaten stehen in der Scan-Diagnose zur Prüfung."
+                            status = "Kein eindeutiger Wert erkannt. Details findest du unter Einstellungen → Scan-Diagnose."
                             return
                         }
                         number = scanned
