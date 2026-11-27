@@ -17,7 +17,7 @@ internal object CarrierPortalDomains {
     val profiles: List<CarrierPortalProfile> = listOf(
         CarrierPortalProfile("DPD", setOf("dpd.com", "dpd.at")),
         CarrierPortalProfile("GLS", setOf("gls-group.eu", "gls-group.com", "gls-one.at")),
-        CarrierPortalProfile("Hermes", setOf("hermesworld.com", "myhermes.de")),
+        CarrierPortalProfile("Hermes", setOf("hermesworld.com", "myhermes.at")),
         CarrierPortalProfile("UPS", setOf("ups.com")),
         CarrierPortalProfile("Österreichische Post", setOf("post.at")),
         CarrierPortalProfile("DHL Paket", setOf("dhl.de", "deutschepost.de")),
