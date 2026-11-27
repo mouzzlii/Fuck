@@ -9,8 +9,6 @@ import android.content.BroadcastReceiver
 import android.content.IntentFilter
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Build
 import android.os.PersistableBundle
@@ -42,7 +40,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
@@ -392,8 +389,6 @@ class MainActivity : ComponentActivity() {
                         }
                         pendingAdvance?.let { record ->
                             val nextStatus = ShipmentRules.nextStatus(record.flow, record.status)
-                            val isPhysicalHandover = nextStatus == ShipmentStatus.HANDED_TO_CUSTOMER ||
-                                nextStatus == ShipmentStatus.HANDED_TO_CARRIER
                             AlertDialog(
                                 onDismissRequest = { pendingAdvance = null },
                                 title = { Text("Statusänderung bestätigen?") },
