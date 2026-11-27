@@ -38,49 +38,35 @@ Das Artefakt enthält `SHA256SUMS.txt`; ausschließlich den dort angegebenen Has
 
 Wenn Android eine abweichende Signatur meldet, Installation abbrechen. Die bestehende App nicht löschen und keine App-Daten entfernen. Debug-Builds können unterschiedliche Signaturen besitzen.
 
-## 3. DPD, GLS, Hermes und UPS getrennt zuordnen
+## 3. Partner-App-Zuordnung – im Pilot gesperrt
 
-In Version 1.54 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
+Die aktuelle App-Version 1.55 läuft fest im **SHADOW MODE**. Die Zuordnung externer Partner-Apps und der Start solcher Apps durch TRAKUNA sind in dieser Pilotversion gesperrt. Die vorhandenen Zuordnungsfunktionen sind Legacy-Code und keine Voraussetzung für den Smartphone-/Portalablauf.
 
-1. TRAKUNA öffnen.
-2. **Betriebssoftware pro Paketdienst zuordnen** antippen.
-3. Im Auswahlfeld den Paketdienst wählen: **DPD**, **GLS**, **Hermes** oder **UPS**.
-4. Die tatsächlich zu diesem Paketdienst gehörende, installierte App auswählen.
-5. Falls sie nicht in der ersten Liste erscheint, **Alle installierten Apps anzeigen** antippen.
-6. Die Anzeige unter der Hauptschaltfläche kontrollieren.
-7. Für die anderen drei Paketdienste wiederholen.
+- Keine DPD-, GLS-, Hermes- oder UPS-App in TRAKUNA zuordnen.
+- Keine externe Carrier-App als von TRAKUNA ausgelöste Übergabe erwarten.
+- Bereits separat installierte oder gestartete Carrier-Apps werden durch den lokalen Shadow Mode nicht kontrolliert. Für den Pilotbetrieb dürfen darin keine echten Buchungen oder Labelbestellungen ausgelöst werden.
 
-Wichtig:
+## 4. Sendungsnummer erfassen und Übergabe simulieren
 
-- Nur Apps auswählen, die der Betreiber bzw. Paketdienst für diesen Standort freigegeben hat.
-- Keine App nur anhand eines ähnlich klingenden Namens zuordnen.
-- Sobald mindestens eine Einzelzuordnung eingerichtet ist, wird für einen anderen Paketdienst ohne eigene Zuordnung keine fremde Carrier-App als Ersatz geöffnet.
-- Eine Zuordnung öffnet später nur die ausgewählte App. Sie beweist nicht, dass diese App die Sendungsnummer übernommen oder eine Buchung ausgeführt hat.
-- Die Zuordnung ist gerätebezogen. Sie wird nicht mit anderen Handgeräten synchronisiert.
-- Eine Zuordnung kann über die Schaltfläche **Zuordnung für [Paketdienst] entfernen** wieder gelöscht werden.
-
-## 4. Sendungsnummer erfassen und übergeben
-
-1. Den passenden Paketdienst in der Hauptmaske auswählen.
-2. Die Sendungsnummer entweder manuell eingeben oder – bei eingerichteter Kamera – scannen.
-3. Die angezeigte Nummer und den Paketdienst vor jeder weiteren Aktion kontrollieren.
-4. **An Partner-App übergeben** antippen.
-5. TRAKUNA speichert die Übergabe lokal verschlüsselt und versucht, die für diesen Paketdienst zugeordnete App zu öffnen.
+1. Den passenden Paketdienst in der Hauptmaske auswählen, falls er nicht automatisch erkannt wurde.
+2. Die Sendungsnummer manuell eingeben oder mit der Kamera scannen.
+3. Die angezeigte Nummer und den Paketdienst vor dem Erfassen kontrollieren.
+4. **„Übergabe simulieren · TESTMODUS“** betätigen, sofern dieser Testschritt benötigt wird.
+5. TRAKUNA speichert den letzten Übergabewert lokal verschlüsselt. Im Shadow Mode wird keine Partner-App geöffnet, nichts in die Zwischenablage kopiert und keine externe Buchung oder Labelbestellung ausgelöst.
 
 **Lebensdauer und Wiederaufnahme:** Der letzte verschlüsselte Übergabewert läuft nach 24 Stunden ab. TRAKUNA setzt ihn nach einem App-Neustart oder bei Rückkehr aus dem Hintergrund nicht automatisch in das Eingabefeld ein. Stattdessen erscheint – solange der Cache gültig ist – die Schaltfläche **„Letzte Sendung wiederaufnehmen“**. Die Sendungsnummer wird erst nach ausdrücklicher Bestätigung übernommen. Unter **Einstellungen** kann der Cache jederzeit manuell gelöscht werden. Nach erfolgreicher Erfassung oder Abschluss löscht TRAKUNA nur den Cache-Eintrag, dessen Nummer zum jeweiligen Vorgang passt.
-6. Falls keine App zugeordnet oder installiert ist, bleibt die Nummer im TRAKUNA-Cache; gegebenenfalls wird sie zusätzlich in die Zwischenablage kopiert.
 
-**Nicht als Buchungserfolg werten:** Das Öffnen einer Partner-App ist keine Bestätigung, dass diese die Nummer empfangen, validiert oder einen Vorgang angelegt hat. TRAKUNA besitzt derzeit keine bestätigte DPD-, GLS-, Hermes- oder UPS-Buchungsschnittstelle.
+**Nicht als Buchungserfolg werten:** Der Shadow Mode ist eine lokale Simulation. TRAKUNA besitzt derzeit keine bestätigte DPD-, GLS-, Hermes- oder UPS-Buchungsschnittstelle. Eine erfolgreiche lokale Erfassung ist keine Carrier-Bestätigung.
 
 ## 5. Lokale Paketshop-Vorgänge
 
-Über **Paketshop-Sendungen verwalten** können Testvorgänge lokal erfasst und ihre Status fortgeschrieben werden:
+Über **Sendungen verwalten** können Testvorgänge lokal erfasst und ihre Status fortgeschrieben werden:
 
 - Sendung für einen Kunden annehmen und als im Shop eingetroffen führen.
 - Eine Sendung als abholbereit markieren und lokal an den Kunden übergeben.
 - Eine Kundenabgabe bzw. Retoure erfassen und den lokalen Ablauf bis zur Übergabe an den Paketdienst fortschreiben.
 
-Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.54 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
+Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
 
 ## 6. Zebra TC26 und DataWedge (DPD/GLS)
 
