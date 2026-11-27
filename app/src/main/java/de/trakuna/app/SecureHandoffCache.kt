@@ -60,11 +60,42 @@ class SecureHandoffCache(context: Context) {
         }
         val encrypted = prefs.getString(KEY_ENCRYPTED, null) ?: return ""
         return try {
-            decodePayload(decrypt(encrypted)).getString("trackingNumber")
+            val payload = decodePayload(decrypt(encrypted))
+            val savedAt = payload.getLong("savedAt")
+            val now = System.currentTimeMillis()
+            if (savedAt > now + CLOCK_SKEW_TOLERANCE_MS || now - savedAt > HANDOFF_TTL_MS) {
+                check(clear()) { "Abgelaufene Übergabedaten konnten nicht gelöscht werden." }
+                return ""
+            }
+            payload.getString("trackingNumber")
         } catch (error: Exception) {
             operationError = error.message ?: "Übergabe-Cache ist beschädigt oder nicht lesbar."
             throw IllegalStateException(operationError, error)
         }
+    }
+
+    /** A cached handoff is never restored automatically; the UI must ask the operator first. */
+    @Synchronized
+    fun hasPendingHandoff(): Boolean = trackingNumber().isNotBlank()
+
+    /** Remove both encrypted and legacy values after completion or explicit operator action. */
+    @Synchronized
+    fun clear(): Boolean {
+        if (initializationError != null) return false
+        val cleared = runCatching {
+            prefs.edit()
+                .remove(KEY_ENCRYPTED)
+                .remove(KEY_LEGACY_NUMBER)
+                .remove(KEY_LEGACY_CARRIER)
+                .remove(KEY_LEGACY_SAVED_AT)
+                .commit()
+        }
+        operationError = when {
+            cleared.isFailure -> cleared.exceptionOrNull()?.message ?: "Übergabedaten konnten nicht gelöscht werden."
+            !cleared.getOrDefault(false) -> "Übergabedaten konnten nicht dauerhaft gelöscht werden."
+            else -> null
+        }
+        return cleared.getOrDefault(false)
     }
 
     private fun migrateLegacyValue() {
@@ -159,5 +190,7 @@ class SecureHandoffCache(context: Context) {
         const val TAG_BYTES = 16
         const val MAX_PAYLOAD_BYTES = 4096
         const val MAX_ENCODED_CHARS = 6000
+        const val HANDOFF_TTL_MS = 24L * 60L * 60L * 1000L
+        const val CLOCK_SKEW_TOLERANCE_MS = 5L * 60L * 1000L
     }
 }
