@@ -1,5 +1,18 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
+## Nachprüfung: Handoff-Cache-Sicherheit – 27.11.2026
+
+Code-Commit `05b7963822ea90e4bca012b29ae53ef556fa5ec6` (Version 1.55 / versionCode 56):
+- [x] Cache-Werte laufen nach 24 Stunden ab; zeitlich unplausible Zeitstempel werden verworfen.
+- [x] Wiederaufnahme wird beim App-Start und bei Rückkehr nicht automatisch ausgeführt; bewusste Bestätigung ist erforderlich.
+- [x] Manuelles Löschen des Caches in Einstellungen vorhanden.
+- [x] Nach Erfassung oder Abschluss wird nur ein zur Sendungsnummer passender Cache-Eintrag gelöscht.
+- [x] Unit-Tests, Android-Lint und Debug-APK-Build erfolgreich (Build Run `46047083001`).
+- [x] API-35-Emulator: **16/16 Instrumentierungstests bestanden**, 0 Fehler, 0 übersprungen (Run `46047082966`).
+- [ ] Wiederaufnahme, Ablauf nach 24 Stunden und manuelles Löschen auf dem realen Android-Zielgerät praktisch prüfen.
+
+Debug-APK-Artefakt `15223271994`; APK-SHA-256: `3a60503f5e5e61df333c0be3c0def872a927872d22d2d4d2c7a4a85518e0e6c0`. Kein signiertes Produktionsrelease. Die reale Geräteabnahme bleibt offen.
+
 ## Zusätzliche Sperren für den Paketshop-Pilot – Shadow Mode 1.55
 
 - [x] Exakter Commit `3da8dbeb571e4b2421ce375ccbb854e6171dd2b0` und erfolgreicher CI-Build für Version 1.55 / versionCode 56 bestätigt (Run `45902838085`)
