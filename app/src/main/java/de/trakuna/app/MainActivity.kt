@@ -68,37 +68,14 @@ class MainActivity : ComponentActivity() {
             var number by remember { mutableStateOf("") }
             var showScanner by remember { mutableStateOf(false) }
             var status by remember { mutableStateOf("Sendungsnummer scannen oder manuell eingeben.") }
-            var showPartnerPicker by remember { mutableStateOf(false) }
-            var partnerPickerCarrier by remember { mutableStateOf("DPD") }
-            var showPartnerCarrierMenu by remember { mutableStateOf(false) }
-            var showAllApps by remember { mutableStateOf(false) }
-            var installedApps by remember { mutableStateOf<List<PartnerCandidate>>(emptyList()) }
             var showShipmentLedger by remember { mutableStateOf(false) }
             var shipmentRevision by remember { mutableStateOf(0) }
-            var recipient by remember { mutableStateOf("") }
             var carrierOverride by remember { mutableStateOf("") }
-            var showCarrierMenu by remember { mutableStateOf(false) }
-            var shipmentNote by remember { mutableStateOf("") }
             var shipmentSearch by remember { mutableStateOf("") }
             var showArchivedShipments by remember { mutableStateOf(false) }
             var visibleRecordLimit by remember { mutableStateOf(100) }
             var pendingAdvance by remember { mutableStateOf<ShipmentRecord?>(null) }
-            var pendingDelete by remember { mutableStateOf<ShipmentRecord?>(null) }
-            var editingRecord by remember { mutableStateOf<ShipmentRecord?>(null) }
-            var historyRecord by remember { mutableStateOf<ShipmentRecord?>(null) }
-            var editRecipient by remember { mutableStateOf("") }
-            var editNote by remember { mutableStateOf("") }
             val context = LocalContext.current
-            var wifiConnected by remember { mutableStateOf(isWifiConnected(context)) }
-            DisposableEffect(context) {
-                val observer = LifecycleEventObserver { _, event ->
-                    if (event == Lifecycle.Event.ON_RESUME) {
-                        wifiConnected = isWifiConnected(context)
-                    }
-                }
-                this@MainActivity.lifecycle.addObserver(observer)
-                onDispose { this@MainActivity.lifecycle.removeObserver(observer) }
-            }
             // Keep one store instance for the screen: its synchronization and initialization state
             // must be shared by every read/write operation in this UI.
             val shipmentStore = remember(context) { ShipmentStore(context) }
@@ -135,10 +112,8 @@ class MainActivity : ComponentActivity() {
                 )
                 onDispose { runCatching { context.unregisterReceiver(receiver) } }
             }
-            var pendingCsv by remember { mutableStateOf<String?>(null) }
             var pendingBackupJson by remember { mutableStateOf<String?>(null) }
             var confirmBackupExport by remember { mutableStateOf(false) }
-            var confirmCsvExport by remember { mutableStateOf(false) }
             var pendingBackupImport by remember { mutableStateOf<String?>(null) }
             var pendingBackupCount by remember { mutableStateOf(0) }
             val backupDocumentLauncher = rememberLauncherForActivityResult(
@@ -180,24 +155,6 @@ class MainActivity : ComponentActivity() {
                             is BackupValidation.Invalid -> status = "Sicherung abgelehnt: ${validation.reason}"
                         }
                     }
-                }
-            }
-            val csvDocumentLauncher = rememberLauncherForActivityResult(
-                ActivityResultContracts.CreateDocument("text/csv")
-            ) { uri ->
-                val csv = pendingCsv
-                pendingCsv = null
-                if (uri == null || csv == null) {
-                    status = "CSV-Export abgebrochen."
-                } else {
-                    val saved = runCatching {
-                        context.contentResolver.openOutputStream(uri)?.bufferedWriter(Charsets.UTF_8)?.use {
-                            it.write("\uFEFF")
-                            it.write(csv)
-                        } ?: error("Datei konnte nicht geöffnet werden.")
-                    }
-                    status = if (saved.isSuccess) "CSV-Datei wurde gespeichert."
-                    else "CSV-Datei konnte nicht gespeichert werden: ${saved.exceptionOrNull()?.message ?: "unbekannter Fehler"}"
                 }
             }
             val shipmentRecords = remember(shipmentRevision) { shipmentStore.all() }
@@ -321,7 +278,6 @@ class MainActivity : ComponentActivity() {
                                         ) { Text(if (showArchivedShipments) "Aktive Vorgänge anzeigen" else "Archivierte Vorgänge anzeigen") }
                                         Text(if (showArchivedShipments) "Archiv – Vorgänge bleiben erhalten und können wiederhergestellt werden." else "Aktive Vorgänge – abgeschlossene Vorgänge können archiviert werden.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         OutlinedTextField(value = shipmentSearch, onValueChange = { shipmentSearch = it.take(120); visibleRecordLimit = 100 }, label = { Text("Sendungsnummer, Empfänger oder Paketdienst suchen") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedButton(onClick = { confirmCsvExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) { Text("CSV-Datei exportieren") }
                                         OutlinedButton(onClick = { confirmBackupExport = true }, enabled = shipmentStorageIssue == null, modifier = Modifier.fillMaxWidth()) {
                                             Text("Vollständige Datensicherung erstellen")
                                         }
@@ -351,14 +307,12 @@ class MainActivity : ComponentActivity() {
                                                         Text("Zuletzt geändert: ${ShipmentRules.formatTimestamp(record.updatedAt)}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                         if (record.carrier.isNotBlank()) Text(record.carrier, style = MaterialTheme.typography.bodySmall)
                                                         if (record.recipient.isNotBlank()) Text("Empfänger: ${record.recipient}", style = MaterialTheme.typography.bodySmall)
-                                                        if (record.note.isNotBlank()) Text("Notiz: ${record.note}", style = MaterialTheme.typography.bodySmall)
                                                         val canAdvance = record.archivedAt == null && !ShipmentRules.isTerminalStatus(record.status)
                                                         if (canAdvance) {
                                                             TextButton(onClick = { pendingAdvance = record }) {
                                                                 Text(shipmentNextAction(record.flow, record.status))
                                                             }
                                                         }
-                                                        TextButton(onClick = { historyRecord = record }) { Text("Vorgangshistorie anzeigen (${record.history.size})") }
                                                         if (record.archivedAt == null) {
                                                             if (ShipmentRules.isTerminalStatus(record.status)) {
                                                                 TextButton(onClick = {
@@ -367,14 +321,12 @@ class MainActivity : ComponentActivity() {
                                                                     shipmentRevision++
                                                                 }) { Text("Vorgang archivieren") }
                                                             }
-                                                            TextButton(onClick = { editRecipient = record.recipient; editNote = record.note; editingRecord = record }) { Text("Details bearbeiten") }
                                                         } else {
                                                             TextButton(onClick = {
                                                                 val restored = shipmentStore.restoreArchived(record.id)
                                                                 status = if (restored) "Vorgang wurde aus dem Archiv wiederhergestellt." else "Vorgang konnte nicht wiederhergestellt werden."
                                                                 shipmentRevision++
                                                             }) { Text("Wiederherstellen") }
-                                                            TextButton(onClick = { pendingDelete = record }) { Text("Endgültig löschen …", color = MaterialTheme.colorScheme.error) }
                                                         }
                                                     }
                                                 }
@@ -390,30 +342,6 @@ class MainActivity : ComponentActivity() {
                                 },
                                 confirmButton = {
                                     TextButton(onClick = { showShipmentLedger = false }) { Text("Schließen") }
-                                }
-                            )
-                        }
-                        if (confirmCsvExport) {
-                            AlertDialog(
-                                onDismissRequest = { confirmCsvExport = false },
-                                title = { Text("CSV-Datei exportieren?") },
-                                text = {
-                                    Text("Die CSV-Datei enthält Sendungsnummern, Empfängernamen, interne Notizen und die lokal gespeicherte Vorgangshistorie. Sie wird unverschlüsselt gespeichert. Die Historie ist kein manipulationssicherer Prüfbeleg. Wähle einen geschützten Speicherort und gib die Datei nur an berechtigte Personen weiter.")
-                                },
-                                confirmButton = {
-                                    TextButton(onClick = {
-                                        confirmCsvExport = false
-                                        val exported = runCatching { shipmentStore.exportCsv() }
-                                        if (exported.isSuccess) {
-                                            pendingCsv = exported.getOrThrow()
-                                            csvDocumentLauncher.launch("TRAKUNA-Sendungen.csv")
-                                        } else {
-                                            status = exported.exceptionOrNull()?.message ?: "CSV-Export fehlgeschlagen."
-                                        }
-                                    }) { Text("CSV erstellen") }
-                                },
-                                dismissButton = {
-                                    TextButton(onClick = { confirmCsvExport = false }) { Text("Abbrechen") }
                                 }
                             )
                         }
@@ -462,64 +390,6 @@ class MainActivity : ComponentActivity() {
                                 dismissButton = { TextButton(onClick = { pendingBackupImport = null }) { Text("Abbrechen") } }
                             )
                         }
-                        historyRecord?.let { record ->
-                            AlertDialog(
-                                onDismissRequest = { historyRecord = null },
-                                title = { Text("Vorgangshistorie") },
-                                text = {
-                                    Column(
-                                        modifier = Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()),
-                                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                                    ) {
-                                        Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
-                                        if (record.history.isEmpty()) {
-                                            Text("Für diesen älteren Vorgang liegen noch keine einzelnen Verlaufseinträge vor.")
-                                        } else {
-                                            record.history.asReversed().forEach { event ->
-                                                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                                                    Text(
-                                                        when (event.type) {
-                                                            ShipmentEventType.CREATED -> "Vorgang angelegt"
-                                                            ShipmentEventType.STATUS_CHANGED -> "Status geändert: ${event.fromStatus?.let(::shipmentStatusLabel) ?: "unbekannt"} → ${event.toStatus?.let(::shipmentStatusLabel) ?: "unbekannt"}"
-                                                            ShipmentEventType.DETAILS_UPDATED -> "Empfänger oder Notiz bearbeitet"
-                                                            ShipmentEventType.ARCHIVED -> "Vorgang archiviert"
-                                                            ShipmentEventType.RESTORED -> "Vorgang aus Archiv wiederhergestellt"
-                                                        },
-                                                        style = MaterialTheme.typography.bodyMedium
-                                                    )
-                                                    Text(ShipmentRules.formatTimestamp(event.at), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                                }
-                                                HorizontalDivider()
-                                            }
-                                        }
-                                        Text("Die Historie wird lokal auf diesem Gerät gespeichert. Sie ist kein manipulationssicheres, zentrales Prüfprotokoll.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                    }
-                                },
-                                confirmButton = { TextButton(onClick = { historyRecord = null }) { Text("Schließen") } }
-                            )
-                        }
-                        editingRecord?.let { record ->
-                            AlertDialog(
-                                onDismissRequest = { editingRecord = null },
-                                title = { Text("Sendungsdetails bearbeiten") },
-                                text = {
-                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                        Text(record.trackingNumber, style = MaterialTheme.typography.titleSmall)
-                                        OutlinedTextField(value = editRecipient, onValueChange = { editRecipient = it.take(100) }, label = { Text("Empfänger / Kundenname") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedTextField(value = editNote, onValueChange = { editNote = it.take(500) }, label = { Text("Interne Notiz") }, minLines = 3, modifier = Modifier.fillMaxWidth())
-                                    }
-                                },
-                                confirmButton = {
-                                    TextButton(onClick = {
-                                        val result = shipmentStore.updateDetails(record.id, editRecipient, editNote)
-                                        status = shipmentResultText(result)
-                                        shipmentRevision++
-                                        editingRecord = null
-                                    }) { Text("Speichern") }
-                                },
-                                dismissButton = { TextButton(onClick = { editingRecord = null }) { Text("Abbrechen") } }
-                            )
-                        }
                         pendingAdvance?.let { record ->
                             val nextStatus = ShipmentRules.nextStatus(record.flow, record.status)
                             val isPhysicalHandover = nextStatus == ShipmentStatus.HANDED_TO_CUSTOMER ||
@@ -552,27 +422,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        pendingDelete?.let { record ->
-                            AlertDialog(
-                                onDismissRequest = { pendingDelete = null },
-                                title = { Text("Vorgang endgültig löschen?") },
-                                text = {
-                                    Text(
-                                        "Achtung: ${record.trackingNumber} wird dauerhaft von diesem Gerät entfernt. " +
-                                            "Auch die lokal gespeicherte Vorgangshistorie geht dabei verloren. " +
-                                            "Diese Löschung wird nicht in einem manipulationssicheren Prüfprotokoll festgehalten und kann nicht rückgängig gemacht werden. " +
-                                            "Wenn du den Vorgang noch dokumentieren musst, brich ab und erstelle zuerst eine Datensicherung."
-                                    )
-                                },
-                                confirmButton = { TextButton(onClick = {
-                                    val removed = shipmentStore.remove(record.id)
-                                    status = if (removed) "Vorgang und lokale Historie wurden endgültig gelöscht." else "Vorgang konnte nicht gelöscht werden. Datenspeicher prüfen."
-                                    shipmentRevision++
-                                    pendingDelete = null
-                                }) { Text("Endgültig löschen") } },
-                                dismissButton = { TextButton(onClick = { pendingDelete = null }) { Text("Abbrechen") } }
-                            )
-                        }
+
 
                     }
                 }
@@ -716,14 +566,6 @@ const val EXTRA_CARRIER = "de.trakuna.app.extra.CARRIER"
 /** Public accessor for a future in-process adapter or diagnostics screen. */
 fun getCachedTrackingNumber(context: Context): String =
     SecureHandoffCache(context).trackingNumber()
-
-private fun isWifiConnected(context: Context): Boolean {
-    val connectivity = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-        ?: return false
-    val network = connectivity.activeNetwork ?: return false
-    val capabilities = connectivity.getNetworkCapabilities(network) ?: return false
-    return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-}
 
 private fun normalizeTrackingNumber(raw: String): String =
     ShipmentRules.normalizeTrackingNumber(raw)
