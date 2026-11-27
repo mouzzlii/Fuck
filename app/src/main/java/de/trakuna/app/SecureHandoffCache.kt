@@ -10,6 +10,14 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 
+internal const val HANDOFF_TTL_MS = 24L * 60L * 60L * 1000L
+internal const val HANDOFF_CLOCK_SKEW_TOLERANCE_MS = 5L * 60L * 1000L
+
+internal fun isHandoffExpired(savedAt: Long, now: Long): Boolean =
+    savedAt < 0L ||
+        savedAt > now + HANDOFF_CLOCK_SKEW_TOLERANCE_MS ||
+        now - savedAt > HANDOFF_TTL_MS
+
 /**
  * Encrypts the last handoff value independently from the non-sensitive partner-app choice.
  * Legacy plaintext values are removed only after a successful encrypted commit.
@@ -63,7 +71,7 @@ class SecureHandoffCache(context: Context) {
             val payload = decodePayload(decrypt(encrypted))
             val savedAt = payload.getLong("savedAt")
             val now = System.currentTimeMillis()
-            if (savedAt > now + CLOCK_SKEW_TOLERANCE_MS || now - savedAt > HANDOFF_TTL_MS) {
+            if (isHandoffExpired(savedAt, now)) {
                 check(clear()) { "Abgelaufene Übergabedaten konnten nicht gelöscht werden." }
                 return ""
             }
@@ -190,7 +198,5 @@ class SecureHandoffCache(context: Context) {
         const val TAG_BYTES = 16
         const val MAX_PAYLOAD_BYTES = 4096
         const val MAX_ENCODED_CHARS = 6000
-        const val HANDOFF_TTL_MS = 24L * 60L * 60L * 1000L
-        const val CLOCK_SKEW_TOLERANCE_MS = 5L * 60L * 1000L
     }
 }
