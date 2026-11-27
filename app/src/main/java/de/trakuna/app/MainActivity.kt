@@ -203,6 +203,21 @@ class MainActivity : ComponentActivity() {
             val shipmentRecords = remember(shipmentRevision) { shipmentStore.all() }
             val shipmentStorageIssue = remember(shipmentRevision) { shipmentStore.storageError() }
 
+            val addShipment: (ShipmentFlow) -> Unit = { flow ->
+                val result = shipmentStore.add(
+                    number,
+                    ShipmentRules.resolveCarrierLabel(carrierOverride, number),
+                    flow
+                )
+                status = shipmentResultText(result)
+                if (result is ShipmentUpdate.Saved) {
+                    number = ""
+                    carrierOverride = ""
+                    showScanner = false
+                }
+                shipmentRevision++
+            }
+
             MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Color(0xFFF3F6F3))) {
                 Surface(Modifier.fillMaxSize(), color = Color(0xFFF3F6F3)) {
                     Column(
@@ -212,38 +227,24 @@ class MainActivity : ComponentActivity() {
                         Spacer(Modifier.height(24.dp))
                         Image(painter = painterResource(id = R.drawable.w_signature), contentDescription = "W-Signatur – Original", contentScale = ContentScale.Fit, modifier = Modifier.height(48.dp).fillMaxWidth())
                         Text("TRAKUNA", style = MaterialTheme.typography.headlineLarge, color = Forest)
-                        Text("SCAN-ZENTRALE", style = MaterialTheme.typography.labelLarge)
-                        Card(Modifier.fillMaxWidth()) {
-                            Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Text(
-                                    if (wifiConnected) "WLAN verbunden" else "Kein WLAN verbunden",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = if (wifiConnected) Forest else MaterialTheme.colorScheme.error
-                                )
-                                Text(
-                                    if (wifiConnected)
-                                        "Dieses TRAKUNA-Gerät ist mit einem WLAN verbunden. Ob die anderen Handgeräte im selben Netzwerk erreichbar sind, ist damit noch nicht geprüft."
-                                    else
-                                        "Dieses Gerät ist derzeit nicht mit einem WLAN verbunden. Der lokale Scanbetrieb funktioniert weiterhin.",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
-                        }
+                        Text("Paketshop", style = MaterialTheme.typography.titleLarge, color = Forest)
+                        Text("Was möchtest du erledigen?", style = MaterialTheme.typography.bodyLarge)
+
                         Button(
                             onClick = { showScanner = !showScanner },
-                            modifier = Modifier.fillMaxWidth().height(58.dp)
+                            modifier = Modifier.fillMaxWidth().height(56.dp)
                         ) {
-                            Text(if (showScanner) "Scanner schließen" else "Barcode / QR-Code scannen")
+                            Text(if (showScanner) "Scanner schließen" else "Sendungsnummer scannen")
                         }
                         if (showScanner) {
                             ScannerPanel(
                                 onDetected = { scanned ->
                                     showScanner = false
                                     if (scanned == null) {
-                                        status = "Mehrere unterschiedliche Codes erkannt. Bitte nur ein Paketlabel gleichzeitig scannen oder die Sendungsnummer manuell eingeben."
+                                        status = "Mehrere Codes erkannt. Bitte nur ein Paketlabel scannen oder die Nummer manuell eingeben."
                                     } else {
                                         number = scanned
-                                        status = "Scan erkannt: $scanned. Bitte Sendungsnummer und Paketdienst prüfen. Es wurde noch nichts an eine andere App übergeben."
+                                        status = "Sendungsnummer erkannt. Bitte prüfen."
                                     }
                                 },
                                 onClose = { showScanner = false }
@@ -253,7 +254,7 @@ class MainActivity : ComponentActivity() {
                             value = number,
                             onValueChange = { number = it.take(80) },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("Sendungsnummer manuell eingeben") },
+                            label = { Text("Sendungsnummer") },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Ascii,
@@ -261,89 +262,43 @@ class MainActivity : ComponentActivity() {
                                 imeAction = ImeAction.Done
                             )
                         )
-                        Text("Start-Paketdienste", style = MaterialTheme.typography.titleSmall, color = Forest)
-                        Box(modifier = Modifier.fillMaxWidth()) {
-                            OutlinedButton(
-                                onClick = { showCarrierMenu = true },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    if (carrierOverride.isBlank()) "Paketdienst auswählen (DPD, GLS, Hermes, UPS)"
-                                    else "Ausgewählt: ${carrierOverride}"
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = showCarrierMenu,
-                                onDismissRequest = { showCarrierMenu = false }
-                            ) {
-                                listOf("DPD", "GLS", "Hermes", "UPS", "Ohne Auswahl").forEach { option ->
-                                    DropdownMenuItem(
-                                        text = { Text(option) },
-                                        onClick = {
-                                            carrierOverride = if (option == "Ohne Auswahl") "" else option
-                                            showCarrierMenu = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                        val detectedCarrier = ShipmentRules.identifyCarrier(number)
                         OutlinedTextField(
                             value = carrierOverride,
                             onValueChange = { carrierOverride = it.take(80) },
                             modifier = Modifier.fillMaxWidth(),
-                            label = { Text("Paketdienst (manuell änderbar)") },
-                            placeholder = { Text("DPD, GLS, Hermes oder UPS") },
-                            supportingText = { Text("Die Auswahl kennzeichnet nur den Vorgang. Eine offizielle Carrier-Buchung oder Schnittstelle ist damit nicht verbunden.") },
+                            label = { Text("Paketdienst (optional)") },
+                            placeholder = { Text(detectedCarrier ?: "Wird bei eindeutiger Nummer erkannt") },
                             singleLine = true
                         )
+                        Text(
+                            if (carrierOverride.isNotBlank()) "Paketdienst: ${carrierOverride.trim()}"
+                            else detectedCarrier?.let { "Erkannt: $it – bitte kurz prüfen" } ?: "Paketdienst bei Bedarf auswählen oder eingeben.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        val canSaveShipment = shipmentStorageIssue == null &&
+                            ShipmentRules.isValidTrackingNumber(normalizeTrackingNumber(number))
                         Button(
-                            onClick = {
-                                val carrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
-                                val result = handoffToPartnerApp(context, number, carrier.ifBlank { null })
-                                status = result.message
-                            },
-                            enabled = normalizeTrackingNumber(number).isNotBlank(),
+                            onClick = { addShipment(ShipmentFlow.INCOMING_FOR_CUSTOMER) },
+                            enabled = canSaveShipment,
                             modifier = Modifier.fillMaxWidth().height(54.dp)
-                        ) {
-                            Text("An Partner-App übergeben")
-                        }
+                        ) { Text("Paket für Kunden annehmen") }
+                        Button(
+                            onClick = { addShipment(ShipmentFlow.OUTGOING_FROM_CUSTOMER) },
+                            enabled = canSaveShipment,
+                            modifier = Modifier.fillMaxWidth().height(54.dp)
+                        ) { Text("Versand vom Kunden annehmen") }
+                        Button(
+                            onClick = { addShipment(ShipmentFlow.CUSTOMER_RETURN) },
+                            enabled = canSaveShipment,
+                            modifier = Modifier.fillMaxWidth().height(54.dp)
+                        ) { Text("Retoure annehmen") }
                         OutlinedButton(
                             onClick = { showShipmentLedger = true },
-                            modifier = Modifier.fillMaxWidth()
-                        ) { Text("Paketshop-Sendungen verwalten") }
-                        OutlinedButton(
-                            onClick = {
-                                val suggestedCarrier = ShipmentRules.resolveCarrierLabel(carrierOverride, number)
-                                partnerPickerCarrier = PartnerAppConfig.priorityCarriers.firstOrNull {
-                                    it == suggestedCarrier
-                                } ?: "DPD"
-                                installedApps = findLaunchableApps(context)
-                                showAllApps = false
-                                showPartnerPicker = true
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) { Text("Betriebssoftware pro Paketdienst zuordnen") }
-                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                            val partnerPrefs = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-                            PartnerAppConfig.priorityCarriers.forEach { carrier ->
-                                val label = partnerPrefs.getString("partner_label_$carrier", null)
-                                Text(
-                                    "$carrier: ${label ?: "noch nicht zugeordnet"}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = Forest
-                                )
-                            }
-                            if (PartnerAppConfig.priorityCarriers.none { partnerPrefs.contains("partner_package_$it") }) {
-                                partnerPrefs.getString("partner_label", null)?.let {
-                                    Text(
-                                        "Alte gemeinsame Zuordnung vorhanden: $it. Sie gilt vorübergehend für alle vier Paketdienste, bis Einzelzuordnungen gespeichert werden.",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-                            }
-                        }
-                        Text(status, style = MaterialTheme.typography.bodyMedium, color = Forest)
+                            modifier = Modifier.fillMaxWidth().height(54.dp)
+                        ) { Text("Sendungen suchen / Abholung") }
+
                         if (showShipmentLedger) {
                             AlertDialog(
                                 onDismissRequest = { showShipmentLedger = false },
@@ -353,73 +308,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier.heightIn(max = 520.dp).verticalScroll(rememberScrollState()),
                                         verticalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
-                                        Text("Neuen Vorgang mit der oben eingegebenen Sendungsnummer erfassen:")
-                                        OutlinedTextField(value = recipient, onValueChange = { recipient = it.take(100) }, label = { Text("Empfänger / Kundenname (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                                        OutlinedTextField(value = shipmentNote, onValueChange = { shipmentNote = it.take(500) }, label = { Text("Notiz (optional)") }, modifier = Modifier.fillMaxWidth(), minLines = 2)
-                                        if (shipmentStorageIssue != null) {
-                                            Text(
-                                                "Erfassung derzeit gesperrt: $shipmentStorageIssue",
-                                                color = MaterialTheme.colorScheme.error,
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        } else if (normalizeTrackingNumber(number).isBlank()) {
-                                            Text(
-                                                "Bitte zuerst oben eine Sendungsnummer eingeben. Danach wird die passende Erfassungs-Schaltfläche aktiv.",
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        }
-                                        Button(
-                                            onClick = {
-                                                val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.INCOMING_FOR_CUSTOMER, recipient, shipmentNote)
-                                                status = shipmentResultText(result)
-                                                if (result is ShipmentUpdate.Saved) {
-                                                    recipient = ""
-                                                    carrierOverride = ""
-                                                    shipmentNote = ""
-                                                    showShipmentLedger = false
-                                                }
-                                                shipmentRevision++
-                                            },
-                                            enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) { Text("Paket für Kunden annehmen") }
-                                        Button(
-                                            onClick = {
-                                                val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.OUTGOING_FROM_CUSTOMER, recipient, shipmentNote)
-                                                status = shipmentResultText(result)
-                                                if (result is ShipmentUpdate.Saved) {
-                                                    recipient = ""
-                                                    carrierOverride = ""
-                                                    shipmentNote = ""
-                                                    showShipmentLedger = false
-                                                }
-                                                shipmentRevision++
-                                            },
-                                            enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) { Text("Sendung vom Kunden annehmen") }
-                                        Button(
-                                            onClick = {
-                                                val result = shipmentStore.add(number, ShipmentRules.resolveCarrierLabel(carrierOverride, number), ShipmentFlow.CUSTOMER_RETURN, recipient, shipmentNote)
-                                                status = shipmentResultText(result)
-                                                if (result is ShipmentUpdate.Saved) {
-                                                    recipient = ""
-                                                    carrierOverride = ""
-                                                    shipmentNote = ""
-                                                    showShipmentLedger = false
-                                                }
-                                                shipmentRevision++
-                                            },
-                                            enabled = shipmentStorageIssue == null && normalizeTrackingNumber(number).isNotBlank(),
-                                            modifier = Modifier.fillMaxWidth()
-                                        ) { Text("Retoure annehmen") }
-                                        Text(
-                                            status,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-                                        HorizontalDivider()
+                                        Text("Suche eine Sendung und dokumentiere die Abholung über die nächste Aktion.")
                                         Text("Gespeicherte Vorgänge", style = MaterialTheme.typography.titleSmall)
                                         if (shipmentStorageIssue == null) {
                                             Text("${shipmentRecords.size} von ${ShipmentStore.MAX_RECORDS} möglichen Einträgen belegt · ${shipmentRecords.count { it.archivedAt == null }} aktiv · ${shipmentRecords.count { it.archivedAt != null }} archiviert", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -684,89 +573,7 @@ class MainActivity : ComponentActivity() {
                                 dismissButton = { TextButton(onClick = { pendingDelete = null }) { Text("Abbrechen") } }
                             )
                         }
-                        if (showPartnerPicker) {
-                            val candidates = if (showAllApps) installedApps else installedApps.filter { it.looksLikeCarrierApp }
-                            val partnerPrefs = context.getSharedPreferences(CACHE_PREFS, Context.MODE_PRIVATE)
-                            val currentPackageKey = "partner_package_$partnerPickerCarrier"
-                            val currentLabelKey = "partner_label_$partnerPickerCarrier"
-                            AlertDialog(
-                                onDismissRequest = {
-                                    showPartnerPicker = false
-                                    showPartnerCarrierMenu = false
-                                },
-                                title = { Text("Betriebssoftware für $partnerPickerCarrier zuordnen") },
-                                text = {
-                                    Column(modifier = Modifier.heightIn(max = 480.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                        Box {
-                                            OutlinedButton(
-                                                onClick = { showPartnerCarrierMenu = true },
-                                                modifier = Modifier.fillMaxWidth()
-                                            ) { Text("Paketdienst: $partnerPickerCarrier") }
-                                            DropdownMenu(
-                                                expanded = showPartnerCarrierMenu,
-                                                onDismissRequest = { showPartnerCarrierMenu = false }
-                                            ) {
-                                                PartnerAppConfig.priorityCarriers.forEach { carrier ->
-                                                    DropdownMenuItem(
-                                                        text = { Text(carrier) },
-                                                        onClick = {
-                                                            partnerPickerCarrier = carrier
-                                                            showPartnerCarrierMenu = false
-                                                            showAllApps = false
-                                                        }
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        Text("Wähle die installierte App, die zu diesem Paketdienst gehört. Die Zuordnung wird nur auf diesem Gerät gespeichert.")
-                                        Text(if (candidates.isEmpty()) "Keine passende Paketdienst-App gefunden. Du kannst alle installierten Apps anzeigen." else "Installierte Apps:")
-                                        candidates.take(30).forEach { app ->
-                                            TextButton(onClick = {
-                                                val saved = partnerPrefs.edit()
-                                                    .putString(currentPackageKey, app.packageName)
-                                                    .putString(currentLabelKey, app.label)
-                                                    .remove("partner_package")
-                                                    .remove("partner_label")
-                                                    .commit()
-                                                if (saved) {
-                                                    status = "$partnerPickerCarrier wurde der App ${app.label} zugeordnet. Eine automatische Übernahme oder Buchung ist dadurch nicht bestätigt."
-                                                    showPartnerPicker = false
-                                                } else {
-                                                    status = "Zuordnung konnte nicht dauerhaft gespeichert werden. Bitte Gerätespeicher prüfen und erneut versuchen."
-                                                }
-                                            }, modifier = Modifier.fillMaxWidth()) {
-                                                Text("${app.label}  ·  ${app.packageName}")
-                                            }
-                                        }
-                                        if (!showAllApps) TextButton(onClick = { showAllApps = true }) { Text("Alle installierten Apps anzeigen") }
-                                        if (partnerPrefs.getString(currentPackageKey, null) != null) {
-                                            TextButton(onClick = {
-                                                val cleared = partnerPrefs.edit()
-                                                    .remove(currentPackageKey)
-                                                    .remove(currentLabelKey)
-                                                    .commit()
-                                                status = if (cleared) "Zuordnung für $partnerPickerCarrier wurde entfernt."
-                                                else "Zuordnung konnte nicht entfernt werden. Bitte erneut versuchen."
-                                            }, modifier = Modifier.fillMaxWidth()) {
-                                                Text("Zuordnung für $partnerPickerCarrier entfernen")
-                                            }
-                                        }
-                                    }
-                                },
-                                confirmButton = {
-                                    TextButton(onClick = {
-                                        showPartnerPicker = false
-                                        showPartnerCarrierMenu = false
-                                    }) { Text("Schließen") }
-                                }
-                            )
-                        }
-                        Spacer(Modifier.height(16.dp))
-                        Text(
-                            "Sendungsnummern werden lokal auf diesem Gerät gespeichert. Eine automatische Übernahme in Partner-Software klappt nur, wenn diese die übergebenen Intent-Extras oder eine passende Schnittstelle unterstützt.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.DarkGray
-                        )
+
                     }
                 }
             }
