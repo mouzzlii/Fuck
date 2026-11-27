@@ -11,6 +11,8 @@
 
 TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
 
+**Verbindlicher Produktumfang:** TRAKUNA wird auf vier Kernvorgänge (Annahme, Abholung, Retoure, Versand) reduziert. Die App soll mit einem Smartphone und möglichst wenigen Bedienhandlungen funktionieren. Nicht notwendige Zusatzfunktionen werden aus der normalen Oberfläche entfernt oder zurückgestellt. Siehe [TRAKUNA-Minimal-Konzept](TRAKUNA-MINIMAL-KONZEPT.md).
+
 ## Aktueller Entwicklungsstand – Version 1.53 (versionCode 54)
 
 - Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
