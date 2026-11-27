@@ -14,7 +14,7 @@ Die Bedienung soll primär über Scanner erfolgen. Ein Scan soll unmittelbar in 
 
 ## 2. Unverzichtbarer Kernumfang
 
-1. **Scannen:** QR-Codes und Strichcodes erfassen. Der Smartphone-Kamerascanner benötigt Autofokus. Vorhandene kompatible Zebra-Scanner müssen als Eingabeweg berücksichtigt werden; ein Zebra-/DataWedge-Scan soll denselben Erfassungsablauf auslösen wie ein Kamerascan.
+1. **Scannen:** QR-Codes und Strichcodes über den Google Code Scanner (Google Play-Dienste) erfassen; dessen native Scan-Oberfläche und automatischer Zoom ersetzen einen eigenen Kamera-Scanner in TRAKUNA. Die App fordert dafür keine Kameraberechtigung an. Vorhandene kompatible Zebra-Scanner müssen als Eingabeweg berücksichtigt werden; ein Zebra-/DataWedge-Scan soll denselben Erfassungsablauf auslösen wie ein Google-Scan.
 2. **Direkte Erfassung:** Der erkannte Wert wird ohne Umwege in den Paketvorgang übernommen. Manuelle Eingabe bleibt nur als zuverlässiger Rückfallweg bei Scanproblemen.
 3. **Anbieter erkennen:** Paketdienst automatisch erkennen, wenn die Barcode-/QR-Daten eine eindeutige und geprüfte Zuordnung erlauben. Hermes ist Pflicht. Bei Unsicherheit nicht raten, sondern eine kurze manuelle Auswahl anbieten.
 4. **Paketshop-Aktionen:** Die App muss die tatsächlichen Abläufe abbilden:
