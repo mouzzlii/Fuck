@@ -117,6 +117,21 @@ class EncryptedStorageInstrumentedTest {
     }
 
     @Test
+    fun handoffCacheRequiresExplicitRestoreAndCanBeCleared() {
+        val cache = SecureHandoffCache(context)
+        assertTrue(cache.save("TEST123456", "Hermes"))
+        assertTrue(cache.hasPendingHandoff())
+
+        assertTrue(cache.clear())
+
+        assertFalse(cache.hasPendingHandoff())
+        assertEquals("", cache.trackingNumber())
+        val preferences = context.getSharedPreferences("trakuna_handoff", Context.MODE_PRIVATE)
+        assertFalse(preferences.contains("tracking_number_encrypted_v1"))
+        assertFalse(preferences.contains("tracking_number"))
+    }
+
+    @Test
     fun damagedPartnerHandoffCacheFailsClosedInsteadOfReturningAnEmptyNumber() {
         val cache = SecureHandoffCache(context)
         assertTrue(cache.save("TEST123456", "Hermes"))
