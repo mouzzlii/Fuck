@@ -95,3 +95,16 @@ Eine Änderung ist nur dann eine Verbesserung, wenn sie den Arbeitsablauf tatsä
 5. Jede Änderung mit vollständigem Diff, Regressionstests und einem klaren Vorher-/Nachher-Vergleich dokumentieren.
 
 **Entscheidungsmaßstab:** Weniger Schritte, weniger Auswahl, weniger Fehlerquellen und weniger Wartungsaufwand. Nicht mehr Funktionen.
+
+## 9. Umsetzungsstand
+
+**Im aktuellen Arbeitszweig umgesetzt (noch nicht freigegeben):**
+
+- Startseite auf vier klare Aktionen reduziert: Paket für Kunden annehmen, Versand vom Kunden annehmen, Retoure annehmen sowie Sendungen suchen/Abholung.
+- Scan und manuelle Eingabe bleiben; erkannter Paketdienst wird als Hinweis angezeigt. Wenn kein eindeutiger Treffer vorliegt, muss der Paketdienst eingegeben werden.
+- WLAN-Statuskarte, Partner-App-Zuordnung/-Picker und Übergabe-Schaltfläche aus der normalen Oberfläche entfernt.
+- Such-/Abholansicht verschlankt: CSV-Export, Historien-/Bearbeitungsdialoge und endgültige Löschaktion aus der normalen Oberfläche entfernt.
+- Lokale Datenspeicherung, Duplikatprüfung, Statusbestätigung und Backup/Wiederherstellung bleiben erhalten.
+- Unbenutzte Partner-App-Handoff-Helfer aus der Hauptaktivität entfernt. Ein passiver externer Scan-Empfang bleibt vorerst bestehen; TRAKUNA steuert kein Zebra-Gerät.
+
+**Noch nicht nachgewiesen:** erfolgreicher Build und Tests des neuen UI-Commits, Bedienung auf einem echten Android-Gerät, Kamera-/Scanner-Abnahme, Drucker- oder Carrier-End-to-End-Funktion. Der zugehörige GitHub-Instrumentierungsworkflow war beim letzten Abruf noch ausstehend. Bis diese Nachweise vorliegen, bleibt der PR Draft und wird nicht gemergt.
