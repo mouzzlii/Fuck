@@ -127,3 +127,8 @@ Für die Android-Instrumentierungstests gibt es zusätzlich den getrennten Workf
 ## Rights and confidentiality
 
 See [PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md) for the bilingual rights notice, third-party materials disclaimer, and rules for confidential information. Do not place unpublished invention details, customer data, passwords, API keys, or private signing keys in this repository.
+
+
+## Verifizierungsnachtrag – 27.11.2026
+
+Der aktuelle PR-Head ist `eb5f861e7f225adab1de258745b3ce1dd54b305d` (Version 1.55 / versionCode 56). Für exakt diesen Commit sind der Android-Build [45911560033](https://github.com/mouzzlii/Fuck/actions/runs/45911560033) und der API-35-Emulatorlauf [45911560010](https://github.com/mouzzlii/Fuck/actions/runs/45911560010) erfolgreich. Der Emulatorlauf führte 15 Instrumentierungstests aus: 15 bestanden, 0 fehlgeschlagen, 0 übersprungen. Ältere Commit- und Run-Referenzen in den historischen Abschnitten unten dokumentieren frühere Stände und sind kein Testnachweis für den aktuellen Head. PR #25 bleibt Draft; reale Kamera-/Autofokus-, Drucker- und manuelle Backup-/Restore-Abnahmen bleiben offen.
