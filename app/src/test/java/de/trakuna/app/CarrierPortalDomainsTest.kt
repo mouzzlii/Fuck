@@ -10,6 +10,8 @@ class CarrierPortalDomainsTest {
         assertEquals("DPD", CarrierPortalDomains.identifyFromUrl("https://www.dpd.com/track"))
         assertEquals("GLS", CarrierPortalDomains.identifyFromUrl("https://gls-one.at/track"))
         assertEquals("Hermes", CarrierPortalDomains.identifyFromUrl("https://tracking.hermesworld.com/track"))
+        assertEquals("Hermes", CarrierPortalDomains.identifyFromUrl("https://www.myhermes.at/sendungsverfolgung/"))
+        assertNull(CarrierPortalDomains.identifyFromUrl("https://www.myhermes.de/sendungsverfolgung/"))
         assertEquals("UPS", CarrierPortalDomains.identifyFromUrl("https://www.ups.com/track"))
         assertEquals("Österreichische Post", CarrierPortalDomains.identifyFromUrl("https://www.post.at/track"))
         assertEquals("DHL Paket", CarrierPortalDomains.identifyFromUrl("https://www.dhl.de/track"))
@@ -34,5 +36,10 @@ class CarrierPortalDomainsTest {
         assertNull(CarrierPortalDomains.validatePortalUrl("DPD", "https://www.dpd.com/parcel?session=secret"))
         assertNull(CarrierPortalDomains.validatePortalUrl("DPD", "https://www.dpd.com/parcel#access-token"))
         assertNull(CarrierPortalDomains.validatePortalUrl("Unknown", "https://www.dpd.com/parcel"))
+        assertEquals(
+            "https://www.myhermes.at/sendungsverfolgung/",
+            CarrierPortalDomains.validatePortalUrl("Hermes", "https://www.myhermes.at/sendungsverfolgung/")
+        )
+        assertNull(CarrierPortalDomains.validatePortalUrl("Hermes", "https://www.myhermes.de/sendungsverfolgung/"))
     }
 }
