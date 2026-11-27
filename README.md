@@ -40,7 +40,8 @@ Ziel ist **ein gemeinsamer Etikettendrucker für alle unterstützten Paketdienst
 
 - Vereinfachungsarbeiten: [PR #36 – TRAKUNA auf den notwendigen Kern reduzieren](https://github.com/mouzzlii/Fuck/pull/36) (Draft, nicht gemergt).
 - Minimalumfang und Abnahmekriterien: [TRAKUNA-MINIMAL-KONZEPT.md](TRAKUNA-MINIMAL-KONZEPT.md).
-- Instrumentierung für den UI-Stand vor Entfernung des externen Scanpfads: [GitHub Actions Run 46067395466](https://github.com/mouzzlii/Fuck/actions/runs/46067395466) erfolgreich. Der eigene Lauf für die Entfernung des externen Scanpfads auf Code-Commit `e737286` läuft: [Run 46068641940](https://github.com/mouzzlii/Fuck/actions/runs/46068641940).
+- GitHub-Instrumentierung für den aktuellen Code-Stand `e737286` erfolgreich: [Run 46068641940](https://github.com/mouzzlii/Fuck/actions/runs/46068641940), einschließlich `:app:connectedDebugAndroidTest`. Der Lauf für den vorherigen UI-Stand `5929eb8` war ebenfalls erfolgreich.
+- Noch kein Test auf echtem Android-Gerät; Kamera-Scan, reale Shopabläufe und physischer Druck bleiben offen.
 - Kein echter Android-Gerätetest, keine Kamera-/Scanner-Abnahme und kein physischer Druckertest nachgewiesen.
 - PR #25 bleibt getrennt und unangetastet.
 
