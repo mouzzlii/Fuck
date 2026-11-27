@@ -1,6 +1,6 @@
 # KI-Team und kostenfreier Entwicklungsmodus
 
-**Geltungsbereich:** Dieses Dokument beschreibt den kostenfreien Entwicklungsmodus für TRAKUNA. Globale Arbeitsweise und Freigabegrenzen sind im [MAINPROMPT 2.0.6](https://github.com/mouzzlii/KI-Arbeitsplatz/blob/main/docs/MAINPROMPT.md) geregelt; die hier genannten Regeln ergänzen sie TRAKUNA-spezifisch.
+**Geltungsbereich:** Dieses Dokument beschreibt den kostenfreien Entwicklungsmodus für TRAKUNA. Globale Arbeitsweise und Freigabegrenzen sind im [MAINPROMPT 2.0.7](https://github.com/mouzzlii/KI-Arbeitsplatz/blob/main/docs/MAINPROMPT.md) geregelt; die hier genannten Regeln ergänzen sie TRAKUNA-spezifisch.
 
 Stand: 23.11.2026
 
