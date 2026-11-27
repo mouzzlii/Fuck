@@ -107,6 +107,6 @@ Eine Änderung ist nur dann eine Verbesserung, wenn sie den Arbeitsablauf tatsä
 - Lokale Datenspeicherung, Duplikatprüfung, Statusbestätigung und Backup/Wiederherstellung bleiben erhalten.
 - Unbenutzte Partner-App-Handoff-Helfer und den externen DataWedge-/Zebra-Broadcast-Empfang aus der Hauptaktivität entfernt. Der Smartphone-Kamera-Scan und die manuelle Eingabe bleiben der einzige vorgesehene Scanweg.
 
-**Bereits nachgewiesen für Commit `5929eb8`:** GitHub-Instrumentierungsworkflow erfolgreich; `:app:connectedDebugAndroidTest` endete mit `BUILD SUCCESSFUL`.
+**Bereits nachgewiesen für Code-Commit `e737286` (Entfernung des externen DataWedge-/Zebra-Broadcast-Empfangs):** GitHub-Instrumentierungsworkflow [Run 46068641940](https://github.com/mouzzlii/Fuck/actions/runs/46068641940) erfolgreich; `:app:connectedDebugAndroidTest` endete mit `BUILD SUCCESSFUL`. Auch der vorherige UI-Stand `5929eb8` wurde erfolgreich instrumentiert.
 
-**Noch nicht nachgewiesen für den nachfolgenden Code-Commit `e737286` (Entfernung des externen DataWedge-/Zebra-Broadcast-Empfangs):** eigener Build-/Instrumentierungslauf, Bedienung auf einem echten Android-Gerät, Kamera-Scan-Abnahme sowie Drucker- oder Carrier-End-to-End-Funktion. Bis diese Nachweise vorliegen, bleibt der PR Draft und wird nicht gemergt.
+**Noch nicht nachgewiesen:** Bedienung auf einem echten Android-Gerät, Kamera-Scan-Abnahme, reale Paketshop-Abläufe sowie Drucker- oder Carrier-End-to-End-Funktion. Der Emulatorlauf belegt keinen Praxistest. Bis diese Punkte geprüft sind, bleibt der PR Draft und wird nicht gemergt.
