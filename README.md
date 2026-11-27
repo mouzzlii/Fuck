@@ -10,6 +10,13 @@
 
 TRAKUNA 1.55 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung der Paketshop-Abläufe.
 
+## Verbindlicher Minimalumfang
+
+TRAKUNA wird auf den täglichen Paketshop-Kern reduziert: **Scannen → Vorgang auswählen → speichern → fertig.** Kamera mit Autofokus und vorhandene kompatible Zebra-Scanner sollen denselben Erfassungsweg nutzen. Hermes ist Pflichtanbieter. Unterstützt werden Annahme, Ausgabe, Kundensendungen, Retouren und die lokale Dokumentation der Fahrer-/Carrier-Übergabe. Manuelle Eingabe bleibt nur Rückfallweg. Diagnose, CSV, Archivverwaltung und weitere Wartungsfunktionen dürfen den normalen Mitarbeiterablauf nicht belasten.
+
+Die verbindliche Produktentscheidung mit Abgrenzungen, Hardwaregrenzen und Abnahmekriterien steht in [TRAKUNA-MINIMAL-SCOPE.md](TRAKUNA-MINIMAL-SCOPE.md). Dieser Minimalumfang hat Vorrang vor älteren historischen Featurelisten in diesem README. Bestehende Daten, Verschlüsselung und sichere Wiederherstellung bleiben geschützt. Der aktuelle Shadow-/Testmodus bleibt aktiv; echte Versandlabels und produktive Druckaufträge sind ausgeschlossen.
+
+
 ## Aktueller Entwicklungsstand – Version 1.55 (versionCode 56)
 
 - **Version 1.55 – automatische Anbietererkennung und Portalrouting:** Ein Scan kann den Paketdienst anhand einer offiziellen HTTPS-QR-Zieladresse erkennen; zusätzlich bleiben nur eindeutige Sendungsnummernformate für UPS, Österreichische Post und DHL Paket aktiv. DPD, GLS, Hermes, FedEx und LogoiX werden nicht aus mehrdeutigen Nummernlängen erraten. Enthält ein QR-Link eine freigegebene offizielle Carrier-Domain, kann TRAKUNA zusätzlich eine eindeutige plausible Sendungs-ID aus dem URL-Pfad übernehmen (mindestens 8 Zeichen); bei fremden Domains bleibt die strengere Formaterkennung aktiv. Nach eindeutiger Erkennung öffnet TRAKUNA das für diesen Anbieter vom Betreiber konfigurierte offizielle HTTPS-Portal im Browser. Portaladressen werden gegen eine Anbieter-Domain-Allowlist geprüft. Unbekannte oder mehrdeutige Scans verlangen weiterhin eine manuelle Auswahl.
