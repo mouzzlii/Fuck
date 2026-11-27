@@ -16,7 +16,6 @@ android = "{http://schemas.android.com/apk/res/android}"
 tools = "{http://schemas.android.com/tools}"
 internet = "android.permission.INTERNET"
 allowed_source_permissions = {
-    "android.permission.CAMERA",
     "android.permission.ACCESS_NETWORK_STATE",
 }
 
@@ -69,14 +68,7 @@ def check_source_manifest() -> None:
     if app.attrib.get(android + "usesCleartextTraffic") != "false":
         fail('android:usesCleartextTraffic muss ausdrücklich "false" sein.')
 
-    camera_features = [
-        node for node in root.findall("uses-feature")
-        if node.attrib.get(android + "name") == "android.hardware.camera"
-    ]
-    if not camera_features or any(node.attrib.get(android + "required") != "false" for node in camera_features):
-        fail("Kamera muss als optionale Hardware (required=false) deklariert bleiben.")
-
-    print("OK: Quellmanifest enthält nur CAMERA und ACCESS_NETWORK_STATE; INTERNET wird entfernt, Backup/Klartextverkehr sind deaktiviert.")
+    print("OK: Quellmanifest enthält keine Kamera-Berechtigung; INTERNET wird entfernt, Backup/Klartextverkehr sind deaktiviert.")
 
 def check_declared_dependencies_and_sources() -> None:
     gradle_file = Path("app/build.gradle.kts")

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- ML Kit pulls a telemetry transport manifest that requests INTERNET. TRAKUNA is intentionally offline. -->
     <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <queries>
@@ -18,9 +19,6 @@
         android:usesCleartextTraffic="false"
         android:label="TRAKUNA"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
-        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="barcode_ui" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
