@@ -534,8 +534,11 @@ class MainActivity : ComponentActivity() {
                                                     carrierOverride = ""
                                                     shipmentNote = ""
                                                     showShipmentLedger = false
-                                                    if (handoffCache.clear()) hasPendingHandoff = false
-                                                    else status += " Die alte Übergabe konnte nicht automatisch gelöscht werden."
+                                                    val cachedHandoff = runCatching { handoffCache.trackingNumber() }.getOrNull()
+                                                    if (cachedHandoff == result.record.trackingNumber) {
+                                                        if (handoffCache.clear()) hasPendingHandoff = false
+                                                        else status += " Die zugehörige gespeicherte Übergabe konnte nicht automatisch gelöscht werden."
+                                                    }
                                                 }
                                                 shipmentRevision++
                                             }
@@ -760,8 +763,11 @@ class MainActivity : ComponentActivity() {
                                     val result = shipmentStore.advance(record.id, expectedStatus = record.status)
                                     status = shipmentResultText(result)
                                     if (result is ShipmentUpdate.Saved && ShipmentRules.isTerminalStatus(result.record.status)) {
-                                        if (handoffCache.clear()) hasPendingHandoff = false
-                                        else status += " Die gespeicherte Übergabe konnte nicht automatisch gelöscht werden."
+                                        val cachedHandoff = runCatching { handoffCache.trackingNumber() }.getOrNull()
+                                        if (cachedHandoff == result.record.trackingNumber) {
+                                            if (handoffCache.clear()) hasPendingHandoff = false
+                                            else status += " Die zugehörige gespeicherte Übergabe konnte nicht automatisch gelöscht werden."
+                                        }
                                     }
                                     shipmentRevision++
                                     pendingAdvance = null
