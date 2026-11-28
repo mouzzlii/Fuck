@@ -52,7 +52,7 @@ Die Hauptansicht soll im Alltag nur enthalten:
 - einen direkten Zugang zu **„Offene Sendungen“**;
 - eine knappe Rückmeldung, ob der Vorgang erfolgreich gespeichert wurde.
 
-Die offene Sendungsliste soll pro Eintrag nur die wesentlichen Informationen und die gerade zulässige nächste Aktion zeigen. Seltene Wartungs- und Supportfunktionen gehören in einen getrennten, unaufdringlichen Bereich.
+Die offene Sendungsliste soll pro Eintrag nur die wesentlichen Informationen und die gerade zulässige nächste Aktion zeigen. Seltene Wartungs- und Supportfunktionen gehören in einen getrennten, unaufdringlichen Bereich **„Eigenschaften“**. Dort soll es einen klaren Einstieg **„Drucker verbinden“** geben: kompatiblen Etikettendrucker auswählen, per WLAN oder Bluetooth verbinden, Verbindung anzeigen/trennen und eine sichere Verbindungskontrolle durchführen. Die konkrete Druckeransteuerung wird erst für das bestätigte Druckermodell und dessen unterstütztes Protokoll implementiert.
 
 ## 5. Aus dem täglichen Ablauf entfernen oder zurückstellen
 
@@ -74,8 +74,10 @@ Diese Funktionen dürfen den Kernablauf nicht länger, unübersichtlicher oder f
 
 - Der Paketshop verwendet Zebra-Scanner. Der bestehende Zebra-/DataWedge-Eingang ist daher anhand der tatsächlich vorhandenen Geräte zu bewerten und darf nicht allein aufgrund einer früheren Dokumentationsnotiz als bedeutungsloser Legacy-Code entfernt werden.
 - Für Hermes wurde ein Zebra/Symbol MC3090BT (Bluetooth, älteres Gerät) genannt. Seine technische Kompatibilität mit der aktuellen Android-App ist nicht belegt. Bestehendes Hermes-System und Gerät nicht verändern; zunächst nur Kompatibilität und freigegebene Integrationsmöglichkeiten feststellen.
-- Genannte Etikettendrucker: Zebra CD421 (GLS) und Zebra CD420 (DPD). Ein Hermes-Handgerät und Hermes-Drucker wurden ebenfalls erwähnt, das genaue Druckermodell/der Anschluss ist nicht belegt.
+- Genannte vorhandene Etikettendrucker: Zebra CD421 (GLS) und Zebra CD420 (DPD). Ziel ist ein gemeinsamer, vom Android-Smartphone aus nutzbarer Etikettendrucker über WLAN oder Bluetooth. Welches konkrete Gerät dafür vorgesehen ist und welche Schnittstelle/Firmware es unterstützt, muss vor der Implementierung bestätigt werden.
+- In **Eigenschaften → Drucker verbinden** soll die Verbindung eingerichtet und verwaltet werden. Keine bestehende DPD-/GLS-/Hermes-Druckerkopplung verändern.
 - Ein Druckweg ist derzeit nicht als umgesetzt oder real getestet zu behandeln. Für den geschlossenen technischen Shop-Test sind echte Versandlabels, echte Drucke und produktive Druckaufträge ausdrücklich ausgeschlossen.
+- Anbieter-Logins erfolgen ausschließlich auf den offiziellen Geschäftskunden-Websites im externen Browser. Browser und Anbieter verwalten Sitzung/Cookies und – sofern vom Benutzer gewünscht und angeboten – den Passwortmanager. TRAKUNA speichert, liest oder überträgt keine Benutzernamen, Passwörter oder Login-Cookies. Eine gespeicherte Sitzung kann durch den Anbieter ablaufen oder widerrufen werden.
 - Keine Carrier-API, Partnerfreigabe, Portal-Datenübertragung oder externe Buchung behaupten, solange sie nicht tatsächlich autorisiert, implementiert und getestet ist.
 
 ## 7. Nicht-Ziele der Minimalversion
@@ -100,6 +102,8 @@ Eine Änderung ist nur dann eine Verbesserung, wenn:
 - Annahme, Ausgabe, Kundensendung, Retoure und Fahrerübergabe korrekt unterscheidbar bleiben;
 - kein bestehender Datensatz verloren geht oder unbemerkt verändert wird;
 - der Testmodus weiterhin echte externe Aktionen verhindert;
+- Drucker können in Eigenschaften eingerichtet werden, ohne bestehende Shopdrucker oder produktive Druckaufträge unkontrolliert zu verändern;
+- Anbieter-Logins bleiben im externen Browser/bei den Anbietern und werden nicht in TRAKUNA gespeichert;
 - relevante Tests für den exakten Commit erfolgreich sind.
 
 Bei jeder neuen Funktion ist zuerst zu begründen, warum sie für den täglichen Paketshop-Ablauf unverzichtbar ist. Ohne diesen Nachweis wird sie nicht gebaut.
