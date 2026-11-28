@@ -4,7 +4,7 @@ Stand: 26. November 2026
 
 ## Ziel
 
-**Verbindliche Zielarchitektur (26.11.2026):** Ein Android-Smartphone ist die zentrale Bedienoberfläche für die gemeinsame TRAKUNA-App und offizielle Carrier-Portale. Ein gemeinsamer Etikettendrucker soll direkt vom Smartphone über WLAN oder Bluetooth genutzt werden; konkrete Druckerkompatibilität und App-Druckcode sind noch nicht bestätigt bzw. implementiert. Zebra/DataWedge ist nur vorhandener Legacy-Code und keine Voraussetzung des neuen Ablaufs. Die nachfolgenden TC26-/DataWedge-Konfigurationsschritte sind historische optionale Regressionstests; keine bestehenden Geräte oder Profile verändern und keine neue Zebra-Hardwareintegration einrichten.
+**Verbindliche Zielarchitektur (26.11.2026):** Ein Android-Smartphone ist die zentrale Bedienoberfläche für die gemeinsame TRAKUNA-App und offizielle Carrier-Portale. Ein gemeinsamer Etikettendrucker soll direkt vom Smartphone über WLAN oder Bluetooth genutzt werden. Die Einrichtung soll in TRAKUNA unter **Eigenschaften → Drucker verbinden** erfolgen; konkrete Druckerkompatibilität und App-Druckcode sind noch nicht bestätigt bzw. implementiert. Zebra/DataWedge ist nur vorhandener Legacy-Code und keine Voraussetzung des neuen Ablaufs. Die nachfolgenden TC26-/DataWedge-Konfigurationsschritte sind historische optionale Regressionstests; keine bestehenden Geräte oder Profile verändern und keine neue Zebra-Hardwareintegration einrichten.
 
 Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: TRAKUNA starten und einen kontrollierten Funktionstest durchführen. Eine WLAN-Verbindung ist für die aktuelle lokale Testversion optional und nicht erforderlich.
 
@@ -16,7 +16,7 @@ Der erste Start soll vor Ort mit möglichst wenigen Handgriffen möglich sein: T
 |---|---|---|
 | Android-Smartphone ↔ Internet/WLAN oder Mobilfunk | Offizielle Carrier-Portale im Browser | Portalzugang und Betreiberberechtigung je Carrier prüfen; TRAKUNA selbst arbeitet derzeit lokal und besitzt keine INTERNET-Berechtigung |
 | TC26 ↔ Shop-WLAN | Internetzugang für spätere freigegebene Online-Dienste | WLAN-Fähigkeit des wahrscheinlichen TC26 vorhanden; Shop-Zugangsdaten/Netzrichtlinien vor Ort unbekannt |
-| Android-Smartphone ↔ gemeinsamer Etikettendrucker | WLAN-/Bluetooth-Druck | Zielarchitektur; konkretes Modell, Protokoll, Netzwerkfreigabe und App-Druckcode noch nicht geprüft/implementiert |
+| Android-Smartphone ↔ gemeinsamer Etikettendrucker | WLAN-/Bluetooth-Druck | Ziel: Einrichtung unter Eigenschaften → Drucker verbinden; konkretes gemeinsames Modell, Protokoll, Netzwerkfreigabe und App-Druckcode noch nicht geprüft/implementiert |
 | DPD-Handgerät ↔ DPD-Drucker | Bestehender DPD-Etikettendruck | Laut Betreiber Bluetooth; nicht verändern |
 | Bisheriges Hermes-MC3090BT ↔ Hermes-Drucker/System | Bisheriger Hermes-Ablauf bis zur Umstellung | Altgerät; laut Betreiber nächste Woche Austausch, bis dahin nicht verändern |
 | UPS-Gerät/Arbeitsplatz ↔ UPS-System/Drucker | UPS-Paketshop-Ablauf | Hardware und Verbindung noch nicht erhoben; vor Ort aufnehmen, nichts verändern |
@@ -100,7 +100,7 @@ Diese Punkte hängen von Informationen oder Freigaben außerhalb des Repositorys
 - Offizielle Carrier-/Paketshop-Schnittstellen, insbesondere Hermes als Pflichtanforderung für den Pilot.
 - Freigabe der Verarbeitung echter Kunden- und Sendungsdaten.
 
-Es werden keine WLAN-Passwörter, Carrier-Passwörter, privaten Schlüssel oder API-Secrets in GitHub, App-Code oder Chat hinterlegt.
+Es werden keine WLAN-Passwörter, Carrier-Passwörter, privaten Schlüssel oder API-Secrets in GitHub, App-Code oder Chat hinterlegt. Geschäftskunden-Logins bleiben ausschließlich im externen Browser bzw. beim Anbieter; TRAKUNA speichert keine Zugangsdaten oder Browser-Sitzungen.
 
 ## 7. Ehrlicher Status
 
