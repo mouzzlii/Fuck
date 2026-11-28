@@ -113,7 +113,7 @@ internal fun CarrierPortalSettingsDialog(
                     label = { Text("Offizielle Portaladresse (HTTPS)") },
                     placeholder = { Text("https://…") },
                     supportingText = {
-                        Text("Nur offizielle Domains des gewählten Anbieters. Gespeichert wird ausschließlich die Portaladresse – niemals Benutzername, Passwort oder Sitzung.")
+                        Text("Nur offizielle Geschäftskunden-Domains. Die Anmeldung und eine mögliche dauerhafte Sitzung bleiben im externen Browser bzw. beim Anbieter. Browser-Passwortmanager und „Angemeldet bleiben“ können dort genutzt werden, sofern angeboten. TRAKUNA speichert niemals Benutzername, Passwort, Cookies oder Sitzung.")
                     },
                     singleLine = true
                 )
