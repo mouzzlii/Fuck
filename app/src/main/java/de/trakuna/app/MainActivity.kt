@@ -433,12 +433,12 @@ class MainActivity : ComponentActivity() {
                         TextButton(
                             onClick = { showSettings = !showSettings },
                             modifier = Modifier.fillMaxWidth()
-                        ) { Text(if (showSettings) "Einstellungen schließen" else "Einstellungen") }
+                        ) { Text(if (showSettings) "Eigenschaften schließen" else "Eigenschaften") }
 
                         if (showSettings) {
                             Card(Modifier.fillMaxWidth()) {
                                 Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                                    Text("Einstellungen", style = MaterialTheme.typography.titleMedium, color = Forest)
+                                    Text("Eigenschaften", style = MaterialTheme.typography.titleMedium, color = Forest)
                                     OutlinedButton(
                                         onClick = { showScanDiagnostics = !showScanDiagnostics },
                                         modifier = Modifier.fillMaxWidth()
