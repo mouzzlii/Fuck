@@ -1,41 +1,68 @@
 # TRAKUNA – Freigabe-Checkliste für den echten Paketshop
 
-Stand: App-Version 1.53 (versionCode 54) · CI-Build 45293985061 erfolgreich (Debug-Testpaket; nicht produktiv signiert)
+## Nachprüfung: Handoff-Cache-Sicherheit – 27.11.2026
+
+Code-Commit `05b7963822ea90e4bca012b29ae53ef556fa5ec6` (Version 1.55 / versionCode 56):
+- [x] Cache-Werte laufen nach 24 Stunden ab; zeitlich unplausible Zeitstempel werden verworfen.
+- [x] Wiederaufnahme wird beim App-Start und bei Rückkehr nicht automatisch ausgeführt; bewusste Bestätigung ist erforderlich.
+- [x] Manuelles Löschen des Caches in Einstellungen vorhanden.
+- [x] Nach Erfassung oder Abschluss wird nur ein zur Sendungsnummer passender Cache-Eintrag gelöscht.
+- [x] Unit-Tests, Android-Lint und Debug-APK-Build erfolgreich (Build Run `46047083001`).
+- [x] API-35-Emulator: **16/16 Instrumentierungstests bestanden**, 0 Fehler, 0 übersprungen (Run `46047082966`).
+- [ ] Wiederaufnahme, Ablauf nach 24 Stunden und manuelles Löschen auf dem realen Android-Zielgerät praktisch prüfen.
+
+Debug-APK-Artefakt `15223271994`; APK-SHA-256: `3a60503f5e5e61df333c0be3c0def872a927872d22d2d4d2c7a4a85518e0e6c0`. Kein signiertes Produktionsrelease. Die reale Geräteabnahme bleibt offen.
+
+## Zusätzliche Sperren für den Paketshop-Pilot – Shadow Mode 1.55
+
+- [x] Exakter Commit `3da8dbeb571e4b2421ce375ccbb854e6171dd2b0` und erfolgreicher CI-Build für Version 1.55 / versionCode 56 bestätigt (Run `45902838085`)
+- [x] API-35-Emulator-Instrumentierung für exakt denselben Commit erfolgreich (Run `45902838084`; Workflow erfolgreich, ohne hier eine nicht separat verifizierte Testfallzahl anzugeben)
+- [ ] Auf Testgerät sichtbar: „Übergabe simulieren · TESTMODUS“
+- [ ] Partner-App wird durch TRAKUNA bei Übergabeversuch nicht geöffnet
+- [ ] Zwischenablage bleibt bei simuliertem Übergabeversuch unverändert
+- [ ] Partner-App-Zuordnung ist im Testmodus deaktiviert
+- [ ] Redigiertes lokales Testprotokoll lässt sich teilen und enthält keine Sendungsnummern/Kundendaten
+- [ ] Paketshop-Betreiber hat Testablauf und Verbot echter Buchungen in separaten Carrier-Apps bestätigt
+- [ ] Reale Kamera-/Autofokus-, Backup-/Restore- und Druckertests separat abgeschlossen
+
+**Hinweis:** Der lokale Shadow Mode blockiert den durch TRAKUNA ausgelösten Partner-App-Start. Er kontrolliert keine separat gestarteten Apps und ist keine netzwerkweite Sperre für externe Buchungen. Derzeit werden nur blockierte Partnerübergabe-Versuche automatisch protokolliert; eine vollständige Ereigniserfassung bleibt offen.
+
+
+Stand: App-Version 1.55 (versionCode 56) · aktueller Integrations-Commit `3da8dbeb571e4b2421ce375ccbb854e6171dd2b0` · Build `45902838085` und API-35-Emulatorlauf `45902838084` für exakt diesen Commit erfolgreich. Reale Geräteabnahme bleibt offen.
 
 Diese Liste trennt automatisiert prüfbare Softwarequalität von Nachweisen, die nur am echten Gerät, mit dem jeweiligen Paketdienst oder durch den Betreiber erbracht werden können. Ein leeres Feld bedeutet **nicht freigegeben**.
 
 ## A. Softwarestand
 
-- [x] CI-Lauf 45293985061 für Version 1.53 erfolgreich – Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload
+- [x] CI-Lauf 45769123996 für Version 1.54 / versionCode 55 auf Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07` erfolgreich – Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, Manifest-/Offline-Sicherheitsprüfungen, APK-Build und Artefakt-Upload
 - [x] Vorhandene Unit-Tests erfolgreich
 - [x] Android-Lint erfolgreich
 - [x] Zusammengeführtes Manifest ohne INTERNET-Berechtigung, aktiviertes Android-Backup oder Klartextverkehr geprüft
-- [x] Debug-APK und SHA-256-Prüfsumme für Version 1.53 als Artefakt bereitgestellt
-- [x] Android-Instrumentierungstestfälle für Keystore-Verschlüsselung, Speicher-Wiederöffnung, beschädigten Übergabe-Cache und Backup-Wiederherstellung nach Speicherschaden hinzugefügt und erfolgreich kompiliert
-- [ ] Android-Instrumentierungstestfälle auf Emulator oder echtem Android-Gerät tatsächlich ausgeführt
+- [x] Debug-APK und zugehörige `SHA256SUMS.txt` für Version 1.54 als Artefakt `15093243107` bereitgestellt
+- [x] Android-Instrumentierungstestfälle für Keystore-Verschlüsselung und lokale Speicherfunktionen auf Emulator ausgeführt: [Run 45769124107 erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45769124107)
 - [ ] Archivieren/Wiederherstellen und Backup-Restore auf einem echten Android-Gerät praktisch geprüft
 - [ ] Release-Version und Versionsnummer fachlich geprüft
 - [ ] Produktionssignatur mit dauerhaft gesichertem Betreiber-Schlüssel erstellt
 - [ ] Stabiler Betreiber-Signaturschlüssel für wiederholbare Test-/Release-Updates eingerichtet und Update ohne Datenverlust geprüft
 - [ ] Update von der vorherigen freigegebenen Version getestet
 - [ ] Archivieren nur abgeschlossener Vorgänge, Wiederherstellen und Konfliktfall mit bereits aktiver Sendungsnummer getestet
-- [ ] JSON-Backup-Schema 2 inklusive Archivstatus exportiert und wiederhergestellt; ältere Schema-1-Sicherung geprüft
+- [ ] Neue passwortgeschützte `.trakuna`-Sicherung (AES-256-GCM) mit korrektem Passwort exportiert und wiederhergestellt; falsches Passwort/beschädigte Datei abgewiesen; alte unverschlüsselte JSON-Sicherung nur als Legacy-Import geprüft
 
-Letzter erfolgreicher Build 1.53: https://github.com/mouzzlii/Fuck/actions/runs/45293985061 (Commit `45a02f7ec8de966100c406bbfdd8e3e572052b05`). Unit-Tests, Android-Lint, Manifestprüfungen, APK-Build, Prüfsumme und Artefakt-Upload waren erfolgreich. Die Emulator-Instrumentierungstests laufen inzwischen in einem getrennten Workflow mit verlängertem TCG-Startfenster, damit sie den normalen APK-Build nicht blockieren. Die Instrumentierungstestfälle sind im Repository vorhanden und wurden erfolgreich kompiliert, aber im Haupt-Build **nicht ausgeführt**; der separate Emulator-Workflow 45295645386 für denselben aktuellen Code-Commit ist noch in Bearbeitung. Die optionalen Release-Signierungsschritte wurden mangels Betreiber-Schlüsseln übersprungen; das Artefakt ist eine Debug-APK.
+Letzter erfolgreich verifizierter Build für Version 1.55: [Android-Build 45902838085](https://github.com/mouzzlii/Fuck/actions/runs/45902838085), Code-Commit `3da8dbeb571e4b2421ce375ccbb854e6171dd2b0`. Die Workflow-Schritte für Unit-Tests, Instrumentierungstest-Kompilierung, Android-Lint, APK-Build, Manifest-/Offline-Sicherheitsprüfungen und APK-Prüfsumme waren erfolgreich; Release-Signierung und Release-Artefakt wurden mangels Betreiber-Secrets übersprungen. Der separate [API-35-Emulator-Instrumentierungslauf 45902838084](https://github.com/mouzzlii/Fuck/actions/runs/45902838084) war für exakt denselben Commit erfolgreich (`connectedDebugAndroidTest`, `BUILD SUCCESSFUL`). Debug-Artefakt `TRAKUNA-Android` (Artifact-ID `15156119686`, 20.921.405 Bytes) ist laut GitHub bis 10.12.2026 22:10 UTC verfügbar. Die automatisierten Prüfungen ersetzen keine reale Geräte-, Carrier- und Betreiberabnahme.
 
-APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`
-ZIP-Artefakt-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`
-
-ZIP-Artefakt erstellt am 24.11.2026, 00:05 UTC; Ablauf am 08.12.2026, 00:05 UTC. Produktionssignierung bleibt offen; der separate Emulator-Instrumentierungstest läuft noch.
 
 ## B. Geräte- und Scannerabnahme
 
-- [ ] Jedes tatsächlich eingesetzte Android-/Zebra-Modell dokumentiert
-- [ ] Android-Version und Gerätemanagement dokumentiert
-- [ ] Kamera-Scan mit echten Testetiketten je Paketdienst bestanden
+**Zielarchitektur:** ein Android-Smartphone und ein gemeinsamer Etikettendrucker. Zebra-/DataWedge-Tests sind keine Freigabebedingung des neuen Ablaufs; vorhandener Legacy-Code bleibt davon getrennt.
+
+- [ ] Vorgesehenes Android-Smartphone (Modell, Android-Version und Gerätemanagement) dokumentiert
+- [ ] Kamera-/Autofokus-Scan mit echten Testetiketten je freigegebenem Carrier bestanden
 - [ ] Manuelle Eingabe einschließlich fehlerhafter/ungewöhnlicher Nummern geprüft
-- [ ] Zebra DataWedge-Profil auf jedem Gerät geprüft
-- [ ] DataWedge Component Information auf TRAKUNA begrenzt und Signaturprüfung aktiviert
+- [ ] Ein gemeinsamer Etikettendrucker (Modell, Firmware, Medienformat und Auflösung) dokumentiert
+- [ ] WLAN-Druck mit echten Testlabels geprüft
+- [ ] Bluetooth-Druck mit echten Testlabels geprüft, sofern das konkrete Modell diesen Weg unterstützt
+- [ ] Duplikatschutz und UNKNOWN-Status nach Timeout praktisch geprüft
+- [ ] Zebra/DataWedge nur dann separat geprüft, wenn der bestehende Legacy-Pfad ausdrücklich weiterverwendet und dafür freigegeben wird; keine neue Hardwareintegration vorausgesetzt
 - [ ] Getrennte Betriebssoftware-Zuordnung für DPD, GLS, Hermes und UPS geprüft; keine falsche Carrier-App wird als Fallback geöffnet
 - [ ] Scan-Broadcast kann keine automatische Buchung auslösen
 - [ ] Hintergrundverhalten geprüft: Scans werden nur bei aktiver TRAKUNA-App im Vordergrund verarbeitet
@@ -59,8 +86,8 @@ Für **jeden** Paketdienst und jede Betriebssoftware ist ein eigener Nachweis er
 
 ### Carrier-spezifische Pflichtfreigaben
 
-- [ ] **DPD:** TC26/DataWedge-Test, autorisierte Shop-Schnittstelle und alle vier Shopabläufe bestätigt
-- [ ] **GLS:** TC26/DataWedge-Test, autorisierte Shop-Schnittstelle und alle vier Shopabläufe bestätigt
+- [ ] **DPD:** offizieller Portal-/Labelübergabeweg, Betreiberberechtigung und die benötigten Shopabläufe bestätigt
+- [ ] **GLS:** offizieller Portal-/Labelübergabeweg, Betreiberberechtigung und die benötigten Shopabläufe bestätigt
 - [ ] **Hermes:** angekündigtes Nachfolgegerät nach Ankunft inventarisiert und Kompatibilität geprüft; bestehender Ablauf bis zur freigegebenen Umstellung unangetastet; autorisierte Schnittstelle und alle vier Shopabläufe bestätigt
 - [ ] **UPS:** Hardware/Shopsoftware erhoben, offizielle App `com.ups.accesspoint`/Android-9+-Anforderung geprüft, Access-Point-Partnerfreigabe und alle vier Shopabläufe bestätigt
 
@@ -122,3 +149,15 @@ Keine Passwörter, API-Schlüssel oder Kundendaten in GitHub-Issues oder Chat-Na
 - [x] TRAKUNA kennzeichnet die Übergabe an DPD/GLS/Hermes/UPS ausdrücklich nur als lokale Dokumentation.
 - [ ] Vor Ort prüfen, dass die Original-Carrier-App bzw. der Partner-Scanner die Übergabe tatsächlich quittiert.
 - [ ] Schriftliche Schnittstellenfreigabe und technische Rückmeldung pro Carrier nachweisen.
+
+
+## Aktualisierter Software-Nachweis – 27.11.2026
+
+- [x] Aktueller PR-Head `eb5f861e7f225adab1de258745b3ce1dd54b305d`, Version 1.55 / versionCode 56, identifiziert.
+- [x] Android-Build für exakt diesen Commit erfolgreich: [Run 45911560033](https://github.com/mouzzlii/Fuck/actions/runs/45911560033).
+- [x] API-35-Emulator-Instrumentierung für exakt diesen Commit erfolgreich: [Run 45911560010](https://github.com/mouzzlii/Fuck/actions/runs/45911560010), 15/15 Tests bestanden, 0 Fehler, 0 übersprungen.
+- [ ] B1–B9 manuell auf einem realen Android-Gerät durchführen und dokumentieren.
+- [ ] Reale Kamera-/Autofokus- und Druckerabnahme durchführen.
+- [ ] Release-Signierung und Update mit dauerhaftem Betreiber-Schlüssel prüfen.
+
+Historische Commit- und Run-Nachweise in den folgenden Abschnitten bleiben als Verlauf erhalten und ersetzen nicht den Nachweis für den aktuellen Head.

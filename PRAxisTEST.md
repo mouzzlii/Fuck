@@ -1,8 +1,37 @@
-# TRAKUNA – Praxis-Testplan (Version 1.53 · versionCode 54)
+# TRAKUNA – Praxis-Testplan (Integrationsversion 1.55 · versionCode 56)
 
-Aktueller Teststand: Version 1.53 ergänzt die sichere Archivierung abgeschlossener Vorgänge, Wiederherstellung und Backup-Schema 2. Der erfolgreiche CI-Lauf 45293985061 auf Commit `45a02f7ec8de966100c406bbfdd8e3e572052b05` bestätigt Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifest-Sicherheitsprüfungen, Debug-APK-Build und Artefakt-Upload. Die Android-Instrumentierungstests werden separat ausgeführt; Emulator-Workflow 45295645386 für den aktuellen Code-Commit ist noch in Bearbeitung. Ein erfolgreicher Lauf ist noch nicht bestätigt. [Build öffnen und Testpaket herunterladen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061). APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
+## Aktueller Prüfstand Version 1.55 – 26.11.2026
+
+Quell-Commit: `91a64ff0c601378193b410a118582f292855f275`.
+
+- Android Build [45885920335](https://github.com/mouzzlii/Fuck/actions/runs/45885920335): erfolgreich.
+- Emulator-Instrumentierung [45885920372](https://github.com/mouzzlii/Fuck/actions/runs/45885920372): **15/15 Tests bestanden**, 0 Fehler, 0 übersprungen.
+- Die neuen Shadow-Protokolltests prüfen das Schreiben und Auslesen des Ereignislogs sowie die Redaktion nicht erlaubter Carrier-Angaben.
+- Debug-APK Artifact-ID `15150190262`; SHA-256 der APK: `ec2645561b56e5916f6a18f3e43df935f4266683ec86313a97235c29ff932aeb`.
+- Dies belegt automatisierte und Emulatorprüfungen, nicht den physischen Betrieb. Kamera-/Autofokus, echte Paketetiketten, Drucker, Backup-/Restore und Paketshop-Betreiberabnahme bleiben offen.
+
+
+## 0. Shadow-Mode-Sicherheitsprüfung (Version 1.55 / versionCode 56)
+
+Diese Pilotversion muss den Testmodus sichtbar anzeigen und vor jeder externen Partnerübergabe blockieren.
+
+1. In TRAKUNA einen ausdrücklich fiktiven Testdatensatz eingeben.
+2. **„Übergabe simulieren · TESTMODUS“** betätigen.
+3. Prüfen, dass TRAKUNA eine Simulation meldet und keine externe Carrier-App öffnet.
+4. Prüfen, dass die Sendungsnummer nicht in die Zwischenablage kopiert wird.
+5. Prüfen, dass die Partner-App-Zuordnung deaktiviert ist.
+6. **„Lokales Testprotokoll teilen“** öffnen und den exportierten Text kontrollieren: Zeitstempel, Ereignis, Shadow-Mode, Carrier-Kürzel, Ergebnis und App-Version vorhanden; keine Sendungsnummer oder Empfängerdaten enthalten.
+7. Testen, dass ein ungültiger/leer gelassener Scan keine Übergabe auslöst.
+8. Falls eine externe Carrier-App unabhängig von TRAKUNA auf dem Gerät installiert ist, sicherstellen, dass Mitarbeiter diese während des Tests nicht manuell für echte Buchungen verwenden.
+
+**Grenze:** Die aktuelle automatische Ereignisprotokollierung erfasst blockierte Partnerübergabe-Versuche. Andere Scan-, Bearbeitungs-, Druck- und Portalereignisse müssen weiterhin mit den bestehenden Testfällen bzw. separat dokumentiert werden. Diese Version ist noch kein vollständiger End-to-End-Shadow-Mode aller Arbeitsabläufe.
+
+
+Aktueller App-Code-Stand: Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07`. Android-Build [45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) und API-35-Emulatorlauf [45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) sind erfolgreich; 8/8 Instrumentierungstests bestanden. Geprüft wurden Unit-Tests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und die Android-Keystore-/Backup-Instrumentierung. Die manuelle Kamera-/Autofokus-Abnahme und die Backup-Abnahme B1–B9 auf einem realen Android-Gerät bleiben offen. Debug-APK ersetzt keine reale Hardware- und Betreiberabnahme.
 
 Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert zu prüfen. Bitte zuerst nur mit Testsendungen bzw. nicht kritischen Sendungsdaten arbeiten.
+
+**Zielarchitektur-Abgrenzung (26.11.2026):** Ein Android-Smartphone ist die zentrale Bedienoberfläche; Scan erfolgt über Kamera oder manuelle Eingabe. Ein gemeinsamer Etikettendrucker soll direkt vom Smartphone über WLAN oder Bluetooth bedient werden, sofern das konkrete Modell beide Wege unterstützt. Zebra-Geräte sind im neuen Ablauf nur Internet-/Portalgeräte. Sämtliche DataWedge-/TC26-Testfälle weiter unten sind historische optionale Legacy-Regressionen und keine Voraussetzung oder Freigabesperre des neuen Ablaufs. Keine bestehenden Carrier-Geräte oder Profile dafür verändern. Die Drucker- und Portalabnahme bleibt ein eigener offener Testbereich.
 
 ## 1. Voraussetzungen
 
@@ -10,6 +39,34 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 - TRAKUNA-APK aus dem zugehörigen erfolgreichen GitHub-Actions-Lauf.
 - Kameraberechtigung für den Scan-Test.
 - Für die Partnerübergabe eine installierte Betriebssoftware. Eine automatische Übernahme ist nur möglich, wenn die Ziel-App die TRAKUNA-Intent-Extras oder eine dokumentierte API unterstützt.
+
+## 2.0 Kamera-Fokus und erlaubte Codeformate
+
+- Der Kamera-Scanner ist auf QR-Code sowie lineare Strichcodes (Code 128/39/93, Codabar, EAN-13/8, ITF, UPC-A/E) begrenzt. EAN-/UPC-Retailformate werden zwar diagnostisch erkannt, aber nicht als Sendungsnummer übernommen.
+- Data Matrix, PDF417, Aztec und andere Formate dürfen von der Kamera nicht als Treffer geliefert werden.
+- Kamera nach Öffnen prüfen: Fokus stellt sich auf den mittleren Bildbereich ein; bei unterstützten Kameras läuft kontinuierlicher Autofokus.
+- Auf einen QR-Code bzw. Strichcode tippen: Autofokus-/Belichtungsmessung muss auf diesen Bereich neu auslösen.
+- Test mit QR-Code und mindestens einem Strichcode durchführen; beide müssen erkannt werden.
+- Test mit Data Matrix, PDF417 und Aztec durchführen; diese dürfen keinen Scan auslösen.
+- Fokus bei nahen und weiter entfernten Etiketten, bei schwachem Licht und nach Rückkehr aus dem Hintergrund prüfen.
+- Der Autofokus hängt von der Kamera-Hardware und deren CameraX-Unterstützung ab; ein Gerät ohne Autofokus kann Software nicht nachträglich fokussierbar machen.
+
+## 2.1 Scan-Diagnose (Version 1.54)
+
+1. In TRAKUNA einen QR-Code bzw. Barcode mit der Kamera scannen.
+2. Nach dem Scan die Karte **Scan-Diagnose** öffnen.
+3. Barcodeformat, Rohinhalt, Anzeigeinhalt und den von TRAKUNA extrahierten Kandidaten vergleichen.
+4. Den GLS-Testfall prüfen: erwartete Sendungsnummer laut Betreiber `31220879741`, bisher fälschlich erkannter Wert `8721335813708`, zusätzlich genannte GLS Track-ID `Z4EIOR5P`. Entscheidend ist zunächst, welcher Wert tatsächlich im QR-Rohinhalt steht; die Diagnose darf diese Kennungen nicht eigenmächtig gleichsetzen.
+5. Den Hermes-Test erneut durchführen und sicherstellen, dass die bekannte korrekte Hermes-Erkennung unverändert bleibt.
+6. Wenn ein Zebra/DataWedge-Scan verwendet wird, prüfen, ob Rohinhalt und extrahierter Kandidat ebenfalls angezeigt werden.
+- Beim Zebra/DataWedge-Scan muss das Format-Extra `com.symbol.datawedge.label_type` mitgeliefert werden. Zugelassen sind QR/GS1-QR sowie Code 128/EAN-128, Code 39/93, Codabar, EAN-13/8, Interleaved 2 of 5 und UPC-A/E0/E1. Fehlendes oder unbekanntes Format sowie Data Matrix, GS1 Data Matrix, PDF417, Aztec, Micro QR und andere nicht freigegebene Typen müssen abgewiesen werden.
+- Im DataWedge-Profil die Decoder möglichst zusätzlich auf die tatsächlich benötigten Formate begrenzen. Die App-Allowlist ist eine zweite Schutzschicht und ersetzt die Geräteprofil-Konfiguration nicht.
+- **EAN-/UPC-Retailcode (Regressionstest):** Über Zebra/DataWedge je einen bekannten EAN-13-, EAN-8-, UPC-A- und UPC-E-Produktbarcode scannen. Das Diagnosefenster muss Format und Rohinhalt anzeigen, aber „Kein Sendungsnummern-Kandidat“ melden; das Eingabefeld darf keinen dieser Produktcodes übernehmen. Anschließend dieselbe geeignete numerische Testzeichenfolge ausdrücklich als Code 128 prüfen: Die Sperre darf nur von der gemeldeten Symbologie abhängen und keine Nummern anderer Formate pauschal blockieren. Dieselben vier Retailformate auch mit der Kamera testen. Nur freigegebene, nicht produktive Testetiketten verwenden.
+- Auf Android 14 (API 34) muss TRAKUNA den ursprünglichen Broadcast-Absender `com.symbol.datawedge` verifizieren; andere oder nicht identifizierbare Absender werden abgewiesen. Auf Android 13 (API 33) und älter weist TRAKUNA DataWedge-Broadcasts vollständig zurück. Dort ausschließlich Kamera-Scanner oder manuelle Eingabe testen; DataWedge Component Information und Signaturprüfung sind kein Ersatz für die in TRAKUNA fehlende Absenderidentität.
+7. Diagnosekarte schließen bzw. einen neuen Scan ausführen. Die Rohdaten dürfen nach App-Neustart nicht als dauerhaft gespeicherte Historie erscheinen.
+8. Eine Sendungsnummer erfassen, TRAKUNA in den Hintergrund legen und das Gerät längere Zeit in Standby lassen. Falls Android den TRAKUNA-Prozess beendet, App wieder öffnen und prüfen, ob das aktive Eingabefeld wiederhergestellt wurde. Die Diagnose-Rohdaten sollen dabei bewusst nicht wiederhergestellt werden.
+
+**Datenschutz:** Die Rohdatenanzeige bleibt nur temporär im Arbeitsspeicher. Sie darf nicht in Logcat, Dateien, Backups oder die dauerhafte Sendungsdatenbank geschrieben werden. Screenshots von Diagnoseinhalten vor Weitergabe auf Namen, Adressen und andere persönliche Daten prüfen.
 
 ## 2. Funktionstests
 
@@ -32,13 +89,18 @@ Dieser Testplan hilft, die App vor einem echten Paketshop-Einsatz kontrolliert z
 | 14 | CSV-Datei exportieren | Android-Dateidialog erscheint; die gespeicherte Datei enthält die Sendungsliste. |
 | 15 | Abgeschlossenen Vorgang archivieren, im Archiv wiederherstellen und erst danach endgültig löschen | Offene Vorgänge lassen sich nicht archivieren oder endgültig löschen. Wiederherstellen entfernt den Archivstatus; endgültiges Löschen ist nur nach Archivierung möglich. |
 | 16 | App schließen und neu öffnen | Lokal gespeicherte Vorgänge sind weiterhin vorhanden. |
-| 17 | Zebra-Scanner mit DataWedge-Profil scannen | Sendungsnummer erscheint im Eingabefeld; es erfolgt keine automatische Buchung. Ungültige Inhalte werden abgelehnt. |
+| 17 | Zebra-Scanner mit DataWedge-Profil auf Android 14+ scannen | Nur bei verifiziertem Absender und freigegebenem Labeltyp erscheint die Sendungsnummer im Eingabefeld; es erfolgt keine automatische Buchung. Auf Android 13 und älter muss DataWedge abgewiesen werden; Kamera/manuelle Eingabe bleiben nutzbar. |
 | 18 | Partner-App auswählen und übergeben | Cache wird vor dem Wechsel dauerhaft gespeichert; Clipboard-Ausfall darf keinen Absturz verursachen, Android 13+ markiert den Clipboard-Inhalt als sensibel; Ziel-App wird nur bei installierter App geöffnet. |
+| 18a | Barcode scannen und danach ohne weitere Aktion warten | Der erkannte Paketdienst wird angezeigt; Browser/Portal wird nicht automatisch geöffnet. Erst die bewusste Betätigung von „Offizielles Portal öffnen“ startet den externen Browser. Es werden keine Sendungsdaten übertragen. |
 | 19 | DPD, GLS, Hermes und UPS jeweils über „Betriebssoftware pro Paketdienst zuordnen“ einer installierten App zuweisen | Jede Zuordnung wird getrennt auf diesem Gerät gespeichert und in der Übersicht beim richtigen Carrier angezeigt. |
 | 20 | Carrier-Schnellauswahl öffnen und DPD, GLS, Hermes, UPS nacheinander auswählen | Der Auswahlknopf zeigt jeweils den gewählten Paketdienst; die Reihenfolge lautet DPD, GLS, Hermes, UPS. Die manuelle Auswahl wird bei allen drei lokalen Vorgangsarten gespeichert und an den Partner-App-Übergabeversuch weitergegeben. Es wird keine externe Buchung behauptet. |
 | 21 | „Ohne Auswahl“ wählen und einen bekannten UPS-1Z-Testcode eingeben | Die manuelle Auswahl wird geleert; der bekannte UPS-Format-Hinweis darf als Hinweis erscheinen. Der Format-Hinweis bestätigt keine Existenz oder Buchung. |
 | 22 | Nur DPD einer App zuordnen, danach einen GLS-Übergabeversuch starten | Die DPD-App darf nicht als Ersatz für GLS geöffnet werden. TRAKUNA meldet die fehlende GLS-Zuordnung; die lokale Cache-Sicherung bleibt erhalten. |
 | 23 | Eine Carrier-Zuordnung entfernen und denselben Übergabeversuch wiederholen | Es wird keine fremde Carrier-App als Fallback geöffnet. Die Nummer bleibt lokal gesichert; die Meldung erklärt die fehlende Zuordnung. |
+| 24 | Gerät ohne verfügbare Kamera bzw. Kamera-Hardware nicht verfügbar | Scanner meldet den fehlenden Kamerazugriff verständlich; manuelle Eingabe bleibt bedienbar und TRAKUNA stürzt nicht ab. |
+| 25 | Leeres Etikett, unlesbarer Barcode und ungültiger/zu kurzer Code | Es wird kein Sendungsnummern-Kandidat übernommen oder übergeben; Diagnose zeigt den fehlenden bzw. ungültigen Kandidaten. |
+| 26 | Dieselbe Sendung zweimal schnell hintereinander mit Kamera und – falls unterstützt – DataWedge scannen | Es wird keine Sendung automatisch angelegt oder an eine Partner-App übergeben. Ein lokaler Vorgang entsteht ausschließlich nach bewusster Bestätigung; doppelte Scan-Ereignisse dürfen keinen doppelten Vorgang erzeugen. |
+| 27 | Activity-Neuerstellung und Prozessneustart im Shadow-Mode testen | Kein automatisches Portalöffnen und keine automatische Wiederherstellung von Sendungsnummern. Der interne verschlüsselte Handoff-Cache bleibt auf 24 Stunden begrenzt, wird aber im aktuellen Mitarbeiterablauf nicht als Wiederaufnahmefunktion angeboten. Temporäre Scan-Rohdaten werden nicht wiederhergestellt. |
 
 
 ### 2a. Zusätzlicher Erfassungstest nach der Rückmeldung „Speichern reagiert nicht“
@@ -65,8 +127,8 @@ Jeder Paketdienst wird getrennt mit freigegebenen Testetiketten bzw. fiktiven Te
 
 | Paketdienst | Auswahl in TRAKUNA | Scan-/Eingabetest | Partner-/Gerätetest | Freigabestatus |
 |---|---|---|---|---|
-| DPD | DPD im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische DPD-Erkennung voraussetzen | Bestehendes DPD-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
-| GLS | GLS im Schnellauswahlmenü | TC26/DataWedge und manuelle Nummer getrennt testen; keine automatische GLS-Erkennung voraussetzen | Bestehendes GLS-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
+| DPD | DPD im Schnellauswahlmenü | TC26/DataWedge nur bei Android 14+ mit verifiziertem Absender testen; auf älteren Android-Versionen Kamera/manuelle Eingabe. Keine automatische DPD-Erkennung voraussetzen | Bestehendes DPD-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
+| GLS | GLS im Schnellauswahlmenü | TC26/DataWedge nur bei Android 14+ mit verifiziertem Absender testen; auf älteren Android-Versionen Kamera/manuelle Eingabe. Keine automatische GLS-Erkennung voraussetzen | Bestehendes GLS-Handgerät und Bluetooth-Drucker parallel beobachten; offizielle Übergabe-/API-Freigabe klären | Offen |
 | Hermes | Hermes im Schnellauswahlmenü | Für das bisherige MC3090BT wurde ein Ersatzgerät für die kommende Woche angekündigt; die tatsächliche Ankunft ist noch zu bestätigen. Nach Ankunft exaktes Modell, Betriebssystem, Hermes-App und Scanner erfassen; bis dahin keine Integrationstests am Altgerät | Bestehenden Hermes-Ablauf und Drucker nicht verändern. Neues Gerät erst nach Betreiberfreigabe untersuchen; offizielle Schnittstelle und Abnahme bleiben Pflicht | Offen – Pilotblocker |
 | UPS | UPS im Schnellauswahlmenü | Bekannte 1Z-Format-Erkennung nur als Hinweis prüfen; zusätzlich manuelle Nummern testen | Prüfen, ob die offizielle App `UPS Access Point` (`com.ups.accesspoint`) installiert und vom Standort freigegeben ist; Version und Android-Gerät erfassen. Die App verlangt laut Google-Play-Angabe Android 9.0 oder höher. Nicht eigenmächtig installieren oder konfigurieren. | Offen |
 
@@ -97,7 +159,7 @@ Die Carrier-Schnellauswahl und die getrennten App-Zuordnungen in Version 1.49 si
 - Historie darf nicht als manipulationssicheres Mitarbeiter-Audit oder als Carrier-Bestätigung ausgegeben werden.
 
 
-- Zebra-/DataWedge-Broadcast ohne Sendungsnummern-Extra oder mit einem falsch typisierten Extra prüfen: Der Scan wird ignoriert und TRAKUNA bleibt bedienbar.
+- Auf Android 14+ Zebra-/DataWedge-Broadcast ohne Sendungsnummern-Extra oder mit einem falsch typisierten Extra prüfen: Der Scan wird ignoriert und TRAKUNA bleibt bedienbar. Auf Android 13 und älter muss bereits der DataWedge-Eingang vollständig abgewiesen werden.
 
 - Ungültige oder zu kurze Sendungsnummern dürfen nicht als neuer Vorgang gespeichert werden.
 - Eine manuell eingegebene Sendungsnummer mit eingebetteten Steuerzeichen (z. B. NUL) muss abgelehnt werden; die Zeichen dürfen nicht stillschweigend entfernt und dadurch in eine andere Nummer umgewandelt werden.
@@ -135,26 +197,27 @@ Ein grüner GitHub-Build bestätigt nur, dass Tests und APK-Erstellung im CI-Lau
 
 ## 7. Zusätzlicher Zebra DataWedge-Sicherheitstest
 
-1. DataWedge-Profil für TRAKUNA öffnen und unter Intent Output → Component Information das Paket `de.trakuna.app` hinzufügen.
+1. DataWedge-Profil für TRAKUNA öffnen und Intent Output exakt konfigurieren: Action `de.trakuna.app.DATAWEDGE_SCAN`, Intent category `android.intent.category.DEFAULT`, Delivery `Broadcast Intent`, Daten-Extra `com.symbol.datawedge.data_string` und Labeltyp-Extra `com.symbol.datawedge.label_type`. Android-Intent-Kategorien müssen mit dem registrierten Empfängerfilter übereinstimmen.
 2. Bei der Abfrage die Signaturprüfung aktivieren und kontrollieren, dass sie in der Component-Liste als aktiv angezeigt wird.
 3. Einen Barcode mit dem Zebra-Auslöser scannen. Der Wert muss in TRAKUNA erscheinen.
 4. TRAKUNA aktualisieren oder neu installieren und prüfen, ob die Signaturprüfung im DataWedge-Profil weiterhin aktiv ist. Bei einem Signaturwechsel die Komponente neu auswählen.
-5. Wenn ein verwalteter Gerätetest möglich ist, einen gleichartigen Broadcast aus einer nicht autorisierten Test-App senden lassen. Er darf nicht als vertrauenswürdiger Scan behandelt werden. Diesen Test nur auf einem Testgerät und mit einer eigens dafür erstellten Test-App durchführen.
+5. Auf Android 14 (API 34) einen gleichartigen Broadcast aus einer nicht autorisierten Test-App senden. TRAKUNA muss ihn wegen des abweichenden bzw. fehlenden Absenders ablehnen. Auf Android 13 (API 33) und älter darf ein DataWedge-Broadcast unabhängig von seinem Inhalt nicht übernommen werden; Kamera-Scanner und manuelle Eingabe müssen weiterhin funktionieren. Ein Spoofing-Test auf diesen älteren Versionen ist nur ergänzend und darf nicht als Ersatz für die vollständige Deaktivierung gewertet werden.
 
 Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Signaturprüfung aktiviert ist. Die Konfiguration muss daher vom Geräteadministrator dokumentiert werden.
 
 ## Datensicherung und Wiederherstellung
 
-1. In „Paketshop-Sendungen verwalten“ eine vollständige JSON-Datensicherung erstellen und in einem sicheren Speicherort ablegen.
-2. Prüfen, dass die Datei `TRAKUNA-Sicherung.json` vorhanden und nicht leer ist.
-3. Für eine Wiederherstellung die Sicherungsdatei auswählen. TRAKUNA liest höchstens 4 MiB ein und prüft UTF-8-Kodierung, Format, Version, Einträge und Höchstmenge. Beschädigte Textkodierung wird abgelehnt.
-4. Vor dem Ersetzen des lokalen Bestands erscheint eine Bestätigungsabfrage. Ohne Bestätigung bleiben die aktuellen Daten unverändert.
-5. Nach Wiederherstellung die angezeigte Anzahl mit dem erwarteten Datenbestand vergleichen.
+1. In „Paketshop-Sendungen verwalten“ eine vollständige passwortgeschützte Datensicherung erstellen.
+2. Ein Passwort mit 12–128 Zeichen eingeben und bestätigen. Es wird nicht in TRAKUNA gespeichert; für eine spätere Wiederherstellung ist es zwingend erforderlich.
+3. Prüfen, dass die Datei `TRAKUNA-Sicherung.trakuna` vorhanden ist. Die Datei enthält ein AES-256-GCM-verschlüsseltes Backup; der Klartext darf nicht in der Datei sichtbar sein.
+4. Für eine Wiederherstellung die Datei auswählen. TRAKUNA liest höchstens 6 MiB ein, erkennt das verschlüsselte Format, fragt das Passwort ab, entschlüsselt und validiert Format, Version, Einträge und Höchstmenge.
+5. Vor dem Ersetzen des lokalen Bestands erscheint eine Bestätigungsabfrage mit der Anzahl der Vorgänge. Ohne ausdrückliche Bestätigung bleiben die aktuellen Daten unverändert.
+6. Falsches Passwort, beschädigter Header, Salt, Nonce oder Ciphertext müssen abgelehnt werden; der aktuelle Bestand bleibt unverändert.
+7. Alte unverschlüsselte JSON-Sicherungen bleiben importierbar, müssen aber vor dem Ersetzen ausdrücklich als Klartext gekennzeichnet werden.
+8. Nach Wiederherstellung die angezeigte Anzahl und einige Testvorgänge mit dem erwarteten Datenbestand vergleichen.
+9. Beschädigten lokalen Datenspeicher ausschließlich in einer Testinstallation simulieren. Eine gültige Sicherung muss den beschädigten Bestand wiederherstellen können; bei ungültiger Sicherung dürfen vorhandene Daten nicht überschrieben werden.
 
-**Wichtig:** Die Sicherungsdatei enthält personenbezogene Daten im Klartext. Nur auf einem geschützten Speicherort ablegen und nicht unverschlüsselt weitergeben.
-
-6. Eine Sicherungsdatei mit verändertem Zähler, doppelter Vorgangs-ID oder doppelter aktiver Sendung testen. TRAKUNA muss sie ablehnen und den bisherigen Bestand unverändert lassen.
-7. Beschädigten lokalen Datenspeicher simulieren (nur in einer Testinstallation). TRAKUNA muss einen Warnhinweis anzeigen und Änderungen sowie CSV-/JSON-Exporte blockieren; vorhandene Rohdaten dürfen nicht automatisch überschrieben werden.
+**Wichtig:** Das Sicherungspasswort getrennt von der `.trakuna`-Datei aufbewahren. CSV-Exporte bleiben unverschlüsselt und enthalten vertrauliche Daten im Klartext.
 
 
 ## Zusätzliche Tests für Version 1.19 – lokale Verschlüsselung
@@ -164,7 +227,7 @@ Die App kann nicht selbst bestätigen, ob die geräteseitige Allowlist oder Sign
 20. **Neuer Datensatz:** Testsendung erfassen, App vollständig schließen und neu öffnen; Datensatz muss weiterhin lesbar sein.
 21. **Verschlüsselter Bestand:** In den App-SharedPreferences darf der Wert des Paketbestands nicht mehr als lesbares JSON mit Sendungsnummern oder Empfängernamen erscheinen.
 22. **Schlüssel-/Datenfehler:** Auf einem isolierten Testgerät den Keystore-Schlüssel entfernen bzw. beschädigte Testdaten verwenden; App muss einen Speicherfehler melden und darf keine neuen Datensätze über den beschädigten Bestand schreiben.
-23. **Backup:** JSON-Export und Wiederherstellung testen; ausdrücklich beachten, dass exportierte Dateien weiterhin Klartext enthalten.
+23. **Backup:** Neue `.trakuna`-Sicherung mit Passwort exportieren und wiederherstellen; zusätzlich den Legacy-Import einer alten unverschlüsselten JSON-Sicherung prüfen und die Klartextwarnung vor dem Ersetzen des Bestands bestätigen.
 
 
 ## Zusätzliche Tests für Version 1.20 – Größenbegrenzung
@@ -216,14 +279,14 @@ Diese Prüfungen ergänzen die Kamera- und DataWedge-Tests. Sie können mit gedr
 58. **Ungültiger Inhalt:** Beliebige URL, ungültige Nummer, Unicode-Zeichen, beschädigte Prozentkodierung und überlange Scan-Inhalte testen. Es darf kein erfundener oder stillschweigend veränderter Wert übernommen werden.
 59. **Keine automatische Aktion:** Nach jeder Erkennung muss die Nummer zunächst sichtbar im Eingabefeld stehen. Ohne bewusste Bedienung darf kein Paketshop-Vorgang angelegt und keine Partner-App geöffnet werden.
 
-Die automatisierten Parser-Tests prüfen die Regeln ohne Kamera-Hardware. Sie ersetzen nicht den Test mit echten Zebra-Geräten, echten Etiketten und der konkret eingesetzten Betriebssoftware.
+Die automatisierten Parser-Tests prüfen die Regeln ohne Kamera-Hardware. Sie ersetzen nicht den Test mit echten Paketetiketten auf dem vorgesehenen Android-Smartphone und die Prüfung des offiziellen Portal-/Labelablaufs. DataWedge-/Zebra-Prüfungen in diesem Dokument sind ausschließlich optionale Legacy-Regressionstests, falls dieser Altpfad separat freigegeben weiterverwendet wird.
 
 
 ## 9. Verhalten bei Hintergrundbetrieb
 
-60. TRAKUNA öffnen und im Vordergrund lassen; einen DataWedge-Testbarcode scannen. Die erkannte Nummer muss im Sendungsnummernfeld erscheinen.
+60. TRAKUNA auf Android 14+ öffnen und im Vordergrund lassen; einen DataWedge-Testbarcode mit freigegebenem Labeltyp scannen. Bei verifiziertem Absender muss die erkannte Nummer im Sendungsnummernfeld erscheinen. Auf Android 13 und älter muss DataWedge abgewiesen werden; Kamera und manuelle Eingabe bleiben verfügbar.
 61. TRAKUNA in den Hintergrund wechseln, ohne die App zu beenden; einen weiteren Barcode scannen. Der Hintergrundscan darf die Eingabemaske nicht verändern.
-62. TRAKUNA wieder in den Vordergrund holen und erneut scannen. Der neue Scan muss wieder zur manuellen Prüfung übernommen werden.
+62. TRAKUNA auf Android 14+ wieder in den Vordergrund holen und erneut scannen. Der neue Scan muss wieder zur manuellen Prüfung übernommen werden. Auf Android 13 und älter sind für diesen Ablauf Kamera oder manuelle Eingabe zu verwenden.
 63. TRAKUNA über die Übersicht vollständig schließen und anschließend neu öffnen. Erst nach dem Öffnen darf der nächste Scan wieder verarbeitet werden.
 
 
@@ -255,9 +318,9 @@ Das öffentlich gefundene Pickup-Partnerhandbuch ist von DPD Deutschland (01/202
 - [ ] Dialogtext kontrollieren: TRAKUNA erklärt, dass keine Carrier-Bestätigung empfangen wird und nur nach abgeschlossener Quittierung im Originalsystem lokal dokumentiert werden soll.
 - [ ] Nach Bestätigung kontrollieren: Status lautet ausdrücklich „Lokal als an Paketdienst übergeben dokumentiert“ und nicht „Carrier-Buchung bestätigt“.
 
-## 10. Ergänzende Android-Instrumentierungstests (Version 1.53)
+## 10. Ergänzende Android-Instrumentierungstests (Integrationsversion 1.54)
 
-Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Testbestand im Repository. Sie wurden in CI erfolgreich kompiliert; ein Emulator- oder Gerätelauf ist noch offen:
+Der Android-Build [45769123996](https://github.com/mouzzlii/Fuck/actions/runs/45769123996) auf Commit `8d9f4058b754084e47d177f0b1190a0bc2860c07` ist erfolgreich. Der separate API-35-Emulatorlauf [45769124107](https://github.com/mouzzlii/Fuck/actions/runs/45769124107) auf demselben Commit hat **8/8 Instrumentierungstests** erfolgreich ausgeführt. Dazu gehören die verschlüsselte Backup-Wiederherstellung, falsche Passwortablehnung, Legacy-PBKDF2-Kompatibilität, verschlüsselte lokale Speicherung und der Schutz vor doppelter Statusfortschreibung. Die Tests bestätigen keinen Kamera- oder Zebra-Hardwarebetrieb.
 
 - [ ] **Keystore-Verschlüsselung:** Testsendung speichern, SharedPreferences kontrollieren und bestätigen, dass Sendungsnummer, Empfänger und Notiz nicht im Klartext vorkommen.
 - [ ] **Speicher-Wiederöffnung:** Neue `ShipmentStore`-Instanz erstellen und kontrollieren, dass der verschlüsselte Bestand vollständig wieder lesbar ist.
@@ -266,3 +329,67 @@ Die folgenden Android-Instrumentierungstestfälle liegen zusätzlich zum JVM-Tes
 - [ ] **Beschädigter Übergabe-Cache:** Verschlüsselten Cachewert beschädigen; die App muss einen Fehler melden und darf keinen leeren Cache vortäuschen.
 - [ ] **Backup-Recovery:** Gültige Sicherung erstellen, lokalen verschlüsselten Bestand beschädigen und anschließend die gültige Sicherung wiederherstellen. Die wiederhergestellten Daten müssen nach erneuter Leseprüfung vorhanden sein.
 
+
+## 11. Zusätzliche manuelle Abnahme für die passwortgeschützte Datensicherung
+
+Diese Prüfungen sind trotz erfolgreicher automatisierter JVM- und Emulatorläufe noch auf einem realen Android-Zielgerät durchzuführen. Sie werden hier bewusst nicht als erledigt markiert.
+
+| Nr. | Test | Erwartetes Ergebnis |
+|---|---|---|
+| B1 | Sicherung mit einem Passwort von 12–128 Zeichen erstellen | Datei endet auf `.trakuna`; Passwort wird zweimal bestätigt und nicht gespeichert. |
+| B2 | Sicherungsdatei mit einem Texteditor öffnen | Sendungsnummern, Empfängernamen und Notizen sind nicht im Klartext sichtbar. |
+| B3 | Datei mit richtigem Passwort importieren | Entschlüsselung und vollständige Validierung gelingen; der Bestand wird erst nach ausdrücklicher Bestätigung ersetzt. |
+| B4 | Falsches Passwort eingeben | Import wird abgelehnt; der aktuelle Bestand bleibt unverändert. |
+| B5 | Header, Salt, Nonce oder Ciphertext verändern | Authentifizierungsprüfung schlägt fehl; keine Daten werden wiederhergestellt. |
+| B6 | Passwort mit Umlauten und Sonderzeichen verwenden | Export und Wiederherstellung funktionieren auf dem Zielgerät. |
+| B7 | Alte JSON-Sicherung importieren | Import bleibt möglich, zeigt aber vor dem Ersetzen eine deutliche Klartext-Warnung. |
+| B8 | Datei oberhalb der Größenbegrenzung importieren | Import wird begrenzt abgewiesen; der aktuelle Datenbestand bleibt erhalten. |
+| B9 | Oberfläche während KDF und Datei-I/O beobachten | App bleibt bedienbar; Kryptografie und Dateioperationen blockieren nicht den UI-Thread. |
+
+**Abnahmesperre:** Erst nach dokumentierter Durchführung von B1–B9 auf einem realen Android-Gerät kann die manuelle Backup-Funktion als abgenommen gelten. Ein Emulatorlauf ersetzt diese Prüfung nicht.
+
+## 12. Zusätzliche Kamera-Abnahme für die stabile Scanbestätigung (Version 1.55)
+
+Die Kamera übernimmt einen Sendungsnummern-Kandidaten erst nach zwölf aufeinanderfolgenden ML-Kit-Analysebildern mit genau einem eindeutigen Kandidaten. Diese Bestätigung ist eine zusätzliche Schutzmaßnahme und ersetzt nicht die Sichtprüfung durch den Mitarbeiter.
+
+- [ ] **Stabiles Etikett:** Einen einzelnen gültigen Paketbarcode ruhig und scharf vor die Kamera halten. Erst nach stabiler Erkennung muss die Nummer ins Eingabefeld übernommen werden.
+- [ ] **Kurz sichtbarer Code:** Barcode nur kurz ins Bild halten und vor Ablauf der zwölf aufeinanderfolgenden Bestätigungsbilder entfernen. Es darf keine Nummer automatisch übernommen werden.
+- [ ] **Unterbrochene Folge:** Einen Barcode zunächst sichtbar halten, dann kurz aus dem Bild nehmen und erneut zeigen. Die Zählung muss nach dem leeren Bild neu beginnen.
+- [ ] **Wechselnder Code:** Während der Bestätigung zwischen zwei unterschiedlichen Sendungsnummern wechseln. Ein Kandidat darf nicht aus einer unterbrochenen Folge übernommen werden.
+- [ ] **Mehrere Codes gleichzeitig:** Zwei unterschiedliche Sendungsnummern gleichzeitig ins Bild halten. Die Bestätigung muss zurückgesetzt werden; keine der Nummern darf automatisch übernommen werden.
+- [ ] **Produktbarcode neben Sendungscode:** Einen EAN-/UPC-Produktcode gemeinsam mit einem gültigen Versandbarcode zeigen. Der Produktcode darf nicht als Sendungsnummer gelten; ein eindeutiger Versandkandidat muss zwölf aufeinanderfolgende Bilder lang bestätigt werden.
+- [ ] **Diagnosebegrenzung:** Bei wechselnden Codes prüfen, dass die Diagnose höchstens 30 unterschiedliche Rohbeobachtungen anzeigt und die App währenddessen stabil bleibt.
+- [ ] **Keine automatische Buchung:** Auch nach bestätigtem Scan darf TRAKUNA keine Partner-App automatisch öffnen und keinen Paketshop-Vorgang anlegen. Der Mitarbeiter muss den nächsten Schritt bewusst auswählen.
+
+Die automatisierte Unit-Prüfung deckt die Bestätigungslogik (stabile Folge, leeres Bild, mehrdeutiges Bild, Kandidatenwechsel) ab. Die tatsächliche Kameraerkennung, Bildrate, Autofokusleistung und Bedienbarkeit sind auf dem Android-Zielgerät zu prüfen.
+
+## 13. Zusätzliche Abnahme der Migration alter lokaler Sendungsdaten
+
+- [ ] **Gültiger Altbestand:** Eine Testinstallation mit vorhandenen unverschlüsselten Sendungsdaten aktualisieren. Alle Vorgänge, Empfänger, Notizen und Status müssen nach der Migration vollständig erhalten bleiben.
+- [ ] **Verschlüsselte Übernahme:** Nach erfolgreicher Migration prüfen, dass der neue verschlüsselte Speicher vorhanden ist und der alte Klartextschlüssel erst nach bestätigtem Commit entfernt wurde.
+- [ ] **Beschädigter Altbestand:** In einer isolierten Testinstallation einen ungültigen Legacy-Wert simulieren. TRAKUNA muss einen Speicherfehler melden; der ursprüngliche Klartextwert muss unverändert erhalten bleiben und darf nicht durch einen verschlüsselten fehlerhaften oder leeren Bestand ersetzt werden.
+- [ ] **Wiederherstellung nach Migrationsfehler:** Eine zuvor erstellte gültige Sicherung importieren. Der beschädigte lokale Bestand darf erst nach erfolgreicher Validierung und ausdrücklicher Bestätigung ersetzt werden.
+
+Die automatisierten Android-Instrumentierungstests prüfen sowohl eine erfolgreiche Legacy-Migration als auch den Erhalt eines ungültigen Altbestands. Der beschädigte Fall darf nur in einer isolierten Testinstallation durchgeführt werden.
+
+## 14. CSV-Export: Responsivität und Dateispeicherung
+
+- [ ] **Kleiner Export:** Eine kleine Sendungsliste exportieren und prüfen, dass die CSV-Datei mit UTF-8-BOM gespeichert wird und Umlaute korrekt dargestellt werden.
+- [ ] **Großer Export:** Mit einem umfangreichen Testbestand exportieren. Die Oberfläche muss während Vorbereitung und Dateischreiben bedienbar bleiben; keine sichtbare Blockade durch Datei-I/O.
+- [ ] **Abbrechen:** Dateiauswahl abbrechen. TRAKUNA muss den Abbruch melden und darf nicht im Beschäftigt-Zustand bleiben.
+- [ ] **Schreibfehler:** In einer isolierten Testumgebung einen nicht verfügbaren oder fehlerhaften Dokumentanbieter verwenden. TRAKUNA muss den Fehler verständlich melden und danach wieder bedienbar sein.
+- [ ] **Parallelaktionen:** Während CSV-Vorbereitung oder -Speicherung dürfen Backup-Import und Backup-Export nicht gleichzeitig gestartet werden.
+
+CSV-Erstellung läuft auf einem Hintergrund-Dispatcher; das Schreiben in den vom Android-Dokumentanbieter gelieferten Ausgabestrom läuft auf `Dispatchers.IO`. Die manuelle Prüfung auf einem realen Android-Gerät bleibt erforderlich.
+
+
+## Verifizierungsnachtrag – 27.11.2026
+
+Der aktuelle PR-Head ist `eb5f861e7f225adab1de258745b3ce1dd54b305d` (Version 1.55 / versionCode 56). Für exakt diesen Commit sind Android-Build [45911560033](https://github.com/mouzzlii/Fuck/actions/runs/45911560033) und API-35-Emulatorlauf [45911560010](https://github.com/mouzzlii/Fuck/actions/runs/45911560010) erfolgreich. Im Emulator wurden 15 Instrumentierungstests gestartet und beendet; 0 fehlgeschlagen, 0 übersprungen. Frühere Commit-/Run-Angaben in den nachfolgenden historischen Abschnitten gelten nur für ihre jeweiligen Commits. Die B1–B9-Praxisabnahme und die realen Kamera-/Druckerprüfungen sind weiterhin offen.
+
+
+## Nachtrag: Lebensdauer der letzten Übergabe
+
+Der interne verschlüsselte Handoff-Cache ist auf 24 Stunden begrenzt. Abgelaufene oder zeitlich unplausible Werte werden verworfen. Diese Schutzlogik gehört zum separaten Partner-Handoff-Codepfad und ist im aktuellen Shadow-Mode-Mitarbeiterablauf nicht als sichtbare Wiederaufnahme- oder Verwaltungsfunktion eingebunden. Der normale Scan-/Erfassungsablauf speichert keine zusätzliche Wiederaufnahme-Kopie.
+
+Automatisierte Verifikation auf dem Integrationsbranch: Unit-Tests für die Ablaufgrenze und Android-Instrumentierung für verschlüsselte Speicherung sowie explizites Löschen. Die manuelle Bedienprüfung auf einem realen Android-Gerät bleibt Teil der offenen Praxisabnahme.

@@ -1,6 +1,6 @@
 # TRAKUNA – Schnittstellenvertrag für Partner-Betriebssoftware
 
-Stand: App-Version 1.53 (versionCode 54)
+Stand: App-Version 1.55 (versionCode 56)
 
 ## Zweck
 Dieses Dokument beschreibt die technische Vereinbarung für eine autorisierte Übergabe zwischen TRAKUNA und der jeweiligen Paketshop-Betriebssoftware.
@@ -9,7 +9,7 @@ Dieses Dokument beschreibt die technische Vereinbarung für eine autorisierte Ü
 
 Für den ersten Start sind **DPD, GLS, Hermes und UPS** die vier priorisierten Paketdienste. Die Reihenfolge in der TRAKUNA-Auswahl ist DPD, GLS, Hermes, UPS. Alle vier müssen im Pilotablauf separat geprüft werden; eine manuelle Carrier-Auswahl ist zunächst nur eine Kennzeichnung des lokalen Vorgangs und keine Buchung im Partnersystem.
 
-- **DPD und GLS:** vorhandene separate Zebra-Handgeräte und Bluetooth-Drucker bleiben unangetastet. DataWedge-Scan auf den TC26-Geräten muss vor Ort getestet werden.
+- **DPD und GLS:** offizielle Portal-/Labelwege und Betreiberberechtigungen separat prüfen. Bestehende Zebra-Handgeräte und Druckerkopplungen bleiben unangetastet; DataWedge ist keine Voraussetzung des neuen Smartphone-Ablaufs.
 - **Hermes:** Das bisherige MC3090BT ist laut Betreiber zu alt und soll in der kommenden Woche ersetzt werden. Das bestehende System bleibt bis zur freigegebenen Umstellung unangetastet; das Nachfolgegerät wird nach Ankunft inventarisiert. Offizielle Hermes-Schnittstelle/Freigabe bleibt Pflicht.
 - **UPS:** Sendungsnummern im bekannten `1Z`-Format können als Format-Hinweis erkannt werden. Das bestätigt weder Gültigkeit noch UPS-Paketshop-Berechtigung. Hardware, Shopsoftware und offizieller Integrationsweg sind noch zu ermitteln.
 
@@ -18,13 +18,31 @@ Die öffentlich dokumentierten Integrationswege für DPD, GLS, Hermes und UPS si
 
 Dieses Dokument beschreibt die minimale technische Vereinbarung, damit eine Paketshop- oder Carrier-App eine Sendungsnummer aus TRAKUNA übernehmen kann. Es ist **keine Behauptung**, dass eine bestehende Post-, DHL-, DPD-, GLS- oder UPS-App diese Schnittstelle bereits unterstützt.
 
+## Automatische Anbietererkennung und Browser-Portalrouting ab Version 1.55
+
+TRAKUNA erkennt einen Anbieter vorrangig anhand einer offiziellen HTTPS-Zieladresse in einem QR-Code. Zusätzlich werden nur eindeutige bekannte Sendungsnummernformate verwendet (UPS `1Z…`, UPU-S10 mit `AT` für Österreichische Post, bekannte DHL-Paket-Präfixe). DPD, GLS, Hermes, FedEx und LogoiX werden nicht anhand bloßer Nummernlängen geraten. Mehrdeutige oder unbekannte Treffer bleiben manuell zuzuordnen.
+
+Nach eindeutiger Erkennung kann TRAKUNA das zuvor vom Betreiber für genau diesen Anbieter konfigurierte offizielle HTTPS-Portal im Browser öffnen. Die Adresse wird gegen eine Anbieter-Domain-Allowlist geprüft; fremde Domains, HTTP und URLs mit eingebetteten Zugangsdaten werden abgelehnt. Weil Geschäftskundenportale je nach Land, Vertrag und Standort variieren, wird kein Login-Portal geraten oder fest als allgemeingültig vorgegeben.
+
+**Datengrenze:** Das Öffnen des Portals überträgt keine Sendungsnummer, keine Empfängerdaten und keine Zugangsdaten. Es erfolgt keine Anmeldung, Buchung, Labelbestellung oder Statusänderung. Der Mitarbeiter muss im offiziellen Portal selbst weiterarbeiten. Die native Partner-App-Übergabe bleibt unabhängig davon im Shadow Mode.
+
+**Geschäftskunden-Login beim nächsten Besuch:** Die Anmeldung erfolgt im externen Standardbrowser auf der offiziellen Geschäftskunden-Seite des jeweiligen Anbieters – niemals in einem eingebetteten TRAKUNA-WebView. Wenn der Anbieter „Angemeldet bleiben“/„Remember me“ anbietet, kann der Mitarbeiter dies dort selbst wählen. Der Browser verwaltet die Sitzung/Cookies; ein Browser-Passwortmanager kann Zugangsdaten nach dessen eigener Freigabe speichern und beim nächsten Besuch ausfüllen. TRAKUNA liest oder speichert keine Zugangsdaten, Cookies oder Tokens und kann deshalb nicht garantieren, dass ein Anbieter eine Sitzung dauerhaft gültig hält. Läuft eine Sitzung ab oder wird sie vom Anbieter beendet, ist eine erneute Anmeldung im Browser erforderlich. Es werden ausschließlich die offiziell freigegebenen Geschäftskundenportale verwendet, keine Privatkunden-Logins.
+
 ## Carrier-spezifische App-Zuordnung ab Version 1.47
 
 DPD, GLS, Hermes und UPS können getrennt jeweils einer auf dem Android-Gerät installierten App zugeordnet werden. Paketnamen werden nicht fest codiert, da sie je nach Land und Betreiber variieren können. Sobald eine Einzelzuordnung existiert, wird für einen anderen Carrier ohne eigene Zuordnung kein gemeinsamer oder fremder App-Eintrag als Fallback verwendet. Eine Zuordnung ist nur ein lokaler Startparameter; sie ist kein Nachweis einer unterstützten Intent-Schnittstelle oder einer Buchung.
 
 ## Aktueller Übergabeversuch von TRAKUNA
 
-TRAKUNA versucht, die installierte Ziel-App über deren Android-Launcher-Intent zu öffnen und hängt folgende Extras an:
+**Aktueller Status (26.11.2026):** Der Pilotbuild ist fest auf SHADOW MODE geschaltet. Die Sendungsnummer wird lokal im geschützten TRAKUNA-Bestand abgelegt; der Übergabeversuch wird nur simuliert. Es wird aktuell keine externe App geöffnet, keine Nummer in die Zwischenablage kopiert und keine Buchung/Labelbestellung ausgelöst. Das lokale Testprotokoll enthält nur Zeitstempel, Ereignis, Testmodus, freigegebenes Carrier-Kürzel, Ergebnis und App-Version – keine Sendungsnummer.
+
+Die folgende Intent-Übergabe ist daher ausschließlich der **zukünftige Integrationsvertrag**, nicht das Verhalten des aktuellen Pilotbuilds. Eine Aktivierung ist erst nach separater Codeprüfung, erfolgreicher CI, Betreiberfreigabe und bestätigter Partner-Schnittstelle zulässig.
+
+TRAKUNA würde in einem späteren, ausdrücklich freigegebenen Live-Modus die installierte Ziel-App über deren Android-Launcher-Intent öffnen und folgende Extras anhängen:**Aktueller Status (26.11.2026):** Der Pilotbuild ist fest auf SHADOW MODE geschaltet. Die Sendungsnummer wird lokal im geschützten TRAKUNA-Bestand abgelegt; der Übergabeversuch wird nur simuliert. Es wird aktuell keine externe App geöffnet, keine Nummer in die Zwischenablage kopiert und keine Buchung/Labelbestellung ausgelöst. Das lokale Testprotokoll enthält nur Zeitstempel, Ereignis, Testmodus, freigegebenes Carrier-Kürzel, Ergebnis und App-Version – keine Sendungsnummer.
+
+Die folgende Intent-Übergabe ist daher ausschließlich der **zukünftige Integrationsvertrag**, nicht das Verhalten des aktuellen Pilotbuilds. Eine Aktivierung ist erst nach separater Codeprüfung, erfolgreicher CI, Betreiberfreigabe und bestätigter Partner-Schnittstelle zulässig.
+
+TRAKUNA würde in einem späteren, ausdrücklich freigegebenen Live-Modus die installierte Ziel-App über deren Android-Launcher-Intent öffnen und folgende Extras anhängen:
 
 | Schlüssel | Typ | Inhalt |
 |---|---|---|
@@ -106,7 +124,7 @@ Mindestanforderungen:
 - Testzugang und freigegebene Testsendungen.
 - Beschreibung, welche Paketshop-Aktionen die Schnittstelle tatsächlich unterstützt (Annahme, Kundenausgabe, Retoure, Übergabe an Zusteller).
 
-Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.53; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
+Seit Version 1.42 ordnet TRAKUNA rein numerische Sendungsnummern nicht anhand ihrer Länge einem Paketdienst zu. Dieses Verhalten gilt auch in Version 1.54; der Paketdienst muss bei Bedarf manuell ausgewählt werden.
 
 Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Übergabeversuch mit lokalem Cache und Zwischenablage-Fallback. Es werden keine Carrier-Endpunkte, Paketbuchungen oder Zugangsdaten erfunden.
 
@@ -114,7 +132,7 @@ Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Ü
 
 - Eine manuelle Sendungsnummer wird als vollständiger kompakter Wert akzeptiert, wenn sie die allgemeinen Eingaberegeln erfüllt. Das allein bestätigt weder Paketdienst noch Existenz der Sendung.
 - Aus freiem Etikettentext werden nur die derzeit ausdrücklich hinterlegten, strukturell eindeutigen Muster extrahiert. Mehrere unterschiedliche Treffer führen zur Ablehnung statt zur willkürlichen Auswahl.
-- Bei QR-Links werden ausdrücklich benannte Sendungsnummern-Felder ausgewertet. Allgemeine numerische IDs und beliebige URL-Pfadsegmente gelten nicht als ausreichender Nachweis.
+- Bei QR-Links haben ausdrücklich benannte Sendungsnummern-Felder Vorrang. Ein URL-Pfadsegment wird nur bei einer freigegebenen offiziellen Carrier-Domain und als eindeutiger plausibler Wert mit mindestens 8 Zeichen übernommen. Auf fremden Domains werden Pfadnummern nur bei einem bereits bekannten eindeutigen Sendungsnummernformat akzeptiert.
 - Die Kamera sammelt erkannte Nummern über mehrere Bilder. Tauchen im Bestätigungsfenster mehrere unterschiedliche Nummern auf, fordert TRAKUNA einen erneuten bzw. manuellen Scan.
 - Automatische Paketdienst-Hinweise bleiben begrenzt auf UPS, Österreichische Post und bestimmte DHL-Muster. DPD, GLS und Hermes müssen bis zur Prüfung freigegebener Originaletiketten manuell ausgewählt werden.
 
@@ -122,7 +140,9 @@ Ohne diese Angaben bleibt die Integration absichtlich ein sicherer Öffnungs-/Ü
 
 ## Zebra DataWedge – Barcode-Eingang
 
-TRAKUNA kann Scan-Ergebnisse von Zebra DataWedge über einen Android-Broadcast empfangen.
+**Legacy-Abgrenzung (26.11.2026):** Dieser Abschnitt dokumentiert ausschließlich den vorhandenen DataWedge-Codepfad. Die verbindliche Zielarchitektur verwendet ein Android-Smartphone als zentrale Bedienoberfläche, Kamera/manuelle Eingabe und einen gemeinsamen Etikettendrucker. Zebra-Handgeräte dienen dabei ausschließlich als Internet-/Portalgeräte. Keine neue DataWedge- oder Zebra-Hardwareintegration planen und keine bestehenden Shopgeräte/Profile verändern. DataWedge ist keine Abnahmebedingung des neuen Ablaufs.
+
+TRAKUNA verarbeitet Scan-Ergebnisse von Zebra DataWedge über einen Android-Broadcast nur auf Android 14 (API 34) oder höher und nur dann, wenn Android den Absender als `com.symbol.datawedge` bestätigt. Auf Android 13 (API 33) und älter weist TRAKUNA DataWedge-Broadcasts aus Sicherheitsgründen zurück; dort Kamera-Scanner oder manuelle Eingabe verwenden.
 
 ### Grundkonfiguration auf dem Zebra-Gerät
 
@@ -152,14 +172,14 @@ DataWedge sendet damit Intent-Daten nur an das festgelegte Paket und prüft zus�
 
 TRAKUNA liest den Scan nur ein, solange die App im Vordergrund aktiv ist, und zeigt ihn zur Prüfung im Sendungsnummernfeld an. Broadcasts während die App im Hintergrund ist, werden ignoriert. Auch ein Kamera-Scan löst keine automatische Buchung oder Partnerübergabe aus. Der Bediener muss die Nummer prüfen und die Übergabe bewusst starten. So wird vermieden, dass ein zufälliger Scan sofort einen betrieblichen Vorgang auslöst.
 
-**Sicherheitsgrenze:** Die DataWedge-Allowlist und Signaturprüfung müssen im Zebra-Profil tatsächlich aktiviert sein. TRAKUNA kann nicht erkennen oder erzwingen, ob ein Administrator diese Geräteeinstellung vorgenommen hat. Ohne korrekt eingerichtete Component Information bleibt der dynamische Android-Empfänger grundsätzlich durch andere Apps auf demselben Gerät nachahmbar. Eingehende Werte sind daher weiterhin nicht vertrauenswürdige Eingaben und müssen vor jeder Buchung geprüft werden.
+**Sicherheitsgrenze:** Die In-App-Absenderprüfung ist maßgeblich: Ab Android 14 (API 34) akzeptiert TRAKUNA nur Broadcasts, deren von Android gemeldeter Absender exakt `com.symbol.datawedge` ist. Auf Android 13 (API 33) und älter ist der DataWedge-Eingang in TRAKUNA deaktiviert, weil dort keine gleichwertig verifizierbare ursprüngliche Senderidentität verfügbar ist. DataWedge Component Information und Signaturprüfung sind zusätzliche Zustellkontrollen im Geräteprofil; sie ersetzen die In-App-Prüfung nicht. TRAKUNA kann nicht erkennen oder erzwingen, ob ein Administrator diese zusätzlichen Geräteeinstellungen aktiviert hat. Auch ein verifizierter DataWedge-Absender macht den Barcode-Inhalt nicht vertrauenswürdig: Nummern und sonstige Eingabewerte müssen vor jeder Buchung geprüft werden.
 
 
 ## GLS-/DPD-Handgeräte – Zebra TC26
 
 Nach den neuesten Vor-Ort-Angaben sind die beiden GLS-/DPD-Handgeräte sehr wahrscheinlich Zebra TC26. Ausschlaggebend ist die beschriebene TC21/TC26-Gehäuseform in Verbindung mit der sichtbaren 4G-Mobilfunkanzeige. Zebra dokumentiert den Unterschied ausdrücklich: TC21 bietet WLAN, TC26 WLAN und Mobilfunk. Die genaue TC26-Teilenummer ist vor Ort noch am Typenschild zu bestätigen.
 
-Zebra DataWedge ist der passende technische Scan-Eingang, sofern auf den konkreten TC26-Geräten vorhanden und freigegeben. TRAKUNA besitzt bereits einen dynamischen Broadcast-Empfänger für `de.trakuna.app.DATAWEDGE_SCAN` und liest `com.symbol.datawedge.data_string`. Die DataWedge-Konfiguration muss auf beiden Geräten einzeln mit dem dedizierten TRAKUNA-Profil und der unter „Zebra DataWedge – Barcode-Eingang“ beschriebenen Component-Allowlist/Signaturprüfung eingerichtet werden. Es wurde noch kein Testscan auf den GLS-/DPD-Shopgeräten ausgeführt.
+Zebra DataWedge ist als technischer Scan-Eingang nur auf Android 14 (API 34) oder höher für TRAKUNA freigegeben. Auf Android 13 (API 33) und älter bleibt der DataWedge-Eingang deaktiviert; dort sind Kamera-Scanner oder manuelle Eingabe zu verwenden. Auf unterstützten Geräten verarbeitet TRAKUNA den Broadcast nur, wenn Android den Absender als `com.symbol.datawedge` bestätigt. Die DataWedge-Konfiguration muss auf jedem Gerät einzeln mit dem dedizierten TRAKUNA-Profil eingerichtet werden. Component Information und Signaturprüfung sind zusätzliche Zustellkontrollen und ersetzen nicht die Absenderprüfung in TRAKUNA. Es wurde noch kein Testscan auf den GLS-/DPD-Shopgeräten ausgeführt.
 
 Offizielle Quellen:
 - Zebra TC21/TC26 Datenblatt: https://www.zebra.com/de/de/products/spec-sheets/mobile-computers/handheld/tc21-tc26.html

@@ -8,47 +8,46 @@
   <sub>Originaldatei unverändert · nur proportionale Skalierung · <a href="https://github.com/mouzzlii/logo-M-glichkeiten-">verbindliche Logo-Regeln</a></sub>
 </div>
 
+TRAKUNA 1.55 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung der Paketshop-Abläufe.
 
-TRAKUNA 1.53 ist eine lokale Android-App zur Erfassung von Paket-Barcodes und zur Unterstützung einfacher Paketshop-Abläufe.
+## Verbindlicher Minimalumfang
 
-## Aktueller Entwicklungsstand – Version 1.53 (versionCode 54)
+TRAKUNA wird auf den täglichen Paketshop-Kern reduziert: **Scannen → Vorgang auswählen → speichern → fertig.** Kamera mit Autofokus und vorhandene kompatible Zebra-Scanner sollen denselben Erfassungsweg nutzen. Hermes ist Pflichtanbieter. Unterstützt werden Annahme, Ausgabe, Kundensendungen, Retouren und die lokale Dokumentation der Fahrer-/Carrier-Übergabe. Manuelle Eingabe bleibt nur Rückfallweg. Diagnose, CSV, Archivverwaltung und weitere Wartungsfunktionen dürfen den normalen Mitarbeiterablauf nicht belasten.
+
+Die verbindliche Produktentscheidung mit Abgrenzungen, Hardwaregrenzen und Abnahmekriterien steht in [TRAKUNA-MINIMAL-SCOPE.md](TRAKUNA-MINIMAL-SCOPE.md). Dieser Minimalumfang hat Vorrang vor älteren historischen Featurelisten in diesem README. Bestehende Daten, Verschlüsselung und sichere Wiederherstellung bleiben geschützt. Der aktuelle Shadow-/Testmodus bleibt aktiv; echte Versandlabels und produktive Druckaufträge sind ausgeschlossen.
+
+
+## Aktueller Entwicklungsstand – Version 1.55 (versionCode 56)
+
+- **Version 1.55 – automatische Anbietererkennung und Portalrouting:** Ein Scan kann den Paketdienst anhand einer offiziellen HTTPS-QR-Zieladresse erkennen; zusätzlich bleiben nur eindeutige Sendungsnummernformate für UPS, Österreichische Post und DHL Paket aktiv. DPD, GLS, Hermes, FedEx und LogoiX werden nicht aus mehrdeutigen Nummernlängen erraten. Enthält ein QR-Link eine freigegebene offizielle Carrier-Domain, kann TRAKUNA zusätzlich eine eindeutige plausible Sendungs-ID aus dem URL-Pfad übernehmen (mindestens 8 Zeichen); bei fremden Domains bleibt die strengere Formaterkennung aktiv. Nach eindeutiger Erkennung zeigt TRAKUNA den Paketdienst an. Das für diesen Anbieter konfigurierte offizielle HTTPS-Portal wird ausschließlich nach bewusster Betätigung von „Offizielles Portal öffnen“ gestartet. Portaladressen werden gegen eine Anbieter-Domain-Allowlist geprüft. Unbekannte oder mehrdeutige Scans verlangen weiterhin eine manuelle Auswahl.
+- Das Portalrouting überträgt weder Sendungsnummer noch Kundendaten, meldet sich nicht an und löst keine Buchung aus. Es speichert keine Zugangsdaten oder Cookies. Die Portaladresse ist je Anbieter/Gerät separat zu konfigurieren; account- oder standortspezifische Portale werden nicht geraten.
+- **CI-Nachweis für Code-Commit `2e4ae2435c29bed959662e4a1734f6826d508244`:** Android-Build, Unit-Tests, Lint und Sicherheitsprüfungen erfolgreich ([45902341310](https://github.com/mouzzlii/Fuck/actions/runs/45902341310)); API-35-Emulator **15/15 Instrumentierungstests bestanden** ([45902341262](https://github.com/mouzzlii/Fuck/actions/runs/45902341262)). Debug-Artefakt `TRAKUNA-Android`, ID `15155914301`, gültig bis 10.12.2026 22:06 UTC. APK-SHA-256: `230bf3cdd79000d25fb7c86a73c7f739abb87f43f2a656ee75aa4182f3346fe9`. Release-Signierung weiterhin nicht vorhanden.
+
+- Version 1.54 ergänzte eine temporäre Scan-Diagnose für Kamera-/ML-Kit- und Zebra-DataWedge-Scans: Barcodeformat, unveränderter Rohinhalt, Anzeigeinhalt und daraus extrahierter Kandidat werden gegenübergestellt. Mehrere unterschiedliche Codes bleiben sichtbar; eine Sendungsnummer wird nur bei genau einem eindeutigen Kandidaten übernommen. Die Diagnose bleibt ausschließlich im Arbeitsspeicher und wird weder gespeichert noch protokolliert. Rohdaten können personenbezogene oder sendungsbezogene Informationen enthalten.
 
 - Neue Archivfunktion für abgeschlossene Vorgänge: Archivieren, Archiv anzeigen und Wiederherstellen.
 - Offene Sendungen können nicht archiviert werden. Endgültiges Löschen wird erst in der Archivansicht angeboten. Die Speicherschicht erzwingt dieselbe Archivpflicht unabhängig von der Oberfläche.
 - Archivstatus und Archivereignisse bleiben in der verschlüsselten lokalen Datenhaltung und in JSON-Backups erhalten. Backup-Schema 2 wird geschrieben; ältere Schema-1-Sicherungen bleiben lesbar.
 - CSV-Export enthält jetzt zusätzlich den Archivierungszeitpunkt.
-- JSON-Backups werden kompakt exportiert; der Import akzeptiert bis zu 4 MiB, während der verschlüsselte lokale Bestand auf 2 MiB begrenzt bleibt. Damit bleibt zusätzlicher Platz für Backup-Kopf und portable Exportstruktur.
-- Version 1.53 ergänzt Android-Instrumentierungstests für Keystore-Verschlüsselung, Wiederöffnung des lokalen Speichers, Fail-closed-Verhalten bei beschädigtem Sendungs- und Übergabe-Cache sowie Wiederherstellung aus einem gültigen Backup nach Beschädigung des lokalen Speichers. CI-Lauf 45293985061 für versionCode 54 war erfolgreich: Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload bestanden. **Die Emulator-Instrumentierungstests laufen separat**; Workflow 45295645386 für den aktuellen Code-Commit ist gestartet, aber noch nicht abgeschlossen. Die optionale Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen; bereitgestellt wurde eine Debug-APK.
-- Debug-APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`.
-- ZIP-Artefakt-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`.
-- Das ZIP-Artefakt wurde am 24.11.2026, 00:05 UTC erstellt und läuft am 08.12.2026, 00:05 UTC ab.
-- CI-Build: https://github.com/mouzzlii/Fuck/actions/runs/45293985061
+- Portable Datensicherungen werden als passwortgeschützte `.trakuna`-Dateien exportiert: AES-256-GCM, PBKDF2-HMAC-SHA256 mit 600.000 Iterationen, zufälliger Salt und Nonce. Das Passwort muss 12–128 Zeichen haben und wird nicht in der App gespeichert. Alte unverschlüsselte JSON-Sicherungen bleiben importierbar, werden vor dem Ersetzen aber ausdrücklich als Klartext gekennzeichnet. CSV-Exporte bleiben unverschlüsselt.
+- Version 1.53 ergänzte die ersten Android-Instrumentierungstestfälle für Keystore-Verschlüsselung, lokalen Speicher und Backup-Wiederherstellung. Der damalige Haupt-Build kompilierte diese Tests; die spätere Version 1.54 enthält die weiterentwickelten Scanner- und Sicherheitsprüfungen.
+- **Integrationsstand 1.54 / versionCode 55:** Der aktuelle Android-Build [45722303637](https://github.com/mouzzlii/Fuck/actions/runs/45722303637) und der API-35-Emulatorlauf [45722303671](https://github.com/mouzzlii/Fuck/actions/runs/45722303671) sind für Commit `25558994d553a509ea7733fd478b5153a539ff94` erfolgreich. Geprüft wurden Unit-Tests, Kompilierung der Android-Instrumentierungstests, Android-Lint, Manifest-/Offline-Sicherheitsgrenzen, APK-Build und **8/8 Emulator-Instrumentierungstests**. Die Debug-APK-Prüfsumme wurde lokal gegen die Artefakt-Prüfsummendatei verifiziert.
+- Debug-Artefakt: `TRAKUNA-Android`, Artifact-ID `15072192619`, verfügbar bis 09.12.2026, 23:26 UTC. Die enthaltene `SHA256SUMS.txt` enthält die Prüfsumme der APK. Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
+- Der Integrationsstand liegt in Draft-PR #25 und ist noch nicht in `main` übernommen. Reale Kamera-/Autofokusprüfung mit Paketetiketten, Drucker-/Portal-End-to-End-Abnahme sowie manuelle Backup-Wiederherstellung bleiben offen. Zebra/DataWedge ist nur vorhandener Legacy-Code und keine Freigabebedingung der neuen Zielarchitektur.
+- **Nachintegration PR #35 – Code-CI-Stand:** `a372591b131888a144f59b5780ccab7730d6db18`. Vollständiger Android-Build/Unit-Tests/Lint/Manifest-/Offline-Prüfungen erfolgreich (Run [45883226923](https://github.com/mouzzlii/Fuck/actions/runs/45883226923)); API-35-Emulator-Instrumentierung erfolgreich (Run [45883226995](https://github.com/mouzzlii/Fuck/actions/runs/45883226995)). Spätere Commits haben ausschließlich Dokumentation aktualisiert; diese CI-Läufe sind kein Testnachweis für die Dokumentations-Commits. PR #25 bleibt Draft und ungemergt; reale Kamera-/Autofokusprüfung, Drucker-/WLAN-/Bluetooth-Abnahme und Backup-Restore auf einem echten Gerät bleiben offen.
 
-**Wichtig:** Version 1.53 ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update zuerst ein JSON-Backup erstellen und dessen Wiederherstellbarkeit prüfen. Die App nicht deinstallieren, solange keine verifizierte Sicherung vorliegt. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Ein erfolgreicher CI-Build ersetzt keinen Test auf den tatsächlichen Shopgeräten.
+**Wichtig:** Der aktuelle Integrationsstand ist ein Debug-Testpaket, kein produktiv signiertes Release. Debug-Signaturen können sich zwischen CI-Läufen unterscheiden; Android kann dann ein Update über eine vorhandene Installation verweigern. Vor jedem Update eine passwortgeschützte `.trakuna`-Sicherung erstellen und das Passwort getrennt aufbewahren. Die App nicht deinstallieren, solange keine verifizierte Sicherungsdatei vorliegt. CSV-Exporte bleiben Klartext. Für wiederholbare Updates ist ein dauerhaft vom Betreiber verwalteter Signaturschlüssel erforderlich. Erfolgreiche CI-Tests ersetzen keine Tests auf den tatsächlichen Shopgeräten.
 
 ## Aktuelle Betriebsgrenzen
 
+**Aktueller Pilot-Sicherheitsmodus:** Die native Partner-App-Übergabe ist fest auf SHADOW MODE geschaltet. Die Sendungsnummer wird lokal im geschützten TRAKUNA-Bestand abgelegt; eine native Übergabe wird nur simuliert. Das separat implementierte Browser-Portalrouting kann nach eindeutiger Anbietererkennung ein vom Betreiber konfiguriertes offizielles Portal öffnen. Dabei werden weder Sendungsnummer noch Kundendaten übertragen; es erfolgen keine Anmeldung, Buchung oder Labelbestellung. Es wird keine native Carrier-/Partner-App geöffnet und keine Sendungsnummer in die Zwischenablage kopiert. Das lokale Testprotokoll enthält nur redigierte Ereignismetadaten, keine Sendungsnummer. Eine Freigabe des Live-Handoffs erfordert eine separate geprüfte Änderung und Betreiberfreigabe.
+
 - Die Daten werden lokal auf diesem Gerät gespeichert und verschlüsselt.
 - Es gibt derzeit keine zentrale Synchronisierung zwischen mehreren Geräten und keine Cloud-Verbindung.
-- WLAN ist für den lokalen Kamera-/DataWedge-Scan nicht erforderlich und aktiviert keine Synchronisierung. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden noch nicht gesucht.
-- Vorhandener DataWedge-Code bleibt bis zur gesonderten Abhängigkeitsprüfung im Bestand. Er ist keine Voraussetzung und keine neue Hardwareanforderung des aktuellen Smartphone-/Portal-/Druckablaufs.
-- DPD, GLS, Hermes und UPS waren die ersten lokalen Auswahlprioritäten in Version 1.53. Eine Carrier-Auswahl ist nur eine lokale Kennzeichnung; das Öffnen eines Anbieterportals bestätigt keine Datenübernahme oder Buchung. Acht Carrier-Profile werden zentral im Gateway dokumentiert; Profile sind keine Live-Integrationen. Offizielle Freigaben und bestätigte Schnittstellen sind je Anbieter weiterhin offen. Zebra-Handgeräte dienen im neuen Ablauf ausschließlich als Internet-/Portalgeräte. Ihre konkreten Modelle und die freigegebenen Integrationsmöglichkeiten bleiben zu inventarisieren; bestehende Shopgeräte und Carrier-Systeme werden nicht eigenmächtig verändert.
+- WLAN ist für lokale Kamera-/manuelle Scans nicht erforderlich und aktiviert keine Synchronisierung. Der künftige lokale Druckweg soll WLAN oder Bluetooth nutzen; dafür ist noch kein Druckcode freigegeben oder real getestet. Version 1.49 zeigt den WLAN-Verbindungsstatus dieses einzelnen Geräts an; andere Geräte werden nicht gesucht.
+- Vorhandener DataWedge-Empfangscode bleibt bis zur gesonderten Abhängigkeitsprüfung im Bestand. Er ist keine Voraussetzung und keine neue Hardwareanforderung des aktuellen Smartphone-/Portal-/Druckablaufs. Zebra-Handgeräte dienen darin ausschließlich als Internet-/Portalgeräte; keine neue Zebra-Scanner-, DataWedge- oder Drucker-Hardwareintegration dafür planen.
+- DPD, GLS, Hermes und UPS waren die ersten lokalen Auswahlprioritäten in Version 1.53. Die Auswahl ist nur eine lokale Kennzeichnung. Das Öffnen eines Anbieterportals bestätigt keine Datenübernahme oder Buchung. Acht Carrier-Profile werden zentral im Gateway dokumentiert; Profile sind keine Live-Integrationen. Offizielle Freigaben und bestätigte Schnittstellen sind je Anbieter weiterhin offen. Zebra-Handgeräte sind in der neuen Zielarchitektur ausschließlich Internet-/Portalgeräte; tatsächliche Modelle und freigegebene Integrationsmöglichkeiten bleiben zu inventarisieren. Bestehende Carrier-Systeme und Shopgeräte werden nicht eigenmächtig verändert.
 - Die vorhandenen Carrier-Systeme, Handgeräte und Druckerkopplungen dürfen ohne ausdrückliche Betreiber- und Carrier-Freigabe nicht verändert werden.
-
-## Aktualisierte Zielarchitektur: ein Smartphone, ein Drucker (26.11.2026)
-
-Die neueste Betreiberentscheidung präzisiert den künftigen Paketportal- und Etikettendruckablauf:
-
-- Ein Android-Smartphone ist die zentrale TRAKUNA-Bedienoberfläche.
-- Ein einziger Etikettendrucker soll die Labels aller vorgesehenen Paketdienste ausgeben.
-- WLAN und Bluetooth sind als Druckverbindungen vorzusehen; die tatsächliche Nutzbarkeit hängt vom konkreten Druckermodell, dessen Firmware und Android-Unterstützung ab.
-- Die Paketdienst-Portale werden auf dem Smartphone verwendet. TRAKUNA übernimmt fertige Etiketten nur über offizielle APIs, Downloads, den Android-Teilen-Dialog oder andere dokumentierte Übergabewege.
-- Der Druck soll direkt vom Smartphone aus funktionieren. Ein zusätzlicher PC, Cloud-Druckdienst oder separater Printserver ist keine Voraussetzung.
-- Zebra-Handgeräte sind für diesen Portalablauf keine von TRAKUNA gesteuerten Scanner oder Druckserver. Sie können allenfalls als Internet-/Browsergeräte für Portale dienen. Neue DataWedge-, Zebra-SDK- oder Zebra-Hardwareintegration ist für diesen Ablauf nicht vorgesehen.
-
-**Abgrenzung zum bestehenden Code:** Version 1.53 enthält weiterhin lokale Kamera-/DataWedge-Funktionen und ältere Hardwaredokumentation. Diese beschreiben den vorhandenen Entwicklungsstand bzw. den bisherigen Betrieb, nicht die neue Zielarchitektur. Bestehende Funktionen werden nicht unkontrolliert entfernt. Offene PRs mit Scanner-/DataWedge-Änderungen sind vor einer Übernahme gegen die neue Zielrichtung zu prüfen.
-
-**Noch nicht umgesetzt oder abgenommen:** zentraler Smartphone-Druckcode, WLAN-/Bluetooth-Erkennung und -Druck, Kompatibilität eines konkreten Ein-Drucker-Modells, automatische Labelübergabe aller Anbieter sowie physische Ende-zu-Ende-Drucktests. Die bestehende Offline-Sicherheitsgrenze (keine INTERNET-Berechtigung) darf für Netzwerkdruck nicht stillschweigend gelockert werden; mögliche Berechtigungsänderungen benötigen eine gezielte Sicherheitsprüfung und passende CI-Anpassung.
 
 ## Release-Build
 
@@ -61,7 +60,7 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 - Ein Android-Smartphone ist die zentrale Bedienoberfläche für alle unterstützten Carrier.
 - Ein gemeinsamer Etikettendrucker wird direkt vom Smartphone aus genutzt; WLAN und Bluetooth sind die vorgesehenen Verbindungswege, abhängig von der tatsächlichen Druckerkompatibilität.
 - Die offiziellen Carrier-Portale bleiben nutzbar. Labels dürfen nur über offizielle APIs oder dokumentierte Download-/Export-/Teilen-Funktionen übernommen werden.
-- Zebra-Handgeräte dienen in diesem Ablauf nur als Internet-/Portalgeräte. Keine neue Zebra-Scanner-, DataWedge- oder Drucker-Hardwareintegration dafür planen.
+- Zebra-Handgeräte dienen in diesem Ablauf ausschließlich als Internet-/Portalgeräte. Keine neue Zebra-Scanner-, DataWedge- oder Drucker-Hardwareintegration dafür planen.
 - Vorhandener DataWedge-Code bleibt bis zur gesonderten Diff-/Abhängigkeitsprüfung erhalten, ist aber kein Bestandteil der neuen Zielstrecke.
 - Kein zusätzlicher PC, Cloud-Printserver oder separater Drucker ist vorausgesetzt.
 - WLAN-/Bluetooth-Druckcode, Druckerkompatibilität und reale Etikettenabnahme sind noch nicht umgesetzt.
@@ -69,7 +68,7 @@ Der CI-Workflow kann zusätzlich ein signiertes Release-APK erstellen, sobald de
 
 ### Aktueller Integrationsnachweis
 
-Der offene Android-PR [#25](https://github.com/mouzzlii/Fuck/pull/25) enthält den aktuellen Integrationsstand auf Head `a372591b131888a144f59b5780ccab7730d6db18`. Android-Build, Unit-Tests, Lint, Manifest-/Offline-Prüfungen und API-35-Emulator-Instrumentierung liefen erfolgreich (Runs [45883226923](https://github.com/mouzzlii/Fuck/actions/runs/45883226923) und [45883226995](https://github.com/mouzzlii/Fuck/actions/runs/45883226995)). PR #25 bleibt Draft und ungemergt; reale Kamera-/Druckerhardware, Backup-Restore auf einem echten Gerät und Carrier-API-Freigaben sind nicht abgenommen.
+Der offene Android-PR [#25](https://github.com/mouzzlii/Fuck/pull/25) enthält den aktuellen Integrationsstand auf Head `a372591b131888a144f59b5780ccab7730d6db18`. Android-Build, Unit-Tests, Lint, Manifest-/Offline-Prüfungen und API-35-Emulator-Instrumentierung liefen erfolgreich (Runs [45883226923](https://github.com/mouzzlii/Fuck/actions/runs/45883226923) und [45883226995](https://github.com/mouzzlii/Fuck/actions/runs/45883226995)). PR #25 bleibt Draft und ungemergt; reale Kamera-/Druckerhardware, Backup-Restore auf echtem Gerät und Carrier-API-Freigaben sind nicht abgenommen.
 
 
 - [Hardwareinventar des ersten Paketshops](HARDWARE-INVENTAR.md): vor Ort erfasste DPD-/GLS-/Hermes-Geräte sowie offene UPS-Hardwareangaben, Verbindungen, Versionsangaben und Prüfpunkte.
@@ -81,13 +80,14 @@ Der offene Android-PR [#25](https://github.com/mouzzlii/Fuck/pull/25) enthält d
 - [Sicherheitsstatus und Produktionsfreigabe](SECURITY.md): dokumentiert umgesetzte Schutzmaßnahmen, bekannte Restrisiken und verbindliche Freigabekriterien.
 - [Sichere Mehrgerätearchitektur](MEHRGERAETE-ARCHITEKTUR.md): Zielmodell für Geräteidentität, Rollen, Offline-Warteschlange, Ereignissynchronisierung und Konfliktbehandlung; noch nicht implementiert.
 - [Mehr-KI-Arbeitsprotokoll](MEHR-KI-ARBEITSPROTOKOLL.md): gemeinsamer GitHub-Arbeitsablauf, Aufgabenpakete, unabhängige Reviews, Zugangsstatus und Kosten-/Datenschutzgrenzen.
-- [Betriebshandbuch](BETRIEBSHANDBUCH.md): einfache Schritt-für-Schritt-Anleitung für Paketannahme, Kundenausgabe, Retouren, Zebra DataWedge, Partner-App und Datensicherung.
+- [Betriebshandbuch](BETRIEBSHANDBUCH.md): einfache Schritt-für-Schritt-Anleitung für Paketannahme, Kundenausgabe, Retouren, Zebra DataWedge, Partner-App und verschlüsselte Datensicherung.
+- [Rechtehinweis](PROPRIETARY-NOTICE.md): Rechtevorbehalt, Drittmaterialien und Schutz vertraulicher Informationen.
 - [Freigabe-Checkliste](FREIGABE-CHECKLISTE.md): verbindliche Nachweise und externe Voraussetzungen vor einem echten Paketshop-Einsatz.
 - [Praxis-Testplan](PRAxisTEST.md): Testfälle für den kontrollierten Gerätetest.
 
 ## CI-Schutzprüfungen
 
-Der Android-Workflow startet nur bei App-/Build-Änderungen und prüft vor dem Build, dass die aktuelle Offline-Version keine INTERNET-Berechtigung anfordert, Android-Backups deaktiviert und Klartextverkehr deaktiviert bleibt. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden.
+Der Android-Workflow startet bei App-/Build-Änderungen sowie bei Änderungen am Sicherheitsprüfskript. `scripts/check-android-security-boundaries.sh` kontrolliert vor dem Build die Quellberechtigungen (nur CAMERA und ACCESS_NETWORK_STATE), die ausdrückliche Entfernung von INTERNET, optionale Kamera-Hardware, deaktiviertes Android-Backup, deaktivierten Klartextverkehr und das Fehlen direkter HTTP-/Socket-Client-Abhängigkeiten bzw. bekannter Netzwerk-APIs. Nach dem APK-Bau wird zusätzlich das tatsächlich paketierte Manifest geprüft. Diese Schranke muss bei einer späteren Backend-Einführung bewusst und zusammen mit dem Sicherheitskonzept angepasst werden; sie ersetzt keinen vollständigen Audit transitiver Bibliotheken.
 
 Für die Android-Instrumentierungstests gibt es zusätzlich den getrennten Workflow [`.github/workflows/android-instrumentation.yml`](.github/workflows/android-instrumentation.yml). Er startet einen API-35-Emulator und führt Keystore-, Speicher- und Backup-Recovery-Tests aus. Dieser langsamere Emulatorlauf ist bewusst vom normalen APK-Build getrennt, damit ein nicht startender Emulator die Bereitstellung der lokalen Debug-Testversion nicht blockiert.
 
@@ -123,7 +123,7 @@ Für die Android-Instrumentierungstests gibt es zusätzlich den getrennten Workf
 ## Neu in Version 1.44
 
 - Kamera-Scans werden über mehrere aufeinanderfolgende Bilder gesammelt. Wenn in diesem Bestätigungsfenster mehrere unterschiedliche Sendungsnummern erkannt werden, wird keine davon automatisch ausgewählt.
-- QR-Links werden vorsichtiger ausgewertet: allgemeine IDs und beliebige URL-Pfadnummern reichen nicht mehr aus; mehrdeutige Treffer werden abgelehnt.
+- QR-Links werden vorsichtig ausgewertet: explizite Sendungsnummer-Felder haben Vorrang. Ein URL-Pfad-ID-Kandidat wird nur von einer offiziellen, allowlist-geprüften Carrier-Domain und nur als eindeutiger Treffer mit mindestens 8 Zeichen akzeptiert; fremde Domains und mehrdeutige Treffer werden abgelehnt.
 - Sendungsnummern aus Etikettentexten werden nur bei eindeutig erkannten Formaten extrahiert. Ein gültig aussehender Teil innerhalb eines längeren Codes wird nicht als eigene Nummer übernommen.
 - Paketdienstnamen werden bei bekannten manuellen Eingaben vereinheitlicht. Die DHL-Erkennung verlangt jetzt ein vollständiges bekanntes Muster; unklare JD-Präfixe werden nicht mehr automatisch als DHL eingestuft.
 - Dieselbe aktive Sendungsnummer kann nicht mehr versehentlich in mehreren Vorgangsarten angelegt werden. Die Rückmeldung zeigt die bereits vorhandene Vorgangsart.
@@ -136,14 +136,6 @@ Für die Android-Instrumentierungstests gibt es zusätzlich den getrennten Workf
 See [PROPRIETARY-NOTICE.md](PROPRIETARY-NOTICE.md) for the bilingual rights notice, third-party materials disclaimer, and rules for confidential information. Do not place unpublished invention details, customer data, passwords, API keys, or private signing keys in this repository.
 
 
-## Vereinheitlichte Paket- und Multi-Carrier-Plattform
+## Verifizierungsnachtrag – 27.11.2026
 
-TRAKUNA ist die gemeinsame Produktlinie. Die Android-App bleibt in diesem Repository; die verbindliche Architektur, Repository-Konsolidierung, Carrier-Registry und Adapterverträge werden zentral im [TRAKUNA Multi-Carrier Gateway](https://github.com/mouzzlii/multi-carrier-gateway) gepflegt:
-
-- [Projektkonsolidierung und Repository-Quellenentscheidung](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/PROJECT-CONSOLIDATION.md)
-- [Zentrale Carrier-Registry für DPD, GLS, Hermes, UPS, Österreichische Post, DHL, FedEx und LogoiX](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/CARRIER-REGISTRY.md)
-- [Anbieterneutraler Carrier-Adaptervertrag](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/CARRIER-ADAPTER-CONTRACT.md)
-- [Smartphone-only-Druckarchitektur](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/SMARTPHONE-UNIFIED-PRINTING.md)
-- [Hermes-Systemrecherche Österreich](https://github.com/mouzzlii/multi-carrier-gateway/blob/main/docs/HERMES-SYSTEMRECHERCHE.md)
-
-Die Dokumentation beschreibt Ziel und Freigabegrenzen. Der tatsächliche Quellcode-Merge von ZIP-/Prototypständen ist noch offen; ungeprüfte Archive werden nicht blind importiert. Bestehende Quellrepositorys bleiben bis zur verifizierten Migration erhalten.
+Der aktuelle PR-Head ist `eb5f861e7f225adab1de258745b3ce1dd54b305d` (Version 1.55 / versionCode 56). Für exakt diesen Commit sind der Android-Build [45911560033](https://github.com/mouzzlii/Fuck/actions/runs/45911560033) und der API-35-Emulatorlauf [45911560010](https://github.com/mouzzlii/Fuck/actions/runs/45911560010) erfolgreich. Der Emulatorlauf führte 15 Instrumentierungstests aus: 15 bestanden, 0 fehlgeschlagen, 0 übersprungen. Ältere Commit- und Run-Referenzen in den historischen Abschnitten unten dokumentieren frühere Stände und sind kein Testnachweis für den aktuellen Head. PR #25 bleibt Draft; reale Kamera-/Autofokus-, Drucker- und manuelle Backup-/Restore-Abnahmen bleiben offen.

@@ -55,6 +55,27 @@ class EncryptedStorageInstrumentedTest {
     }
 
     @Test
+    fun repeatedStatusConfirmationCannotAdvanceTheSameShipmentTwice() {
+        val store = ShipmentStore(context)
+        val added = store.add(
+            rawTrackingNumber = "DOUBLE12345",
+            carrier = "DPD",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER
+        )
+        assertTrue(added is ShipmentUpdate.Saved)
+        val original = (added as ShipmentUpdate.Saved).record
+
+        val first = store.advance(original.id, expectedStatus = original.status)
+        assertTrue(first is ShipmentUpdate.Saved)
+        assertEquals(ShipmentStatus.READY_FOR_PICKUP, store.all().single().status)
+
+        // Simulate a second tap from the still-open confirmation dialog.
+        val duplicate = store.advance(original.id, expectedStatus = original.status)
+        assertTrue(duplicate is ShipmentUpdate.Rejected)
+        assertEquals(ShipmentStatus.READY_FOR_PICKUP, store.all().single().status)
+    }
+
+    @Test
     fun damagedEncryptedShipmentStorageFailsClosedInsteadOfBecomingAnEmptyWritableStore() {
         val store = ShipmentStore(context)
         assertTrue(
@@ -96,6 +117,21 @@ class EncryptedStorageInstrumentedTest {
     }
 
     @Test
+    fun handoffCacheRequiresExplicitRestoreAndCanBeCleared() {
+        val cache = SecureHandoffCache(context)
+        assertTrue(cache.save("TEST123456", "Hermes"))
+        assertTrue(cache.hasPendingHandoff())
+
+        assertTrue(cache.clear())
+
+        assertFalse(cache.hasPendingHandoff())
+        assertEquals("", cache.trackingNumber())
+        val preferences = context.getSharedPreferences("trakuna_handoff", Context.MODE_PRIVATE)
+        assertFalse(preferences.contains("tracking_number_encrypted_v1"))
+        assertFalse(preferences.contains("tracking_number"))
+    }
+
+    @Test
     fun damagedPartnerHandoffCacheFailsClosedInsteadOfReturningAnEmptyNumber() {
         val cache = SecureHandoffCache(context)
         assertTrue(cache.save("TEST123456", "Hermes"))
@@ -122,7 +158,8 @@ class EncryptedStorageInstrumentedTest {
             note = "Wiederherstellungstest"
         )
         assertTrue(saved is ShipmentUpdate.Saved)
-        val backup = original.exportBackupJson()
+        val password = "Android Backup Password 2026!"
+        val backup = BackupCrypto.encrypt(original.exportBackupJson(), password.toCharArray())
 
         context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE)
             .edit()
@@ -131,10 +168,107 @@ class EncryptedStorageInstrumentedTest {
 
         val damaged = ShipmentStore(context)
         assertNotNull(damaged.storageError())
-        val restored = damaged.restoreBackup(backup)
+        val decryptedBackup = BackupCrypto.decrypt(backup, password.toCharArray())
+        val restored = damaged.restoreBackup(decryptedBackup)
         assertEquals(BackupRestoreResult.Restored(1), restored)
         assertEquals(listOf((saved as ShipmentUpdate.Saved).record), damaged.all())
         assertEquals(null, damaged.storageError())
+    }
+
+
+
+
+    @Test
+    fun passwordEncryptedBackupUsesAndroidCryptoProviderAndRejectsWrongPassword() {
+        val store = ShipmentStore(context)
+        val saved = store.add(
+            rawTrackingNumber = "ANDROIDTEST123",
+            carrier = "DPD",
+            flow = ShipmentFlow.INCOMING_FOR_CUSTOMER,
+            recipient = "Android Test",
+            note = "Backup Crypto Instrumentierung"
+        )
+        assertTrue(saved is ShipmentUpdate.Saved)
+        val plain = store.exportBackupJson()
+        val password = "Android Backup Password 2026!"
+        val encrypted = BackupCrypto.encrypt(plain, password.toCharArray())
+        assertTrue(BackupCrypto.isEncryptedBackup(encrypted))
+        assertFalse(encrypted.contains("ANDROIDTEST123"))
+        val decrypted = BackupCrypto.decrypt(encrypted, password.toCharArray())
+        assertEquals(plain, decrypted)
+        assertTrue(store.validateBackup(decrypted) is BackupValidation.Valid)
+        assertTrue(runCatching {
+            BackupCrypto.decrypt(encrypted, "Wrong Password 2026!".toCharArray())
+        }.isFailure)
+    }
+
+
+    @Test
+    fun legacy210000IterationBackupUsesTheOriginalAndroidPbkdf2Provider() {
+        val plain = """{"format":"TRAKUNA_BACKUP","schemaVersion":2,"recordCount":0}"""
+        val password = "Grüße aus Österreich € 2026!"
+        val passwordChars = password.toCharArray()
+        val salt = ByteArray(16) { it.toByte() }
+        val nonce = ByteArray(12) { (it + 16).toByte() }
+        val prefix = "TRAKUNA-ENCRYPTED-BACKUP-V1\n"
+        val header = java.nio.ByteBuffer.allocate(33)
+            .put(1.toByte())
+            .putInt(210_000)
+            .put(salt)
+            .put(nonce)
+            .array()
+        val spec = javax.crypto.spec.PBEKeySpec(passwordChars, salt, 210_000, 256)
+        val key = try {
+            javax.crypto.SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
+                .generateSecret(spec).encoded
+        } finally {
+            spec.clearPassword()
+            passwordChars.fill('\u0000')
+        }
+        val cipher = javax.crypto.Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(
+            javax.crypto.Cipher.ENCRYPT_MODE,
+            javax.crypto.spec.SecretKeySpec(key, "AES"),
+            javax.crypto.spec.GCMParameterSpec(128, nonce)
+        )
+        cipher.updateAAD(prefix.toByteArray(Charsets.US_ASCII))
+        cipher.updateAAD(header)
+        val encrypted = prefix + java.util.Base64.getEncoder().encodeToString(
+            header + cipher.doFinal(plain.toByteArray(Charsets.UTF_8))
+        )
+        java.util.Arrays.fill(key, 0)
+
+        assertEquals(plain, BackupCrypto.decrypt(encrypted, password.toCharArray()))
+    }
+
+
+    @Test
+    fun validLegacyPlaintextStoreMigratesOnlyAfterValidation() {
+        val legacy = """[{"id":"legacy-migration","trackingNumber":"LEGACY123456","carrier":"DPD","flow":"INCOMING_FOR_CUSTOMER","status":"RECEIVED_BY_SHOP","createdAt":100,"updatedAt":100,"recipient":"Legacy Empfaenger","note":"Alter Datensatz"}]"""
+        val preferences = context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE)
+        assertTrue(preferences.edit().putString("records_v1", legacy).commit())
+
+        val migrated = ShipmentStore(context)
+
+        assertEquals(null, migrated.storageError())
+        assertEquals("LEGACY123456", migrated.all().single().trackingNumber)
+        assertFalse(preferences.contains("records_v1"))
+        val encrypted = preferences.getString("records_encrypted_v2", null)
+        assertNotNull(encrypted)
+        assertFalse(encrypted!!.contains("LEGACY123456"))
+    }
+
+    @Test
+    fun malformedLegacyPlaintextStoreIsPreservedInsteadOfEncryptedAndDeleted() {
+        val legacy = "not valid JSON"
+        val preferences = context.getSharedPreferences("trakuna_shipments", Context.MODE_PRIVATE)
+        assertTrue(preferences.edit().putString("records_v1", legacy).commit())
+
+        val reopened = ShipmentStore(context)
+
+        assertNotNull(reopened.storageError())
+        assertEquals(legacy, preferences.getString("records_v1", null))
+        assertFalse(preferences.contains("records_encrypted_v2"))
     }
 
     private fun clearStorePreferences() {

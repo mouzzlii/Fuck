@@ -1,88 +1,86 @@
 # TRAKUNA – Betriebshandbuch
 
-Stand: App-Version 1.53 (versionCode 54) · CI erfolgreich: Lauf 45293985061 (Debug-Testpaket)
+Stand: Integrationsversion 1.54 (versionCode 55) · Build 45769123996 und API-35-Emulator 45769124107 erfolgreich · 8/8 Instrumentierungstests (Debug-Testpaket, noch nicht in main)
 
 Dieses Handbuch erklärt die lokale Testversion Schritt für Schritt. TRAKUNA ist noch keine freigegebene Produktivsoftware. Ausschließlich mit ausdrücklich freigegebenen Testsendungen bzw. erfundenen Testnummern arbeiten.
 
 ## 1. Aktuelles Testpaket installieren
 
-1. Den [erfolgreichen Android-Build 45293985061 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45293985061).
-2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen.
+1. Den [erfolgreichen Android-Build 45769123996 öffnen](https://github.com/mouzzlii/Fuck/actions/runs/45769123996).
+2. Im Abschnitt **Artifacts** das Paket **TRAKUNA-Android** herunterladen (Artifact-ID `15093243107`).
 3. Das ZIP entpacken und die enthaltene Datei `app-debug.apk` auf das Android-Gerät übertragen.
-4. Die Prüfsumme im entpackten Ordner mit `sha256sum -c SHA256SUMS.txt` prüfen; erwartet wird `app-debug.apk: OK`. Unter Windows kann alternativ `Get-FileHash .\app-debug.apk -Algorithm SHA256` mit dem oben genannten APK-Hash verglichen werden.
+4. Die Prüfsumme im entpackten Ordner mit `sha256sum -c SHA256SUMS.txt` prüfen; erwartet wird `app-debug.apk: OK`. Unter Windows kann alternativ `Get-FileHash .\\app-debug.apk -Algorithm SHA256` mit dem Wert in `SHA256SUMS.txt` verglichen werden.
 5. Die APK öffnen und installieren. Android kann eine einmalige Erlaubnis für die Installation aus dieser Datei-App verlangen. Nur der vertrauenswürdigen Datei-App diese Erlaubnis geben und danach wieder deaktivieren.
 6. TRAKUNA starten und zuerst mit erfundenen Testdaten prüfen.
 
-**Prüfsummen des bereitgestellten Testpakets**
+**Stand des Testpakets**
 
-- APK-SHA-256: `ce7ed6093e213af7167e5bb2ebfc9c97fd89123fc4231f82fb94b8a4e8143f2b`
-- ZIP-SHA-256: `b2857b0eeb9c452f929ecc9fb2f1258de768897e7f9e26c0eb7912c8c45b6b59`
-- Erstellt: 24.11.2026, 00:05 UTC
-- Artefakt verfügbar bis: 08.12.2026, 00:05 UTC
+- App-Version: 1.54 (versionCode 55)
+- Geprüfter Commit: `8d9f4058b754084e47d177f0b1190a0bc2860c07`
+- Android-Build: [45769123996 – erfolgreich](https://github.com/mouzzlii/Fuck/actions/runs/45769123996)
+- Emulator-Instrumentierung: [45769124107 – erfolgreich, 8/8 Tests](https://github.com/mouzzlii/Fuck/actions/runs/45769124107)
+- Artefakt: `TRAKUNA-Android`, Artifact-ID `15093243107`
+- Verfügbar bis: 10.12.2026, 06:37 UTC
+- APK-SHA-256: `18a4ec27365f31a0a21d2fd8dc04342dde4f9d4f7e6150a18eb56438de1e4dc3`
 
-Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Version 1.53 enthält die Archivierungs- und Löschschutzfunktionen sowie neue Android-Instrumentierungstestfälle. Diese Instrumentierungstestfälle wurden im Haupt-Build kompiliert. Der separate Emulator-Workflow 45295645386 für den aktuellen Code-Commit ist noch in Bearbeitung und hat noch kein bestätigtes Ergebnis. CI bestätigte Unit-Tests, Kompilierung der Android-Instrumentierungstestfälle, Android-Lint, Manifestprüfungen, APK-Build und Artefakt-Upload. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen.
+Das Artefakt enthält `SHA256SUMS.txt`; ausschließlich den dort angegebenen Hash für genau diese APK verwenden. Es ist ein Debug-Testpaket, kein signiertes Produktionsrelease. Die Release-Signierung wurde mangels Betreiber-Schlüsseln übersprungen. Die CI-Prüfung ersetzt keine reale Kamera-, Drucker-/Portal- oder Betreiberabnahme.
 
 ## 2. Vorhandene Daten bei Updates schützen
 
 **TRAKUNA vor einem Update nicht deinstallieren.** Lokale Sendungsdaten und der zugehörige Android-Keystore-Schlüssel können bei einer Deinstallation verloren gehen.
 
-1. In TRAKUNA eine vollständige JSON-Datensicherung erstellen.
-2. Die Datei an einem geschützten Ort ablegen. Sie enthält Sendungsnummern, Empfängernamen und Notizen im Klartext.
-3. Prüfen, ob die Sicherungsdatei tatsächlich vorhanden ist.
-4. Erst dann das neue APK installieren und – wenn Android es anbietet – die bestehende App aktualisieren, nicht deinstallieren.
-5. Nach dem Update einige vorhandene Testvorgänge kontrollieren.
+1. In TRAKUNA eine vollständige passwortgeschützte Datensicherung erstellen.
+2. Ein Sicherungspasswort mit 12 bis 128 Zeichen eingeben und bestätigen. Das Passwort wird nicht in TRAKUNA gespeichert.
+3. Die `.trakuna`-Datei an einem geschützten Ort ablegen; das Passwort getrennt von der Datei aufbewahren. Ohne das Passwort ist die Sicherung nicht wiederherstellbar.
+4. Prüfen, ob die Datei tatsächlich vorhanden ist und eine plausible Dateigröße hat. Die Wiederherstellung ersetzt den gesamten aktuellen Bestand und darf nicht unbedacht auf dem produktiven Gerät getestet werden.
+5. Erst dann das neue APK installieren und – wenn Android es anbietet – die bestehende App aktualisieren, nicht deinstallieren.
+6. Nach dem Update einige vorhandene Testvorgänge kontrollieren.
 
 Wenn Android eine abweichende Signatur meldet, Installation abbrechen. Die bestehende App nicht löschen und keine App-Daten entfernen. Debug-Builds können unterschiedliche Signaturen besitzen.
 
-## 3. DPD, GLS, Hermes und UPS getrennt zuordnen
+## 3. Partner-App-Zuordnung – im Pilot gesperrt
 
-In Version 1.53 kann jeder der vier Start-Paketdienste einer eigenen installierten Betriebssoftware zugeordnet werden. Die Zuordnung wird lokal auf diesem Android-Gerät gespeichert.
+Die aktuelle App-Version 1.55 läuft fest im **SHADOW MODE**. Die Zuordnung externer Partner-Apps und der Start solcher Apps durch TRAKUNA sind in dieser Pilotversion gesperrt. Die vorhandenen Zuordnungsfunktionen sind Legacy-Code und keine Voraussetzung für den Smartphone-/Portalablauf.
 
-1. TRAKUNA öffnen.
-2. **Betriebssoftware pro Paketdienst zuordnen** antippen.
-3. Im Auswahlfeld den Paketdienst wählen: **DPD**, **GLS**, **Hermes** oder **UPS**.
-4. Die tatsächlich zu diesem Paketdienst gehörende, installierte App auswählen.
-5. Falls sie nicht in der ersten Liste erscheint, **Alle installierten Apps anzeigen** antippen.
-6. Die Anzeige unter der Hauptschaltfläche kontrollieren.
-7. Für die anderen drei Paketdienste wiederholen.
+- Keine DPD-, GLS-, Hermes- oder UPS-App in TRAKUNA zuordnen.
+- Keine externe Carrier-App als von TRAKUNA ausgelöste Übergabe erwarten.
+- Bereits separat installierte oder gestartete Carrier-Apps werden durch den lokalen Shadow Mode nicht kontrolliert. Für den Pilotbetrieb dürfen darin keine echten Buchungen oder Labelbestellungen ausgelöst werden.
 
-Wichtig:
+## 4. Sendungsnummer erfassen und Übergabe simulieren
 
-- Nur Apps auswählen, die der Betreiber bzw. Paketdienst für diesen Standort freigegeben hat.
-- Keine App nur anhand eines ähnlich klingenden Namens zuordnen.
-- Sobald mindestens eine Einzelzuordnung eingerichtet ist, wird für einen anderen Paketdienst ohne eigene Zuordnung keine fremde Carrier-App als Ersatz geöffnet.
-- Eine Zuordnung öffnet später nur die ausgewählte App. Sie beweist nicht, dass diese App die Sendungsnummer übernommen oder eine Buchung ausgeführt hat.
-- Die Zuordnung ist gerätebezogen. Sie wird nicht mit anderen Handgeräten synchronisiert.
-- Eine Zuordnung kann über die Schaltfläche **Zuordnung für [Paketdienst] entfernen** wieder gelöscht werden.
+1. Den passenden Paketdienst in der Hauptmaske auswählen, falls er nicht automatisch erkannt wurde.
+2. Die Sendungsnummer manuell eingeben oder mit der Kamera scannen.
+3. Die angezeigte Nummer und den Paketdienst vor dem Erfassen kontrollieren.
+4. **„Übergabe simulieren · TESTMODUS“** betätigen, sofern dieser Testschritt benötigt wird.
+5. TRAKUNA speichert den letzten Übergabewert lokal verschlüsselt. Im Shadow Mode wird keine Partner-App geöffnet, nichts in die Zwischenablage kopiert und keine externe Buchung oder Labelbestellung ausgelöst.
 
-## 4. Sendungsnummer erfassen und übergeben
+**Portalaufruf:** Nach dem Scan öffnet TRAKUNA kein Browserfenster automatisch. Wenn der Paketdienst eindeutig erkannt wurde, kann der Mitarbeiter nach Prüfung der Sendungsnummer bewusst **„Offizielles Portal öffnen“** auswählen. Die Sendungsnummer wird dabei nicht an das Portal übertragen und es erfolgt keine Buchung. Die manuelle Portal-Konfiguration bleibt in den Einstellungen.
 
-1. Den passenden Paketdienst in der Hauptmaske auswählen.
-2. Die Sendungsnummer entweder manuell eingeben oder – bei eingerichteter Kamera – scannen.
-3. Die angezeigte Nummer und den Paketdienst vor jeder weiteren Aktion kontrollieren.
-4. **An Partner-App übergeben** antippen.
-5. TRAKUNA speichert die Übergabe lokal verschlüsselt und versucht, die für diesen Paketdienst zugeordnete App zu öffnen.
-6. Falls keine App zugeordnet oder installiert ist, bleibt die Nummer im TRAKUNA-Cache; gegebenenfalls wird sie zusätzlich in die Zwischenablage kopiert.
-
-**Nicht als Buchungserfolg werten:** Das Öffnen einer Partner-App ist keine Bestätigung, dass diese die Nummer empfangen, validiert oder einen Vorgang angelegt hat. TRAKUNA besitzt derzeit keine bestätigte DPD-, GLS-, Hermes- oder UPS-Buchungsschnittstelle.
+**Nicht als Buchungserfolg werten:** Der Shadow Mode ist eine lokale Simulation. TRAKUNA besitzt derzeit keine bestätigte DPD-, GLS-, Hermes- oder UPS-Buchungsschnittstelle. Eine erfolgreiche lokale Erfassung ist keine Carrier-Bestätigung.
 
 ## 5. Lokale Paketshop-Vorgänge
 
-Über **Paketshop-Sendungen verwalten** können Testvorgänge lokal erfasst und ihre Status fortgeschrieben werden:
+Über **Sendungen verwalten** können Testvorgänge lokal erfasst und ihre Status fortgeschrieben werden:
 
 - Sendung für einen Kunden annehmen und als im Shop eingetroffen führen.
 - Eine Sendung als abholbereit markieren und lokal an den Kunden übergeben.
 - Eine Kundenabgabe bzw. Retoure erfassen und den lokalen Ablauf bis zur Übergabe an den Paketdienst fortschreiben.
 
-Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. Eine Übergabe an DPD, GLS, Hermes oder UPS wird in Version 1.53 ausdrücklich als **lokale Dokumentation** angezeigt. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
+Die lokalen Status ersetzen keine Buchung oder Bestätigung im Carrier-System. TRAKUNA erhält keine Carrier-Bestätigung; erst das offizielle Carrier-System und dessen Quittung sind maßgeblich. Vorhandene Carrier-Programme bleiben führend.
 
 ## 6. Zebra TC26 und DataWedge (DPD/GLS)
 
-Die DPD- und GLS-Handgeräte wurden anhand der bisherigen Angaben als Zebra TC26 vermutet; das genaue Modell muss am Typenschild bestätigt werden.
+**Legacy-Hinweis (26.11.2026):** Dieser Abschnitt beschreibt ausschließlich den vorhandenen DataWedge-Codepfad. Die verbindliche Zielarchitektur verwendet ein Android-Smartphone als zentrale TRAKUNA-Bedienoberfläche und die Kamera bzw. manuelle Eingabe. Zebra-Handgeräte sind in diesem Ablauf nur Internet-/Portalgeräte. Es wird keine neue DataWedge- oder Zebra-Hardwareintegration geplant; die folgenden Einrichtungsdetails sind keine Voraussetzung für den neuen Ablauf. Bestehende Shopgeräte und Profile nicht verändern.
 
-Für einen TRAKUNA-Scan auf einem Android-Zebra-Gerät ist ein eigenes DataWedge-Profil erforderlich. Die bestehende DPD-/GLS-Konfiguration nicht überschreiben. Das Profil muss TRAKUNA zugeordnet sein und den Intent-Eingang mit der Action `de.trakuna.app.DATAWEDGE_SCAN` sowie dem Extra `com.symbol.datawedge.data_string` verwenden. Die vollständige Anleitung und die Sicherheitshinweise stehen in [PARTNER_INTEGRATION.md](PARTNER_INTEGRATION.md).
+Die DPD- und GLS-Handgeräte wurden anhand der bisherigen Angaben als Zebra TC26 vermutet; das genaue Modell und die Android-Version müssen am Gerät bzw. Typenschild bestätigt werden.
 
-Ein Scan wird nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Die DataWedge-Konfiguration und der echte Scan-Empfang sind auf den Shopgeräten noch nicht vor Ort abgenommen.
+**Wichtige Android-Voraussetzung:** TRAKUNA verarbeitet DataWedge-Broadcasts nur ab Android 14 (API 34), wenn Android den Absender eindeutig als `com.symbol.datawedge` bestätigt. Auf Android 13 (API 33) und älteren Versionen ist der DataWedge-Eingang in TRAKUNA aus Sicherheitsgründen deaktiviert. Dort bitte den Kamera-Scanner oder die manuelle Eingabe verwenden.
+
+Für Android 14 oder höher ist ein eigenes DataWedge-Profil erforderlich. Die bestehende DPD-/GLS-Konfiguration nicht überschreiben. Das Profil muss TRAKUNA zugeordnet sein und den Intent-Eingang mit der Action `de.trakuna.app.DATAWEDGE_SCAN`, Delivery **Broadcast Intent** sowie dem Extra `com.symbol.datawedge.data_string` verwenden. Unter **Component Information** ausschließlich das Paket `de.trakuna.app` als Empfänger eintragen und die **Signaturprüfung aktivieren**. Diese DataWedge-seitige Prüfung begrenzt die Zustellung zusätzlich; TRAKUNA prüft unabhängig davon den von Android gemeldeten ursprünglichen Absender exakt auf `com.symbol.datawedge`. Beide Schutzschichten sind für den produktiven Geräteeinsatz vorgesehen. [Offizielle Zebra-Anleitung](https://techdocs.zebra.com/datawedge/latest/guide/output/intent/). Bei Debug-Testpaketen kann sich die Signatur zwischen CI-Läufen ändern; nach jeder Neuinstallation muss die Component-Auswahl erneut geprüft werden. Für den Produktivbetrieb ist ein stabiler Betreiber-Release-Signaturschlüssel erforderlich.
+
+Die vollständige Anleitung und die Sicherheitshinweise stehen in [PARTNER_INTEGRATION.md](PARTNER_INTEGRATION.md) und [WLAN-STARTVORBEREITUNG.md](WLAN-STARTVORBEREITUNG.md).
+
+Ein DataWedge-Scan wird – sofern dieser historische Legacy-Pfad separat weiter genutzt werden soll – nur verarbeitet, solange TRAKUNA im Vordergrund aktiv ist. Dieser Pfad ist keine Voraussetzung des neuen Smartphone-/Portalablaufs. Eine Prüfung wäre nur nach gesonderter Betreiberfreigabe erforderlich.
 
 ## 7. Hermes – neues Handgerät angekündigt
 
@@ -103,7 +101,9 @@ Die UPS-App nicht eigenmächtig installieren oder konfigurieren. Vorhandene App-
 - Lokale Daten liegen nur auf diesem Gerät; es gibt keine zentrale Synchronisierung und keine Cloud-Verbindung.
 - Es gibt keine Mitarbeiterkonten oder Rollen.
 - Maximal 500 Vorgänge werden lokal gespeichert; archivierte Vorgänge belegen weiterhin einen Platz.
-- JSON-Backups und CSV-Exporte enthalten vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
+- Neue `.trakuna`-Datensicherungen sind mit AES-256-GCM und PBKDF2-HMAC-SHA256 (600.000 Iterationen) passwortgeschützt. Das Passwort muss 12–128 Zeichen lang sein und getrennt von der Datei aufbewahrt werden.
+- Alte JSON-Sicherungen bleiben importierbar, sind aber unverschlüsselt. TRAKUNA kennzeichnet sie vor dem Ersetzen des aktuellen Bestands ausdrücklich als Klartext.
+- CSV-Exporte enthalten weiterhin vertrauliche Daten im Klartext. Nur geschützt speichern und nur an berechtigte Personen weitergeben.
 - Der CSV-Export enthält zusätzlich die lokal gespeicherten Historieneinträge mit Zeitstempel und Ereignistyp. Diese Historie ist weiterhin nur lokal und nicht manipulationssicher oder zentral bestätigt.
 - Keine echten Kundendaten in öffentliche Screenshots, GitHub-Issues oder Chat-Nachrichten aufnehmen.
 - Vor dem produktiven Einsatz sind Datenschutzprüfung, Mehrgeräte-/Mitarbeitermodell, Backup-Wiederherstellung und signiertes Produktionsrelease erforderlich.

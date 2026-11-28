@@ -277,6 +277,30 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun officialCarrierQrUrlsAreRecognizedButLookalikeHostsAreRejected() {
+        assertEquals("DPD", ShipmentRules.identifyCarrier("https://www.dpd.com/track/123"))
+        assertEquals("GLS", ShipmentRules.identifyCarrier("https://gls-one.at/parcel/123"))
+        assertEquals("Hermes", ShipmentRules.identifyCarrier("https://tracking.hermesworld.com/parcel/123"))
+        assertEquals("UPS", ShipmentRules.identifyCarrier("https://www.ups.com/track"))
+        assertEquals("Österreichische Post", ShipmentRules.identifyCarrier("https://www.post.at/track"))
+        assertEquals("DHL Paket", ShipmentRules.identifyCarrier("https://www.dhl.de/track"))
+        assertEquals("DHL Express", ShipmentRules.identifyCarrier("https://mydhl.express.dhl/track"))
+        assertEquals("FedEx", ShipmentRules.identifyCarrier("https://www.fedex.com/track"))
+        assertEquals("LogoiX", ShipmentRules.identifyCarrier("https://www.logoix.com/track"))
+        assertEquals(null, ShipmentRules.identifyCarrier("https://dpd.com.attacker.example/track"))
+        assertEquals(null, ShipmentRules.identifyCarrier("12345678901234"))
+    }
+
+    @Test
+    fun officialCarrierUrlsCanSupplyOpaquePathIdsButUntrustedHostsCannot() {
+        assertEquals("12345678901234", ShipmentRules.extractTrackingNumber("https://www.dpd.com/track/12345678901234"))
+        assertEquals("GLS123456789", ShipmentRules.extractTrackingNumber("https://gls-group.eu/parcel/GLS123456789"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/track/12345678901234"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://dpd.com.attacker.example/track/12345678901234"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("https://www.dpd.com/track/123456"))
+    }
+
+    @Test
     fun outgoingAndReturnFlowsFinishAtCarrierHandover() {
         assertEquals(ShipmentStatus.HANDED_TO_CARRIER, ShipmentRules.nextStatus(ShipmentFlow.OUTGOING_FROM_CUSTOMER, ShipmentStatus.ACCEPTED_FROM_CUSTOMER))
         assertEquals(ShipmentStatus.HANDED_TO_CARRIER, ShipmentRules.nextStatus(ShipmentFlow.CUSTOMER_RETURN, ShipmentStatus.RETURN_ACCEPTED))
@@ -458,6 +482,83 @@ class ShipmentStoreTest {
     }
 
     @Test
+    fun alphanumericAustrianPostPickupCodeIsAcceptedWithoutNumericOnlyAssumptions() {
+        val pickupCode = "AB12CD34"
+        assertEquals(pickupCode, ShipmentRules.extractTrackingNumber(pickupCode))
+        assertEquals(pickupCode, ShipmentRules.extractTrackingNumber("  $pickupCode  "))
+        assertEquals(true, ShipmentRules.isValidTrackingNumber(pickupCode))
+    }
+
+    @Test
+    fun glsQrPrefersShipmentNumberOverAuxiliaryTrackIdRegardlessOfParameterOrder() {
+        val expected = "31220879741"
+        val trackId = "Z4EIOR5P"
+        assertEquals(
+            expected,
+            ShipmentRules.extractTrackingNumber(
+                "https://gls.example/track?trackingnumber=$expected&trackid=$trackId"
+            )
+        )
+        assertEquals(
+            expected,
+            ShipmentRules.extractTrackingNumber(
+                "https://gls.example/track?trackid=$trackId&trackingnumber=$expected"
+            )
+        )
+    }
+
+    @Test
+    fun glsQrDoesNotGuessWhenMultiplePrimaryShipmentFieldsConflict() {
+        assertEquals(
+            null,
+            ShipmentRules.extractTrackingNumber(
+                "https://gls.example/track?trackingnumber=31220879741&parcelnumber=8721335813708"
+            )
+        )
+    }
+
+    @Test
+    fun trackIdRemainsUsableWhenNoExplicitShipmentNumberIsPresent() {
+        assertEquals(
+            "Z4EIOR5P",
+            ShipmentRules.extractTrackingNumber("https://gls.example/track?trackid=Z4EIOR5P")
+        )
+    }
+
+    @Test
+    fun glsLabelParserPrefersParcelNumberAndIgnoresTrackIdCustomerReferenceAndPostcodes() {
+        val label = """
+            Your GLS Track ID: Z4EIOR5P
+            Cust-Ref 0400932541
+            PLZ 4030
+            Paketnummer 31220879741
+        """.trimIndent()
+        assertEquals("31220879741", ShipmentRules.extractTrackingNumber(label))
+    }
+
+    @Test
+    fun glsLabelParserAcceptsTrackIdOnlyWhenParcelNumberIsAbsent() {
+        assertEquals("Z4EIOR5P", ShipmentRules.extractTrackingNumber("Your GLS Track ID: Z4EIOR5P"))
+        assertEquals("Z4EIOR5P", ShipmentRules.extractTrackingNumber("Z4EIOR5P"))
+    }
+
+    @Test
+    fun glsLabelParserAcceptsExactParcelNumberTokensInTwoDimensionalPayloads() {
+        assertEquals("31220879741", ShipmentRules.extractTrackingNumber("GLS|PARCEL|31220879741|CUSTREF|0400932541|ZIP|4202"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("8721335813708", rejectRetailProductBarcode = true))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("6725350723808", rejectRetailProductBarcode = true))
+        // Numeric identifiers from other carriers are not globally rejected.
+        assertEquals("8721335813708", ShipmentRules.extractTrackingNumber("8721335813708"))
+    }
+
+    @Test
+    fun glsLabelParserRejectsConflictingParcelNumbersAndDoesNotPromoteCustomerReference() {
+        assertEquals(null, ShipmentRules.extractTrackingNumber("Parcel Number 31220879741 Parcel Number 87220879741"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("Cust-Ref 0400932541"))
+        assertEquals(null, ShipmentRules.extractTrackingNumber("PLZ 4030"))
+    }
+
+    @Test
     fun scanParserUsesRecognizableQrPathAndRejectsUntrustedOrOversizedInput() {
         assertEquals("AB123456789AT", ShipmentRules.extractTrackingNumber("https://example.test/parcel/AB123456789AT"))
         assertEquals(null, ShipmentRules.extractTrackingNumber("https://example.test/parcel/not-a-number"))
@@ -495,5 +596,17 @@ class ShipmentStoreTest {
         assertFalse(ShipmentRules.canPermanentlyDelete(archived.copy(archivedAt = null)))
         assertFalse(ShipmentRules.canPermanentlyDelete(archived.copy(archivedAt = 250L)))
         assertFalse(ShipmentRules.canPermanentlyDelete(archived.copy(status = ShipmentStatus.READY_FOR_PICKUP)))
+    }
+
+    @Test
+    fun csvCellsEscapeDelimitersQuotesAndSpreadsheetFormulaStarters() {
+        assertEquals("\"plain value\"", ShipmentRules.csvSafeCell("plain value"))
+        assertEquals("\"a; b\"", ShipmentRules.csvSafeCell("a; b"))
+        assertEquals("\"a\"\"b\"", ShipmentRules.csvSafeCell("a\"b"))
+        assertEquals("\"'=1+1\"", ShipmentRules.csvSafeCell("=1+1"))
+        assertEquals("\"'  +SUM(A1:A2)\"", ShipmentRules.csvSafeCell("  +SUM(A1:A2)"))
+        assertEquals("\"'\uFEFF@SUM(A1:A2)\"", ShipmentRules.csvSafeCell("\uFEFF@SUM(A1:A2)"))
+        assertEquals("\"'\u200B-1+1\"", ShipmentRules.csvSafeCell("\u200B-1+1"))
+        assertEquals("\"line 1\nline 2\"", ShipmentRules.csvSafeCell("line 1\nline 2"))
     }
 }

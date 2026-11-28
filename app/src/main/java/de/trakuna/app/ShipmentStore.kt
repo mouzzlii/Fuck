@@ -93,6 +93,9 @@ class ShipmentStore(context: Context) {
                     error("Alte unverschlüsselte Daten konnten nicht entfernt werden.")
                 }
             } else if (legacy != null) {
+                // Validate the plaintext source before replacing it. If an old
+                // preference is malformed, keep the original recoverable value.
+                validateStoredPayload(legacy)
                 val replacement = encrypt(legacy)
                 if (!prefs.edit()
                         .putString(KEY_RECORDS_ENCRYPTED, replacement)
@@ -236,13 +239,18 @@ class ShipmentStore(context: Context) {
     }
 
     @Synchronized
-    fun advance(id: String): ShipmentUpdate {
+    fun advance(id: String, expectedStatus: ShipmentStatus): ShipmentUpdate {
         val records = readRecords().getOrElse {
             return ShipmentUpdate.Rejected("Lokaler Datenspeicher kann nicht sicher gelesen werden. Es wurden keine Daten geändert.")
         }.toMutableList()
         val index = records.indexOfFirst { it.id == id }
         if (index < 0) return ShipmentUpdate.Rejected("Sendung wurde nicht gefunden.")
         val current = records[index]
+        // Optimistic concurrency guard: a repeated tap or stale confirmation must
+        // never advance a shipment that has already changed since the dialog opened.
+        if (current.status != expectedStatus) {
+            return ShipmentUpdate.Rejected("Status wurde inzwischen geändert. Bitte Liste aktualisieren und erneut prüfen.")
+        }
         if (current.archivedAt != null) return ShipmentUpdate.Rejected("Archivierte Vorgänge können nicht fortgeschrieben werden. Bitte zuerst wiederherstellen.")
         val next = ShipmentRules.nextStatus(current.flow, current.status)
             ?: return ShipmentUpdate.Rejected("Dieser Vorgang ist bereits abgeschlossen.")
@@ -544,7 +552,49 @@ object ShipmentRules {
      * Parse a barcode or supported carrier QR URL without guessing arbitrary digits.
      * Kept in the pure rules layer so scanner formats can be covered by JVM tests.
      */
-    fun extractTrackingNumber(raw: String, maxInputChars: Int = 4096): String? {
+    /**
+     * GLS label parser. GLS parcel numbers are normally 11/12 digits; Track IDs
+     * are 8-character alphanumeric identifiers. Customer references and postcodes
+     * are not parcel identifiers and must never be promoted to tracking numbers.
+     */
+    private fun extractGlsLabelIdentifier(value: String): String? {
+        val parcelLabel = Regex(
+            "(?i)(?:parcel\\s*(?:number|no\\.?)|paketnummer|sendungsnummer|shipment\\s*(?:number|no\\.?))\\s*[:=#]?\\s*([0-9]{11,12})"
+        )
+        val trackLabel = Regex(
+            "(?i)(?:your\\s*gls\\s*)?track\\s*id\\s*[:=#]?\\s*([A-Z0-9]{8})"
+        )
+        val customerReference = Regex(
+            "(?i)(?:cust(?:omer)?[- ]?ref(?:erence)?|kundenreferenz)\\s*[:=#]?\\s*([A-Z0-9-]+)"
+        )
+        val postcodeLabel = Regex(
+            "(?i)(?:plz|post(?:al)?\\s*code|zip(?:\\s*code)?)\\s*[:=#]?\\s*([0-9]{4,10})"
+        )
+        val excluded = (customerReference.findAll(value).map { it.groupValues[1] } +
+            postcodeLabel.findAll(value).map { it.groupValues[1] }).toSet()
+
+        fun unique(values: List<String>): String? =
+            values.filterNot { it in excluded }.distinct().singleOrNull()
+
+        val labelledParcels = parcelLabel.findAll(value).map { it.groupValues[1] }.toList()
+        if (labelledParcels.isNotEmpty()) return unique(labelledParcels)
+
+        // Structured 2D payloads may contain additional references. Only exact
+        // 11/12-digit tokens qualify; 13-digit EAN-13 values are deliberately excluded.
+        val numericTokens = Regex("(?<![A-Z0-9])[0-9]{11,12}(?![A-Z0-9])")
+            .findAll(value).map { it.value }.toList()
+        if (numericTokens.isNotEmpty()) return unique(numericTokens)
+
+        val labelledTrackIds = trackLabel.findAll(value).map { it.groupValues[1].uppercase() }.toList()
+        if (labelledTrackIds.isNotEmpty()) return unique(labelledTrackIds)
+
+        // An unlabelled Track ID is accepted only when the entire scan is exactly
+        // one 8-character alphanumeric token, not when embedded in arbitrary text.
+        val exactTrackId = value.trim().uppercase()
+        return exactTrackId.takeIf { Regex("(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]{8}").matches(it) }
+    }
+
+    fun extractTrackingNumber(raw: String, maxInputChars: Int = 4096, rejectRetailProductBarcode: Boolean = false): String? {
         if (raw.isEmpty() || raw.length > maxInputChars) return null
 
         // Zebra/DataWedge and GS1 scanners may prepend an AIM symbology identifier.
@@ -553,6 +603,10 @@ object ShipmentRules {
             .replace(Regex("^(?:\\]C[0-9]|\\]d[0-9]|\\]Q[0-9])"), "")
             .trim()
         if (cleaned.isBlank()) return null
+        // CameraX/ML Kit and DataWedge provide the barcode symbology. When it
+        // confirms an EAN/UPC retail product code, never promote its payload to
+        // a shipment number; opaque numeric IDs remain allowed for other formats.
+        if (rejectRetailProductBarcode) return null
 
         fun plausible(value: String?): String? =
             value?.let(::normalizeTrackingNumber)?.takeIf(::isValidTrackingNumber)
@@ -570,37 +624,56 @@ object ShipmentRules {
             if (uri.scheme?.lowercase() !in setOf("http", "https") ||
                 uri.host.isNullOrBlank() || uri.rawUserInfo != null
             ) return null
+            // Official carrier hosts provide context for opaque IDs in URL paths.
+            val recognizedUrlCarrier = CarrierPortalDomains.identifyFromUrl(cleaned)
 
-            val acceptedKeys = setOf(
-                "trackingnumber", "tracking_number", "tracking", "trackid", "shipment",
+            // Prefer fields explicitly named as shipment/tracking numbers over auxiliary
+            // carrier references. Some GLS QR payloads contain both a numeric parcel
+            // number and a separate alphanumeric track ID; treating both as equivalent
+            // makes a valid label look ambiguous or selects the wrong identifier.
+            val primaryKeys = setOf(
+                "trackingnumber", "tracking_number", "tracking", "shipment",
                 "shipmentid", "shipment_id", "consignment", "consignmentnumber",
-                "parcel", "parcelnumber", "barcode", "piececode", "sendungsnummer", "snr", "id"
+                "parcel", "parcelnumber", "barcode", "piececode", "sendungsnummer", "snr"
             )
             val queryCandidates = mutableListOf<String>()
+            val trackIdCandidates = mutableListOf<String>()
             for (part in uri.rawQuery.orEmpty().split("&")) {
                 if (part.isBlank()) continue
                 val key = part.substringBefore("=", "")
                 val value = part.substringAfter("=", "")
                 val decodedKey = runCatching { java.net.URLDecoder.decode(key, "UTF-8") }.getOrNull()
                     ?: continue
-                if (decodedKey.lowercase() !in acceptedKeys) continue
+                val normalizedKey = decodedKey.lowercase()
+                if (normalizedKey !in primaryKeys && normalizedKey != "trackid" && normalizedKey != "id") continue
                 val decodedValue = runCatching { java.net.URLDecoder.decode(value, "UTF-8") }.getOrNull()
                     ?: continue
                 val candidate = plausible(decodedValue) ?: continue
-                // Generic "id" is too ambiguous unless it has a known carrier structure.
-                if (decodedKey.equals("id", ignoreCase = true) && identifyCarrier(candidate) == null) continue
-                queryCandidates += candidate
+                when (normalizedKey) {
+                    in primaryKeys -> queryCandidates += candidate
+                    "trackid" -> trackIdCandidates += candidate
+                    // Generic "id" is too ambiguous unless it has a known carrier structure.
+                    "id" -> if (identifyCarrier(candidate) != null) trackIdCandidates += candidate
+                }
             }
             if (queryCandidates.isNotEmpty()) return unique(queryCandidates)
+            if (trackIdCandidates.isNotEmpty()) return unique(trackIdCandidates)
 
-            // A path segment is accepted only when it has a distinctive known format.
-            // Arbitrary IDs in unrelated URLs are not treated as parcel tracking numbers.
+            // Official carrier URLs can contain opaque path IDs (e.g. DPD numeric codes).
+            // Accept one plausible >=8-character ID only on an allowlisted carrier host.
+            // For every other host, retain the stricter distinctive-format requirement.
             val pathCandidates = uri.path.orEmpty().split("/")
                 .filter { it.isNotBlank() }
                 .mapNotNull(::plausible)
-                .filter { identifyCarrier(it) != null }
+                .filter { candidate ->
+                    if (recognizedUrlCarrier != null) candidate.length >= 8
+                    else identifyCarrier(candidate) != null
+                }
             return unique(pathCandidates)
         }
+
+        val glsIdentifier = extractGlsLabelIdentifier(cleaned)
+        if (glsIdentifier != null) return glsIdentifier
 
         val compact = plausible(cleaned)
         // If a known-format identifier is embedded inside a longer token, reject the
@@ -749,7 +822,10 @@ object ShipmentRules {
      * never be used to select a paid shipping product or confirm carrier acceptance.
      */
     fun identifyCarrier(raw: String): String? {
-        val value = normalizeTrackingNumber(raw).uppercase()
+        // QR labels may contain an official carrier URL. Resolve its hostname first;
+        // never infer a carrier from an ambiguous numeric length alone.
+        CarrierPortalDomains.identifyFromUrl(raw)?.let { return it }
+        val value = normalizeTrackingNumber(raw).uppercase(java.util.Locale.ROOT)
         return when {
             Regex("^1Z[A-Z0-9]{16}$").matches(value) -> "UPS"
             Regex("^[A-Z]{2}[0-9]{9}AT$").matches(value) -> "Österreichische Post"
