@@ -34,6 +34,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.core.content.ContextCompat
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 
 private val Forest = Color(0xFF174B3A)
 private const val DATAWEDGE_DATA_EXTRA = "com.symbol.datawedge.data_string"
@@ -42,10 +45,24 @@ private const val DATAWEDGE_LABEL_TYPE_EXTRA = "com.symbol.datawedge.label_type"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val googleScannerOptions = GmsBarcodeScannerOptions.Builder()
+            .setBarcodeFormats(
+                Barcode.FORMAT_QR_CODE,
+                Barcode.FORMAT_CODE_128,
+                Barcode.FORMAT_CODE_39,
+                Barcode.FORMAT_CODE_93,
+                Barcode.FORMAT_CODABAR,
+                Barcode.FORMAT_ITF,
+                Barcode.FORMAT_PDF417,
+                Barcode.FORMAT_AZTEC,
+                Barcode.FORMAT_DATA_MATRIX
+            )
+            .enableAutoZoom()
+            .build()
+        val googleScanner = GmsBarcodeScanning.getClient(this, googleScannerOptions)
         setContent {
             val context = LocalContext.current
             var number by rememberSaveable { mutableStateOf("") }
-            var showScanner by remember { mutableStateOf(false) }
             var scanDiagnostic by remember { mutableStateOf<ScanDiagnosticResult?>(null) }
             var showScanDiagnostics by remember { mutableStateOf(false) }
             var showSettings by remember { mutableStateOf(false) }
@@ -299,36 +316,62 @@ class MainActivity : ComponentActivity() {
                         }
 
                         Button(
-                            onClick = { showScanner = !showScanner },
-                            modifier = Modifier.fillMaxWidth().height(64.dp)
-                        ) {
-                            Text(if (showScanner) "Scanner schließen" else "Scannen")
-                        }
-
-                        if (showScanner) {
-                            ScannerPanel(
-                                onDetected = { diagnostic ->
-                                    showScanner = false
-                                    scanDiagnostic = diagnostic
-                                    showScanDiagnostics = false
-                                    val scanned = diagnostic.selectedValue
-                                    if (scanned == null) {
-                                        status = "Kein eindeutiger Wert erkannt. Bitte erneut scannen oder Nummer manuell eingeben."
-                                    } else {
-                                        number = scanned
-                                        val detectedCarrier = diagnostic.observations.asSequence()
-                                            .mapNotNull { ShipmentRules.identifyCarrier(it.rawValue) }
-                                            .firstOrNull() ?: ShipmentRules.identifyCarrier(scanned)
-                                        if (detectedCarrier != null) {
-                                            carrierOverride = detectedCarrier
-                                            status = "Anbieter erkannt · $detectedCarrier"
+                            onClick = {
+                                status = "Google Scanner wird geöffnet…"
+                                googleScanner.startScan()
+                                    .addOnSuccessListener { barcode ->
+                                        val raw = barcode.rawValue?.takeIf { it.isNotBlank() }
+                                        if (raw == null || raw.length > MAX_SCAN_INPUT_CHARS) {
+                                            status = "Kein gültiger Barcode erkannt. Bitte erneut scannen oder Nummer manuell eingeben."
                                         } else {
-                                            status = "Sendungsnummer erkannt. Paketdienst bei Bedarf auswählen."
+                                            val retailBarcode = barcode.format in setOf(
+                                                Barcode.FORMAT_EAN_13,
+                                                Barcode.FORMAT_EAN_8,
+                                                Barcode.FORMAT_UPC_A,
+                                                Barcode.FORMAT_UPC_E
+                                            )
+                                            val scanned = extractTrackingNumber(
+                                                raw,
+                                                rejectRetailProductBarcode = retailBarcode
+                                            )
+                                            val observation = ScanObservation(
+                                                source = "Google Code Scanner",
+                                                format = googleBarcodeFormatLabel(barcode.format),
+                                                rawValue = raw,
+                                                displayValue = barcode.displayValue,
+                                                extractedValue = scanned
+                                            )
+                                            scanDiagnostic = ScanDiagnosticResult(
+                                                observations = listOf(observation),
+                                                selectedValue = scanned
+                                            )
+                                            showScanDiagnostics = false
+                                            if (scanned.isNullOrBlank()) {
+                                                status = "Der erkannte Code ist keine unterstützte Sendungsnummer. Bitte den Paketcode scannen oder manuell eingeben."
+                                            } else {
+                                                number = scanned
+                                                val detectedCarrier = ShipmentRules.identifyCarrier(raw)
+                                                    ?: ShipmentRules.identifyCarrier(scanned)
+                                                if (detectedCarrier != null) {
+                                                    carrierOverride = detectedCarrier
+                                                    status = "Anbieter erkannt · $detectedCarrier"
+                                                } else {
+                                                    carrierOverride = ""
+                                                    status = "Sendungsnummer erkannt. Paketdienst bei Bedarf auswählen."
+                                                }
+                                            }
                                         }
                                     }
-                                },
-                                onClose = { showScanner = false }
-                            )
+                                    .addOnCanceledListener {
+                                        status = "Scan abgebrochen."
+                                    }
+                                    .addOnFailureListener {
+                                        status = "Google Scanner konnte nicht gestartet werden. Bitte Google Play-Dienste prüfen oder die Sendungsnummer manuell eingeben."
+                                    }
+                            },
+                            modifier = Modifier.fillMaxWidth().height(64.dp)
+                        ) {
+                            Text("Mit Google scannen")
                         }
 
                         OutlinedTextField(
@@ -820,6 +863,19 @@ class MainActivity : ComponentActivity() {
 
 
 
+
+private fun googleBarcodeFormatLabel(format: Int): String = when (format) {
+    Barcode.FORMAT_QR_CODE -> "QR-Code"
+    Barcode.FORMAT_CODE_128 -> "Code 128"
+    Barcode.FORMAT_CODE_39 -> "Code 39"
+    Barcode.FORMAT_CODE_93 -> "Code 93"
+    Barcode.FORMAT_CODABAR -> "Codabar"
+    Barcode.FORMAT_ITF -> "ITF"
+    Barcode.FORMAT_PDF417 -> "PDF417"
+    Barcode.FORMAT_AZTEC -> "Aztec"
+    Barcode.FORMAT_DATA_MATRIX -> "Data Matrix"
+    else -> "Unbekannt ($format)"
+}
 
 private fun isWifiConnected(context: Context): Boolean {
     val connectivity = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
